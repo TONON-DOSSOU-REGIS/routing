@@ -27,7 +27,10 @@ class RequestContextTest extends TestCase
             8080,
             444,
             '/baz',
-            'bar=foobar'
+            'bar=foobar',
+            [
+                'foo' => 'bar',
+            ]
         );
 
         $this->assertEquals('foo', $requestContext->getBaseUrl());
@@ -38,6 +41,20 @@ class RequestContextTest extends TestCase
         $this->assertSame(444, $requestContext->getHttpsPort());
         $this->assertEquals('/baz', $requestContext->getPathInfo());
         $this->assertEquals('bar=foobar', $requestContext->getQueryString());
+        $this->assertSame(['foo' => 'bar'], $requestContext->getParameters());
+    }
+
+    public function testConstructParametersBcLayer()
+    {
+        $requestContext = new class() extends RequestContext {
+            public function __construct()
+            {
+                $this->setParameters(['foo' => 'bar']);
+                parent::__construct();
+            }
+        };
+
+        $this->assertSame(['foo' => 'bar'], $requestContext->getParameters());
     }
 
     public function testFromUriWithBaseUrl()
