@@ -5,6 +5,7 @@ CHANGELOG
 ---
 
  * Allow query-specific parameters in `UrlGenerator` using `_query`
+ * Add support of multiple env names in the  `Symfony\Component\Routing\Attribute\Route` attribute
 
 7.3
 ---
