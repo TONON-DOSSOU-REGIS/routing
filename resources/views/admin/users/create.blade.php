@@ -231,13 +231,34 @@
                                             id="pays"
                                             class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                         <option value="">Sélectionner un pays</option>
-                                        <option value="France" {{ old('pays') == 'France' ? 'selected' : '' }}>France</option>
-                                        <option value="Belgique" {{ old('pays') == 'Belgique' ? 'selected' : '' }}>Belgique</option>
-                                        <option value="Suisse" {{ old('pays') == 'Suisse' ? 'selected' : '' }}>Suisse</option>
-                                        <option value="Canada" {{ old('pays') == 'Canada' ? 'selected' : '' }}>Canada</option>
-                                        <option value="Maroc" {{ old('pays') == 'Maroc' ? 'selected' : '' }}>Maroc</option>
-                                        <option value="Algérie" {{ old('pays') == 'Algérie' ? 'selected' : '' }}>Algérie</option>
-                                        <option value="Tunisie" {{ old('pays') == 'Tunisie' ? 'selected' : '' }}>Tunisie</option>
+                                        <option value="Allemagne" {{ old('pays') == 'Allemagne' ? 'selected' : '' }}>(DE) Allemagne</option>
+                                        <option value="Autriche" {{ old('pays') == 'Autriche' ? 'selected' : '' }}>(AT) Autriche</option>
+                                        <option value="Belgique" {{ old('pays') == 'Belgique' ? 'selected' : '' }}>(BE) Belgique</option>
+                                        <option value="Bulgarie" {{ old('pays') == 'Bulgarie' ? 'selected' : '' }}>(BG) Bulgarie</option>
+                                        <option value="Chypre" {{ old('pays') == 'Chypre' ? 'selected' : '' }}>(CY) Chypre</option>
+                                        <option value="Croatie" {{ old('pays') == 'Croatie' ? 'selected' : '' }}>(HR) Croatie</option>
+                                        <option value="Danemark" {{ old('pays') == 'Danemark' ? 'selected' : '' }}>(DK) Danemark</option>
+                                        <option value="Espagne" {{ old('pays') == 'Espagne' ? 'selected' : '' }}>(ES) Espagne</option>
+                                        <option value="Estonie" {{ old('pays') == 'Estonie' ? 'selected' : '' }}>(EE) Estonie</option>
+                                        <option value="Finlande" {{ old('pays') == 'Finlande' ? 'selected' : '' }}>(FI) Finlande</option>
+                                        <option value="France" {{ old('pays') == 'France' ? 'selected' : '' }}>(FR) France</option>
+                                        <option value="Grèce" {{ old('pays') == 'Grèce' ? 'selected' : '' }}>(GR) Grèce</option>
+                                        <option value="Hongrie" {{ old('pays') == 'Hongrie' ? 'selected' : '' }}>(HU) Hongrie</option>
+                                        <option value="Irlande" {{ old('pays') == 'Irlande' ? 'selected' : '' }}>(IE) Irlande</option>
+                                        <option value="Italie" {{ old('pays') == 'Italie' ? 'selected' : '' }}>(IT) Italie</option>
+                                        <option value="Lettonie" {{ old('pays') == 'Lettonie' ? 'selected' : '' }}>(LV) Lettonie</option>
+                                        <option value="Lituanie" {{ old('pays') == 'Lituanie' ? 'selected' : '' }}>(LT) Lituanie</option>
+                                        <option value="Luxembourg" {{ old('pays') == 'Luxembourg' ? 'selected' : '' }}>(LU) Luxembourg</option>
+                                        <option value="Malte" {{ old('pays') == 'Malte' ? 'selected' : '' }}>(MT) Malte</option>
+                                        <option value="Pays-Bas" {{ old('pays') == 'Pays-Bas' ? 'selected' : '' }}>(NL) Pays-Bas</option>
+                                        <option value="Pologne" {{ old('pays') == 'Pologne' ? 'selected' : '' }}>(PL) Pologne</option>
+                                        <option value="Portugal" {{ old('pays') == 'Portugal' ? 'selected' : '' }}>(PT) Portugal</option>
+                                        <option value="République Tchèque" {{ old('pays') == 'République Tchèque' ? 'selected' : '' }}>(CZ) République Tchèque</option>
+                                        <option value="Roumanie" {{ old('pays') == 'Roumanie' ? 'selected' : '' }}>(RO) Roumanie</option>
+                                        <option value="Slovaquie" {{ old('pays') == 'Slovaquie' ? 'selected' : '' }}>(SK) Slovaquie</option>
+                                        <option value="Slovénie" {{ old('pays') == 'Slovénie' ? 'selected' : '' }}>(SI) Slovénie</option>
+                                        <option value="Suède" {{ old('pays') == 'Suède' ? 'selected' : '' }}>(SE) Suède</option>
+                                        <option value="Suisse" {{ old('pays') == 'Suisse' ? 'selected' : '' }}>(CH) Suisse</option>
                                     </select>
                                 </div>
                             </div>

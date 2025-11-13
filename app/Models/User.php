@@ -34,6 +34,7 @@ class User extends Authenticatable
         'balance',
         'status',
         'password',
+        'activation_code',
     ];
 
     /**

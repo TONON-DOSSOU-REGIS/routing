@@ -193,7 +193,6 @@
                                                 @if($user->id !== auth()->id())
                                                     <form method="POST" action="{{ route('admin.users.toggle', $user) }}" class="inline">
                                                         @csrf
-                                                        @method('PATCH')
                                                         <button type="submit"
                                                                 class="text-sm px-3 py-1 rounded
                                                                 @if($user->status == 'active')

@@ -45,4 +45,6 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
 
     Route::get('/transactions/export/pdf', [AdminController::class, 'exportPdf'])->name('admin.export.pdf');
     Route::get('/transactions/export/excel', [AdminController::class, 'exportExcel'])->name('admin.export.excel');
+
+    Route::patch('/users/{user}/reset-password', [AdminController::class, 'resetPassword'])->name('admin.users.reset-password');
 });

@@ -51,7 +51,7 @@ class TransactionController extends Controller
         if (!$settings) {
             $settings = Setting::where('is_global', true)->firstOrFail();
         }
-        $increment = 7; // pas de progression
+        $increment = 1; // pas de progression
         $p = min(100, (int)$tx->progress + $increment);
 
         if ($tx->status === 'pending') {
@@ -76,7 +76,16 @@ class TransactionController extends Controller
                     $tx->update(['progress' => 100, 'status' => 'success']);
                 });
 
-                // TODO: Envoi mail+SMS + PDF
+                // Send confirmation email
+                try {
+                    \Illuminate\Support\Facades\Mail::to($tx->user->email)->send(new \App\Mail\TransferConfirmationMail($tx));
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Failed to send transfer confirmation email', [
+                        'transaction_id' => $tx->id,
+                        'user_id' => $tx->user->id,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
 
                 return response()->json(['status' => 'success', 'progress' => 100]);
             }

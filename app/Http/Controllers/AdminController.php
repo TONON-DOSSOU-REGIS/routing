@@ -3,14 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DepositRequest;
+use App\Mail\PasswordResetMail;
 use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class AdminController extends Controller
 {
@@ -125,6 +130,36 @@ class AdminController extends Controller
         return Excel::download(new \App\Exports\TransactionsExport, 'transactions.xlsx');
     }
 
+    public function resetPassword(User $user)
+    {
+        // Generate a random password
+        $newPassword = Str::random(12);
+
+        // Update user password
+        $user->update([
+            'password' => Hash::make($newPassword),
+        ]);
+
+        // Log the action
+        Log::info('Admin reset user password', [
+            'admin_id' => auth()->id(),
+            'user_id' => $user->id,
+            'user_email' => $user->email,
+        ]);
+
+        // Send email notification
+        try {
+            Mail::to($user->email)->send(new PasswordResetMail($user, $newPassword));
+        } catch (\Exception $e) {
+            Log::error('Failed to send password reset email', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        return redirect()->route('admin.users')->with('status', 'Mot de passe réinitialisé avec succès. Un email a été envoyé à l\'utilisateur.');
+    }
+
     public function createUser()
     {
         return view('admin.users.create');
@@ -186,6 +221,9 @@ class AdminController extends Controller
 
     public function updateUser(Request $request, User $user)
     {
+        // Handle French decimal format (comma) for balance
+        $request->merge(['balance' => str_replace(',', '.', $request->balance)]);
+
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',

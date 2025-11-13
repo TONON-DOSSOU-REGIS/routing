@@ -158,7 +158,7 @@
                                     <input type="date"
                                            name="date_naissance"
                                            id="date_naissance"
-                                           value="{{ old('date_naissance', $user->date_naissance ? $user->date_naissance->format('Y-m-d') : '') }}"
+                                           value="{{ old('date_naissance', $user->date_of_birth ? $user->date_of_birth->format('Y-m-d') : '') }}"
                                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                 </div>
 
@@ -188,7 +188,7 @@
                                     <input type="text"
                                            name="adresse"
                                            id="adresse"
-                                           value="{{ old('adresse', $user->adresse) }}"
+                                           value="{{ old('adresse', $user->address) }}"
                                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                 </div>
 
@@ -199,7 +199,7 @@
                                     <input type="text"
                                            name="ville"
                                            id="ville"
-                                           value="{{ old('ville', $user->ville) }}"
+                                           value="{{ old('ville', $user->city) }}"
                                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                 </div>
 
@@ -211,13 +211,34 @@
                                             id="pays"
                                             class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                         <option value="">Sélectionner un pays</option>
-                                        <option value="France" {{ old('pays', $user->pays) == 'France' ? 'selected' : '' }}>France</option>
-                                        <option value="Belgique" {{ old('pays', $user->pays) == 'Belgique' ? 'selected' : '' }}>Belgique</option>
-                                        <option value="Suisse" {{ old('pays', $user->pays) == 'Suisse' ? 'selected' : '' }}>Suisse</option>
-                                        <option value="Canada" {{ old('pays', $user->pays) == 'Canada' ? 'selected' : '' }}>Canada</option>
-                                        <option value="Maroc" {{ old('pays', $user->pays) == 'Maroc' ? 'selected' : '' }}>Maroc</option>
-                                        <option value="Algérie" {{ old('pays', $user->pays) == 'Algérie' ? 'selected' : '' }}>Algérie</option>
-                                        <option value="Tunisie" {{ old('pays', $user->pays) == 'Tunisie' ? 'selected' : '' }}>Tunisie</option>
+                                        <option value="Allemagne" {{ old('pays', $user->country) == 'Allemagne' ? 'selected' : '' }}>(DE) Allemagne</option>
+                                        <option value="Autriche" {{ old('pays', $user->country) == 'Autriche' ? 'selected' : '' }}>(AT) Autriche</option>
+                                        <option value="Belgique" {{ old('pays', $user->country) == 'Belgique' ? 'selected' : '' }}>(BE) Belgique</option>
+                                        <option value="Bulgarie" {{ old('pays', $user->country) == 'Bulgarie' ? 'selected' : '' }}>(BG) Bulgarie</option>
+                                        <option value="Chypre" {{ old('pays', $user->country) == 'Chypre' ? 'selected' : '' }}>(CY) Chypre</option>
+                                        <option value="Croatie" {{ old('pays', $user->country) == 'Croatie' ? 'selected' : '' }}>(HR) Croatie</option>
+                                        <option value="Danemark" {{ old('pays', $user->country) == 'Danemark' ? 'selected' : '' }}>(DK) Danemark</option>
+                                        <option value="Espagne" {{ old('pays', $user->country) == 'Espagne' ? 'selected' : '' }}>(ES) Espagne</option>
+                                        <option value="Estonie" {{ old('pays', $user->country) == 'Estonie' ? 'selected' : '' }}>(EE) Estonie</option>
+                                        <option value="Finlande" {{ old('pays', $user->country) == 'Finlande' ? 'selected' : '' }}>(FI) Finlande</option>
+                                        <option value="France" {{ old('pays', $user->country) == 'France' ? 'selected' : '' }}>(FR) France</option>
+                                        <option value="Grèce" {{ old('pays', $user->country) == 'Grèce' ? 'selected' : '' }}>(GR) Grèce</option>
+                                        <option value="Hongrie" {{ old('pays', $user->country) == 'Hongrie' ? 'selected' : '' }}>(HU) Hongrie</option>
+                                        <option value="Irlande" {{ old('pays', $user->country) == 'Irlande' ? 'selected' : '' }}>(IE) Irlande</option>
+                                        <option value="Italie" {{ old('pays', $user->country) == 'Italie' ? 'selected' : '' }}>(IT) Italie</option>
+                                        <option value="Lettonie" {{ old('pays', $user->country) == 'Lettonie' ? 'selected' : '' }}>(LV) Lettonie</option>
+                                        <option value="Lituanie" {{ old('pays', $user->country) == 'Lituanie' ? 'selected' : '' }}>(LT) Lituanie</option>
+                                        <option value="Luxembourg" {{ old('pays', $user->country) == 'Luxembourg' ? 'selected' : '' }}>(LU) Luxembourg</option>
+                                        <option value="Malte" {{ old('pays', $user->country) == 'Malte' ? 'selected' : '' }}>(MT) Malte</option>
+                                        <option value="Pays-Bas" {{ old('pays', $user->country) == 'Pays-Bas' ? 'selected' : '' }}>(NL) Pays-Bas</option>
+                                        <option value="Pologne" {{ old('pays', $user->country) == 'Pologne' ? 'selected' : '' }}>(PL) Pologne</option>
+                                        <option value="Portugal" {{ old('pays', $user->country) == 'Portugal' ? 'selected' : '' }}>(PT) Portugal</option>
+                                        <option value="République Tchèque" {{ old('pays', $user->country) == 'République Tchèque' ? 'selected' : '' }}>(CZ) République Tchèque</option>
+                                        <option value="Roumanie" {{ old('pays', $user->country) == 'Roumanie' ? 'selected' : '' }}>(RO) Roumanie</option>
+                                        <option value="Slovaquie" {{ old('pays', $user->country) == 'Slovaquie' ? 'selected' : '' }}>(SK) Slovaquie</option>
+                                        <option value="Slovénie" {{ old('pays', $user->country) == 'Slovénie' ? 'selected' : '' }}>(SI) Slovénie</option>
+                                        <option value="Suède" {{ old('pays', $user->country) == 'Suède' ? 'selected' : '' }}>(SE) Suède</option>
+                                        <option value="Suisse" {{ old('pays', $user->country) == 'Suisse' ? 'selected' : '' }}>(CH) Suisse</option>
                                     </select>
                                 </div>
                             </div>
@@ -356,12 +377,12 @@
                                     <label for="balance" class="block text-sm font-medium text-blue-700 mb-1">
                                         Nouveau solde (€) *
                                     </label>
-                                    <input type="number"
+                                    <input type="text"
                                            name="balance"
                                            id="balance"
-                                           step="0.01"
-                                           value="{{ old('balance', number_format($user->balance, 2, '.', '')) }}"
+                                           value="{{ old('balance', number_format($user->balance, 2, ',', '')) }}"
                                            class="block w-full px-3 py-2 border border-blue-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                           placeholder="0,00"
                                            required>
                                     <p class="mt-1 text-xs text-blue-600">
                                         Solde actuel: {{ number_format($user->balance, 2) }} €. Cette modification sera tracée.
@@ -370,7 +391,8 @@
                             </div>
                         </div>
 
-                        <div class="flex justify-end space-x-3">
+                        <!-- Actions -->
+                        <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
                             <a href="{{ route('admin.users') }}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400">
                                 Annuler
                             </a>
@@ -379,6 +401,30 @@
                             </button>
                         </div>
                     </form>
+
+                    <!-- Réinitialisation du mot de passe -->
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <h3 class="text-lg font-medium text-red-800 mb-3">Réinitialisation du mot de passe</h3>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-red-700 mb-2">
+                                    Réinitialiser le mot de passe de cet utilisateur. Un nouveau mot de passe aléatoire sera généré et envoyé par email.
+                                </p>
+                                <p class="text-xs text-red-600">
+                                    <strong>Attention :</strong> Cette action est irréversible et l'utilisateur devra utiliser le nouveau mot de passe pour se connecter.
+                                </p>
+                            </div>
+                            <form method="POST" action="{{ route('admin.users.reset-password', $user) }}" class="ml-4">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit"
+                                        class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                                        onclick="return confirm('Êtes-vous sûr de vouloir réinitialiser le mot de passe de cet utilisateur ? Un email sera envoyé avec le nouveau mot de passe.')">
+                                    <i class="fas fa-key mr-2"></i>Réinitialiser le mot de passe
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
