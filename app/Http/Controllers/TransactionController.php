@@ -31,7 +31,7 @@ class TransactionController extends Controller
             'reason' => $request->reason,
             'activation_code' => $request->activation_code,
             'status' => 'pending',
-            'progress' => 0,
+            'progress' => 1,
         ]);
 
         return response()->json(['tx_id' => $transaction->id]);

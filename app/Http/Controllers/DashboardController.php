@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -17,5 +18,11 @@ class DashboardController extends Controller
         $transactions = $user->transactions()->latest()->take(5)->get();
 
         return view('dashboard.index', compact('user', 'transactions'));
+    }
+
+    public function profile()
+    {
+        $user = auth()->user();
+        return view('profile.index', compact('user'));
     }
 }

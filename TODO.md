@@ -1,13 +1,10 @@
-# TODO: Rendre les vues login et register responsives avec bouton toggle menu
+# TODO - Ajout de défilement d'images en arrière-plan dans la section Hero
 
-## Tâches à accomplir
-
-- [x] Ajouter une barre de navigation responsive avec bouton toggle menu (hamburger) à login.blade.php
-- [x] Inclure Font Awesome pour les icônes dans login.blade.php
-- [x] Ajuster la mise en page du formulaire dans login.blade.php pour une meilleure responsivité
-- [ ] Ajouter une barre de navigation responsive avec bouton toggle menu (hamburger) à register.blade.php
-- [ ] Inclure Font Awesome pour les icônes dans register.blade.php
-- [ ] Ajuster les grilles des formulaires dans register.blade.php (grid-cols-1 sm:grid-cols-2)
-- [ ] Assurer que la mise en page globale est responsive (centrage, padding adaptatif) dans les deux vues
-- [ ] Tester la responsivité en lançant l'application et vérifiant sur différentes tailles d'écran
-- [ ] Vérifier que le menu toggle fonctionne correctement
+## Tâches à accomplir :
+- [x] Modifier la section Hero dans home.blade.php pour supprimer l'image de fond fixe
+- [x] Ajouter un conteneur pour les images de fond avec positionnement absolu
+- [x] Inclure 4 images de fond pertinentes (bureaux, bâtiments bancaires, finance, technologie)
+- [x] Ajouter du CSS pour les transitions d'opacité fluides
+- [x] Intégrer du JavaScript pour cycler les images toutes les 5 secondes
+- [x] Tester le défilement des images sur la page d'accueil (serveur lancé sur http://127.0.0.1:8000)
+- [ ] Ajuster les images ou les timings si nécessaire

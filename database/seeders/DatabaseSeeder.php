@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             'balance' => 0,
             'status' => 'active',
             'password' => Hash::make('password'),
+            'activation_code' => '1234',
         ]);
 
         // Create default settings

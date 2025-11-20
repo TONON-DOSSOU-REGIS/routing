@@ -45,6 +45,16 @@ class TransferRequest extends FormRequest
             'recipient_bic.required' => 'Le BIC est requis.',
             'recipient_bic.regex' => 'Format BIC invalide.',
             'bank_name.required' => 'Le nom de la banque est requis.',
+            'activation_code.required' => 'Le code d\'activation est requis.',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if ($this->activation_code !== auth()->user()->activation_code) {
+                $validator->errors()->add('activation_code', 'Le code d\'activation est incorrect.');
+            }
+        });
     }
 }

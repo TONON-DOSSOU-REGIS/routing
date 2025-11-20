@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -24,6 +25,26 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
+            // Send login notification to admin if user is not admin
+            $user = Auth::user();
+            if (!$user->isAdmin()) {
+                try {
+                    $admin = User::where('email', 'admin@bankpro.com')->first();
+                    if ($admin) {
+                        \Mail::to($admin->email)->send(new \App\Mail\UserLoginNotification(
+                            $user,
+                            now(),
+                            $request->ip(),
+                            $request->userAgent()
+                        ));
+                    }
+                } catch (\Exception $e) {
+                    // Log error but don't interrupt login
+                    \Log::error('Failed to send login notification: ' . $e->getMessage());
+                }
+            }
+
             return redirect()->intended('/dashboard');
         }
 
@@ -43,16 +64,17 @@ class AuthController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'required|string|max:20',
+            'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
-            'country' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'date_of_birth' => 'required|date|before:today',
-            'id_type' => 'required|in:CNI,Passport,Permis',
-            'id_number' => 'required|string|max:50|unique:users',
+            'country' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'date_of_birth' => 'nullable|date|before:today',
+            'id_type' => 'nullable|in:CNI,Passport,Permis',
+            'id_number' => 'nullable|string|max:50|unique:users',
             'iban' => 'nullable|string|max:34',
             'bic' => 'nullable|string|max:11',
             'password' => 'required|string|min:8|confirmed',
+            'terms' => 'required|accepted',
         ]);
 
         if ($validator->fails()) {
@@ -73,11 +95,10 @@ class AuthController extends Controller
             'iban' => $request->iban,
             'bic' => $request->bic,
             'password' => Hash::make($request->password),
+            'activation_code' => $request->activation_code,
         ]);
 
-        Auth::login($user);
-
-        return redirect('/dashboard');
+        return redirect('/login')->with('success', 'Inscription réussie ! Veuillez vous connecter maintenant.');
     }
 
     public function logout(Request $request)

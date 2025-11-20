@@ -8,6 +8,55 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'home'])->name('home');
 
+// Static pages
+Route::get('/services/comptes-professionnels', function () {
+    return view('services.comptes-professionnels');
+})->name('services.comptes-professionnels');
+
+Route::get('/services/virements-internationaux', function () {
+    return view('services.virements-internationaux');
+})->name('services.virements-internationaux');
+
+Route::get('/services/gestion-tresorerie', function () {
+    return view('services.gestion-tresorerie');
+})->name('services.gestion-tresorerie');
+
+Route::get('/services/cartes-paiement', function () {
+    return view('services.cartes-paiement');
+})->name('services.cartes-paiement');
+
+Route::get('/about/notre-histoire', function () {
+    return view('about.notre-histoire');
+})->name('about.notre-histoire');
+
+Route::get('/about/carrieres', function () {
+    return view('about.carrieres');
+})->name('about.carrieres');
+
+Route::get('/about/presse', function () {
+    return view('about.presse');
+})->name('about.presse');
+
+Route::get('/about/blog', function () {
+    return view('about.blog');
+})->name('about.blog');
+
+Route::get('/support/centre-aide', function () {
+    return view('support.centre-aide');
+})->name('support.centre-aide');
+
+Route::get('/support/nous-contacter', function () {
+    return view('support.nous-contacter');
+})->name('support.nous-contacter');
+
+Route::get('/support/securite', function () {
+    return view('support.securite');
+})->name('support.securite');
+
+Route::get('/support/mentions-legales', function () {
+    return view('support.mentions-legales');
+})->name('support.mentions-legales');
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
@@ -19,6 +68,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->n
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
 
     Route::get('/transfer', [TransactionController::class, 'create'])->name('transfer.create');
     Route::post('/transfer/start', [TransactionController::class, 'start'])->name('transfer.start');

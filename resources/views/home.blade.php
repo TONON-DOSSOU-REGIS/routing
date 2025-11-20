@@ -1,130 +1,1351 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BankPro - Banque en Ligne Professionnelle</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BankPro - Banque en Ligne Professionnelle</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Police et fondations visuelles */
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Animations fluides */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in-up { animation: fadeInUp 1s ease forwards; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .fade-in { animation: fadeIn 1.5s ease forwards; }
+
+    /* Parallaxe douce */
+    .parallax {
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    /* Hero Background Slideshow */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .bg-slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      opacity: 0;
+      transition: opacity 1.8s ease-in-out;
+    }
+
+    .bg-slide.active {
+      opacity: 1;
+    }
+
+    /* Témoignages slider */
+    .testimonial-slide {
+      opacity: 0;
+      transform: translateX(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      display: none;
+    }
+
+    .testimonial-slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      display: block;
+    }
+
+    .testimonial-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      border: 2px solid #1e40af;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .testimonial-dot.active {
+      background-color: #1e40af;
+      transform: scale(1.15);
+    }
+
+    /* Partenaires – défilement doux */
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .partners-marquee {
+      display: flex;
+      width: 200%;
+      animation: marquee 25s linear infinite;
+    }
+
+    /* FAQ */
+    .faq-item {
+      border-radius: 0.75rem;
+      border: 1px solid #e5e7eb;
+      background-color: #ffffff;
+      overflow: hidden;
+      transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+    }
+    .faq-item.active {
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+      border-color: #1e40af;
+      transform: translateY(-2px);
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+    .faq-answer.open {
+      max-height: 300px;
+    }
+
+    /* Améliorations spécifiques pour un aspect premium */
+    .gradient-bg {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    }
+    
+    .premium-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+    
+    .nav-gradient {
+      background: linear-gradient(90deg, #1e3a8a 0%, #1e40af 100%);
+    }
+    
+    .text-premium {
+      color: #1e3a8a;
+    }
+    
+    .border-premium {
+      border-color: #1e40af;
+    }
+    
+    .btn-premium {
+      background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%);
+      color: white;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-premium:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(30, 64, 175, 0.3);
+    }
+    
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, #e5e7eb 50%, transparent 100%);
+    }
+    
+    .stat-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .feature-icon {
+      background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%);
+      color: white;
+    }
+    
+    .security-badge {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+    }
+
+    /* Menu mobile amélioré avec animation fluide */
+    .mobile-menu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+    
+    .mobile-menu.open {
+      max-height: 500px;
+      transform: translateY(0);
+      opacity: 1;
+      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                  transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.3s ease;
+    }
+    
+    .mobile-menu-item {
+      transform: translateX(-20px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    
+    .mobile-menu.open .mobile-menu-item {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    
+    .mobile-menu.open .mobile-menu-item:nth-child(1) {
+      transition-delay: 0.1s;
+    }
+    
+    .mobile-menu.open .mobile-menu-item:nth-child(2) {
+      transition-delay: 0.2s;
+    }
+    
+    /* Animation pour les compteurs */
+    @keyframes countUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .count-animation {
+      animation: countUp 1s ease forwards;
+    }
+    
+    /* Bouton menu avec animation */
+    .menu-button {
+      transition: all 0.3s ease;
+    }
+    
+    .menu-button.active {
+      transform: rotate(90deg);
+    }
+  </style>
 </head>
-<body class="bg-gray-50">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <h1 class="text-2xl font-bold text-blue-600">BankPro</h1>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600">Connexion</a>
-                    <a href="{{ route('register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Créer un compte</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+<body class="bg-gray-50 text-gray-800">
 
-    <!-- Hero Section -->
-    <section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-5xl font-bold mb-6">Votre Banque en Ligne Professionnelle</h1>
-            <p class="text-xl mb-8 max-w-3xl mx-auto">
-                Ouvrez votre compte en quelques minutes et profitez de virements sécurisés, rapides, contrôlés et certifiés.
+  <!-- Navigation -->
+  <nav class="nav-gradient shadow-xl fixed w-full top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-20">
+        <div class="flex items-center space-x-3">
+          <div class="bg-white p-2 rounded-lg">
+            <i class="fas fa-building-columns text-premium text-2xl"></i>
+          </div>
+          <a href="{{ route('home') }}" class="text-2xl font-bold text-white">BankPro</a>
+        </div>
+        
+        <!-- Menu Desktop -->
+        <div class="hidden md:flex items-center space-x-6">
+          <a href="{{ route('login') }}" class="text-white hover:text-blue-200 transition font-medium">Connexion</a>
+          <a href="{{ route('register') }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">Créer un compte</a>
+        </div>
+        
+        <!-- Bouton Menu Mobile -->
+        <div class="md:hidden flex items-center">
+          <button id="mobile-menu-button" class="menu-button text-white focus:outline-none p-2 rounded-lg hover:bg-blue-700 transition">
+            <i class="fas fa-bars text-2xl"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Menu Mobile -->
+      <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-800 border-t border-blue-700">
+        <div class="px-4 py-6 space-y-4">
+          <a href="{{ route('login') }}" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Connexion</a>
+          <a href="{{ route('register') }}" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Créer un compte</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative text-white pt-32 pb-32 overflow-hidden">
+    <!-- Background Images Container -->
+    <div class="hero-bg">
+      <div class="bg-slide active" style="background-image: url('https://images.pexels.com/photos/259249/pexels-photo-259249.jpeg');"></div>
+      <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1920&q=80');"></div>
+      <div class="bg-slide" style="background-image: url('https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg');"></div>
+      <div class="bg-slide" style="background-image: url('https://images.pexels.com/photos/3184325/pexels-photo-3184325.jpeg');"></div>
+      <div class="bg-slide" style="background-image: url('{{ asset('images/photo-15.avif') }}');"></div>
+      <div class="bg-slide" style="background-image: url('{{ asset('images/photo-154.avif') }}');"></div>
+    </div>
+
+    <div class="bg-black bg-opacity-70 py-20 relative z-10">
+      <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center fade-in-up">
+        <div>
+          <span class="inline-flex items-center px-4 py-2 rounded-full security-badge text-sm mb-6">
+            <i class="fas fa-shield-alt mr-2"></i> Plateforme bancaire 100% sécurisée
+          </span>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+            Votre banque en ligne<br>
+            <span class="text-blue-300">professionnelle & certifiée</span>
+          </h1>
+          <p class="text-xl mb-8 max-w-xl leading-relaxed">
+            Ouvrez votre compte en quelques minutes, suivez vos virements en temps réel
+            et recevez des justificatifs officiels certifiés par BankPro.
+          </p>
+          <ul class="grid sm:grid-cols-2 gap-4 text-base mb-8">
+            <li class="flex items-start space-x-3">
+              <i class="fas fa-check-circle text-green-400 mt-1"></i>
+              <span>Inscription 100% en ligne, sans déplacement.</span>
+            </li>
+            <li class="flex items-start space-x-3">
+              <i class="fas fa-check-circle text-green-400 mt-1"></i>
+              <span>Suivi de virement étape par étape avec barre de progression.</span>
+            </li>
+            <li class="flex items-start space-x-3">
+              <i class="fas fa-check-circle text-green-400 mt-1"></i>
+              <span>Notifications par e-mail pour chaque mouvement.</span>
+            </li>
+            <li class="flex items-start space-x-3">
+              <i class="fas fa-check-circle text-green-400 mt-1"></i>
+              <span>Reçus PDF sécurisés et archivés dans votre espace client.</span>
+            </li>
+          </ul>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="{{ route('register') }}" class="btn-premium px-8 py-4 rounded-lg font-semibold text-center">
+              Créer mon compte
+            </a>
+            <a href="{{ route('login') }}" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-amber-400 hover:text-premium transition text-center">
+              Accéder à mon espace
+            </a>
+          </div>
+          <p class="text-sm text-gray-300 mt-6 flex items-center">
+            <i class="fas fa-lock mr-2"></i> BankPro respecte les normes de sécurité les plus strictes pour protéger vos données financières.
+          </p>
+        </div>
+
+        <div class="hidden lg:block">
+          <div class="premium-card rounded-2xl p-8">
+            <h3 class="text-2xl font-semibold mb-6 flex items-center text-premium">
+              <i class="fas fa-chart-line mr-3"></i>
+              Aperçu de votre tableau de bord
+            </h3>
+            <div class="space-y-6 text-gray-700">
+              <div class="flex justify-between items-center border-b pb-4">
+                <span class="font-medium">Virements en cours</span>
+                <span class="font-bold text-premium">3 opérations</span>
+              </div>
+              <div class="mt-6">
+                <p class="mb-3 text-sm uppercase tracking-wide text-gray-500">Progression d'un virement prioritaire</p>
+                <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                  <div class="bg-gradient-to-r from-green-500 to-blue-600 h-3 w-3/4 rounded-full"></div>
+                </div>
+                <p class="text-sm text-gray-500 mt-2">Étape 3/4 - Contrôle final de conformité</p>
+              </div>
+              <div class="grid grid-cols-3 gap-4 mt-6 text-center">
+                <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
+                  <p class="text-gray-600 mb-2">Virements</p>
+                  <p class="font-bold text-premium text-xl">+32</p>
+                </div>
+                <div class="bg-green-50 rounded-xl p-4 border border-green-100">
+                  <p class="text-gray-600 mb-2">Réception</p>
+                  <p class="font-bold text-green-600 text-xl">+18</p>
+                </div>
+                <div class="bg-red-50 rounded-xl p-4 border border-red-100">
+                  <p class="text-gray-600 mb-2">Alertes</p>
+                  <p class="font-bold text-red-500 text-xl">0</p>
+                </div>
+              </div>
+              <p class="text-sm text-gray-500 mt-4">
+                Interface moderne, claire et pensée pour les virements professionnels.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+<section id="features" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Title -->
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <h2 class="text-4xl font-extrabold mb-6 text-gray-900 tracking-tight">
+        Des fonctionnalités puissantes, pensées pour les professionnels
+      </h2>
+      <p class="text-xl text-gray-600 leading-relaxed">
+        BankPro vous offre une expérience bancaire moderne : sécurité avancée, transparence totale et gestion intelligente de vos opérations.
+      </p>
+    </div>
+
+    <!-- Cards -->
+    <div class="grid md:grid-cols-3 gap-10">
+
+      <!-- CARD 1 -->
+      <div class="feature-card group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
+        <div class="relative h-48 overflow-hidden">
+          <img src="{{ asset('images/256-bit.webp') }}"
+               class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700">
+          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/40"></div>
+        </div>
+
+        <div class="p-8">
+          <h3 class="text-2xl font-semibold mb-4 text-gray-800">
+            Sécurité bancaire AES 256-bit
+          </h3>
+          <p class="text-gray-600 mb-6 leading-relaxed">
+            Vos données sont chiffrées de bout en bout et protégées par les mêmes protocoles que les grandes institutions bancaires.
+          </p>
+
+          <ul class="text-gray-600 space-y-3 text-left">
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
+              Connexion sécurisée (HTTPS / SSL)
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
+              Détection de connexions suspectes
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
+              Archivage sécurisé et protégé
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="feature-card group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
+        <div class="relative h-48 overflow-hidden">
+          <img src="{{ asset('images/zabra.avif') }}"
+               class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700">
+          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/40"></div>
+        </div>
+
+        <div class="p-8">
+          <h3 class="text-2xl font-semibold mb-4 text-gray-800">
+            Surveillance anti-fraude en temps réel
+          </h3>
+          <p class="text-gray-600 mb-6 leading-relaxed">
+            Un système intelligent analyse en continu vos opérations pour détecter toute activité anormale.
+          </p>
+
+          <ul class="text-gray-600 space-y-3 text-left">
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
+              Alerte en temps réel par e-mail
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
+              Analyse automatique des anomalies
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
+              Contrôle manuel possible par l’administrateur
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="feature-card group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
+        <div class="relative h-48 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1556742031-c6961e8560b0?auto=format&fit=crop&w=1200&q=80"
+               class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700">
+          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/40"></div>
+        </div>
+
+        <div class="p-8">
+          <h3 class="text-2xl font-semibold mb-4 text-gray-800">
+            Progression des virements supervisée
+          </h3>
+          <p class="text-gray-600 mb-6 leading-relaxed">
+            Chaque virement passe par un processus de validation certifié pour garantir sécurité et transparence.
+          </p>
+
+          <ul class="text-gray-600 space-y-3 text-left">
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
+              Suivi étape par étape
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
+              Barre de progression dynamique
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
+              Justificatif PDF certifié
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Intersection Animation -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const cards = document.querySelectorAll(".feature-card");
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("animate-fade-in-up");
+      }
+    });
+  }, { threshold: 0.3 });
+
+  cards.forEach(card => {
+    card.classList.add("opacity-0", "translate-y-8", "transition-all", "duration-700");
+    observer.observe(card);
+  });
+});
+</script>
+
+<style>
+/* Animation fade-in-up */
+.animate-fade-in-up {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+</style>
+
+
+  <!-- Advantages -->
+  <section class="py-24 parallax" style="background-image: url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1920&q=80');">
+    <div class="gradient-bg bg-opacity-95 py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
+        <h2 class="text-4xl font-bold text-center mb-12">Pourquoi choisir BankPro ?</h2>
+        <p class="max-w-3xl mx-auto text-center mb-16 text-xl text-blue-100 leading-relaxed">
+          BankPro accompagne aussi bien les particuliers que les professionnels avec une solution bancaire
+          moderne, accessible, rapide et extrêmement fiable.
+        </p>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
+          <div class="text-center p-6">
+            <div class="bg-white bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <i class="fas fa-home text-3xl text-yellow-300"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-4">Aucun déplacement nécessaire</h3>
+            <p class="text-blue-100 leading-relaxed">
+              Ouvrez et gérez vos comptes depuis votre ordinateur, smartphone ou tablette, où que vous soyez.
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ route('register') }}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100">Créer mon compte</a>
-                <a href="{{ route('login') }}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600">Accéder à mon espace</a>
+          </div>
+          <div class="text-center p-6">
+            <div class="bg-white bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <i class="fas fa-clock text-3xl text-green-300"></i>
             </div>
-        </div>
-    </section>
-
-    <!-- Features -->
-    <section class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="text-center">
-                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-shield-alt text-blue-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">Sécurité bancaire AES 256-bit</h3>
-                    <p class="text-gray-600">Vos données sont protégées par les plus hauts standards de sécurité.</p>
-                </div>
-                <div class="text-center">
-                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-eye text-green-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">Surveillance anti-fraude</h3>
-                    <p class="text-gray-600">Système de surveillance 24/7 pour détecter toute activité suspecte.</p>
-                </div>
-                <div class="text-center">
-                    <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-play-circle text-purple-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">Progression des virements supervisée</h3>
-                    <p class="text-gray-600">Chaque virement est contrôlé par nos administrateurs pour votre sécurité.</p>
-                </div>
+            <h3 class="text-xl font-semibold mb-4">Approbation rapide</h3>
+            <p class="text-blue-100 leading-relaxed">
+              Processus de validation accéléré pour vos virements et demandes importantes.
+            </p>
+          </div>
+          <div class="text-center p-6">
+            <div class="bg-white bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <i class="fas fa-check-circle text-3xl text-purple-300"></i>
             </div>
-        </div>
-    </section>
-
-    <!-- Advantages -->
-    <section class="py-16 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center mb-12">Pourquoi choisir BankPro ?</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="text-center">
-                    <i class="fas fa-home text-4xl text-blue-600 mb-4"></i>
-                    <h3 class="text-lg font-semibold mb-2">Aucun déplacement nécessaire</h3>
-                </div>
-                <div class="text-center">
-                    <i class="fas fa-clock text-4xl text-green-600 mb-4"></i>
-                    <h3 class="text-lg font-semibold mb-2">Approbation rapide</h3>
-                </div>
-                <div class="text-center">
-                    <i class="fas fa-check-circle text-4xl text-purple-600 mb-4"></i>
-                    <h3 class="text-lg font-semibold mb-2">Virements contrôlés + reçu PDF</h3>
-                </div>
-                <div class="text-center">
-                    <i class="fas fa-headset text-4xl text-orange-600 mb-4"></i>
-                    <h3 class="text-lg font-semibold mb-2">Support client humain</h3>
-                </div>
+            <h3 class="text-xl font-semibold mb-4">Virements + reçu PDF</h3>
+            <p class="text-blue-100 leading-relaxed">
+              Recevez un justificatif PDF certifié après chaque virement effectué avec succès.
+            </p>
+          </div>
+          <div class="text-center p-6">
+            <div class="bg-white bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <i class="fas fa-headset text-3xl text-orange-300"></i>
             </div>
+            <h3 class="text-xl font-semibold mb-4">Support client humain</h3>
+            <p class="text-blue-100 leading-relaxed">
+              Une équipe disponible pour vous assister, vous conseiller et répondre à vos questions.
+            </p>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- Stats -->
-    <section class="py-16 bg-blue-600 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-3 gap-8 text-center">
+  <!-- Stats -->
+  <section class="py-24 gradient-bg text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-3 gap-12 text-center">
+        <div class="transform hover:scale-105 transition duration-300 p-6">
+          <div class="text-6xl font-bold mb-4" id="client-count">0</div>
+          <div class="text-2xl mb-4">Clients satisfaits</div>
+          <p class="text-blue-100 text-lg leading-relaxed">
+            Des milliers d'utilisateurs font confiance à BankPro pour leurs opérations quotidiennes.
+          </p>
+        </div>
+        <div class="transform hover:scale-105 transition duration-300 p-6">
+          <div class="text-6xl font-bold mb-4" id="transaction-volume">0</div>
+          <div class="text-2xl mb-4">Volume de transactions (M€)</div>
+          <p class="text-blue-100 text-lg leading-relaxed">
+            Un volume important de flux financiers géré avec précision et transparence.
+          </p>
+        </div>
+        <div class="transform hover:scale-105 transition duration-300 p-6">
+          <div class="text-6xl font-bold mb-4" id="satisfaction-rate">0%</div>
+          <div class="text-2xl mb-4">Taux de satisfaction</div>
+          <p class="text-blue-100 text-lg leading-relaxed">
+            Nos utilisateurs recommandent BankPro pour sa simplicité, sa rapidité et son sérieux.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Partenaires -->
+  <section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-4xl font-bold mb-6 text-premium">Ils nous font confiance</h2>
+        <p class="text-xl text-gray-600 leading-relaxed">
+          BankPro collabore avec des institutions financières reconnues mondialement, afin de garantir
+          fiabilité, sécurité et qualité de service.
+        </p>
+      </div>
+
+      <div class="overflow-hidden py-6">
+        <div class="partners-marquee flex items-center space-x-16">
+
+          <!-- Première série -->
+          <img src="{{ asset('images/MasterCard.png') }}" 
+              class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Mastercard">
+
+          <img src="{{ asset('images/Visa.webp') }}" 
+              class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Visa">
+
+          <img src="{{ asset('images/PayPal.png') }}" 
+              class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="PayPal">
+
+          <img src="{{ asset('images/Western_Union.png') }}" 
+              class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Western Union">
+
+          <img src="{{ asset('images/Stripe.png') }}" 
+              class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Stripe">
+
+          <img src="{{ asset('images/Revolut.png') }}" 
+              class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Revolut">
+
+          <img src="{{ asset('images/N26.png') }}" 
+              class="h-14 grayscale hover:grayscale-0 transition duration-300" alt="N26">
+
+          <!-- Copie pour effet infinie -->
+          <img src="{{ asset('images/MasterCard.png') }}" 
+              class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Mastercard">
+
+          <img src="{{ asset('images/Visa.webp') }}" 
+              class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Visa">
+
+          <img src="{{ asset('images/PayPal.png') }}" 
+              class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="PayPal">
+
+          <img src="{{ asset('images/Western_Union.png') }}" 
+              class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Western Union">
+
+          <img src="{{ asset('images/Stripe.png') }}" 
+              class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Stripe">
+
+          <img src="{{ asset('images/Revolut.png') }}" 
+              class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Revolut">
+
+          <img src="{{ asset('images/N26.png') }}" 
+              class="h-14 grayscale hover:grayscale-0 transition duration-300" alt="N26">
+        </div>
+      </div>
+
+      <p class="text-center text-gray-500 mt-10">
+        Les logos affichés sont présentés à titre illustratif pour une démonstration visuelle.
+      </p>
+
+    </div>
+  </section>
+
+
+  <!-- Certifications & Badges -->
+<section id="certifications" class="py-24 bg-gray-50 relative overflow-hidden">
+
+  <!-- Light Glow Background -->
+  <div class="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 opacity-30 blur-3xl"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+    <!-- Title -->
+    <div class="text-center max-w-3xl mx-auto mb-16 fade-up">
+      <h2 class="text-4xl font-extrabold mb-6 text-gray-900">
+        Certifiée par les meilleurs standards
+      </h2>
+      <p class="text-xl text-gray-600 leading-relaxed">
+        BankPro applique les normes les plus strictes du secteur bancaire pour assurer des opérations
+        fiables, transparentes et sécurisées.
+      </p>
+    </div>
+
+    <!-- Cards -->
+    <div class="grid md:grid-cols-3 gap-10">
+
+      <!-- CARD 1 -->
+      <div class="cert-card bg-white rounded-3xl shadow-lg p-8 text-center transform transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl fade-up">
+
+        <img src="{{ asset('images/certification.png') }}"
+             class="w-full h-40 object-cover rounded-2xl mb-6">
+
+        <div class="flex justify-center mb-6">
+          <span class="inline-flex items-center px-5 py-3 rounded-full bg-blue-50 text-blue-600 text-sm font-semibold">
+            <i class="fas fa-shield-alt mr-2"></i>Certification Sécurité
+          </span>
+        </div>
+
+        <h3 class="font-bold text-2xl mb-4 text-gray-900">Normes de sécurité renforcées</h3>
+
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          Conforme aux standards internationaux de cybersécurité, assurant un chiffrement de qualité bancaire.
+        </p>
+
+        <div class="flex items-center justify-center space-x-1 text-yellow-400 text-xl">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="cert-card bg-white rounded-3xl shadow-lg p-8 text-center transform transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl fade-up">
+
+        <img src="{{ asset('images/services.jpg') }}"
+             class="w-full h-40 object-cover rounded-2xl mb-6">
+
+        <div class="flex justify-center mb-6">
+          <span class="inline-flex items-center px-5 py-3 rounded-full bg-indigo-50 text-indigo-600 text-sm font-semibold">
+            <i class="fas fa-award mr-2"></i>Qualité de Service
+          </span>
+        </div>
+
+        <h3 class="font-bold text-2xl mb-4 text-gray-900">Excellence & transparence</h3>
+
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          Un suivi détaillé, des frais affichés clairement et une interface pensée pour les utilisateurs.
+        </p>
+
+        <div class="flex items-center justify-center space-x-2">
+          <i class="fas fa-medal text-yellow-500 text-2xl"></i>
+          <span class="text-sm text-gray-500 font-medium">Distinction Premium Service</span>
+        </div>
+
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="cert-card bg-white rounded-3xl shadow-lg p-8 text-center transform transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl fade-up">
+
+        <img src="https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&w=800&q=80"
+             class="w-full h-40 object-cover rounded-2xl mb-6">
+
+        <div class="flex justify-center mb-6">
+          <span class="inline-flex items-center px-5 py-3 rounded-full bg-purple-50 text-purple-700 text-sm font-semibold">
+            <i class="fas fa-user-shield mr-2"></i>Protection des données
+          </span>
+        </div>
+
+        <h3 class="font-bold text-2xl mb-4 text-gray-900">Confidentialité garantie</h3>
+
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          Gestion stricte des accès sensibles et conformité inspirée des directives RGPD.
+        </p>
+
+        <div class="flex items-center justify-center space-x-2 text-gray-700">
+          <i class="fas fa-lock"></i>
+          <span class="text-sm font-medium">Conformité & sécurité des données</span>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- Certifications Animation Script -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const items = document.querySelectorAll(".fade-up");
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("fade-visible");
+      }
+    });
+  }, { threshold: 0.3 });
+
+  items.forEach(item => {
+    item.classList.add("opacity-0", "translate-y-8", "transition-all", "duration-700");
+    observer.observe(item);
+  });
+});
+</script>
+
+<style>
+.fade-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+</style>
+
+
+  <!-- Témoignages (Slider) -->
+  <section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-4xl font-bold mb-6 text-premium">Ce que disent nos clients</h2>
+        <p class="text-xl text-gray-600 leading-relaxed">
+          Des utilisateurs réels, des expériences réelles. BankPro simplifie la gestion des virements au quotidien.
+        </p>
+      </div>
+
+      <div class="max-w-5xl mx-auto">
+        <div id="testimonial-slider" class="relative">
+          <!-- Slide 1 -->
+          <div class="testimonial-slide active premium-card rounded-3xl p-10">
+            <div class="flex flex-col md:flex-row items-start md:items-center md:space-x-8">
+              <div class="flex items-center space-x-4 mb-6 md:mb-0">
+                <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
+                  <i class="fas fa-user text-premium text-2xl"></i>
+                </div>
                 <div>
-                    <div class="text-4xl font-bold mb-2">10,000+</div>
-                    <div class="text-xl">Clients satisfaits</div>
+                  <p class="font-bold text-gray-800 text-lg">Sarah M.</p>
+                  <p class="text-sm text-gray-500">Entrepreneure - E-commerce</p>
                 </div>
-                <div>
-                    <div class="text-4xl font-bold mb-2">500M€</div>
-                    <div class="text-xl">Volume de transactions</div>
+              </div>
+              <div class="flex-1">
+                <p class="text-gray-600 mb-4 text-lg leading-relaxed">
+                  « BankPro m'a permis de suivre mes virements fournisseurs en temps réel.
+                  La barre de progression et les reçus PDF sont vraiment rassurants. »
+                </p>
+                <div class="flex items-center space-x-2 text-yellow-400 text-lg">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                  <span class="text-gray-500 text-sm ml-2">Service impeccable</span>
                 </div>
-                <div>
-                    <div class="text-4xl font-bold mb-2">98%</div>
-                    <div class="text-xl">Taux de satisfaction</div>
-                </div>
+              </div>
             </div>
-        </div>
-    </section>
+          </div>
 
-    <!-- CTA -->
-    <section class="py-16 bg-white">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl font-bold mb-6">Prêt à commencer ?</h2>
-            <p class="text-xl text-gray-600 mb-8">Rejoignez des milliers de clients qui nous font confiance.</p>
-            <a href="{{ route('register') }}" class="bg-blue-600 text-white px-8 py-4 rounded-lg text-xl font-semibold hover:bg-blue-700">Commencer maintenant</a>
-        </div>
-    </section>
+          <!-- Slide 2 -->
+          <div class="testimonial-slide premium-card rounded-3xl p-10">
+            <div class="flex flex-col md:flex-row items-start md:items-center md:space-x-8">
+              <div class="flex items-center space-x-4 mb-6 md:mb-0">
+                <div class="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center">
+                  <i class="fas fa-user-tie text-emerald-600 text-2xl"></i>
+                </div>
+                <div>
+                  <p class="font-bold text-gray-800 text-lg">Jean-Paul D.</p>
+                  <p class="text-sm text-gray-500">Consultant financier</p>
+                </div>
+              </div>
+              <div class="flex-1">
+                <p class="text-gray-600 mb-4 text-lg leading-relaxed">
+                  « J'apprécie particulièrement la surveillance anti-fraude et les alertes e-mail.
+                  Je sais immédiatement quand un virement important est en cours ou finalisé. »
+                </p>
+                <div class="flex items-center space-x-2 text-yellow-400 text-lg">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                  <span class="text-gray-500 text-sm ml-2">Très fiable</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p>&copy; 2024 BankPro. Tous droits réservés.</p>
+          <!-- Slide 3 -->
+          <div class="testimonial-slide premium-card rounded-3xl p-10">
+            <div class="flex flex-col md:flex-row items-start md:items-center md:space-x-8">
+              <div class="flex items-center space-x-4 mb-6 md:mb-0">
+                <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center">
+                  <i class="fas fa-user-circle text-purple-600 text-2xl"></i>
+                </div>
+                <div>
+                  <p class="font-bold text-gray-800 text-lg">Karim L.</p>
+                  <p class="text-sm text-gray-500">Indépendant - Service B2B</p>
+                </div>
+              </div>
+              <div class="flex-1">
+                <p class="text-gray-600 mb-4 text-lg leading-relaxed">
+                  « L'interface est claire et très simple. Je peux montrer directement à mes clients
+                  les preuves de virement avec les reçus PDF. »
+                </p>
+                <div class="flex items-center space-x-2 text-yellow-400 text-lg">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                  <span class="text-gray-500 text-sm ml-2">Pratique et moderne</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dots -->
+          <div class="flex justify-center items-center space-x-4 mt-10">
+            <span class="testimonial-dot active" data-index="0"></span>
+            <span class="testimonial-dot" data-index="1"></span>
+            <span class="testimonial-dot" data-index="2"></span>
+          </div>
         </div>
-    </footer>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-4xl font-bold mb-6 text-premium">Questions fréquentes (FAQ)</h2>
+        <p class="text-xl text-gray-600 leading-relaxed">
+          Retrouvez les réponses aux questions les plus courantes sur BankPro, l'ouverture de compte
+          et la gestion de vos virements en ligne.
+        </p>
+      </div>
+
+      <div class="max-w-4xl mx-auto space-y-6" id="faq-list">
+        <!-- FAQ Item -->
+        <div class="faq-item">
+          <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
+            <div>
+              <p class="font-bold text-xl text-gray-800">Comment ouvrir un compte sur BankPro ?</p>
+              <p class="text-gray-500 mt-2">Inscription simple en quelques étapes.</p>
+            </div>
+            <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
+          </button>
+          <div class="faq-answer px-8 pb-6">
+            <p class="text-gray-600 leading-relaxed">
+              Cliquez sur « Créer un compte », remplissez le formulaire avec vos informations
+              (nom, e-mail, téléphone, etc.), confirmez votre adresse e-mail, puis accédez à votre
+              espace sécurisé pour réaliser vos premières opérations.
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
+            <div>
+              <p class="font-bold text-xl text-gray-800">Mes virements sont-ils vraiment surveillés ?</p>
+              <p class="text-gray-500 mt-2">Suivi et contrôle manuel des opérations.</p>
+            </div>
+            <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
+          </button>
+          <div class="faq-answer px-8 pb-6">
+            <p class="text-gray-600 leading-relaxed">
+              Oui. Chaque virement passe par plusieurs étapes de validation. Les administrateurs BankPro
+              peuvent contrôler et certifier les opérations sensibles, ce qui réduit fortement les risques d'erreur ou de fraude.
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
+            <div>
+              <p class="font-bold text-xl text-gray-800">Puis-je télécharger un reçu pour chaque virement ?</p>
+              <p class="text-gray-500 mt-2">Justificatif PDF disponible.</p>
+            </div>
+            <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
+          </button>
+          <div class="faq-answer px-8 pb-6">
+            <p class="text-gray-600 leading-relaxed">
+              Bien sûr. Une fois le virement finalisé et certifié, un reçu PDF est généré automatiquement.
+              Vous pouvez le télécharger, l'imprimer ou le partager avec vos partenaires.
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
+            <div>
+              <p class="font-bold text-xl text-gray-800">Que faire en cas de problème ou de doute ?</p>
+              <p class="text-gray-500 mt-2">Support humain disponible.</p>
+            </div>
+            <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
+          </button>
+          <div class="faq-answer px-8 pb-6">
+            <p class="text-gray-600 leading-relaxed">
+              Vous pouvez contacter notre support client via votre espace sécurisé ou par les coordonnées
+              indiquées sur le site. Un conseiller vous répondra dans les meilleurs délais.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+<section id="cta-section" class="py-24 bg-white relative overflow-hidden">
+  
+  <!-- BACKGROUND SPOTLIGHT EFFECT -->
+  <div class="absolute inset-0 opacity-30 bg-gradient-to-r from-blue-100 to-white blur-3xl"></div>
+
+  <div class="max-w-5xl mx-auto px-6 text-center relative z-10 cta-animate">
+    <h2 class="text-5xl font-extrabold mb-8 text-gray-900 tracking-tight animate-title">
+      Prêt à commencer ?
+    </h2>
+
+    <p class="text-2xl text-gray-600 mb-10 leading-relaxed animate-text">
+      Rejoignez des milliers de clients satisfaits qui font confiance à BankPro pour leurs virements et opérations bancaires en ligne.
+    </p>
+
+    <!-- BUTTON -->
+    <a href="{{ route('register') }}" 
+       class="cta-button px-14 py-5 rounded-xl text-2xl font-bold inline-block relative overflow-hidden">
+       <span>Commencer maintenant</span>
+    </a>
+
+    <!-- SECURITY TEXT -->
+    <p class="text-gray-500 mt-6 flex items-center justify-center animate-text">
+      <i class="fas fa-lock mr-2"></i>
+      L'ouverture de compte se fait en quelques minutes, sans déplacement, et avec un haut niveau de sécurité.
+    </p>
+  </div>
+</section>
+
+
+<!-- CTA ANIMATIONS SCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const cta = document.querySelector(".cta-animate");
+
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      cta.classList.add("cta-visible");
+    }
+  }, { threshold: 0.4 });
+
+  observer.observe(cta);
+});
+</script>
+
+<style>
+/* Fade-in animation */
+.cta-animate {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 1.1s ease-out;
+}
+.cta-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Title Animation */
+.animate-title {
+  animation: titleFade 1.3s ease forwards;
+}
+@keyframes titleFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Text Animation */
+.animate-text {
+  opacity: 0;
+  animation: textFade 1.8s ease forwards;
+}
+@keyframes textFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* BUTTON STYLES */
+.cta-button {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8, #1e40af);
+  color: white;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.35s ease-out;
+}
+
+/* BUTTON HOVER GLOW EFFECT */
+.cta-button:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 18px 45px rgba(37, 99, 235, 0.55);
+}
+
+/* Shine Effect */
+.cta-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.45), transparent);
+  transform: skewX(-20deg);
+  transition: 0.7s;
+}
+.cta-button:hover::after {
+  left: 120%;
+}
+
+/* Soft Pulse */
+.cta-button span {
+  animation: softPulse 2.2s infinite ease-in-out;
+}
+@keyframes softPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .85; }
+}
+</style>
+
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 py-16">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-10 mb-12">
+        <div>
+          <div class="flex items-center space-x-3 mb-6">
+            <div class="bg-white p-2 rounded-lg">
+              <i class="fas fa-building-columns text-premium text-2xl"></i>
+            </div>
+            <a href="{{ route('home') }}" class="text-2xl font-bold text-white">BankPro</a>
+          </div>
+          <p class="text-gray-400 mb-4">
+            Une solution bancaire 100% sécurisée, simple et rapide pour les professionnels.
+          </p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-linkedin text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook text-xl"></i></a>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-white font-bold text-lg mb-6">Services</h3>
+          <ul class="space-y-3">
+            <li><a href="{{ route('services.comptes-professionnels') }}" class="text-gray-400 hover:text-white transition">Comptes professionnels</a></li>
+            <li><a href="{{ route('services.virements-internationaux') }}" class="text-gray-400 hover:text-white transition">Virements internationaux</a></li>
+            <li><a href="{{ route('services.gestion-tresorerie') }}" class="text-gray-400 hover:text-white transition">Gestion de trésorerie</a></li>
+            <li><a href="{{ route('services.cartes-paiement') }}" class="text-gray-400 hover:text-white transition">Cartes de paiement</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-white font-bold text-lg mb-6">À propos</h3>
+          <ul class="space-y-3">
+            <li><a href="{{ route('about.notre-histoire') }}" class="text-gray-400 hover:text-white transition">Notre histoire</a></li>
+            <li><a href="{{ route('about.carrieres') }}" class="text-gray-400 hover:text-white transition">Carrières</a></li>
+            <li><a href="{{ route('about.presse') }}" class="text-gray-400 hover:text-white transition">Presse</a></li>
+            <li><a href="{{ route('about.blog') }}" class="text-gray-400 hover:text-white transition">Blog</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-white font-bold text-lg mb-6">Support</h3>
+          <ul class="space-y-3">
+            <li><a href="{{ route('support.centre-aide') }}" class="text-gray-400 hover:text-white transition">Centre d'aide</a></li>
+            <li><a href="{{ route('support.nous-contacter') }}" class="text-gray-400 hover:text-white transition">Nous contacter</a></li>
+            <li><a href="{{ route('support.securite') }}" class="text-gray-400 hover:text-white transition">Sécurité</a></li>
+            <li><a href="{{ route('support.mentions-legales') }}" class="text-gray-400 hover:text-white transition">Mentions légales</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="section-divider my-8"></div>
+      
+      <div class="text-center">
+        <p>&copy; 2025 <span class="text-blue-400 font-semibold">BankPro</span>. Tous droits réservés.</p>
+        <p class="text-sm text-gray-500 mt-2">
+          Les informations affichées sur ce site ont une valeur indicative et peuvent être adaptées selon votre
+          projet réel.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      /* HERO BACKGROUND SLIDESHOW */
+      const slides = document.querySelectorAll('.bg-slide');
+      let currentSlide = 0;
+
+      if (slides.length > 1) {
+        setInterval(function() {
+          slides[currentSlide].classList.remove('active');
+          currentSlide = (currentSlide + 1) % slides.length;
+          slides[currentSlide].classList.add('active');
+        }, 5000);
+      }
+
+      /* TESTIMONIALS SLIDER */
+      const testimonialSlides = document.querySelectorAll('.testimonial-slide');
+      const testimonialDots = document.querySelectorAll('.testimonial-dot');
+      let currentTestimonial = 0;
+
+      function goToTestimonial(index) {
+        if (!testimonialSlides.length) return;
+        testimonialSlides.forEach((slide, i) => {
+          slide.classList.toggle('active', i === index);
+        });
+        testimonialDots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === index);
+        });
+        currentTestimonial = index;
+      }
+
+      if (testimonialSlides.length > 0) {
+        // Auto-play
+        setInterval(function() {
+          const nextIndex = (currentTestimonial + 1) % testimonialSlides.length;
+          goToTestimonial(nextIndex);
+        }, 7000);
+
+        // Click on dots
+        testimonialDots.forEach(dot => {
+          dot.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'), 10);
+            goToTestimonial(index);
+          });
+        });
+      }
+
+      /* FAQ ACCORDION */
+      const faqItems = document.querySelectorAll('#faq-list .faq-item');
+
+      faqItems.forEach(item => {
+        const button = item.querySelector('button');
+        const answer = item.querySelector('.faq-answer');
+        const icon = item.querySelector('i.fas.fa-chevron-down');
+
+        button.addEventListener('click', function() {
+          const isOpen = answer.classList.contains('open');
+
+          // Fermer toutes les FAQ
+          faqItems.forEach(otherItem => {
+            otherItem.classList.remove('active');
+            const otherAnswer = otherItem.querySelector('.faq-answer');
+            const otherIcon = otherItem.querySelector('i.fas.fa-chevron-down');
+            if (otherAnswer) otherAnswer.classList.remove('open');
+            if (otherIcon) otherIcon.classList.remove('rotate-180');
+          });
+
+          // Si ce n'était pas ouvert, on l'ouvre
+          if (!isOpen) {
+            item.classList.add('active');
+            answer.classList.add('open');
+            icon.classList.add('rotate-180');
+          }
+        });
+      });
+
+      /* MENU MOBILE TOGGLE AMÉLIORÉ */
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('open');
+          mobileMenuButton.classList.toggle('active');
+          
+          // Changer l'icône avec animation
+          const icon = mobileMenuButton.querySelector('i');
+          if (mobileMenu.classList.contains('open')) {
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-times');
+          } else {
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+          }
+        });
+
+        // Fermer le menu en cliquant à l'extérieur
+        document.addEventListener('click', function(event) {
+          if (!mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target) && mobileMenu.classList.contains('open')) {
+            mobileMenu.classList.remove('open');
+            mobileMenuButton.classList.remove('active');
+            const icon = mobileMenuButton.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+          }
+        });
+      }
+
+      /* STATISTIQUES DYNAMIQUES CORRIGÉES POUR MOBILE */
+      function animateCounter(element, target, suffix = '', duration = 2000) {
+        const start = 0;
+        const increment = target / (duration / 16); // 60fps
+        let current = start;
+        
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= target) {
+            element.textContent = target.toLocaleString() + suffix;
+            clearInterval(timer);
+            element.classList.add('count-animation');
+          } else {
+            element.textContent = Math.floor(current).toLocaleString() + suffix;
+          }
+        }, 16);
+      }
+
+      // Observer pour déclencher l'animation quand la section est visible
+      const statsSection = document.querySelector('.gradient-bg');
+      const clientCount = document.getElementById('client-count');
+      const transactionVolume = document.getElementById('transaction-volume');
+      const satisfactionRate = document.getElementById('satisfaction-rate');
+
+      let statsAnimated = false;
+
+      function animateStats() {
+        if (statsAnimated) return;
+        
+        // Animer les compteurs
+        animateCounter(clientCount, 10000);
+        animateCounter(transactionVolume, 500, ' M€');
+        animateCounter(satisfactionRate, 98, '%');
+        
+        statsAnimated = true;
+      }
+
+      if (statsSection && clientCount && transactionVolume && satisfactionRate) {
+        // Vérifier si la section est déjà visible au chargement
+        const rect = statsSection.getBoundingClientRect();
+        const isVisible = (
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+          rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+
+        if (isVisible) {
+          animateStats();
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              animateStats();
+            }
+          });
+        }, { threshold: 0.3 });
+
+        observer.observe(statsSection);
+
+        // Fallback pour mobile - déclencher après un délai
+        setTimeout(() => {
+          if (!statsAnimated) {
+            animateStats();
+          }
+        }, 1000);
+      }
+    });
+  </script>
+
 </body>
 </html>

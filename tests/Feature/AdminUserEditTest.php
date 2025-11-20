@@ -154,10 +154,11 @@ test('admin can edit user page loads correctly', function () {
 
     $response = $this->withoutMiddleware(\App\Http\Middleware\IsAdmin::class)
         ->actingAs($admin)
+        ->startSession()
         ->get(route('admin.users.edit', $user));
 
     $response->assertStatus(200);
-    $response->assertSee('Modifier l\'utilisateur');
+    $response->assertSee('Modifier l&#039;utilisateur');
     $response->assertSee('Test');
     $response->assertSee('User');
     $response->assertSee('test@example.com');
