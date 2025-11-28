@@ -35,7 +35,7 @@ class UserLoginNotification extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Notification de Connexion - BankPro',
+            subject: 'Notification de Connexion - SG BANK',
         );
     }
 
@@ -65,3 +65,4 @@ class UserLoginNotification extends Mailable
         return [];
     }
 }
+

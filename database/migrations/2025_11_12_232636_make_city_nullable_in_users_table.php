@@ -21,8 +21,14 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Replace NULL city values before making the column NOT NULL to avoid truncation
+        \Illuminate\Support\Facades\DB::table('users')
+            ->whereNull('city')
+            ->update(['city' => 'N/A']);
+
         Schema::table('users', function (Blueprint $table) {
             $table->string('city')->nullable(false)->change();
         });
     }
 };
+

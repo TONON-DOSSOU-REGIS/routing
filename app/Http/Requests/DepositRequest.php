@@ -25,6 +25,7 @@ class DepositRequest extends FormRequest
             'user_id' => 'required|exists:users,id',
             'amount' => 'required|numeric|min:0.01',
             'reason' => 'nullable|string|max:500',
+            'currency' => ['required', 'string', 'in:' . implode(',', array_keys(config('currencies.currencies')))],
         ];
     }
 
@@ -36,6 +37,9 @@ class DepositRequest extends FormRequest
             'amount.required' => 'Le montant est requis.',
             'amount.numeric' => 'Le montant doit être un nombre.',
             'amount.min' => 'Le montant doit être supérieur à 0.',
+            'currency.required' => 'La devise est requise.',
+            'currency.in' => 'La devise sélectionnée est invalide.',
         ];
     }
 }
+

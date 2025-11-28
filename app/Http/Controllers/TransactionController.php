@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TransferRequest;
 use App\Models\Setting;
 use App\Models\Transaction;
+use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -55,19 +57,7 @@ class TransactionController extends Controller
         $p = min(100, (int)$tx->progress + $increment);
 
         if ($tx->status === 'pending') {
-            if ($p >= (int)$settings->stop_percentage && (int)$settings->stop_percentage > 0) {
-                $tx->update([
-                    'progress' => $settings->stop_percentage,
-                    'status'   => 'on_hold',
-                    'message'  => $settings->stop_message,
-                ]);
-                return response()->json([
-                    'status' => 'on_hold',
-                    'progress' => (int)$settings->stop_percentage,
-                    'message' => $settings->stop_message,
-                ]);
-            }
-
+            // Check for completion FIRST (priority over stop_percentage)
             if ($p >= 100) {
                 DB::transaction(function () use ($tx) {
                     $user = $tx->user()->lockForUpdate()->first();
@@ -76,7 +66,7 @@ class TransactionController extends Controller
                     $tx->update(['progress' => 100, 'status' => 'success']);
                 });
 
-                // Send confirmation email
+                // Send confirmation email to user
                 try {
                     \Illuminate\Support\Facades\Mail::to($tx->user->email)->send(new \App\Mail\TransferConfirmationMail($tx));
                 } catch (\Exception $e) {
@@ -87,7 +77,57 @@ class TransactionController extends Controller
                     ]);
                 }
 
+                // Notify user of successful transfer
+                try {
+                    NotificationService::notifyTransaction($tx->user, $tx, 'success');
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Failed to create user notification', [
+                        'transaction_id' => $tx->id,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+
+                // Notify all admins of new transfer
+                try {
+                    NotificationService::notifyAdmins(
+                        '💸 Nouveau virement',
+                        "{$tx->user->first_name} {$tx->user->last_name} a effectué un virement de " . number_format($tx->amount, 2, ',', ' ') . " € vers {$tx->recipient_name}",
+                        'blue',
+                        route('admin.transactions')
+                    );
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Failed to notify admins', [
+                        'transaction_id' => $tx->id,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+
                 return response()->json(['status' => 'success', 'progress' => 100]);
+            }
+
+            // Check for stop_percentage (only if not yet at 100%)
+            if ($p >= (int)$settings->stop_percentage && (int)$settings->stop_percentage > 0 && $p < 100) {
+                $tx->update([
+                    'progress' => $settings->stop_percentage,
+                    'status'   => 'on_hold',
+                    'message'  => $settings->stop_message,
+                ]);
+                
+                // Notify user that transaction is on hold
+                try {
+                    NotificationService::notifyTransactionOnHold($tx->user, $tx);
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Failed to create on-hold notification', [
+                        'transaction_id' => $tx->id,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+                
+                return response()->json([
+                    'status' => 'on_hold',
+                    'progress' => (int)$settings->stop_percentage,
+                    'message' => $settings->stop_message,
+                ]);
             }
 
             $tx->update(['progress' => $p]);
@@ -102,9 +142,28 @@ class TransactionController extends Controller
         ]);
     }
 
-    public function history()
+    public function history(Request $request)
     {
-        $transactions = auth()->user()->transactions()->latest()->paginate(10);
+        $query = auth()->user()->transactions();
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        $transactions = $query->latest()->paginate(10)->appends($request->all());
+
         return view('transactions.history', compact('transactions'));
     }
 
@@ -117,4 +176,15 @@ class TransactionController extends Controller
         $pdf = Pdf::loadView('transactions.receipt', compact('transaction'));
         return $pdf->download('receipt_' . $transaction->id . '.pdf');
     }
+
+    // New method to return HTML receipt view
+    public function receiptHtml(Transaction $transaction)
+    {
+        if ($transaction->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        return view('transactions.receipt', compact('transaction'));
+    }
 }
+

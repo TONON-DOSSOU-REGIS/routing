@@ -3,22 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Connexion - BankPro</title>
+  <title>Connexion - SG BANK</title>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    rel="stylesheet"
-  />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
 
   <style>
-    /* Animation fluide */
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .fade-in-up { animation: fadeInUp 1s ease-out forwards; }
+    .fade-in-up { animation: fadeInUp 0.9s ease-out forwards; }
 
-    /* Effet Glassmorphism amélioré */
     .glass {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(20px);
@@ -27,215 +23,189 @@
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
     }
 
-    /* Animation d'entrée pour les éléments */
-    .stagger-item {
-      opacity: 0;
-      animation: fadeInUp 0.8s ease-out forwards;
-    }
+    .btn-hover { transition: all 0.2s ease; }
+    .btn-hover:hover { transform: translateY(-2px); }
 
-    .stagger-item:nth-child(1) { animation-delay: 0.1s; }
-    .stagger-item:nth-child(2) { animation-delay: 0.2s; }
-    .stagger-item:nth-child(3) { animation-delay: 0.3s; }
-    .stagger-item:nth-child(4) { animation-delay: 0.4s; }
-    .stagger-item:nth-child(5) { animation-delay: 0.5s; }
+    .input-field { transition: all 0.2s ease; }
+    .input-field:focus { box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); }
 
-    /* Effet de survol amélioré pour les boutons */
-    .btn-hover {
-      transition: all 0.3s ease;
-    }
-    .btn-hover:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Style pour les inputs */
-    .input-field {
-      transition: all 0.3s ease;
-    }
-    .input-field:focus {
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-    }
+    .error-text { font-size: 0.825rem; }
   </style>
 </head>
 
-<body
-  class="bg-cover bg-center bg-no-repeat min-h-screen flex flex-col justify-between"
-  style="background-image: url('https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=1920&q=80');"
->
-  <!-- Overlay sombre amélioré -->
-  <div class="absolute inset-0 bg-gradient-to-br from-blue-900/70 to-indigo-900/70"></div>
+<body class="bg-slate-900 min-h-screen flex flex-col">
+  <!-- Hero background -->
+  <div class="pointer-events-none fixed inset-0 -z-10">
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-900/70 to-indigo-900/70"></div>
+    <img alt="" class="w-full h-full object-cover opacity-30"
+         src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&amp;fit=crop&amp;w=1920&amp;q=80">
+  </div>
 
-  <!-- Navigation améliorée -->
-  <nav class="relative z-10 bg-white/90 shadow-lg backdrop-blur-md">
+  <!-- Navigation -->
+  <nav class="bg-white/90 shadow-lg backdrop-blur-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <div class="flex items-center space-x-2">
           <i class="fas fa-building-columns text-blue-600 text-2xl"></i>
-          <a href="{{ route('home') }}" class="text-2xl font-bold text-blue-600">BankPro</a>
+          <a href="{{ route('home') }}" class="text-xl font-semibold text-slate-800 hover:text-blue-700 transition">
+            SG BANK
+          </a>
         </div>
-        <div class="hidden md:flex items-center space-x-4">
-          <a href="{{ route('home') }}" class="text-gray-700 hover:text-blue-600 transition duration-300">Accueil</a>
-          <a href="{{ route('register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300 btn-hover">Créer un compte</a>
+        <div class="flex items-center space-x-4">
+          <a href="{{ route('register') }}" class="hidden sm:inline-block text-slate-700 hover:text-blue-600 transition">
+            Créer un compte
+          </a>
+          <a href="{{ route('login') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg btn-hover shadow">
+            <i class="fa-solid fa-right-to-bracket mr-2"></i> Connexion
+          </a>
         </div>
-        <!-- Mobile menu button -->
-        <div class="md:hidden flex items-center">
-          <button
-            id="mobile-menu-button"
-            class="text-gray-700 hover:text-blue-600 focus:outline-none transition duration-300"
-          >
-            <i class="fas fa-bars text-xl"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- Mobile menu -->
-      <div id="mobile-menu" class="hidden pb-4 md:hidden">
-        <a href="{{ route('home') }}" class="block px-2 py-1 text-gray-700 hover:text-blue-600 transition duration-300">Accueil</a>
-        <a href="{{ route('register') }}" class="block px-2 py-1 bg-blue-600 text-white rounded-lg mt-2 btn-hover">Créer un compte</a>
       </div>
     </div>
   </nav>
 
-  <!-- Formulaire de Connexion amélioré -->
-  <div class="relative z-10 flex-grow flex items-center justify-center fade-in-up px-4 py-8">
-    <div class="glass rounded-2xl p-8 shadow-2xl max-w-md w-full text-white">
-      <div class="text-center mb-8 stagger-item">
-        <div class="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <i class="fas fa-lock text-blue-300 text-2xl"></i>
+  <!-- Main -->
+  <main class="flex-1">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <!-- Left panel -->
+        <div class="text-white fade-in-up">
+          <h1 class="text-3xl sm:text-4xl font-extrabold">
+            Accédez à votre espace sécurisé
+          </h1>
+          <p class="mt-3 text-slate-200">
+            Gérez vos comptes, suivez vos transactions, recevez des notifications en temps réel et accédez à nos services professionnels.
+          </p>
+          <ul class="mt-6 space-y-3 text-slate-200">
+            <li class="flex items-center"><i class="fa-solid fa-shield-halved text-blue-300 mr-3"></i> Sécurité de niveau bancaire</li>
+            <li class="flex items-center"><i class="fa-solid fa-bell text-blue-300 mr-3"></i> Notifications en temps réel</li>
+            <li class="flex items-center"><i class="fa-solid fa-chart-line text-blue-300 mr-3"></i> Tableau de bord analytique</li>
+          </ul>
         </div>
-        <h2 class="text-3xl font-bold mb-2">Connexion sécurisée</h2>
-        <p class="text-sm text-gray-200">
-          Ou
-          <a href="{{ route('register') }}" class="font-medium text-blue-300 hover:text-blue-200 transition duration-300">
-            créez un nouveau compte
-          </a>
-        </p>
-      </div>
 
-      @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 stagger-item">
-          <i class="fas fa-check-circle mr-2"></i>{{ session('success') }}
-        </div>
-      @endif
-
-      <form class="space-y-6" method="POST" action="{{ route('login') }}">
-        @csrf
-        <div class="space-y-4">
-          <div class="stagger-item">
-            <label for="email" class="block text-sm font-medium text-gray-200 mb-1">Adresse email</label>
-            <div class="relative">
-              <i class="fas fa-envelope absolute left-3 top-2.5 text-gray-400"></i>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autocomplete="email"
-                required
-                class="pl-10 w-full px-3 py-3 rounded-lg border border-gray-300 text-gray-900 focus:outline-none input-field"
-                placeholder="Entrez votre email"
-                value="{{ old('email') }}"
-              />
+        <!-- Login card -->
+        <div class="glass rounded-2xl p-6 sm:p-8 text-white fade-in-up">
+          @if (session('success'))
+            <div class="mb-4 p-3 rounded bg-green-500/20 text-green-200 border border-green-400/40">
+              <i class="fa-solid fa-circle-check mr-2"></i> {{ session('success') }}
             </div>
-          </div>
+          @endif
 
-          <div class="stagger-item">
-            <label for="password" class="block text-sm font-medium text-gray-200 mb-1">Mot de passe</label>
-            <div class="relative">
-              <i class="fas fa-lock absolute left-3 top-2.5 text-gray-400"></i>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autocomplete="current-password"
-                required
-                class="pl-10 w-full px-3 py-3 rounded-lg border border-gray-300 text-gray-900 focus:outline-none input-field"
-                placeholder="••••••••"
-              />
-              <button type="button" class="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700" id="togglePassword">
-                <i class="fas fa-eye"></i>
-              </button>
+          @if ($errors->any())
+            <div class="mb-4 p-3 rounded bg-red-500/20 text-red-200 border border-red-400/40">
+              <ul class="list-disc pl-5">
+                @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
             </div>
+          @endif
+
+          <h2 class="text-2xl font-bold mb-1">Connexion</h2>
+          <p class="text-slate-200 mb-6">Entrez vos identifiants pour accéder à votre compte.</p>
+
+          <form method="POST" action="{{ route('login') }}" class="space-y-5">
+            @csrf
+
+            <div>
+              <label for="email" class="block mb-1 text-sm text-slate-200">Adresse email</label>
+              <input id="email" name="email" type="email" required autocomplete="email" value="{{ old('email') }}"
+                     class="input-field w-full px-4 py-3 rounded-lg bg-white/90 text-slate-900 placeholder-slate-500 focus:outline-none"
+                     placeholder="vous@exemple.com">
+              @error('email')
+                <p class="error-text text-red-300 mt-1">{{ $message }}</p>
+              @enderror
+            </div>
+
+            <div>
+              <label for="password" class="block mb-1 text-sm text-slate-200">Mot de passe</label>
+              <div class="relative">
+                <input id="password" name="password" type="password" required autocomplete="current-password"
+                       class="input-field w-full px-4 py-3 pr-12 rounded-lg bg-white/90 text-slate-900 placeholder-slate-500 focus:outline-none"
+                       placeholder="••••••••">
+                <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 px-3 text-slate-600 hover:text-slate-800">
+                  <i class="fa-regular fa-eye"></i>
+                </button>
+              </div>
+              @error('password')
+                <p class="error-text text-red-300 mt-1">{{ $message }}</p>
+              @enderror
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <input id="remember" type="checkbox" name="remember"
+                       class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                <label for="remember" class="text-sm text-slate-200">Se souvenir de moi</label>
+              </div>
+              <div class="text-sm">
+                <a href="#" class="text-blue-300 hover:text-blue-200">Mot de passe oublié ?</a>
+              </div>
+            </div>
+
+            <button type="submit"
+                    class="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 btn-hover shadow-lg font-semibold">
+              Se connecter
+            </button>
+
+            <div class="relative my-6">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-white/20"></div>
+              </div>
+              <div class="relative flex justify-center text-sm">
+                <span class="px-2 bg-transparent text-slate-200">Ou</span>
+              </div>
+            </div>
+
+            <div class="text-center">
+              <span class="text-slate-200">Pas de compte ?</span>
+              <a href="{{ route('register') }}" class="text-blue-300 hover:text-blue-200 font-semibold ml-1">Inscrivez-vous</a>
+            </div>
+          </form>
+
+          <div class="mt-6 grid grid-cols-2 gap-3">
+            <button type="button" class="bg-white text-slate-700 py-2.5 px-4 rounded-lg flex items-center justify-center hover:bg-slate-100 transition btn-hover">
+              <i class="fab fa-google text-red-500 mr-2"></i> Google
+            </button>
+            <button type="button" class="bg-white text-slate-700 py-2.5 px-4 rounded-lg flex items-center justify-center hover:bg-slate-100 transition btn-hover">
+              <i class="fab fa-apple text-slate-800 mr-2"></i> Apple
+            </button>
           </div>
         </div>
-
-        @error('email')
-          <p class="text-red-300 text-sm mt-2 stagger-item">{{ $message }}</p>
-        @enderror
-
-        <div class="flex items-center justify-between mt-4 stagger-item">
-          <div class="flex items-center">
-            <input id="remember_me" name="remember" type="checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-            <label for="remember_me" class="ml-2 text-sm text-gray-200">Se souvenir de moi</label>
-          </div>
-          <a href="#" class="text-sm text-blue-300 hover:text-blue-200 transition duration-300">Mot de passe oublié ?</a>
-        </div>
-
-        <div class="stagger-item">
-          <button
-            type="submit"
-            class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-lg shadow-lg btn-hover transition duration-300"
-          >
-            <i class="fas fa-right-to-bracket mr-2"></i> Se connecter
-          </button>
-        </div>
-      </form>
-
-      <!-- Séparateur -->
-      <div class="relative my-6">
-        <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-gray-300/30"></div>
-        </div>
-        <div class="relative flex justify-center text-sm">
-          <span class="px-2 bg-transparent text-gray-300">Ou continuer avec</span>
-        </div>
-      </div>
-
-      <!-- Options de connexion alternatives -->
-      <div class="grid grid-cols-2 gap-3 stagger-item">
-        <button type="button" class="bg-white text-gray-700 py-2 px-4 rounded-lg flex items-center justify-center hover:bg-gray-100 transition duration-300 btn-hover">
-          <i class="fab fa-google text-red-500 mr-2"></i> Google
-        </button>
-        <button type="button" class="bg-white text-gray-700 py-2 px-4 rounded-lg flex items-center justify-center hover:bg-gray-100 transition duration-300 btn-hover">
-          <i class="fab fa-apple text-gray-800 mr-2"></i> Apple
-        </button>
       </div>
     </div>
-  </div>
+  </main>
 
-  <!-- Footer amélioré -->
-  <footer class="relative z-10 text-center text-gray-300 py-6 bg-black bg-opacity-40 backdrop-blur-sm">
+  <!-- Footer -->
+  <footer class="mt-auto text-center text-slate-200 py-6 bg-black/40 backdrop-blur-sm">
     <div class="max-w-7xl mx-auto px-4">
-      <p>&copy; 2025 <span class="text-blue-300 font-semibold">BankPro</span>. Tous droits réservés.</p>
+      <p>&copy; {{ date('Y') }} <span class="text-blue-300 font-semibold">SG BANK</span>. Tous droits réservés.</p>
       <div class="mt-2 flex justify-center space-x-4 text-sm">
-        <a href="#" class="hover:text-blue-300 transition duration-300">Confidentialité</a>
-        <a href="#" class="hover:text-blue-300 transition duration-300">Conditions</a>
-        <a href="#" class="hover:text-blue-300 transition duration-300">Assistance</a>
+        <a href="#" class="hover:text-blue-300 transition">Confidentialité</a>
+        <a href="#" class="hover:text-blue-300 transition">Conditions</a>
+        <a href="#" class="hover:text-blue-300 transition">Assistance</a>
       </div>
     </div>
   </footer>
 
   <script>
-    // Toggle menu mobile
-    document.getElementById("mobile-menu-button").addEventListener("click", function () {
-      const menu = document.getElementById("mobile-menu");
-      menu.classList.toggle("hidden");
-    });
-
-    // Toggle password visibility
-    document.getElementById("togglePassword").addEventListener("click", function() {
-      const passwordInput = document.getElementById("password");
-      const icon = this.querySelector("i");
-      
-      if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-        icon.classList.remove("fa-eye");
-        icon.classList.add("fa-eye-slash");
-      } else {
-        passwordInput.type = "password";
-        icon.classList.remove("fa-eye-slash");
-        icon.classList.add("fa-eye");
-      }
-    });
+    const toggleBtn = document.getElementById("togglePassword");
+    if (toggleBtn) {
+      toggleBtn.addEventListener("click", function () {
+        const passwordInput = document.getElementById("password");
+        const icon = this.querySelector("i");
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          icon.classList.remove("fa-eye");
+          icon.classList.add("fa-eye-slash");
+        } else {
+          passwordInput.type = "password";
+          icon.classList.remove("fa-eye-slash");
+          icon.classList.add("fa-eye");
+        }
+      });
+    }
   </script>
 </body>
 </html>
+
+

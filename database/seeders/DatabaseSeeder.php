@@ -17,24 +17,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create admin user
-        User::create([
-            'first_name' => 'Admin',
-            'last_name' => 'BankPro',
-            'email' => 'admin@bankpro.com',
-            'phone' => '+22912345678',
-            'address' => '123 Admin Street',
-            'country' => 'Benin',
-            'city' => 'Porto-Novo',
-            'date_of_birth' => '1980-01-01',
-            'id_type' => 'CNI',
-            'id_number' => '123456789',
-            'role' => 'admin',
-            'balance' => 0,
-            'status' => 'active',
-            'password' => Hash::make('password'),
-            'activation_code' => '1234',
-        ]);
+        // Create admin user if not exists
+        if (!User::where('email', 'admin@sgbank.com')->exists()) {
+            User::create([
+                'first_name' => 'Admin',
+                'last_name' => 'SG BANK',
+                'email' => 'admin@sgbank.com',
+                'phone' => '+22912345678',
+                'address' => '123 Admin Street',
+                'role' => 'admin',
+                'balance' => 0,
+                'status' => 'active',
+                'password' => Hash::make('password'),
+                'activation_code' => '1234',
+                'date_of_birth' => '1970-01-01',
+                'id_number' => '0000000000', // Added to fix seeding error
+            ]);
+        }
 
         // Create default settings
         Setting::create([
@@ -43,3 +42,4 @@ class DatabaseSeeder extends Seeder
         ]);
     }
 }
+

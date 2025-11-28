@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comptes professionnels - BankPro</title>
+    <title>Comptes professionnels - SG BANK</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -29,7 +29,7 @@
                     <div class="bg-white p-2 rounded-lg">
                         <i class="fas fa-building-columns text-premium text-2xl"></i>
                     </div>
-                    <a href="{{ route('home') }}" class="text-2xl font-bold text-white">BankPro</a>
+                    <a href="{{ route('home') }}" class="text-2xl font-bold text-white">SG BANK</a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
@@ -58,7 +58,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-4xl mx-auto fade-in-up">
                 <h1 class="text-4xl sm:text-5xl font-bold mb-6">
-                    Comptes professionnels BankPro
+                    Comptes professionnels SG BANK
                 </h1>
                 <p class="text-xl mb-8 text-blue-100 leading-relaxed">
                     Des solutions bancaires adaptées aux besoins des entreprises et professionnels.
@@ -80,7 +80,7 @@
     <section id="features" class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-4xl font-bold mb-6 text-premium">Pourquoi choisir un compte professionnel BankPro ?</h2>
+                <h2 class="text-4xl font-bold mb-6 text-premium">Pourquoi choisir un compte professionnel SG BANK ?</h2>
                 <p class="text-xl text-gray-600 leading-relaxed">
                     Des fonctionnalités avancées conçues spécifiquement pour les besoins des entreprises modernes.
                 </p>
@@ -155,7 +155,7 @@
         <div class="max-w-4xl mx-auto px-6 text-center">
             <h2 class="text-4xl font-bold mb-6">Prêt à digitaliser votre trésorerie ?</h2>
             <p class="text-xl mb-8 text-blue-100 leading-relaxed">
-                Rejoignez les milliers d'entreprises qui font confiance à BankPro pour leur gestion bancaire quotidienne.
+                Rejoignez les milliers d'entreprises qui font confiance à SG BANK pour leur gestion bancaire quotidienne.
             </p>
             <a href="{{ route('register') }}" class="btn-premium px-12 py-5 rounded-lg text-2xl font-bold inline-block">
                 Créer mon compte professionnel
@@ -167,7 +167,7 @@
     <footer class="bg-gray-900 text-gray-400 py-12">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center">
-                <p>&copy; 2025 <span class="text-blue-400 font-semibold">BankPro</span>. Tous droits réservés.</p>
+                <p>&copy; 2025 <span class="text-blue-400 font-semibold">SG BANK</span>. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
@@ -182,3 +182,5 @@
 
 </body>
 </html>
+
+

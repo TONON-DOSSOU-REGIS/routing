@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dépôt manuel - BankPro Admin</title>
+    <title>Dépôt manuel - SG BANK Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
@@ -169,7 +169,7 @@
                                     <i class="fas fa-building-columns text-white text-xl"></i>
                                 </div>
                                 <div>
-                                    <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">BankPro Admin</a>
+                                    <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK Admin</a>
                                     <div class="text-xs text-gray-500 -mt-1">Gestion des dépôts</div>
                                 </div>
                             </div>
@@ -353,13 +353,35 @@
                                                    placeholder="0.00"
                                                    required>
                                             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                                <span class="text-gray-500 font-medium">€</span>
+                                                <span id="currency-symbol" class="text-gray-500 font-medium">€</span>
                                             </div>
                                         </div>
-                                        <p class="mt-2 text-sm text-gray-500 flex items-center">
+                                        <p class="mt-2 text-sm text-gray-500 flex items-center" id="amount-min-info">
                                             <i class="fas fa-info-circle mr-1 text-blue-500"></i>
-                                            Montant minimum: 0.01 €. Utilisez le point comme séparateur décimal.
+                                            Montant minimum: 0.01 €
                                         </p>
+                                    </div>
+                                    
+                                    <!-- Sélection de la devise -->
+                                    <div class="stagger-item">
+                                        <label for="currency" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
+                                            <i class="fas fa-coins mr-2 text-yellow-500"></i>
+                                            Sélectionnez la devise
+                                        </label>
+                                        <div class="relative">
+                                            <select name="currency"
+                                                    id="currency"
+                                                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm input-field"
+                                                    required>
+                                                <option value="">Choisir une devise...</option>
+                                                @foreach(config('currencies.currencies') as $code => $name)
+                                                    <option value="{{ $code }}" {{ old('currency') == $code ? 'selected' : '' }}>{{ $name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                                <i class="fas fa-chevron-down text-gray-400"></i>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!-- Motif du dépôt -->
@@ -510,49 +532,70 @@
             }
         });
 
-        // Update preview dynamically
-        function updatePreview() {
-            const select = document.getElementById('user_id');
-            const amount = document.getElementById('amount').value;
-            const selectedOption = select.options[select.selectedIndex];
-            const balanceDisplay = document.getElementById('balance-display');
-            const currentBalanceSpan = document.getElementById('current-balance');
-            const newBalanceDiv = document.getElementById('new-balance');
-            const newBalanceAmount = document.getElementById('new-balance-amount');
+            // Update preview dynamically
+            function updatePreview() {
+                const select = document.getElementById('user_id');
+                const amount = document.getElementById('amount').value;
+                const currencySelect = document.getElementById('currency');
+                const selectedOption = select.options[select.selectedIndex];
+                const balanceDisplay = document.getElementById('balance-display');
+                const currentBalanceSpan = document.getElementById('current-balance');
+                const currencySymbolSpan = document.getElementById('currency-symbol');
+                const newBalanceDiv = document.getElementById('new-balance');
+                const newBalanceAmount = document.getElementById('new-balance-amount');
+                const amountMinInfo = document.getElementById('amount-min-info');
+    
+                if (select.value && amount && currencySelect.value) {
+                    const userText = selectedOption.text.split(' - ')[0];
+                    const currentBalance = parseFloat(selectedOption.getAttribute('data-balance'));
+                    const depositAmount = parseFloat(amount);
+                    const newBalance = currentBalance + depositAmount;
+                    const selectedCurrencyCode = currencySelect.value;
+                    const currencies = @json(config('currencies.currencies'));
+    
+                    const currencyName = currencies[selectedCurrencyCode] || '';
+                    const currencySymbolMatch = currencyName.match(/\(([^)]+)\)/);
+                    const currencySymbol = currencySymbolMatch ? currencySymbolMatch[1] : selectedCurrencyCode;
+    
+                    document.getElementById('preview-text').textContent =
+                        `Dépôt de ${depositAmount.toFixed(2)} ${currencySymbol} sur le compte de ${userText}`;
+                    
+                    // Afficher le solde actuel avec devise
+                    balanceDisplay.classList.remove('hidden');
+                    currentBalanceSpan.textContent = currentBalance.toFixed(2);
+                    currencySymbolSpan.textContent = currencySymbol;
+                    
+                    // Afficher le nouveau solde avec devise
+                    newBalanceDiv.classList.remove('hidden');
+                    newBalanceAmount.textContent = newBalance.toFixed(2);
 
-            if (select.value && amount) {
-                const userText = selectedOption.text.split(' - ')[0];
-                const currentBalance = parseFloat(selectedOption.getAttribute('data-balance'));
-                const depositAmount = parseFloat(amount);
-                const newBalance = currentBalance + depositAmount;
-
-                document.getElementById('preview-text').textContent =
-                    `Dépôt de ${depositAmount.toFixed(2)} € sur le compte de ${userText}`;
-                
-                // Afficher le solde actuel
-                balanceDisplay.classList.remove('hidden');
-                currentBalanceSpan.textContent = currentBalance.toFixed(2);
-                
-                // Afficher le nouveau solde
-                newBalanceDiv.classList.remove('hidden');
-                newBalanceAmount.textContent = newBalance.toFixed(2);
-            } else {
-                document.getElementById('preview-text').textContent =
-                    'Sélectionnez un client et un montant pour voir l\'aperçu.';
-                balanceDisplay.classList.add('hidden');
-                newBalanceDiv.classList.add('hidden');
+                    // Update amount minimum info with the selected currency symbol
+                    if (amountMinInfo) {
+                        amountMinInfo.innerHTML = `<i class="fas fa-info-circle mr-1 text-blue-500"></i>Montant minimum: 0.01 ${currencySymbol}`;
+                    }
+                } else {
+                    document.getElementById('preview-text').textContent =
+                        'Sélectionnez un client, un montant et une devise pour voir l\'aperçu.';
+                    balanceDisplay.classList.add('hidden');
+                    newBalanceDiv.classList.add('hidden');
+                    if (amountMinInfo) {
+                        amountMinInfo.innerHTML = `<i class="fas fa-info-circle mr-1 text-blue-500"></i>Montant minimum: 0.01 €`;
+                    }
+                }
             }
-        }
-
-        document.getElementById('user_id').addEventListener('change', updatePreview);
-        document.getElementById('amount').addEventListener('input', updatePreview);
-
-        // Initialiser l'aperçu si des valeurs existent déjà
-        document.addEventListener('DOMContentLoaded', function() {
-            if (document.getElementById('user_id').value || document.getElementById('amount').value) {
-                updatePreview();
-            }
-        });
+    
+            document.getElementById('user_id').addEventListener('change', updatePreview);
+            document.getElementById('amount').addEventListener('input', updatePreview);
+            document.getElementById('currency').addEventListener('change', updatePreview);
+    
+            // Initialiser l'aperçu si des valeurs existent déjà
+            document.addEventListener('DOMContentLoaded', function() {
+                if (document.getElementById('user_id').value || document.getElementById('amount').value) {
+                    updatePreview();
+                }
+            });
     </script>
+    @include('components.admin-chat-widget')
 </body>
 </html>
+

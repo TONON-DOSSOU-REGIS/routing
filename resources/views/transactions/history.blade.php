@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historique des transactions - BankPro</title>
+    <title>Historique des transactions - SG BANK</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
@@ -191,7 +191,7 @@
                                     <i class="fas fa-building-columns text-white text-xl"></i>
                                 </div>
                                 <div>
-                                    <a href="{{ route('dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">BankPro</a>
+                                    <a href="{{ route('dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK</a>
                                     <div class="text-xs text-gray-500 -mt-1">Historique des transactions</div>
                                 </div>
                             </div>
@@ -422,7 +422,7 @@
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap">
                                                     <div class="text-sm font-bold @if($transaction->type == 'deposit') text-green-600 @elseif($transaction->type == 'withdrawal') text-red-600 @else text-gray-900 @endif">
-                                                        {{ number_format($transaction->amount, 2) }} €
+                                                        {{ \App\Helpers\CurrencyHelper::format($transaction->amount, $transaction->user->default_currency ?? 'EUR') }}
                                                     </div>
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -584,3 +584,4 @@
     </script>
 </body>
 </html>
+

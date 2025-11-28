@@ -20,9 +20,10 @@ class DashboardController extends Controller
         return view('dashboard.index', compact('user', 'transactions'));
     }
 
-    public function profile()
+public function profile()
     {
-        $user = auth()->user();
+        $user = auth()->user()->load('creditCard');
         return view('profile.index', compact('user'));
     }
 }
+

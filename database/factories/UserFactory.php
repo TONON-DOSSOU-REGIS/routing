@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -24,33 +23,35 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
-            'email' => fake()->unique()->safeEmail(),
-            'phone' => fake()->phoneNumber(),
-            'address' => fake()->address(),
-            'country' => fake()->country(),
-            'city' => fake()->city(),
-            'date_of_birth' => fake()->date(),
-            'id_type' => fake()->randomElement(['CNI', 'Passport', 'Permis']),
-            'id_number' => fake()->numerify('##########'),
-            'iban' => fake()->iban('FR'),
-            'bic' => fake()->swiftBicNumber(),
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'phone' => $this->faker->phoneNumber(),
+            'address' => $this->faker->address(),
+            // Removed country, city, date_of_birth, id_type, id_number fields
+            'iban' => $this->faker->iban('FR'),
+            'bic' => $this->faker->swiftBicNumber(),
             'role' => 'user',
-            'balance' => fake()->randomFloat(2, 0, 10000),
+            'balance' => $this->faker->randomFloat(2, 0, 10000),
             'status' => 'active',
             'password' => static::$password ??= Hash::make('password'),
-            'activation_code' => fake()->optional()->word(),
+            'activation_code' => $this->faker->optional()->word(),
+            'date_of_birth' => $this->faker->date('Y-m-d', '2000-01-01'),
+            'id_type' => 'passport',
+            'id_number' => $this->faker->unique()->regexify('[A-Z0-9]{10}'),
         ];
     }
 
     /**
      * Indicate that the model's email address should be unverified.
      */
-    public function unverified(): static
+    public function unverified()
     {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
+        return $this->state(function (array $attributes) {
+            return [
+                'email_verified_at' => null,
+            ];
+        });
     }
 }
+

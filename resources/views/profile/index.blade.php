@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Profil - BankPro</title>
+    <title>Mon Profil - SG BANK</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -192,6 +192,18 @@
             transition: all 0.3s ease;
         }
     </style>
+
+    @php
+        $currencyCode = $user->default_currency ?? 'EUR';
+        $currencies = config('currencies.currencies');
+        $currencySymbol = '€';
+        if (isset($currencies[$currencyCode])) {
+            preg_match('/\((.*?)\)/', $currencies[$currencyCode], $matches);
+            if (isset($matches[1])) {
+                $currencySymbol = $matches[1];
+            }
+        }
+    @endphp
 </head>
 <body class="min-h-screen">
     <!-- Container avec image de fond -->
@@ -207,7 +219,7 @@
                                     <i class="fas fa-building-columns text-white text-xl"></i>
                                 </div>
                                 <div>
-                                    <a href="{{ route('home') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">BankPro</a>
+                                    <a href="{{ route('home') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK</a>
                                     <div class="text-xs text-gray-500 -mt-1">Mon Profil</div>
                                 </div>
                             </div>
@@ -334,33 +346,71 @@
                                     </div>
                                     @endif
 
-                                    @if($user->country || $user->city)
+                                    @if($user->address)
                                     <div class="profile-info">
                                         <div class="flex items-center mb-2">
-                                            <i class="fas fa-map-marker-alt text-red-500 mr-3"></i>
-                                            <span class="text-sm font-semibold text-gray-600">Adresse</span>
+                                            <i class="fas fa-home text-red-500 mr-3"></i>
+                                            <span class="text-sm font-semibold text-gray-600">Adresse complète</span>
                                         </div>
-                                        <p class="text-lg font-bold text-gray-900">
-                                            @if($user->city && $user->country)
-                                                {{ $user->city }}, {{ $user->country }}
-                                            @elseif($user->city)
-                                                {{ $user->city }}
-                                            @elseif($user->country)
-                                                {{ $user->country }}
-                                            @else
-                                                Non spécifiée
-                                            @endif
-                                        </p>
+                                        <p class="text-lg font-bold text-gray-900">{{ $user->address }}</p>
                                     </div>
                                     @endif
 
-                                    @if($user->id_type && $user->id_number)
+                                    @if($user->city)
                                     <div class="profile-info">
                                         <div class="flex items-center mb-2">
-                                            <i class="fas fa-id-card text-indigo-500 mr-3"></i>
-                                            <span class="text-sm font-semibold text-gray-600">Pièce d'identité</span>
+                                            <i class="fas fa-city text-pink-500 mr-3"></i>
+                                            <span class="text-sm font-semibold text-gray-600">Ville</span>
                                         </div>
-                                        <p class="text-lg font-bold text-gray-900">{{ $user->id_type }}: {{ $user->id_number }}</p>
+                                        <p class="text-lg font-bold text-gray-900">{{ $user->city }}</p>
+                                    </div>
+                                    @endif
+
+                                    @if($user->country)
+                                    <div class="profile-info">
+                                        <div class="flex items-center mb-2">
+                                            <i class="fas fa-globe text-teal-500 mr-3"></i>
+                                            <span class="text-sm font-semibold text-gray-600">Pays</span>
+                                        </div>
+                                        <p class="text-lg font-bold text-gray-900">{{ $user->country }}</p>
+                                    </div>
+                                    @endif
+
+                                    @if($user->id_type)
+                                    <div class="profile-info">
+                                        <div class="flex items-center mb-2">
+                                            <i class="fas fa-id-badge text-indigo-500 mr-3"></i>
+                                            <span class="text-sm font-semibold text-gray-600">Type de pièce d'identité</span>
+                                        </div>
+                                        <p class="text-lg font-bold text-gray-900">{{ $user->id_type }}</p>
+                                    </div>
+                                    @endif
+
+                                    @if($user->id_number)
+                                    <div class="profile-info">
+                                        <div class="flex items-center mb-2">
+                                            <i class="fas fa-hashtag text-indigo-500 mr-3"></i>
+                                            <span class="text-sm font-semibold text-gray-600">Numéro de pièce</span>
+                                        </div>
+                                        <p class="text-lg font-bold text-gray-900">{{ $user->id_number }}</p>
+                                    </div>
+                                    @endif
+
+                                    @if($user->default_currency)
+                                    <div class="profile-info">
+                                        <div class="flex items-center mb-2">
+                                            <i class="fas fa-money-bill-wave text-emerald-500 mr-3"></i>
+                                            <span class="text-sm font-semibold text-gray-600">Devise par défaut</span>
+                                        </div>
+                                        <p class="text-lg font-bold text-gray-900">
+                                            {{ $user->default_currency }}
+                                            @php
+                                                $currencies = config('currencies.currencies');
+                                                if (isset($currencies[$user->default_currency])) {
+                                                    echo ' - ' . $currencies[$user->default_currency];
+                                                }
+                                            @endphp
+                                        </p>
                                     </div>
                                     @endif
                                 </div>
@@ -403,7 +453,7 @@
                                             </div>
                                             <div class="text-right">
                                                 <div class="text-sm font-bold @if($transaction->type == 'deposit') text-green-600 @elseif($transaction->type == 'withdrawal') text-red-600 @else text-gray-900 @endif">
-                                                    {{ $transaction->type == 'withdrawal' ? '-' : '' }}{{ number_format($transaction->amount, 2) }} €
+                                                    {{ $transaction->type == 'withdrawal' ? '-' : '' }}{{ number_format($transaction->amount, 2) }} {{ $currencySymbol }}
                                                 </div>
                                                 <span class="badge text-xs
                                                     @if($transaction->status == 'success') bg-green-100 text-green-800
@@ -427,72 +477,203 @@
                         </div>
                     </div>
 
-                    <!-- Informations bancaires -->
-                    <div class="space-y-6">
-                        <!-- Solde et compte -->
-                        <div class="glass-card rounded-2xl overflow-hidden card-hover stat-card stagger-item">
-                            <div class="p-6 relative z-10">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div>
-                                        <p class="text-sm font-semibold text-gray-600 mb-1">Solde actuel</p>
-                                        <p class="text-2xl font-bold text-gray-900">{{ number_format($user->balance, 2) }} €</p>
-                                    </div>
-                                    <div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4 rounded-2xl shadow-lg">
-                                        <i class="fas fa-euro-sign text-white text-2xl"></i>
-                                    </div>
-                                </div>
-                                <div class="flex items-center text-xs text-green-600">
-                                    <i class="fas fa-arrow-up mr-1"></i>
-                                    <span>Solde disponible</span>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Informations bancaires -->
+                        <div class="space-y-6">
 
-                        <!-- Informations du compte -->
-                        <div class="glass-card rounded-2xl overflow-hidden card-hover stagger-item">
-                            <div class="p-6">
-                                <div class="flex items-center mb-6">
-                                    <div class="bg-gradient-to-r from-indigo-500 to-purple-500 p-3 rounded-2xl mr-4 shadow-lg">
-                                        <i class="fas fa-credit-card text-white text-2xl"></i>
+                            <!-- Solde et compte -->
+                            <div class="glass-card rounded-2xl overflow-hidden card-hover stat-card stagger-item">
+                                <div class="p-6 relative z-10">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div>
+                                            <p class="text-sm font-semibold text-gray-600 mb-1">Solde actuel</p>
+                                            @php
+                                                $currencyCode = $user->default_currency ?? 'EUR';
+                                                $currencies = config('currencies.currencies');
+                                                $currencySymbol = '€';
+                                                if (isset($currencies[$currencyCode])) {
+                                                    preg_match('/\((.*?)\)/', $currencies[$currencyCode], $matches);
+                                                    if (isset($matches[1])) {
+                                                        $currencySymbol = $matches[1];
+                                                    }
+                                                }
+                                            @endphp
+                                            <p class="text-2xl font-bold text-gray-900">{{ number_format($user->balance, 2) }} {{ $currencySymbol }}</p>
+                                        </div>
+                                        <div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4 rounded-2xl shadow-lg">
+                                            <i class="fas fa-euro-sign text-white text-2xl"></i>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h3 class="text-lg font-bold text-gray-900">Informations bancaires</h3>
-                                        <p class="text-gray-600 text-sm mt-1">Détails de votre compte</p>
-                                    </div>
-                                </div>
-
-                                <div class="space-y-4">
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-sm text-gray-600">Numéro de compte</span>
-                                        <span class="text-sm font-bold text-gray-900">{{ $user->id }}</span>
-                                    </div>
-
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-sm text-gray-600">Statut du compte</span>
-                                        <span class="badge bg-green-100 text-green-800">
-                                            <i class="fas fa-check-circle"></i>
-                                            Actif
-                                        </span>
-                                    </div>
-
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-sm text-gray-600">Type de compte</span>
-                                        <span class="text-sm font-bold text-gray-900">
-                                            @if($user->isAdmin())
-                                                Administrateur
-                                            @else
-                                                Client
-                                            @endif
-                                        </span>
-                                    </div>
-
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-sm text-gray-600">Date d'inscription</span>
-                                        <span class="text-sm font-bold text-gray-900">{{ $user->created_at->format('d/m/Y') }}</span>
+                                    <div class="flex items-center text-xs text-green-600">
+                                        <i class="fas fa-arrow-up mr-1"></i>
+                                        <span>Solde disponible</span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
+                            <!-- Informations du compte -->
+                            <div class="glass-card rounded-2xl overflow-hidden card-hover stagger-item">
+                                <div class="p-6">
+                                    <div class="flex items-center mb-6">
+                                        <div class="bg-gradient-to-r from-indigo-500 to-purple-500 p-3 rounded-2xl mr-4 shadow-lg">
+                                            <i class="fas fa-credit-card text-white text-2xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-lg font-bold text-gray-900">Informations bancaires</h3>
+                                            <p class="text-gray-600 text-sm mt-1">Détails de votre compte</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-gray-600">Numéro de compte</span>
+                                            <span class="text-sm font-bold text-gray-900">{{ $user->id }}</span>
+                                        </div>
+
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-gray-600">Statut du compte</span>
+                                            <span class="badge bg-green-100 text-green-800">
+                                                <i class="fas fa-check-circle"></i>
+                                                Actif
+                                            </span>
+                                        </div>
+
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-gray-600">Type de compte</span>
+                                            <span class="text-sm font-bold text-gray-900">
+                                                @if($user->isAdmin())
+                                                    Administrateur
+                                                @else
+                                                    Client
+                                                @endif
+                                            </span>
+                                        </div>
+
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-gray-600">Date d'inscription</span>
+                                            <span class="text-sm font-bold text-gray-900">{{ $user->created_at->format('d/m/Y') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Informations bancaires détaillées -->
+                            <div class="glass-card rounded-2xl overflow-hidden card-hover stagger-item mt-6">
+                                <div class="p-6">
+                                    <div class="flex items-center mb-6">
+                                        <div class="bg-gradient-to-r from-cyan-500 to-blue-500 p-3 rounded-2xl mr-4 shadow-lg">
+                                            <i class="fas fa-university text-white text-2xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-lg font-bold text-gray-900">Coordonnées bancaires</h3>
+                                            <p class="text-gray-600 text-sm mt-1">Vos informations bancaires</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        @if($user->iban)
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-gray-600">IBAN</span>
+                                            <span class="text-sm font-bold text-gray-900">{{ $user->iban }}</span>
+                                        </div>
+                                        @endif
+
+                                        @if($user->bic)
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-gray-600">BIC</span>
+                                            <span class="text-sm font-bold text-gray-900">{{ $user->bic }}</span>
+                                        </div>
+                                        @endif
+
+                                        @if(!$user->iban && !$user->bic)
+                                        <p class="text-gray-600 italic text-sm">Aucune coordonnée bancaire renseignée.</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Nouvelle section Carte de crédit -->
+                            <div class="glass-card rounded-2xl overflow-hidden card-hover stagger-item mt-6">
+                                <div class="p-6">
+                                    <div class="flex items-center mb-6">
+                                        <div class="bg-gradient-to-r from-yellow-500 to-orange-500 p-3 rounded-2xl mr-4 shadow-lg">
+                                            <i class="fas fa-credit-card text-white text-2xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-lg font-bold text-gray-900">Carte de crédit</h3>
+                                            <p class="text-gray-600 text-sm mt-1">Informations sur votre carte de crédit</p>
+                                        </div>
+                                    </div>
+
+                                    @if($user->creditCard)
+                                    <div class="space-y-4 text-gray-900">
+                                        <div class="flex justify-between">
+                                            <span class="font-semibold text-sm text-gray-600">Nom du titulaire</span>
+                                            <span class="text-sm font-bold">{{ $user->creditCard->card_holder_name }}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="font-semibold text-sm text-gray-600">Numéro de carte</span>
+                                            <span class="text-sm font-bold">{{ $user->creditCard->masked_card_number }}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="font-semibold text-sm text-gray-600">Type de carte</span>
+                                            <span class="text-sm font-bold">{{ $user->creditCard->card_type ?? 'Non spécifié' }}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="font-semibold text-sm text-gray-600">Date d'expiration</span>
+                                            <span class="text-sm font-bold">{{ $user->creditCard->expiry_date->format('m/Y') }}</span>
+                                        </div>
+                                    </div>
+                                    @else
+                                    <p class="text-gray-600 italic text-sm">Pas de carte de crédit associée.</p>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- Section Sécurité -->
+                            <div class="glass-card rounded-2xl overflow-hidden card-hover stagger-item mt-6">
+                                <div class="p-6">
+                                    <div class="flex items-center mb-6">
+                                        <div class="bg-gradient-to-r from-red-500 to-pink-500 p-3 rounded-2xl mr-4 shadow-lg">
+                                            <i class="fas fa-shield-alt text-white text-2xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-lg font-bold text-gray-900">Sécurité</h3>
+                                            <p class="text-gray-600 text-sm mt-1">Paramètres de sécurité</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        @if($user->activation_code)
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-gray-600">Code d'activation</span>
+                                            <span class="text-sm font-bold text-gray-900">
+                                                <span class="bg-gray-100 px-3 py-1 rounded-lg">
+                                                    <i class="fas fa-lock mr-1"></i>
+                                                    {{ str_repeat('•', 8) }}
+                                                </span>
+                                            </span>
+                                        </div>
+                                        @endif
+
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-gray-600">Statut du compte</span>
+                                            <span class="badge 
+                                                @if($user->status == 'active') bg-green-100 text-green-800
+                                                @elseif($user->status == 'pending') bg-yellow-100 text-yellow-800
+                                                @elseif($user->status == 'suspended') bg-red-100 text-red-800
+                                                @else bg-gray-100 text-gray-800
+                                                @endif">
+                                                <i class="fas fa-circle text-xs"></i>
+                                                {{ ucfirst($user->status ?? 'active') }}
+                                            </span>
+                                        </div>
+
+                                        @if(!$user->activation_code)
+                                        <p class="text-gray-600 italic text-sm">Aucun code d'activation défini.</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
 
                         <!-- Actions rapides -->
                         <div class="glass-card rounded-2xl overflow-hidden card-hover stagger-item">
@@ -546,5 +727,9 @@
             }
         });
     </script>
+    {{-- Include Chat Widget --}}
+    @include('components.chat-widget-with-files')
 </body>
 </html>
+
+

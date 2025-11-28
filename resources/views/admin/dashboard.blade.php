@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administration - BankPro</title>
+    <title>Administration - SG BANK</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
     <style>
         /* Animations élégantes */
@@ -149,7 +151,7 @@
                                 <i class="fas fa-building-columns text-white text-xl"></i>
                             </div>
                             <div>
-                                <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">BankPro Admin</a>
+                                <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SB BANK Admin</a>
                                 <div class="text-xs text-gray-500 -mt-1">Tableau de bord</div>
                             </div>
                         </div>
@@ -161,22 +163,27 @@
                             <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
-                        <a href="{{ route('admin.settings') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
-                            <i class="fas fa-cog mr-2"></i> Paramètres
-                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-                        </a>
                         <a href="{{ route('admin.users') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
                             <i class="fas fa-users mr-2"></i> Utilisateurs
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                        </a>
+                        <a href="{{ route('admin.transactions') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
+                            <i class="fas fa-exchange-alt mr-2"></i> Virements
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
                         <a href="{{ route('admin.deposit') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
                             <i class="fas fa-plus-circle mr-2"></i> Dépôt
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
+                        <a href="{{ route('admin.settings') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
+                            <i class="fas fa-cog mr-2"></i> Paramètres
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                        </a>
                         <a href="{{ route('dashboard') }}" class="relative text-gray-700 hover:text-green-600 transition duration-300 font-medium group">
                             <i class="fas fa-arrow-left mr-2"></i> Retour au site
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
+                        @include('components.notification-bell')
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="relative text-gray-700 hover:text-red-600 transition duration-300 font-medium group">
@@ -202,14 +209,17 @@
                         <a href="{{ route('admin.dashboard') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
                             <i class="fas fa-tachometer-alt w-5 mr-3 text-center"></i> Dashboard
                         </a>
-                        <a href="{{ route('admin.settings') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
-                            <i class="fas fa-cog w-5 mr-3 text-center"></i> Paramètres
-                        </a>
                         <a href="{{ route('admin.users') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
                             <i class="fas fa-users w-5 mr-3 text-center"></i> Utilisateurs
                         </a>
+                        <a href="{{ route('admin.transactions') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
+                            <i class="fas fa-exchange-alt w-5 mr-3 text-center"></i> Virements
+                        </a>
                         <a href="{{ route('admin.deposit') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
                             <i class="fas fa-plus-circle w-5 mr-3 text-center"></i> Dépôt
+                        </a>
+                        <a href="{{ route('admin.settings') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
+                            <i class="fas fa-cog w-5 mr-3 text-center"></i> Paramètres
                         </a>
                         <a href="{{ route('dashboard') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-lg transition duration-300">
                             <i class="fas fa-arrow-left w-5 mr-3 text-center"></i> Retour au site
@@ -228,8 +238,8 @@
         <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             <!-- En-tête du tableau de bord -->
             <div class="mb-8 fade-in-up">
-                <h1 class="text-3xl font-bold text-gray-900">Tableau de bord administrateur</h1>
-                <p class="text-gray-600 mt-2">Vue d'ensemble des performances et activités du système</p>
+                <h1 class="text-3xl font-bold text-gray-900 text-center">Tableau de bord administrateur</h1>
+                <p class="text-gray-600 mt-2 text-center">Vue d'ensemble des performances et activités du système</p>
             </div>
 
             <!-- Stats Cards améliorées -->
@@ -369,6 +379,13 @@
                             <p class="text-sm opacity-90 mt-2">Effectuer un dépôt client</p>
                         </a>
                     </div>
+                </div>
+            </div>
+
+            <!-- Market Tracker Widget -->
+            <div class="bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl overflow-hidden fade-in-up border border-white/50 mb-8">
+                <div class="px-8 py-8">
+                    @include('components.market-tracker-fixed')
                 </div>
             </div>
 
@@ -520,5 +537,7 @@
             });
         });
     </script>
+    @include('components.admin-chat-widget-v2')
 </body>
 </html>
+

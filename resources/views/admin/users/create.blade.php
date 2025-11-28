@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Créer un utilisateur - BankPro Admin</title>
+    <title>Créer un utilisateur - SG BANK Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
@@ -202,7 +202,7 @@
                                     <i class="fas fa-building-columns text-white text-xl"></i>
                                 </div>
                                 <div>
-                                    <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">BankPro Admin</a>
+                                    <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK Admin</a>
                                     <div class="text-xs text-gray-500 -mt-1">Création d'utilisateur</div>
                                 </div>
                             </div>
@@ -281,8 +281,8 @@
             <div class="max-w-6xl mx-auto py-6 sm:px-6 lg:px-8">
                 <!-- En-tête de la page -->
                 <div class="mb-8 fade-in-up">
-                    <h1 class="text-3xl font-bold text-white drop-shadow-lg">Créer un nouvel utilisateur</h1>
-                    <p class="text-white/90 mt-2 drop-shadow">Ajoutez un nouveau client ou administrateur au système</p>
+                    <h1 class="text-3xl font-bold text-white drop-shadow-lg text-center">Créer un nouvel utilisateur</h1>
+                    <p class="text-white/90 mt-2 drop-shadow text-center">Ajoutez un nouveau client ou administrateur au système</p>
                 </div>
 
                 <!-- Flash Messages améliorées -->
@@ -522,12 +522,11 @@
                                                 id="pays"
                                                 class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 input-field">
                                             <option value="">Sélectionner un pays</option>
-                                            <option value="France" {{ old('pays') == 'France' ? 'selected' : '' }}>(FR) France</option>
-                                            <option value="Allemagne" {{ old('pays') == 'Allemagne' ? 'selected' : '' }}>(DE) Allemagne</option>
-                                            <option value="Belgique" {{ old('pays') == 'Belgique' ? 'selected' : '' }}>(BE) Belgique</option>
-                                            <option value="Suisse" {{ old('pays') == 'Suisse' ? 'selected' : '' }}>(CH) Suisse</option>
-                                            <option value="Espagne" {{ old('pays') == 'Espagne' ? 'selected' : '' }}>(ES) Espagne</option>
-                                            <option value="Italie" {{ old('pays') == 'Italie' ? 'selected' : '' }}>(IT) Italie</option>
+                                            @foreach ($countries as $country)
+                                                <option value="{{ $country['name'] }}" {{ old('pays') == $country['name'] ? 'selected' : '' }}>
+                                                    ({{ $country['code'] }}) {{ $country['name'] }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -722,3 +721,4 @@
     </script>
 </body>
 </html>
+

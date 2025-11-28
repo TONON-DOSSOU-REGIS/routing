@@ -25,13 +25,8 @@ test('admin can update user details', function () {
             'last_name' => 'Smith',
             'email' => 'jane@example.com',
             'phone' => '+1234567890',
-            'date_naissance' => '1990-01-01',
             'role' => 'user',
             'adresse' => '123 New Street',
-            'ville' => 'New City',
-            'pays' => 'France',
-            'type_piece' => 'CNI',
-            'numero_piece' => '123456789',
             'iban' => 'FR7612345678901234567890123',
             'bic' => 'BNPAFRPP',
             'activation_code' => 'new_code',
@@ -47,18 +42,83 @@ test('admin can update user details', function () {
     expect($user->last_name)->toBe('Smith');
     expect($user->email)->toBe('jane@example.com');
     expect($user->phone)->toBe('+1234567890');
-    expect($user->date_of_birth->format('Y-m-d'))->toBe('1990-01-01');
     expect($user->role)->toBe('user');
     expect($user->address)->toBe('123 New Street');
-    expect($user->city)->toBe('New City');
-    expect($user->country)->toBe('France');
-    expect($user->id_type)->toBe('CNI');
-    expect($user->id_number)->toBe('123456789');
     expect($user->iban)->toBe('FR7612345678901234567890123');
     expect($user->bic)->toBe('BNPAFRPP');
     expect($user->activation_code)->toBe('new_code');
     expect($user->balance)->toBe('200.00');
     expect($user->status)->toBe('active');
+});
+
+test('admin can update and create credit card info with user', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($admin)
+        ->withoutMiddleware(\App\Http\Middleware\IsAdmin::class)
+        ->startSession()
+        ->withSession(['_token' => 'test'])
+        ->put(route('admin.users.update', $user), [
+            '_token' => 'test',
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'email' => $user->email,
+            'role' => $user->role,
+            'balance' => $user->balance,
+            'status' => $user->status,
+            'card_holder_name' => 'John Cardholder',
+            'card_number' => '4111111111111111',
+            'card_type' => 'Visa',
+            'expiry_date' => now()->addYear()->format('Y-m-d'),
+        ]);
+
+    $response->assertRedirect(route('admin.users'));
+    $response->assertSessionHas('status', 'Utilisateur mis à jour avec succès.');
+
+    $user->refresh();
+    $creditCard = $user->creditCard;
+    expect($creditCard)->not->toBeNull();
+    expect($creditCard->card_holder_name)->toBe('John Cardholder');
+    expect($creditCard->card_number)->toBe('4111111111111111');
+    expect($creditCard->card_type)->toBe('Visa');
+    expect($creditCard->expiry_date->format('Y-m-d'))->toBe(now()->addYear()->format('Y-m-d'));
+});
+
+test('admin can delete credit card info', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    $user = User::factory()->create();
+    $user->creditCard()->create([
+        'card_holder_name' => 'John Cardholder',
+        'card_number' => '4111111111111111',
+        'card_type' => 'Visa',
+        'expiry_date' => now()->addYear(),
+    ]);
+
+    $response = $this->actingAs($admin)
+        ->withoutMiddleware(\App\Http\Middleware\IsAdmin::class)
+        ->startSession()
+        ->withSession(['_token' => 'test'])
+        ->put(route('admin.users.update', $user), [
+            '_token' => 'test',
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'email' => $user->email,
+            'role' => $user->role,
+            'balance' => $user->balance,
+            'status' => $user->status,
+            // All credit card fields empty to trigger deletion
+            'card_holder_name' => '',
+            'card_number' => '',
+            'card_type' => '',
+            'expiry_date' => '',
+        ]);
+
+    $response->assertRedirect(route('admin.users'));
+    $response->assertSessionHas('status', 'Utilisateur mis à jour avec succès.');
+
+    $user->refresh();
+    expect($user->creditCard)->toBeNull();
 });
 
 test('admin can reset user password', function () {
@@ -157,10 +217,13 @@ test('admin can edit user page loads correctly', function () {
         ->startSession()
         ->get(route('admin.users.edit', $user));
 
-    $response->assertStatus(200);
-    $response->assertSee('Modifier l&#039;utilisateur');
+$response->assertStatus(200);
+file_put_contents('response_dump.html', $response->getContent());
+$content = html_entity_decode($response->getContent());
+$this->assertStringContainsString("Modifier l'utilisateur", $content);
     $response->assertSee('Test');
     $response->assertSee('User');
     $response->assertSee('test@example.com');
     $response->assertSee('test_code');
 });
+

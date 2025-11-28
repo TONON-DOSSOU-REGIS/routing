@@ -21,8 +21,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('activation_code');
-        });
+        // Guard against dropping non-existent column during rollback
+        if (\Illuminate\Support\Facades\Schema::hasColumn('users', 'activation_code')) {
+            \Illuminate\Support\Facades\Schema::table('users', function (Blueprint $table) {
+                $table->dropColumn('activation_code');
+            });
+        }
     }
 };
+

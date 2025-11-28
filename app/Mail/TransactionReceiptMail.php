@@ -51,3 +51,4 @@ class TransactionReceiptMail extends Mailable
         return [];
     }
 }
+

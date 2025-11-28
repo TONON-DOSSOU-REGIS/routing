@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rapport des Transactions - BankPro</title>
+    <title>Rapport des Transactions - SG BANK</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -435,7 +435,7 @@
                 </div>
             </div>
             <h1>Rapport des Transactions</h1>
-            <div class="subtitle">BankPro - Analyse complète des opérations financières</div>
+            <div class="subtitle">SG BANK - Analyse complète des opérations financières</div>
         </div>
 
         <!-- Informations du rapport -->
@@ -539,7 +539,7 @@
                 </div>
             </div>
             <div class="copyright">
-                &copy; 2025 BankPro. Tous droits réservés. | Rapport confidentiel
+                &copy; 2025 SG BANK. Tous droits réservés. | Rapport confidentiel
             </div>
         </div>
     </div>
@@ -592,3 +592,4 @@
     </script>
 </body>
 </html>
+

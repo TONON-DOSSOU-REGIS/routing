@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des utilisateurs - BankPro Admin</title>
+    <title>Gestion des utilisateurs - SG BANK Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
@@ -204,7 +204,7 @@
                                     <i class="fas fa-building-columns text-white text-xl"></i>
                                 </div>
                                 <div>
-                                    <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">BankPro Admin</a>
+                                    <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK Admin</a>
                                     <div class="text-xs text-gray-500 -mt-1">Gestion des utilisateurs</div>
                                 </div>
                             </div>
@@ -477,15 +477,22 @@
                                                     </div>
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap">
-                                                    <span class="badge 
-                                                        @if($user->status == 'active') 
-                                                            bg-gradient-to-r from-green-100 to-green-200 text-green-800
-                                                        @else 
-                                                            bg-gradient-to-r from-red-100 to-red-200 text-red-800 
-                                                        @endif">
-                                                        <i class="fas fa-{{ $user->status == 'active' ? 'check-circle' : 'ban' }}"></i>
-                                                        {{ ucfirst($user->status) }}
-                                                    </span>
+                                                    @if($user->status === 'pending')
+                                                        <span class="badge bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800">
+                                                            <i class="fas fa-hourglass-half"></i>
+                                                            En attente de validation
+                                                        </span>
+                                                    @elseif($user->status == 'active') 
+                                                        <span class="badge bg-gradient-to-r from-green-100 to-green-200 text-green-800">
+                                                            <i class="fas fa-check-circle"></i>
+                                                            {{ ucfirst($user->status) }}
+                                                        </span>
+                                                    @else 
+                                                        <span class="badge bg-gradient-to-r from-red-100 to-red-200 text-red-800">
+                                                            <i class="fas fa-ban"></i>
+                                                            {{ ucfirst($user->status) }}
+                                                        </span>
+                                                    @endif
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap">
                                                     <div class="text-sm text-gray-900 font-medium">
@@ -504,7 +511,21 @@
                                                             <span class="hidden sm:inline">Modifier</span>
                                                         </a>
                                                         
-                                                        @if($user->id !== auth()->id())
+                                                        @if($user->status === 'pending' && $user->id !== auth()->id())
+                                                            <form method="POST" action="{{ route('admin.users.approve', $user) }}" class="inline">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit"
+                                                                        class="bg-gradient-to-r from-yellow-50 to-yellow-100 text-yellow-700 px-3 py-2 rounded-lg hover:from-yellow-100 hover:to-yellow-200 transition duration-300 flex items-center gap-2 text-sm font-medium shadow-sm"
+                                                                        onclick="return confirm('Êtes-vous sûr de vouloir valider cet utilisateur ?')"
+                                                                        title="Valider l'utilisateur">
+                                                                    <i class="fas fa-check"></i>
+                                                                    <span class="hidden sm:inline">Valider</span>
+                                                                </button>
+                                                            </form>
+                                                        @endif
+                                                        
+                                                        @if($user->id !== auth()->id() && $user->status !== 'pending')
                                                             <form method="POST" action="{{ route('admin.users.toggle', $user) }}" class="inline">
                                                                 @csrf
                                                                 <button type="submit"
@@ -525,6 +546,8 @@
                                                                     @endif
                                                                 </button>
                                                             </form>
+                                                        @endif
+                                                        @if($user->status !== 'pending')
                                                             <form method="POST" action="{{ route('admin.users.delete', $user) }}" class="inline">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -536,7 +559,8 @@
                                                                     <span class="hidden sm:inline">Supprimer</span>
                                                                 </button>
                                                             </form>
-                                                        @else
+                                                        @endif
+                                                        @if($user->id === auth()->id())
                                                             <span class="text-gray-400 text-sm font-medium px-3 py-2">
                                                                 <i class="fas fa-user-circle mr-1"></i>
                                                                 Vous-même
@@ -617,5 +641,7 @@
             }, 500);
         });
     </script>
+    @include('components.admin-chat-widget')
 </body>
 </html>
+

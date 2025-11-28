@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reçu de Transaction - BankPro</title>
+    <title>Reçu de Transaction - SG BANK</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -138,7 +138,7 @@
     <div class="receipt-container">
         <!-- Header -->
         <div class="header">
-            <h1>BankPro</h1>
+            <h1>SG BANK</h1>
             <p>Système Bancaire Sécurisé</p>
         </div>
 
@@ -152,6 +152,17 @@
             <!-- Transaction Amount -->
             <div class="amount">
                 {{ number_format($transaction->amount, 2) }} €
+            </div>
+
+            <!-- Message Prompt with appropriate icon based on progress -->
+            <div class="message-prompt">
+                @if($transaction->progress == 100)
+                    <img src="/images/validate-icon.png" alt="Validated"/>
+                    Le virement a été effectué à 100% avec succès.
+                @elseif($transaction->progress < 100)
+                    <img src="/images/alert-icon.png" alt="Alert"/>
+                    Le virement est en cours, à {{ $transaction->progress }}% de progression.
+                @endif
             </div>
 
             <!-- Status -->
@@ -256,7 +267,7 @@
             <!-- Security Notice -->
             <div class="security-notice">
                 <strong>⚠️ Avis de Sécurité:</strong> Ce reçu est généré électroniquement et constitue une preuve officielle de votre transaction.
-                Conservez-le en lieu sûr. En cas de contestation, contactez immédiatement le service client de BankPro.
+                Conservez-le en lieu sûr. En cas de contestation, contactez immédiatement le service client de SG BANK.
             </div>
 
             @if($transaction->status == 'on_hold' && $transaction->message)
@@ -269,10 +280,12 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p><strong>BankPro - Système Bancaire Sécurisé</strong></p>
+            <p><strong>SG BANK - Système Bancaire Sécurisé</strong></p>
             <p>Ce document a été généré automatiquement le {{ now()->format('d/m/Y à H:i:s') }}</p>
             <p>Pour toute question, contactez notre service client</p>
         </div>
     </div>
 </body>
 </html>
+
+

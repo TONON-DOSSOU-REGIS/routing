@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('id_number')->nullable()->change();
+            // Add nullable country column back
+            $table->string('country')->nullable()->after('address');
         });
     }
 
@@ -22,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('id_number')->nullable(false)->change();
+            $table->dropColumn('country');
         });
     }
 };
+

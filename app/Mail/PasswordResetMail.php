@@ -31,7 +31,7 @@ class PasswordResetMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Votre mot de passe a été réinitialisé - BankPro',
+            subject: 'Votre mot de passe a été réinitialisé - SG BANK',
         );
     }
 
@@ -59,3 +59,4 @@ class PasswordResetMail extends Mailable
         return [];
     }
 }
+

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inscription - BankPro</title>
+  <title>Inscription - SG BANK</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -81,7 +81,7 @@
       <div class="flex justify-between h-16">
         <div class="flex items-center space-x-2">
           <i class="fas fa-building-columns text-blue-600 text-2xl"></i>
-          <a href="{{ route('home') }}" class="text-2xl font-bold text-blue-600">BankPro</a>
+          <a href="{{ route('home') }}" class="text-2xl font-bold text-blue-600">SG BANK</a>
         </div>
         <div class="hidden md:flex items-center space-x-4">
           <a href="{{ route('home') }}" class="text-gray-700 hover:text-blue-600 transition duration-300">Accueil</a>
@@ -102,13 +102,30 @@
   </nav>
 
   <!-- Formulaire d'inscription amélioré -->
-  <div class="relative z-10 flex-grow flex items-center justify-center fade-in-up px-4 py-8">
-    <div class="glass rounded-2xl p-8 shadow-2xl max-w-3xl w-full text-white">
+  <div class="relative z-10 flex-grow fade-in-up px-4 py-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <!-- Panneau gauche -->
+        <div class="text-white fade-in-up">
+          <h1 class="text-3xl sm:text-4xl font-extrabold">
+            Ouvrez votre <span class="text-orange-400">compte</span> en quelques <span class="text-orange-400">minutes</span>
+          </h1>
+          <p class="mt-3 text-slate-200">
+            Simple, <span class="text-orange-300">sécurisé</span> et conçu pour aller <span class="text-orange-300">vite</span>.
+          </p>
+          <ul class="mt-6 space-y-3 text-slate-200">
+            <li class="flex items-center"><i class="fa-solid fa-bolt text-orange-400 mr-3"></i> Inscription <span class="text-white font-semibold">rapide</span></li>
+            <li class="flex items-center"><i class="fa-solid fa-shield-halved text-orange-400 mr-3"></i> Sécurité de niveau <span class="text-white font-semibold">bancaire</span></li>
+            <li class="flex items-center"><i class="fa-solid fa-bell text-orange-400 mr-3"></i> Notifications en <span class="text-white font-semibold">temps réel</span></li>
+          </ul>
+        </div>
+        <!-- Carte formulaire -->
+        <div class="glass rounded-2xl p-8 shadow-2xl w-full text-white">
       <div class="text-center mb-8 stagger-item">
         <div class="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
           <i class="fas fa-user-plus text-blue-300 text-2xl"></i>
         </div>
-        <h2 class="text-3xl font-bold mb-2">Rejoignez BankPro</h2>
+        <h2 class="text-3xl font-bold mb-2">Rejoignez SG BANK</h2>
         <p class="text-sm text-gray-200">
           Déjà inscrit ?
           <a href="{{ route('login') }}" class="font-medium text-blue-300 hover:text-blue-200 transition duration-300">
@@ -320,13 +337,15 @@
           </button>
         </div>
       </form>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Footer amélioré -->
   <footer class="relative z-10 text-center text-gray-300 py-6 bg-black bg-opacity-40 backdrop-blur-sm">
     <div class="max-w-7xl mx-auto px-4">
-      <p>&copy; 2025 <span class="text-blue-300 font-semibold">BankPro</span>. Tous droits réservés.</p>
+      <p>&copy; 2025 <span class="text-blue-300 font-semibold">SG BANK</span>. Tous droits réservés.</p>
       <div class="mt-2 flex justify-center space-x-4 text-sm">
         <a href="#" class="hover:text-blue-300 transition duration-300">Confidentialité</a>
         <a href="#" class="hover:text-blue-300 transition duration-300">Conditions</a>
@@ -398,3 +417,4 @@
   </script>
 </body>
 </html>
+

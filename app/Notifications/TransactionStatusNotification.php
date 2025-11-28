@@ -52,3 +52,4 @@ class TransactionStatusNotification extends Notification
         ];
     }
 }
+

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modifier l'utilisateur - BankPro Admin</title>
+    <title>Modifier l'utilisateur - SG BANK Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -147,7 +147,7 @@
                     <div class="flex items-center">
                         <a href="{{ route('admin.dashboard') }}" class="flex items-center text-xl font-bold text-gray-900">
                             <i class="fas fa-university text-primary-500 mr-2"></i>
-                            BankPro <span class="text-primary-500 ml-1">Admin</span>
+                            SG BANK <span class="text-primary-500 ml-1">Admin</span>
                         </a>
                     </div>
 
@@ -383,34 +383,11 @@
                                                 id="pays"
                                                 class="form-input block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors bg-white/80">
                                             <option value="">Sélectionner un pays</option>
-                                            <option value="Allemagne" {{ old('pays', $user->country) == 'Allemagne' ? 'selected' : '' }}>(DE) Allemagne</option>
-                                            <option value="Autriche" {{ old('pays', $user->country) == 'Autriche' ? 'selected' : '' }}>(AT) Autriche</option>
-                                            <option value="Belgique" {{ old('pays', $user->country) == 'Belgique' ? 'selected' : '' }}>(BE) Belgique</option>
-                                            <option value="Bulgarie" {{ old('pays', $user->country) == 'Bulgarie' ? 'selected' : '' }}>(BG) Bulgarie</option>
-                                            <option value="Chypre" {{ old('pays', $user->country) == 'Chypre' ? 'selected' : '' }}>(CY) Chypre</option>
-                                            <option value="Croatie" {{ old('pays', $user->country) == 'Croatie' ? 'selected' : '' }}>(HR) Croatie</option>
-                                            <option value="Danemark" {{ old('pays', $user->country) == 'Danemark' ? 'selected' : '' }}>(DK) Danemark</option>
-                                            <option value="Espagne" {{ old('pays', $user->country) == 'Espagne' ? 'selected' : '' }}>(ES) Espagne</option>
-                                            <option value="Estonie" {{ old('pays', $user->country) == 'Estonie' ? 'selected' : '' }}>(EE) Estonie</option>
-                                            <option value="Finlande" {{ old('pays', $user->country) == 'Finlande' ? 'selected' : '' }}>(FI) Finlande</option>
-                                            <option value="France" {{ old('pays', $user->country) == 'France' ? 'selected' : '' }}>(FR) France</option>
-                                            <option value="Grèce" {{ old('pays', $user->country) == 'Grèce' ? 'selected' : '' }}>(GR) Grèce</option>
-                                            <option value="Hongrie" {{ old('pays', $user->country) == 'Hongrie' ? 'selected' : '' }}>(HU) Hongrie</option>
-                                            <option value="Irlande" {{ old('pays', $user->country) == 'Irlande' ? 'selected' : '' }}>(IE) Irlande</option>
-                                            <option value="Italie" {{ old('pays', $user->country) == 'Italie' ? 'selected' : '' }}>(IT) Italie</option>
-                                            <option value="Lettonie" {{ old('pays', $user->country) == 'Lettonie' ? 'selected' : '' }}>(LV) Lettonie</option>
-                                            <option value="Lituanie" {{ old('pays', $user->country) == 'Lituanie' ? 'selected' : '' }}>(LT) Lituanie</option>
-                                            <option value="Luxembourg" {{ old('pays', $user->country) == 'Luxembourg' ? 'selected' : '' }}>(LU) Luxembourg</option>
-                                            <option value="Malte" {{ old('pays', $user->country) == 'Malte' ? 'selected' : '' }}>(MT) Malte</option>
-                                            <option value="Pays-Bas" {{ old('pays', $user->country) == 'Pays-Bas' ? 'selected' : '' }}>(NL) Pays-Bas</option>
-                                            <option value="Pologne" {{ old('pays', $user->country) == 'Pologne' ? 'selected' : '' }}>(PL) Pologne</option>
-                                            <option value="Portugal" {{ old('pays', $user->country) == 'Portugal' ? 'selected' : '' }}>(PT) Portugal</option>
-                                            <option value="République Tchèque" {{ old('pays', $user->country) == 'République Tchèque' ? 'selected' : '' }}>(CZ) République Tchèque</option>
-                                            <option value="Roumanie" {{ old('pays', $user->country) == 'Roumanie' ? 'selected' : '' }}>(RO) Roumanie</option>
-                                            <option value="Slovaquie" {{ old('pays', $user->country) == 'Slovaquie' ? 'selected' : '' }}>(SK) Slovaquie</option>
-                                            <option value="Slovénie" {{ old('pays', $user->country) == 'Slovénie' ? 'selected' : '' }}>(SI) Slovénie</option>
-                                            <option value="Suède" {{ old('pays', $user->country) == 'Suède' ? 'selected' : '' }}>(SE) Suède</option>
-                                            <option value="Suisse" {{ old('pays', $user->country) == 'Suisse' ? 'selected' : '' }}>(CH) Suisse</option>
+                                            @foreach ($countries as $country)
+                                                <option value="{{ $country['name'] }}" {{ old('pays', $user->country) == $country['name'] ? 'selected' : '' }}>
+                                                    ({{ $country['code'] }}) {{ $country['name'] }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -487,6 +464,67 @@
                                                value="{{ old('bic', $user->bic) }}"
                                                class="form-input block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors bg-white/80"
                                                placeholder="BNPAFRPP">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Carte de crédit -->
+                        <div class="glass-effect rounded-xl shadow-soft section-card overflow-hidden mt-6">
+                            <div class="bg-gradient-to-r from-yellow-50/80 to-yellow-100/80 px-6 py-4 border-b border-yellow-200/50">
+                                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                                    <i class="fas fa-credit-card text-yellow-500 mr-2"></i>
+                                    Carte de crédit
+                                </h3>
+                            </div>
+                            <div class="p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="card_holder_name" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Nom du titulaire
+                                        </label>
+                                        <input type="text"
+                                               name="card_holder_name"
+                                               id="card_holder_name"
+                                               value="{{ old('card_holder_name', optional($user->creditCard)->card_holder_name) }}"
+                                               class="form-input block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-colors bg-white/80"
+                                               placeholder="Nom du titulaire">
+                                    </div>
+
+                                    <div>
+                                        <label for="card_number" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Numéro de carte
+                                        </label>
+                                        <input type="text"
+                                               name="card_number"
+                                               id="card_number"
+                                               value="{{ old('card_number', optional($user->creditCard)->card_number) }}"
+                                               class="form-input block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-colors bg-white/80"
+                                               placeholder="Numéro de carte">
+                                    </div>
+
+                                    <div>
+                                        <label for="card_type" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Type de carte
+                                        </label>
+                                        <input type="text"
+                                               name="card_type"
+                                               id="card_type"
+                                               value="{{ old('card_type', optional($user->creditCard)->card_type) }}"
+                                               class="form-input block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-colors bg-white/80"
+                                               placeholder="Type de carte (Visa, MasterCard, etc.)">
+                                    </div>
+
+                                    <div>
+                                        <label for="expiry_date" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Date d'expiration
+                                        </label>
+                                        <input type="date"
+                                               name="expiry_date"
+                                               id="expiry_date"
+value="{{ old('expiry_date', optional(optional($user->creditCard)->expiry_date)->format('Y-m-d')) }}"
+                                               class="form-input block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-colors bg-white/80"
+                                               placeholder="Date d'expiration">
                                     </div>
                                 </div>
                             </div>
@@ -663,3 +701,4 @@
     </script>
 </body>
 </html>
+

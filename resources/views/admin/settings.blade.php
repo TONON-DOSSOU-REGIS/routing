@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paramètres de progression - BankPro Admin</title>
+    <title>Paramètres de progression - SG BANK Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
@@ -214,7 +214,7 @@
                                     <i class="fas fa-building-columns text-white text-xl"></i>
                                 </div>
                                 <div>
-                                    <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">BankPro Admin</a>
+                                    <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK Admin</a>
                                     <div class="text-xs text-gray-500 -mt-1">Paramètres système</div>
                                 </div>
                             </div>
@@ -362,7 +362,7 @@
                                                    name="stop_percentage"
                                                    id="stop_percentage"
                                                    min="1"
-                                                   max="99"
+                                                   max="100"
                                                    value="{{ old('stop_percentage', $settings->stop_percentage ?? 70) }}"
                                                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm input-field"
                                                    required>
@@ -439,7 +439,7 @@
                                                     class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 sm:text-sm input-field">
                                                 <option value="">Choisir un client...</option>
                                                 @foreach(\App\Models\User::where('role', 'user')->get() as $user)
-                                                    <option value="{{ $user->id }}" {{ old('target_user_id', $settings->target_user_id) == $user->id ? 'selected' : '' }}>
+                                                    <option value="{{ $user->id }}" {{ old('target_user_id', $settings->target_user_id ?? '') == $user->id ? 'selected' : '' }}>
                                                         {{ $user->first_name }} {{ $user->last_name }} ({{ $user->email }})
                                                     </option>
                                                 @endforeach
@@ -613,5 +613,7 @@
             }
         });
     </script>
+    @include('components.admin-chat-widget')
 </body>
 </html>
+

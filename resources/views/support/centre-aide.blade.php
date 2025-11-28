@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centre d'aide - BankPro</title>
+    <title>Centre d'aide - SG BANK</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -33,7 +33,7 @@
                     <div class="bg-white p-2 rounded-lg">
                         <i class="fas fa-building-columns text-premium text-2xl"></i>
                     </div>
-                    <a href="{{ route('home') }}" class="text-2xl font-bold text-white">BankPro</a>
+                    <a href="{{ route('home') }}" class="text-2xl font-bold text-white">SG BANK</a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
@@ -62,7 +62,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-4xl mx-auto fade-in-up">
                 <h1 class="text-4xl sm:text-5xl font-bold mb-6">
-                    Centre d'aide BankPro
+                    Centre d'aide SG BANK
                 </h1>
                 <p class="text-xl mb-8 text-indigo-100 leading-relaxed">
                     Trouvez rapidement des réponses à vos questions.
@@ -142,7 +142,7 @@
                         </div>
                         <div>
                             <h3 class="font-semibold mb-2 text-premium">Créer un compte</h3>
-                            <p class="text-gray-600 text-sm mb-3">Guide complet pour ouvrir votre compte professionnel BankPro.</p>
+                            <p class="text-gray-600 text-sm mb-3">Guide complet pour ouvrir votre compte professionnel SG BANK.</p>
                             <a href="#" class="text-blue-600 hover:text-blue-800 font-medium text-sm">Lire le guide →</a>
                         </div>
                     </div>
@@ -222,7 +222,7 @@
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <h2 class="text-4xl font-bold mb-6 text-premium">Questions fréquentes</h2>
                 <p class="text-xl text-gray-600 leading-relaxed">
-                    Retrouvez les réponses aux questions les plus courantes sur BankPro.
+                    Retrouvez les réponses aux questions les plus courantes sur SG BANK.
                 </p>
             </div>
 
@@ -231,7 +231,7 @@
                 <div class="faq-item">
                     <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
                         <div>
-                            <p class="font-bold text-xl text-gray-800">Comment ouvrir un compte sur BankPro ?</p>
+                            <p class="font-bold text-xl text-gray-800">Comment ouvrir un compte sur SG BANK ?</p>
                             <p class="text-gray-500 mt-2">Inscription simple en quelques étapes.</p>
                         </div>
                         <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
@@ -258,7 +258,7 @@
                     </button>
                     <div class="faq-answer px-8 pb-6">
                         <p class="text-gray-600 leading-relaxed">
-                            Oui. Chaque virement passe par plusieurs étapes de validation. Les administrateurs BankPro
+                            Oui. Chaque virement passe par plusieurs étapes de validation. Les administrateurs SG BANK
                             peuvent contrôler et certifier les opérations sensibles, ce qui réduit fortement les risques d'erreur ou de fraude.
                         </p>
                     </div>
@@ -302,14 +302,14 @@
                 <div class="faq-item">
                     <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
                         <div>
-                            <p class="font-bold text-xl text-gray-800">Quels sont les frais de BankPro ?</p>
+                            <p class="font-bold text-xl text-gray-800">Quels sont les frais de SG BANK ?</p>
                             <p class="text-gray-500 mt-2">Transparence totale sur les tarifs.</p>
                         </div>
                         <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
                     </button>
                     <div class="faq-answer px-8 pb-6">
                         <p class="text-gray-600 leading-relaxed">
-                            BankPro applique une politique de transparence totale. Les frais sont clairement affichés
+                            SG BANK applique une politique de transparence totale. Les frais sont clairement affichés
                             avant chaque opération. Pas de frais cachés, pas de mauvaises surprises.
                         </p>
                     </div>
@@ -325,7 +325,7 @@
                     </button>
                     <div class="faq-answer px-8 pb-6">
                         <p class="text-gray-600 leading-relaxed">
-                            Absolument. BankPro utilise le chiffrement AES 256-bit, conforme aux standards bancaires
+                            Absolument. SG BANK utilise le chiffrement AES 256-bit, conforme aux standards bancaires
                             européens. Vos données sont stockées sur des serveurs sécurisés et ne sont jamais partagées.
                         </p>
                     </div>
@@ -356,7 +356,7 @@
     <footer class="bg-gray-900 text-gray-400 py-12">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center">
-                <p>&copy; 2025 <span class="text-blue-400 font-semibold">BankPro</span>. Tous droits réservés.</p>
+                <p>&copy; 2025 <span class="text-blue-400 font-semibold">SG BANK</span>. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
@@ -400,3 +400,5 @@
 
 </body>
 </html>
+
+

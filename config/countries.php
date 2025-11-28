@@ -1,0 +1,33 @@
+<?php
+
+return [
+    ['code' => 'AT', 'name' => 'Autriche'],
+    ['code' => 'BE', 'name' => 'Belgique'],
+    ['code' => 'BG', 'name' => 'Bulgarie'],
+    ['code' => 'CY', 'name' => 'Chypre'],
+    ['code' => 'CZ', 'name' => 'République Tchèque'],
+    ['code' => 'DE', 'name' => 'Allemagne'],
+    ['code' => 'DK', 'name' => 'Danemark'],
+    ['code' => 'EE', 'name' => 'Estonie'],
+    ['code' => 'ES', 'name' => 'Espagne'],
+    ['code' => 'FI', 'name' => 'Finlande'],
+    ['code' => 'FR', 'name' => 'France'],
+    ['code' => 'GR', 'name' => 'Grèce'],
+    ['code' => 'HR', 'name' => 'Croatie'],
+    ['code' => 'HU', 'name' => 'Hongrie'],
+    ['code' => 'IE', 'name' => 'Irlande'],
+    ['code' => 'IT', 'name' => 'Italie'],
+    ['code' => 'LT', 'name' => 'Lituanie'],
+    ['code' => 'LU', 'name' => 'Luxembourg'],
+    ['code' => 'LV', 'name' => 'Lettonie'],
+    ['code' => 'MT', 'name' => 'Malte'],
+    ['code' => 'NL', 'name' => 'Pays-Bas'],
+    ['code' => 'PL', 'name' => 'Pologne'],
+    ['code' => 'PT', 'name' => 'Portugal'],
+    ['code' => 'RO', 'name' => 'Roumanie'],
+    ['code' => 'SE', 'name' => 'Suède'],
+    ['code' => 'SI', 'name' => 'Slovénie'],
+    ['code' => 'SK', 'name' => 'Slovaquie'],
+    ['code' => 'CH', 'name' => 'Suisse'],
+];
+

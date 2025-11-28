@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BankPro - Banque en Ligne Professionnelle</title>
+  <title>SG BANK - Banque en Ligne Professionnelle</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -250,11 +250,29 @@
           <div class="bg-white p-2 rounded-lg">
             <i class="fas fa-building-columns text-premium text-2xl"></i>
           </div>
-          <a href="{{ route('home') }}" class="text-2xl font-bold text-white">BankPro</a>
+          <a href="{{ route('home') }}" class="text-2xl font-bold text-white">SG BANK</a>
         </div>
         
         <!-- Menu Desktop -->
         <div class="hidden md:flex items-center space-x-6">
+          <a href="{{ route('home') }}" class="text-white hover:text-blue-200 transition font-medium">Accueil</a>
+          <div class="relative group">
+            <button class="text-white hover:text-blue-200 transition font-medium inline-flex items-center">
+              Services
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <div class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-1 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
+              <a href="{{ route('services.comptes-professionnels') }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900">Comptes professionnels</a>
+              <a href="{{ route('services.virements-internationaux') }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900">Virements internationaux</a>
+              <a href="{{ route('services.gestion-tresorerie') }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900">Gestion de trésorerie</a>
+              <a href="{{ route('services.cartes-paiement') }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900">Cartes de paiement</a>
+            </div>
+          </div>
+          <a href="#testimonial-slider" class="text-white hover:text-blue-200 transition font-medium">Témoignage client</a>
+          <a href="#faq-list" class="text-white hover:text-blue-200 transition font-medium">FAQ</a>
+          <a href="{{ route('support.nous-contacter') }}" class="text-white hover:text-blue-200 transition font-medium">Formulaire de contact</a>
           <a href="{{ route('login') }}" class="text-white hover:text-blue-200 transition font-medium">Connexion</a>
           <a href="{{ route('register') }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">Créer un compte</a>
         </div>
@@ -270,6 +288,24 @@
       <!-- Menu Mobile -->
       <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-800 border-t border-blue-700">
         <div class="px-4 py-6 space-y-4">
+          <a href="{{ route('home') }}" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Accueil</a>
+          <div class="mobile-menu-item relative group">
+            <button class="w-full text-left text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 inline-flex items-center justify-between">
+              Services
+              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <div class="mobile-submenu hidden flex-col bg-blue-900 border border-blue-700 rounded-md mt-2 p-2 space-y-1">
+              <a href="{{ route('services.comptes-professionnels') }}" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md">Comptes professionnels</a>
+              <a href="{{ route('services.virements-internationaux') }}" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md">Virements internationaux</a>
+              <a href="{{ route('services.gestion-tresorerie') }}" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md">Gestion de trésorerie</a>
+              <a href="{{ route('services.cartes-paiement') }}" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md">Cartes de paiement</a>
+            </div>
+          </div>
+          <a href="#testimonial-slider" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Témoignage client</a>
+          <a href="#faq-list" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">FAQ</a>
+          <a href="{{ route('support.nous-contacter') }}" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Formulaire de contact</a>
           <a href="{{ route('login') }}" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Connexion</a>
           <a href="{{ route('register') }}" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Créer un compte</a>
         </div>
@@ -301,7 +337,7 @@
           </h1>
           <p class="text-xl mb-8 max-w-xl leading-relaxed">
             Ouvrez votre compte en quelques minutes, suivez vos virements en temps réel
-            et recevez des justificatifs officiels certifiés par BankPro.
+            et recevez des justificatifs officiels certifiés par SG BANK.
           </p>
           <ul class="grid sm:grid-cols-2 gap-4 text-base mb-8">
             <li class="flex items-start space-x-3">
@@ -330,7 +366,7 @@
             </a>
           </div>
           <p class="text-sm text-gray-300 mt-6 flex items-center">
-            <i class="fas fa-lock mr-2"></i> BankPro respecte les normes de sécurité les plus strictes pour protéger vos données financières.
+            <i class="fas fa-lock mr-2"></i> SG BANK respecte les normes de sécurité les plus strictes pour protéger vos données financières.
           </p>
         </div>
 
@@ -387,7 +423,7 @@
         Des fonctionnalités puissantes, pensées pour les professionnels
       </h2>
       <p class="text-xl text-gray-600 leading-relaxed">
-        BankPro vous offre une expérience bancaire moderne : sécurité avancée, transparence totale et gestion intelligente de vos opérations.
+        SG BANK vous offre une expérience bancaire moderne : sécurité avancée, transparence totale et gestion intelligente de vos opérations.
       </p>
     </div>
 
@@ -530,9 +566,9 @@ document.addEventListener("DOMContentLoaded", () => {
   <section class="py-24 parallax" style="background-image: url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1920&q=80');">
     <div class="gradient-bg bg-opacity-95 py-20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
-        <h2 class="text-4xl font-bold text-center mb-12">Pourquoi choisir BankPro ?</h2>
+        <h2 class="text-4xl font-bold text-center mb-12">Pourquoi choisir SG BANK ?</h2>
         <p class="max-w-3xl mx-auto text-center mb-16 text-xl text-blue-100 leading-relaxed">
-          BankPro accompagne aussi bien les particuliers que les professionnels avec une solution bancaire
+          SG BANK accompagne aussi bien les particuliers que les professionnels avec une solution bancaire
           moderne, accessible, rapide et extrêmement fiable.
         </p>
 
@@ -586,7 +622,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="text-6xl font-bold mb-4" id="client-count">0</div>
           <div class="text-2xl mb-4">Clients satisfaits</div>
           <p class="text-blue-100 text-lg leading-relaxed">
-            Des milliers d'utilisateurs font confiance à BankPro pour leurs opérations quotidiennes.
+            Des milliers d'utilisateurs font confiance à SG BANK pour leurs opérations quotidiennes.
           </p>
         </div>
         <div class="transform hover:scale-105 transition duration-300 p-6">
@@ -600,7 +636,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="text-6xl font-bold mb-4" id="satisfaction-rate">0%</div>
           <div class="text-2xl mb-4">Taux de satisfaction</div>
           <p class="text-blue-100 text-lg leading-relaxed">
-            Nos utilisateurs recommandent BankPro pour sa simplicité, sa rapidité et son sérieux.
+            Nos utilisateurs recommandent SG BANK pour sa simplicité, sa rapidité et son sérieux.
           </p>
         </div>
       </div>
@@ -614,7 +650,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="text-center max-w-3xl mx-auto mb-16">
         <h2 class="text-4xl font-bold mb-6 text-premium">Ils nous font confiance</h2>
         <p class="text-xl text-gray-600 leading-relaxed">
-          BankPro collabore avec des institutions financières reconnues mondialement, afin de garantir
+          SG BANK collabore avec des institutions financières reconnues mondialement, afin de garantir
           fiabilité, sécurité et qualité de service.
         </p>
       </div>
@@ -690,7 +726,7 @@ document.addEventListener("DOMContentLoaded", () => {
         Certifiée par les meilleurs standards
       </h2>
       <p class="text-xl text-gray-600 leading-relaxed">
-        BankPro applique les normes les plus strictes du secteur bancaire pour assurer des opérations
+        SG BANK applique les normes les plus strictes du secteur bancaire pour assurer des opérations
         fiables, transparentes et sécurisées.
       </p>
     </div>
@@ -811,7 +847,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="text-center max-w-3xl mx-auto mb-16">
         <h2 class="text-4xl font-bold mb-6 text-premium">Ce que disent nos clients</h2>
         <p class="text-xl text-gray-600 leading-relaxed">
-          Des utilisateurs réels, des expériences réelles. BankPro simplifie la gestion des virements au quotidien.
+          Des utilisateurs réels, des expériences réelles. SG BANK simplifie la gestion des virements au quotidien.
         </p>
       </div>
 
@@ -831,7 +867,7 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>
               <div class="flex-1">
                 <p class="text-gray-600 mb-4 text-lg leading-relaxed">
-                  « BankPro m'a permis de suivre mes virements fournisseurs en temps réel.
+                  « SG BANK m'a permis de suivre mes virements fournisseurs en temps réel.
                   La barre de progression et les reçus PDF sont vraiment rassurants. »
                 </p>
                 <div class="flex items-center space-x-2 text-yellow-400 text-lg">
@@ -909,7 +945,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="text-center max-w-3xl mx-auto mb-16">
         <h2 class="text-4xl font-bold mb-6 text-premium">Questions fréquentes (FAQ)</h2>
         <p class="text-xl text-gray-600 leading-relaxed">
-          Retrouvez les réponses aux questions les plus courantes sur BankPro, l'ouverture de compte
+          Retrouvez les réponses aux questions les plus courantes sur SG BANK, l'ouverture de compte
           et la gestion de vos virements en ligne.
         </p>
       </div>
@@ -919,7 +955,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="faq-item">
           <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
             <div>
-              <p class="font-bold text-xl text-gray-800">Comment ouvrir un compte sur BankPro ?</p>
+              <p class="font-bold text-xl text-gray-800">Comment ouvrir un compte sur SG BANK ?</p>
               <p class="text-gray-500 mt-2">Inscription simple en quelques étapes.</p>
             </div>
             <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
@@ -943,7 +979,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </button>
           <div class="faq-answer px-8 pb-6">
             <p class="text-gray-600 leading-relaxed">
-              Oui. Chaque virement passe par plusieurs étapes de validation. Les administrateurs BankPro
+              Oui. Chaque virement passe par plusieurs étapes de validation. Les administrateurs SG BANK
               peuvent contrôler et certifier les opérations sensibles, ce qui réduit fortement les risques d'erreur ou de fraude.
             </p>
           </div>
@@ -996,7 +1032,7 @@ document.addEventListener("DOMContentLoaded", () => {
     </h2>
 
     <p class="text-2xl text-gray-600 mb-10 leading-relaxed animate-text">
-      Rejoignez des milliers de clients satisfaits qui font confiance à BankPro pour leurs virements et opérations bancaires en ligne.
+      Rejoignez des milliers de clients satisfaits qui font confiance à SG BANK pour leurs virements et opérations bancaires en ligne.
     </p>
 
     <!-- BUTTON -->
@@ -1113,7 +1149,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="bg-white p-2 rounded-lg">
               <i class="fas fa-building-columns text-premium text-2xl"></i>
             </div>
-            <a href="{{ route('home') }}" class="text-2xl font-bold text-white">BankPro</a>
+            <a href="{{ route('home') }}" class="text-2xl font-bold text-white">SG BANK</a>
           </div>
           <p class="text-gray-400 mb-4">
             Une solution bancaire 100% sécurisée, simple et rapide pour les professionnels.
@@ -1159,7 +1195,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="section-divider my-8"></div>
       
       <div class="text-center">
-        <p>&copy; 2025 <span class="text-blue-400 font-semibold">BankPro</span>. Tous droits réservés.</p>
+        <p>&copy; 2025 <span class="text-blue-400 font-semibold">SG BANK</span>. Tous droits réservés.</p>
         <p class="text-sm text-gray-500 mt-2">
           Les informations affichées sur ce site ont une valeur indicative et peuvent être adaptées selon votre
           projet réel.
@@ -1274,6 +1310,17 @@ document.addEventListener("DOMContentLoaded", () => {
             icon.classList.add('fa-bars');
           }
         });
+
+        // Toggle submenu for Services in mobile menu
+        const servicesButton = mobileMenu.querySelector('.mobile-menu-item.relative.group > button');
+        const servicesSubmenu = mobileMenu.querySelector('.mobile-submenu');
+
+        if (servicesButton && servicesSubmenu) {
+          servicesButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            servicesSubmenu.classList.toggle('hidden');
+          });
+        }
       }
 
       /* STATISTIQUES DYNAMIQUES CORRIGÉES POUR MOBILE */
@@ -1349,3 +1396,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+

@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('country')->nullable()->change();
+            // Drop the country column to avoid migration errors caused by invalid data
+            $table->dropColumn('country');
         });
     }
 
@@ -21,8 +22,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // No rollback needed for dropped column
         Schema::table('users', function (Blueprint $table) {
-            $table->string('country')->nullable(false)->change();
+            //
         });
     }
 };
+

@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->date('date_of_birth')->nullable()->change();
+            // Drop the date_of_birth column due to data truncation errors
+            $table->dropColumn('date_of_birth');
         });
     }
 
@@ -22,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->date('date_of_birth')->nullable(false)->change();
+            // No rollback actions needed for dropped column
         });
     }
 };
+

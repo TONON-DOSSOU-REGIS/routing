@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog - BankPro</title>
+    <title>Blog - SG BANK</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -29,7 +29,7 @@
                     <div class="bg-white p-2 rounded-lg">
                         <i class="fas fa-building-columns text-premium text-2xl"></i>
                     </div>
-                    <a href="{{ route('home') }}" class="text-2xl font-bold text-white">BankPro</a>
+                    <a href="{{ route('home') }}" class="text-2xl font-bold text-white">SG BANK</a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
@@ -58,7 +58,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-4xl mx-auto fade-in-up">
                 <h1 class="text-4xl sm:text-5xl font-bold mb-6">
-                    Blog BankPro
+                    Blog SG BANK
                 </h1>
                 <p class="text-xl mb-8 text-indigo-100 leading-relaxed">
                     Découvrez nos insights sur la fintech, les tendances bancaires et les conseils
@@ -264,7 +264,7 @@
     <footer class="bg-gray-900 text-gray-400 py-12">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center">
-                <p>&copy; 2025 <span class="text-blue-400 font-semibold">BankPro</span>. Tous droits réservés.</p>
+                <p>&copy; 2025 <span class="text-blue-400 font-semibold">SG BANK</span>. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
@@ -279,3 +279,5 @@
 
 </body>
 </html>
+
+

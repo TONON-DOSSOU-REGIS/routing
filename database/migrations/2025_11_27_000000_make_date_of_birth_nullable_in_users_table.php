@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('id_type')->nullable()->change();
+            $table->date('date_of_birth')->nullable()->change();
         });
     }
 
@@ -21,8 +21,14 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Replace NULL dates before making the column NOT NULL to avoid truncation
+        \Illuminate\Support\Facades\DB::table('users')
+            ->whereNull('date_of_birth')
+            ->update(['date_of_birth' => '1970-01-01']);
+
         Schema::table('users', function (Blueprint $table) {
-            $table->string('id_type')->nullable(false)->change();
+            $table->date('date_of_birth')->nullable(false)->change();
         });
     }
 };
+

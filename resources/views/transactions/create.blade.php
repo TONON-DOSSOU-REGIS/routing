@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nouveau virement - BankPro</title>
+    <title>Nouveau virement - SG BANK</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
@@ -129,6 +129,30 @@
             animation: pulse-glow 2s infinite;
         }
 
+        /* Overlay popup fade in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Icon smooth fade & scale */
+        .icon-fade-transition {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .icon-visible {
+            opacity: 1 !important;
+            transform: scale(1) !important;
+        }
+
         /* Style pour l'arrière-plan */
         .background-container {
             background-image: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
@@ -210,7 +234,7 @@
                                     <i class="fas fa-building-columns text-white text-xl"></i>
                                 </div>
                                 <div>
-                                    <a href="{{ route('dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">BankPro</a>
+                                    <a href="{{ route('dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK</a>
                                     <div class="text-xs text-gray-500 -mt-1">Nouveau virement</div>
                                 </div>
                             </div>
@@ -500,11 +524,11 @@
 
     <!-- Overlay d'interruption -->
     <div id="flashOverlay" class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-70 z-50 p-4">
-        <div class="glass-card max-w-md w-full mx-auto p-8 rounded-2xl shadow-2xl text-center animate-pulse border border-red-200">
-            <div class="bg-red-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
+        <div id="flashCard" class="glass-card max-w-md w-full mx-auto p-8 rounded-2xl shadow-2xl text-center animate-pulse border border-red-200">
+            <div id="flashIconContainer" class="bg-red-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <i id="flashIcon" class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-3">Opération interrompue</h3>
+            <h3 id="flashTitle" class="text-xl font-bold text-gray-900 mb-3">Opération interrompue</h3>
             <p id="flashMessage" class="text-gray-700 mb-6 leading-relaxed"></p>
             <button id="closeFlash" class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-indigo-700 font-medium shadow-lg w-full">
                 <i class="fas fa-check mr-2"></i>J'ai compris
@@ -535,6 +559,10 @@
         const overlay = document.getElementById('flashOverlay');
         const flashMsg = document.getElementById('flashMessage');
         const closeFlash = document.getElementById('closeFlash');
+        const flashIcon = document.getElementById('flashIcon');
+        const flashIconContainer = document.getElementById('flashIconContainer');
+        const flashCard = document.getElementById('flashCard');
+        const flashTitle = document.getElementById('flashTitle');
 
         let txId = null;
         let ticking = false;
@@ -568,11 +596,11 @@
                     startBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Traitement en cours...';
                     tick();
                 } else {
-                    showError('Erreur lors du lancement du virement');
+                    showMessage('Erreur lors du lancement du virement', 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showError('Une erreur est survenue lors de la connexion');
+                showMessage('Une erreur est survenue lors de la connexion', 'error');
             }
         });
 
@@ -596,19 +624,20 @@
                 if (data.status === 'on_hold') {
                     ticking = false;
                     resetStartButton();
-                    flashMsg.textContent = data.message || 'Transaction en attente de vérification de sécurité.';
-                    overlay.classList.remove('hidden');
-                    overlay.classList.add('flex');
+                    showMessage(data.message || 'Transaction en attente de vérification de sécurité.', 'error');
                     return;
                 }
 
                 if (data.status === 'success') {
                     ticking = false;
+                    resetStartButton();
                     // Animation de succès avant redirection
                     progressBar.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                    showMessage('Virement effectué avec succès ! Vous allez être redirigé...', 'success');
+                    // Let the success message show for 2 seconds before redirect
                     setTimeout(() => {
                         window.location.href = '{{ route('transactions.history') }}';
-                    }, 1000);
+                    }, 2000);
                     return;
                 }
 
@@ -618,7 +647,7 @@
                 console.error('Error:', error);
                 ticking = false;
                 resetStartButton();
-                showError('Erreur de connexion lors du traitement');
+                showMessage('Erreur de connexion lors du traitement', 'error');
             }
         }
 
@@ -627,10 +656,42 @@
             startBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Lancer le virement';
         }
 
-        function showError(message) {
+        function showMessage(message, type = 'error') {
             flashMsg.textContent = message;
+            // Remove previous icon classes and animation classes
+            flashIcon.classList.remove('icon-visible');
+            flashIcon.classList.add('icon-fade-transition');
+
+            if (type === 'success') {
+                // Change to validated icon and green styling
+                flashIcon.className = 'fas fa-check-circle text-green-500 text-2xl icon-fade-transition';
+                flashIconContainer.className = 'bg-green-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4';
+                flashCard.className = 'glass-card max-w-md w-full mx-auto p-8 rounded-2xl shadow-2xl text-center border border-green-200';
+                flashTitle.textContent = 'Opération réussie';
+
+                // Animate icon appearance
+                setTimeout(() => {
+                    flashIcon.classList.add('icon-visible');
+                }, 50);
+            } else {
+                // Change to alert icon and red styling
+                flashIcon.className = 'fas fa-exclamation-triangle text-red-500 text-2xl icon-fade-transition';
+                flashIconContainer.className = 'bg-red-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4';
+                flashCard.className = 'glass-card max-w-md w-full mx-auto p-8 rounded-2xl shadow-2xl text-center border border-red-200';
+                flashTitle.textContent = 'Opération interrompue';
+
+                // Animate icon appearance
+                setTimeout(() => {
+                    flashIcon.classList.add('icon-visible');
+                }, 50);
+            }
+
+            // Show overlay with fade-in animation
             overlay.classList.remove('hidden');
             overlay.classList.add('flex');
+            overlay.style.animation = 'fadeIn 0.3s ease forwards';
+
+            console.log("Current icon class:", flashIcon.className); // Debug log
         }
 
         closeFlash.addEventListener('click', () => {
@@ -652,3 +713,4 @@
     </script>
 </body>
 </html>
+
