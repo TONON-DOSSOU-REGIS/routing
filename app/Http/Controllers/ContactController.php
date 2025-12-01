@@ -12,6 +12,11 @@ use Carbon\Carbon;
 
 class ContactController extends Controller
 {
+    public function create()
+    {
+        return view('support.nous-contacter');
+    }
+
     public function store(ContactRequest $request)
     {
         // Validate and get validated data

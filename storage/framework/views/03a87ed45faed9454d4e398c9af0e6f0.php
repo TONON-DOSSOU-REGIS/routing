@@ -653,4 +653,6 @@
     </script>
     <?php echo $__env->make('components.admin-chat-widget', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 </body>
-</html><?php /**PATH C:\xampp\htdocs\cerveau\resources\views/admin/users.blade.php ENDPATH**/ ?>
+</html>
+
+<?php /**PATH C:\xampp\htdocs\cerveau\resources\views/admin/users.blade.php ENDPATH**/ ?>

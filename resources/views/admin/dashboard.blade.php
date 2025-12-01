@@ -139,7 +139,7 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
+<body class="bg-gradient-to-br from-red-900 via-red-800 to-red-700 min-h-screen">
     <div class="min-h-screen">
         <!-- Navigation améliorée -->
         <nav class="glass-nav sticky top-0 z-50">
@@ -238,8 +238,8 @@
         <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             <!-- En-tête du tableau de bord -->
             <div class="mb-8 fade-in-up">
-                <h1 class="text-3xl font-bold text-gray-900 text-center">Tableau de bord administrateur</h1>
-                <p class="text-gray-600 mt-2 text-center">Vue d'ensemble des performances et activités du système</p>
+                <h1 class="text-3xl font-bold text-white text-center">Tableau de bord administrateur</h1>
+                <p class="text-white/80 mt-2 text-center">Vue d'ensemble des performances et activités du système</p>
             </div>
 
             <!-- Stats Cards améliorées -->

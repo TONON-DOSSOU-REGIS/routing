@@ -492,4 +492,6 @@ function escapeHtml(text) {
 setInterval(updateAdminUnreadCount, 10000);
 updateAdminUnreadCount();
 </script>
+
+
 <?php /**PATH C:\xampp\htdocs\cerveau\resources\views/components/admin-chat-widget.blade.php ENDPATH**/ ?>

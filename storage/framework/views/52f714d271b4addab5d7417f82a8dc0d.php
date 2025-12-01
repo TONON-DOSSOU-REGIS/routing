@@ -634,7 +634,7 @@ unset($__errorArgs, $__bag); ?>
             const payload = new FormData(form);
 
             try {
-                const res = await fetch('<?php echo e(route('transfer.start')); ?>', {
+                const res = await fetch('<?php echo e(route('transactions.start')); ?>', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
@@ -664,7 +664,7 @@ unset($__errorArgs, $__bag); ?>
             if (!ticking || !txId) return;
 
             try {
-                const res = await fetch('<?php echo e(route('transfer.progress')); ?>', {
+                const res = await fetch('<?php echo e(route('transactions.progress')); ?>', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
@@ -768,4 +768,6 @@ unset($__errorArgs, $__bag); ?>
         });
     </script>
 </body>
-</html><?php /**PATH C:\xampp\htdocs\cerveau\resources\views/transactions/create.blade.php ENDPATH**/ ?>
+</html>
+
+<?php /**PATH C:\xampp\htdocs\cerveau\resources\views/transactions/create.blade.php ENDPATH**/ ?>

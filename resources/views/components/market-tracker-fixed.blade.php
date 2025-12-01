@@ -7,7 +7,7 @@
                 </svg>
             </div>
             <div>
-                <h3 class="text-xl font-bold text-white">Suivi des Marchés</h3>
+                <h3 class="text-xl font-bold text-black">Suivi des Marchés</h3>
                 <p class="text-gray-400 text-sm" id="last-update">À l'instant</p>
             </div>
         </div>

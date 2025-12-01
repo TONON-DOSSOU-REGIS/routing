@@ -454,4 +454,6 @@ document.addEventListener('DOMContentLoaded', function() {
     loadAnalytics();
 });
 </script>
+
+
 <?php /**PATH C:\xampp\htdocs\cerveau\resources\views/components/analytics-section.blade.php ENDPATH**/ ?>

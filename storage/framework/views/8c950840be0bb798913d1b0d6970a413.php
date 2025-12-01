@@ -5,4 +5,5 @@
     <?php echo e($slot); ?>
 
 </section>
+
 <?php /**PATH C:\xampp\htdocs\cerveau\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/section-container.blade.php ENDPATH**/ ?>

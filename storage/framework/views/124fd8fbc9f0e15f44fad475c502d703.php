@@ -721,4 +721,6 @@
         });
     </script>
 </body>
-</html><?php /**PATH C:\xampp\htdocs\cerveau\resources\views/admin/users/create.blade.php ENDPATH**/ ?>
+</html>
+
+<?php /**PATH C:\xampp\htdocs\cerveau\resources\views/admin/users/create.blade.php ENDPATH**/ ?>

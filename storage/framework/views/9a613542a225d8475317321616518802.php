@@ -164,4 +164,5 @@ unset($__defined_vars, $__key, $__value); ?>
         </button>
     </div>
 </div>
+
 <?php /**PATH C:\xampp\htdocs\cerveau\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/request-url.blade.php ENDPATH**/ ?>

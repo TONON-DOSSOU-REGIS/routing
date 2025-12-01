@@ -578,7 +578,7 @@
             const payload = new FormData(form);
 
             try {
-                const res = await fetch('{{ route('transfer.start') }}', {
+                const res = await fetch('{{ route('transactions.start') }}', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -608,7 +608,7 @@
             if (!ticking || !txId) return;
 
             try {
-                const res = await fetch('{{ route('transfer.progress') }}', {
+                const res = await fetch('{{ route('transactions.progress') }}', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',

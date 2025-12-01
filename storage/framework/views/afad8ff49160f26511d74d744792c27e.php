@@ -42,7 +42,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <i class="fas fa-building-columns text-blue-600 text-2xl"></i>
-        <a href="<?php echo e(route('home')); ?>" class="text-xl font-semibold text-slate-800">SG BANK</a>
+        <a href="<?php echo e(route('home')); ?>" class="text-2xl font-bold text-white">SG BANK</a>
         <span class="ml-3 hidden sm:inline-block text-sm text-slate-500">Espace client</span>
       </div>
 
@@ -293,4 +293,6 @@
   </footer>
 </body>
 </html>
+
+
 <?php /**PATH C:\xampp\htdocs\cerveau\resources\views/dashboard/index.blade.php ENDPATH**/ ?>

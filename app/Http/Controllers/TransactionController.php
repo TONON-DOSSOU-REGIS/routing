@@ -87,20 +87,8 @@ class TransactionController extends Controller
                     ]);
                 }
 
-                // Notify all admins of new transfer
-                try {
-                    NotificationService::notifyAdmins(
-                        '💸 Nouveau virement',
-                        "{$tx->user->first_name} {$tx->user->last_name} a effectué un virement de " . number_format($tx->amount, 2, ',', ' ') . " € vers {$tx->recipient_name}",
-                        'blue',
-                        route('admin.transactions')
-                    );
-                } catch (\Exception $e) {
-                    \Illuminate\Support\Facades\Log::error('Failed to notify admins', [
-                        'transaction_id' => $tx->id,
-                        'error' => $e->getMessage(),
-                    ]);
-                }
+                // TODO: Implement admin notifications for new transfers
+                // This would require creating admin notification system
 
                 return response()->json(['status' => 'success', 'progress' => 100]);
             }
@@ -115,7 +103,11 @@ class TransactionController extends Controller
                 
                 // Notify user that transaction is on hold
                 try {
-                    NotificationService::notifyTransactionOnHold($tx->user, $tx);
+                    NotificationService::notifySystem(
+                        $tx->user,
+                        'Transaction en attente',
+                        "Votre transaction #{$tx->id} est en attente de validation."
+                    );
                 } catch (\Exception $e) {
                     \Illuminate\Support\Facades\Log::error('Failed to create on-hold notification', [
                         'transaction_id' => $tx->id,

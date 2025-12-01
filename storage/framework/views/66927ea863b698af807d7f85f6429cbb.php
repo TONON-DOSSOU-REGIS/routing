@@ -9,4 +9,5 @@
     </clipPath>
   </defs>
 </svg>
+
 <?php /**PATH C:\xampp\htdocs\cerveau\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/icons/chevrons-down-up.blade.php ENDPATH**/ ?>

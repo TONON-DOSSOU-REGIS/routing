@@ -4,336 +4,170 @@ namespace App\Services;
 
 use App\Models\Notification;
 use App\Models\User;
-use App\Helpers\CurrencyHelper;
 
 class NotificationService
 {
     /**
-     * Create a transaction notification
+     * Créer une notification pour un utilisateur
      */
-    public static function notifyTransaction(User $user, $transaction, $type = 'success')
-    {
-        $titles = [
-            'deposit' => '💰 Dépôt reçu',
-            'withdrawal' => '💸 Retrait effectué',
-            'transfer' => '📤 Virement envoyé',
-        ];
-
-        $messages = [
-            'deposit' => "Vous avez reçu un dépôt de " . CurrencyHelper::formatForUser($user, $transaction->amount),
-            'withdrawal' => "Un retrait de " . CurrencyHelper::formatForUser($user, $transaction->amount) . " a été effectué",
-            'transfer' => "Votre virement de " . CurrencyHelper::formatForUser($user, $transaction->amount) . " a été envoyé",
-        ];
-
-        $colors = [
-            'deposit' => 'green',
-            'withdrawal' => 'red',
-            'transfer' => 'blue',
-        ];
-
-        return Notification::create([
-            'user_id' => $user->id,
-            'type' => 'transaction',
-            'title' => $titles[$transaction->type] ?? 'Transaction',
-            'message' => $messages[$transaction->type] ?? "Transaction de " . CurrencyHelper::formatForUser($user, $transaction->amount),
-            'icon' => 'fa-exchange-alt',
-            'color' => $colors[$transaction->type] ?? 'blue',
-            'action_url' => route('transactions.receipt.html', $transaction->id),
-        ]);
-    }
-
-    /**
-     * Create a message notification
-     */
-    public static function notifyNewMessage(User $user, $message)
+    public static function create(User $user, string $type, string $title, string $message, array $data = []): Notification
     {
         return Notification::create([
             'user_id' => $user->id,
-            'type' => 'message',
-            'title' => '💬 Nouveau message',
-            'message' => 'Vous avez reçu un nouveau message du support',
-            'icon' => 'fa-envelope',
-            'color' => 'blue',
-            'action_url' => '/dashboard',
-        ]);
-    }
-
-    /**
-     * Create an account validation notification
-     */
-    public static function notifyAccountApproved(User $user)
-    {
-        return Notification::create([
-            'user_id' => $user->id,
-            'type' => 'account',
-            'title' => '✅ Compte validé',
-            'message' => 'Félicitations! Votre compte a été validé par notre équipe. Vous pouvez maintenant accéder à tous nos services.',
-            'icon' => 'fa-check-circle',
-            'color' => 'green',
-            'action_url' => '/dashboard',
-        ]);
-    }
-
-    /**
-     * Create an account suspended notification
-     */
-    public static function notifyAccountSuspended(User $user, $reason = null)
-    {
-        $message = 'Votre compte a été suspendu.';
-        if ($reason) {
-            $message .= ' Raison: ' . $reason;
-        }
-        $message .= ' Veuillez contacter le support.';
-
-        return Notification::create([
-            'user_id' => $user->id,
-            'type' => 'alert',
-            'title' => '⚠️ Compte suspendu',
-            'message' => $message,
-            'icon' => 'fa-exclamation-triangle',
-            'color' => 'red',
-            'action_url' => route('support.nous-contacter'),
-        ]);
-    }
-
-    /**
-     * Create a low balance alert
-     */
-    public static function notifyLowBalance(User $user, $threshold = 100)
-    {
-        return Notification::create([
-            'user_id' => $user->id,
-            'type' => 'alert',
-            'title' => '⚠️ Solde faible',
-            'message' => "Votre solde est inférieur à " . CurrencyHelper::formatForUser($user, $threshold) . ". Pensez à recharger votre compte.",
-            'icon' => 'fa-exclamation-circle',
-            'color' => 'yellow',
-            'action_url' => '/dashboard',
-        ]);
-    }
-
-    /**
-     * Create a transaction on hold notification
-     */
-    public static function notifyTransactionOnHold(User $user, $transaction)
-    {
-        return Notification::create([
-            'user_id' => $user->id,
-            'type' => 'alert',
-            'title' => '⏳ Transaction en attente',
-            'message' => "Votre transaction de " . CurrencyHelper::formatForUser($user, $transaction->amount) . " est en attente de validation.",
-            'icon' => 'fa-clock',
-            'color' => 'yellow',
-            'action_url' => route('transactions.receipt.html', $transaction->id),
-        ]);
-    }
-
-    /**
-     * Create a password changed notification
-     */
-    public static function notifyPasswordChanged(User $user)
-    {
-        return Notification::create([
-            'user_id' => $user->id,
-            'type' => 'account',
-            'title' => '🔐 Mot de passe modifié',
-            'message' => 'Votre mot de passe a été modifié avec succès. Si ce n\'était pas vous, contactez immédiatement le support.',
-            'icon' => 'fa-key',
-            'color' => 'purple',
-            'action_url' => route('support.nous-contacter'),
-        ]);
-    }
-
-    /**
-     * Create a new login notification
-     */
-    public static function notifyNewLogin(User $user, $ipAddress, $userAgent)
-    {
-        return Notification::create([
-            'user_id' => $user->id,
-            'type' => 'account',
-            'title' => '🔓 Nouvelle connexion',
-            'message' => "Nouvelle connexion détectée depuis {$ipAddress}",
-            'icon' => 'fa-sign-in-alt',
-            'color' => 'blue',
-            'action_url' => '/dashboard',
-        ]);
-    }
-
-    /**
-     * Create a system notification
-     */
-    public static function notifySystem(User $user, $title, $message, $color = 'blue')
-    {
-        return Notification::create([
-            'user_id' => $user->id,
-            'type' => 'system',
+            'type' => $type,
             'title' => $title,
             'message' => $message,
-            'icon' => 'fa-info-circle',
-            'color' => $color,
-            'action_url' => null,
+            'data' => $data,
+            'is_read' => false,
         ]);
     }
 
     /**
-     * Create a welcome notification for new users
+     * Notification pour nouvelle transaction
      */
-    public static function notifyWelcome(User $user)
+    public static function notifyTransaction(User $user, $transaction): void
     {
-        return Notification::create([
-            'user_id' => $user->id,
-            'type' => 'system',
-            'title' => '🎉 Bienvenue sur SG BANK!',
-            'message' => 'Merci de nous avoir rejoint! Découvrez toutes nos fonctionnalités et profitez d\'une expérience bancaire moderne.',
-            'icon' => 'fa-hand-wave',
-            'color' => 'purple',
-            'action_url' => '/dashboard',
-        ]);
+        $amount = \App\Helpers\CurrencyHelper::format($transaction->amount, $user->default_currency ?? 'EUR');
+        $type = $transaction->type === 'credit' ? 'dépôt' : 'retrait';
+
+        self::create(
+            $user,
+            'transaction',
+            'Nouvelle transaction',
+            "Un {$type} de {$amount} a été effectué sur votre compte.",
+            [
+                'transaction_id' => $transaction->id,
+                'amount' => $transaction->amount,
+                'type' => $transaction->type,
+                'status' => $transaction->status
+            ]
+        );
     }
 
     /**
-     * Notify all admins
+     * Notification pour nouveau message dans le chat
      */
-    public static function notifyAdmins($title, $message, $color = 'blue', $actionUrl = null)
+    public static function notifyMessage(User $user, $message): void
     {
-        $admins = User::where('role', 'admin')->get();
-        
-        foreach ($admins as $admin) {
-            Notification::create([
-                'user_id' => $admin->id,
-                'type' => 'system',
-                'title' => $title,
-                'message' => $message,
-                'icon' => 'fa-user-shield',
-                'color' => $color,
-                'action_url' => $actionUrl,
-            ]);
-        }
+        self::create(
+            $user,
+            'message',
+            'Nouveau message',
+            "Vous avez reçu un nouveau message du support.",
+            [
+                'message_id' => $message->id,
+                'sender_id' => $message->sender_id,
+                'content' => substr($message->message, 0, 50) . (strlen($message->message) > 50 ? '...' : '')
+            ]
+        );
     }
 
     /**
-     * Notify admins when a user logs in
+     * Notification pour changement de statut de compte
      */
-    public static function notifyAdminUserLogin(User $user, $ipAddress, $userAgent = null)
+    public static function notifyAccountStatus(User $user, string $oldStatus, string $newStatus): void
     {
-        $admins = User::where('role', 'admin')->get();
-        
-        $browser = 'Navigateur inconnu';
-        if ($userAgent) {
-            // Simple browser detection
-            if (stripos($userAgent, 'Chrome') !== false) {
-                $browser = 'Chrome';
-            } elseif (stripos($userAgent, 'Firefox') !== false) {
-                $browser = 'Firefox';
-            } elseif (stripos($userAgent, 'Safari') !== false) {
-                $browser = 'Safari';
-            } elseif (stripos($userAgent, 'Edge') !== false) {
-                $browser = 'Edge';
-            }
-        }
+        $statusLabels = [
+            'pending' => 'en attente',
+            'active' => 'actif',
+            'suspended' => 'suspendu',
+            'blocked' => 'bloqué'
+        ];
 
-        foreach ($admins as $admin) {
-            Notification::create([
-                'user_id' => $admin->id,
-                'type' => 'account',
-                'title' => '🔓 Connexion utilisateur',
-                'message' => "{$user->first_name} {$user->last_name} s'est connecté depuis {$ipAddress} ({$browser})",
-                'icon' => 'fa-sign-in-alt',
-                'color' => 'blue',
-                'action_url' => route('admin.users'),
-            ]);
-        }
+        $oldLabel = $statusLabels[$oldStatus] ?? $oldStatus;
+        $newLabel = $statusLabels[$newStatus] ?? $newStatus;
+
+        self::create(
+            $user,
+            'account',
+            'Changement de statut',
+            "Le statut de votre compte est passé de '{$oldLabel}' à '{$newLabel}'.",
+            [
+                'old_status' => $oldStatus,
+                'new_status' => $newStatus
+            ]
+        );
     }
 
     /**
-     * Notify admins when a new user registers
+     * Notification pour compte approuvé par l'admin
      */
-    public static function notifyAdminUserRegistration(User $user, $ipAddress)
+    public static function notifyAccountApproved(User $user): void
     {
-        $admins = User::where('role', 'admin')->get();
-        
-        foreach ($admins as $admin) {
-            Notification::create([
-                'user_id' => $admin->id,
-                'type' => 'account',
-                'title' => '👤 Nouvelle inscription',
-                'message' => "{$user->first_name} {$user->last_name} ({$user->email}) s'est inscrit depuis {$ipAddress}. Le compte est en attente de validation.",
-                'icon' => 'fa-user-plus',
-                'color' => 'purple',
-                'action_url' => route('admin.users'),
-            ]);
-        }
+        self::create(
+            $user,
+            'account',
+            'Compte approuvé',
+            "Félicitations ! Votre compte a été approuvé et est maintenant actif.",
+            ['status' => 'approved']
+        );
     }
 
     /**
-     * Notify admins when a deposit is made
+     * Notification pour alerte de sécurité
      */
-    public static function notifyAdminDeposit(User $user, $amount, $currency = 'EUR')
+    public static function notifySecurityAlert(User $user, string $alertType, string $message): void
     {
-        $admins = User::where('role', 'admin')->get();
-        
-        $currencySymbol = $currency === 'EUR' ? '€' : $currency;
-        
-        foreach ($admins as $admin) {
-            Notification::create([
-                'user_id' => $admin->id,
-                'type' => 'transaction',
-                'title' => '💰 Dépôt effectué',
-                'message' => "Dépôt de " . number_format($amount, 2, ',', ' ') . " {$currencySymbol} effectué sur le compte de {$user->first_name} {$user->last_name}",
-                'icon' => 'fa-money-bill-wave',
-                'color' => 'green',
-                'action_url' => route('admin.transactions'),
-            ]);
-        }
+        self::create(
+            $user,
+            'alert',
+            'Alerte de sécurité',
+            $message,
+            ['alert_type' => $alertType]
+        );
     }
 
     /**
-     * Notify user of their own login
+     * Notification système
      */
-    public static function notifyUserLogin(User $user, $ipAddress, $userAgent = null)
+    public static function notifySystem(User $user, string $title, string $message): void
     {
-        $browser = 'Navigateur inconnu';
-        if ($userAgent) {
-            // Simple browser detection
-            if (stripos($userAgent, 'Chrome') !== false) {
-                $browser = 'Chrome';
-            } elseif (stripos($userAgent, 'Firefox') !== false) {
-                $browser = 'Firefox';
-            } elseif (stripos($userAgent, 'Safari') !== false) {
-                $browser = 'Safari';
-            } elseif (stripos($userAgent, 'Edge') !== false) {
-                $browser = 'Edge';
-            }
-        }
-
-        return Notification::create([
-            'user_id' => $user->id,
-            'type' => 'account',
-            'title' => '🔓 Connexion réussie',
-            'message' => "Vous vous êtes connecté depuis {$ipAddress} ({$browser}) le " . now()->format('d/m/Y à H:i'),
-            'icon' => 'fa-sign-in-alt',
-            'color' => 'blue',
-            'action_url' => '/dashboard',
-        ]);
+        self::create(
+            $user,
+            'system',
+            $title,
+            $message,
+            ['system' => true]
+        );
     }
 
     /**
-     * Notify admin who performed the deposit action
+     * Notification pour dépôt effectué par l'admin
      */
-    public static function notifyAdminDepositConfirmation(User $admin, User $targetUser, $amount, $currency = 'EUR')
+    public static function notifyDeposit(User $user, $transaction): void
     {
-        $currencySymbol = $currency === 'EUR' ? '€' : $currency;
-        
-        return Notification::create([
-            'user_id' => $admin->id,
-            'type' => 'transaction',
-            'title' => '✅ Dépôt confirmé',
-            'message' => "Vous avez effectué un dépôt de " . number_format($amount, 2, ',', ' ') . " {$currencySymbol} sur le compte de {$targetUser->first_name} {$targetUser->last_name}",
-            'icon' => 'fa-check-circle',
-            'color' => 'green',
-            'action_url' => route('admin.transactions'),
-        ]);
+        $amount = \App\Helpers\CurrencyHelper::format($transaction->amount, $user->default_currency ?? 'EUR');
+
+        self::create(
+            $user,
+            'transaction',
+            'Dépôt effectué',
+            "Un dépôt de {$amount} a été crédité sur votre compte.",
+            [
+                'transaction_id' => $transaction->id,
+                'amount' => $transaction->amount,
+                'type' => 'deposit'
+            ]
+        );
+    }
+
+    /**
+     * Notification pour remboursement de transaction
+     */
+    public static function notifyRefund(User $user, $transaction): void
+    {
+        $amount = \App\Helpers\CurrencyHelper::format($transaction->amount, $user->default_currency ?? 'EUR');
+
+        self::create(
+            $user,
+            'transaction',
+            'Transaction remboursée',
+            "La transaction #{$transaction->id} d'un montant de {$amount} a été remboursée.",
+            [
+                'transaction_id' => $transaction->id,
+                'amount' => $transaction->amount,
+                'type' => 'refund'
+            ]
+        );
     }
 }
-

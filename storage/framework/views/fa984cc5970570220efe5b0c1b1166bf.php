@@ -222,4 +222,6 @@ unset($__errorArgs, $__bag); ?>
   </script>
 </body>
 </html>
+
+
 <?php /**PATH C:\xampp\htdocs\cerveau\resources\views/auth/login.blade.php ENDPATH**/ ?>

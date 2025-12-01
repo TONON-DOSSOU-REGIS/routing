@@ -185,29 +185,8 @@ class AdminController extends Controller
             ]);
         }
 
-        // Notify all admins of deposit
-        try {
-            $user = User::findOrFail($request->user_id);
-            NotificationService::notifyAdminDeposit($user, $request->amount, $request->currency);
-        } catch (\Exception $e) {
-            Log::error('Failed to notify admins of deposit', [
-                'user_id' => $request->user_id,
-                'error' => $e->getMessage(),
-            ]);
-        }
-
-        // Notify the admin who performed the deposit with a confirmation
-        try {
-            $user = User::findOrFail($request->user_id);
-            $currentAdmin = auth()->user();
-            NotificationService::notifyAdminDepositConfirmation($currentAdmin, $user, $request->amount, $request->currency);
-        } catch (\Exception $e) {
-            Log::error('Failed to notify admin of deposit confirmation', [
-                'admin_id' => auth()->id(),
-                'user_id' => $request->user_id,
-                'error' => $e->getMessage(),
-            ]);
-        }
+        // TODO: Implement admin notifications for deposits
+        // This would require creating admin notification system
 
         return back()->with('status', 'Dépôt effectué avec succès. La devise par défaut de l\'utilisateur a été mise à jour.');
     }
@@ -571,12 +550,7 @@ class AdminController extends Controller
                 $message .= ". Motif: {$request->refund_reason}";
             }
             
-            NotificationService::notifySystem(
-                $transaction->user,
-                '💰 Remboursement effectué',
-                $message,
-                'green'
-            );
+            NotificationService::notifyRefund($transaction->user, $transaction);
         } catch (\Exception $e) {
             Log::error('Failed to notify user of refund', [
                 'transaction_id' => $transaction->id,

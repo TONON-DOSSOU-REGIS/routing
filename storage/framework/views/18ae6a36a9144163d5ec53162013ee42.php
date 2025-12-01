@@ -357,4 +357,6 @@
     updateAdminUnreadCountV2();
 })();
 </script>
+
+
 <?php /**PATH C:\xampp\htdocs\cerveau\resources\views/components/admin-chat-widget-v2.blade.php ENDPATH**/ ?>

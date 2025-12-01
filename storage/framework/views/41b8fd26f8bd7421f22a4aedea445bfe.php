@@ -419,4 +419,6 @@
     </script>
 </body>
 </html>
+
+
 <?php /**PATH C:\xampp\htdocs\cerveau\resources\views/admin/transactions.blade.php ENDPATH**/ ?>

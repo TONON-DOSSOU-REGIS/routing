@@ -246,5 +246,13 @@ class User extends Authenticatable
         
         return $symbols[$currency] ?? $currency;
     }
+
+    /**
+     * Get the user's full name
+     */
+    public function getNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
 }
 

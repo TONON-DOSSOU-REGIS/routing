@@ -14,7 +14,7 @@ class MarketDataService
     public function __construct()
     {
         $this->cachePrefix = config('market.cache.prefix', 'market_data_');
-        $this->cacheDuration = config('market.cache.duration', 60);
+        $this->cacheDuration = config('market.cache.duration', 5); // Réduit à 5 secondes pour les mises à jour en temps réel
     }
 
     /**
@@ -22,14 +22,12 @@ class MarketDataService
      */
     public function getAllMarketData()
     {
-        return Cache::remember($this->cachePrefix . 'all', $this->cacheDuration, function () {
-            return [
-                'crypto' => $this->getCryptoData(),
-                'stocks' => $this->getStocksData(),
-                'forex' => $this->getForexData(),
-                'timestamp' => now()->toIso8601String(),
-            ];
-        });
+        return [
+            'crypto' => $this->getCryptoData(),
+            'stocks' => $this->getStocksData(),
+            'forex' => $this->getForexData(),
+            'timestamp' => now()->toIso8601String(),
+        ];
     }
 
     /**
@@ -37,48 +35,47 @@ class MarketDataService
      */
     public function getCryptoData()
     {
-        return Cache::remember($this->cachePrefix . 'crypto', $this->cacheDuration, function () {
-            try {
-                $cryptos = config('market.cryptocurrencies', []);
-                $ids = implode(',', array_column($cryptos, 'id'));
+        // For real-time updates, bypass cache and fetch fresh data each time
+        try {
+            $cryptos = config('market.cryptocurrencies', []);
+            $ids = implode(',', array_column($cryptos, 'id'));
 
-                $response = Http::timeout(10)->get(config('market.apis.coingecko.base_url') . '/simple/price', [
-                    'ids' => $ids,
-                    'vs_currencies' => 'usd,eur',
-                    'include_24hr_change' => 'true',
-                    'include_24hr_vol' => 'true',
-                ]);
+            $response = Http::timeout(10)->get(config('market.apis.coingecko.base_url') . '/simple/price', [
+                'ids' => $ids,
+                'vs_currencies' => 'usd,eur',
+                'include_24hr_change' => 'true',
+                'include_24hr_vol' => 'true',
+            ]);
 
-                if ($response->successful()) {
-                    $data = $response->json();
-                    $result = [];
+            if ($response->successful()) {
+                $data = $response->json();
+                $result = [];
 
-                    foreach ($cryptos as $key => $crypto) {
-                        if (isset($data[$crypto['id']])) {
-                            $result[] = [
-                                'id' => $crypto['id'],
-                                'symbol' => $crypto['symbol'],
-                                'name' => $crypto['name'],
-                                'icon' => $crypto['icon'],
-                                'image' => $crypto['image'] ?? null,
-                                'price_usd' => $data[$crypto['id']]['usd'] ?? 0,
-                                'price_eur' => $data[$crypto['id']]['eur'] ?? 0,
-                                'change_24h' => $data[$crypto['id']]['usd_24h_change'] ?? 0,
-                                'volume_24h' => $data[$crypto['id']]['usd_24h_vol'] ?? 0,
-                                'type' => 'crypto',
-                            ];
-                        }
+                foreach ($cryptos as $key => $crypto) {
+                    if (isset($data[$crypto['id']])) {
+                        $result[] = [
+                            'id' => $crypto['id'],
+                            'symbol' => $crypto['symbol'],
+                            'name' => $crypto['name'],
+                            'icon' => $crypto['icon'],
+                            'image' => $crypto['image'] ?? null,
+                            'price_usd' => $data[$crypto['id']]['usd'] ?? 0,
+                            'price_eur' => $data[$crypto['id']]['eur'] ?? 0,
+                            'change_24h' => $data[$crypto['id']]['usd_24h_change'] ?? 0,
+                            'volume_24h' => $data[$crypto['id']]['usd_24h_vol'] ?? 0,
+                            'type' => 'crypto',
+                        ];
                     }
-
-                    return $result;
                 }
 
-                return $this->getMockCryptoData();
-            } catch (\Exception $e) {
-                Log::error('Error fetching crypto data: ' . $e->getMessage());
-                return $this->getMockCryptoData();
+                return $result;
             }
-        });
+
+            return $this->getMockCryptoData();
+        } catch (\Exception $e) {
+            Log::error('Error fetching crypto data: ' . $e->getMessage());
+            return $this->getMockCryptoData();
+        }
     }
 
     /**
@@ -86,11 +83,10 @@ class MarketDataService
      */
     public function getStocksData()
     {
-        return Cache::remember($this->cachePrefix . 'stocks', $this->cacheDuration, function () {
-            // For demo purposes, return mock data
-            // In production, integrate with Alpha Vantage or Finnhub
-            return $this->getMockStocksData();
-        });
+        // For real-time updates, bypass cache and fetch fresh data each time
+        // For demo purposes, return mock data
+        // In production, integrate with Alpha Vantage or Finnhub
+        return $this->getMockStocksData();
     }
 
     /**
@@ -98,11 +94,10 @@ class MarketDataService
      */
     public function getForexData()
     {
-        return Cache::remember($this->cachePrefix . 'forex', $this->cacheDuration, function () {
-            // For demo purposes, return mock data
-            // In production, integrate with Alpha Vantage or Finnhub
-            return $this->getMockForexData();
-        });
+        // For real-time updates, bypass cache and fetch fresh data each time
+        // For demo purposes, return mock data
+        // In production, integrate with Alpha Vantage or Finnhub
+        return $this->getMockForexData();
     }
 
     /**

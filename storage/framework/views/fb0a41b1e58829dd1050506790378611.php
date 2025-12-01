@@ -8,4 +8,5 @@
     </clipPath>
   </defs>
 </svg>
+
 <?php /**PATH C:\xampp\htdocs\cerveau\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/icons/copy.blade.php ENDPATH**/ ?>

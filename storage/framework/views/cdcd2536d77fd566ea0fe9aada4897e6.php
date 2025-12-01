@@ -1,290 +1,240 @@
+<?php $attributes ??= new \Illuminate\View\ComponentAttributeBag;
 
-<div class="relative" x-data="notificationBell()" x-init="init()">
-    <!-- Bell Icon with Badge -->
-    <button @click="toggleDropdown()" 
-            class="relative p-2 text-gray-700 hover:text-blue-600 focus:outline-none transition duration-300 rounded-lg hover:bg-blue-50">
-        <i class="fas fa-bell text-xl" :class="{ 'animate-bounce': hasNewNotifications }"></i>
-        
-        <!-- Badge with count -->
-        <span x-show="unreadCount > 0" 
-              x-text="unreadCount > 99 ? '99+' : unreadCount"
-              class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 min-w-[20px] flex items-center justify-center px-1 animate-pulse">
+$__newAttributes = [];
+$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['user' => null]));
+
+foreach ($attributes->all() as $__key => $__value) {
+    if (in_array($__key, $__propNames)) {
+        $$__key = $$__key ?? $__value;
+    } else {
+        $__newAttributes[$__key] = $__value;
+    }
+}
+
+$attributes = new \Illuminate\View\ComponentAttributeBag($__newAttributes);
+
+unset($__propNames);
+unset($__newAttributes);
+
+foreach (array_filter((['user' => null]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
+    $$__key = $$__key ?? $__value;
+}
+
+$__defined_vars = get_defined_vars();
+
+foreach ($attributes->all() as $__key => $__value) {
+    if (array_key_exists($__key, $__defined_vars)) unset($$__key);
+}
+
+unset($__defined_vars, $__key, $__value); ?>
+
+<div class="relative inline-block">
+    <button id="notification-bell" class="relative p-2 text-gray-600 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full transition-colors duration-200">
+        <i class="fas fa-bell text-xl"></i>
+        <span id="notification-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center hidden">
+            0
         </span>
     </button>
 
-    <!-- Dropdown -->
-    <div x-show="isOpen" 
-         @click.away="isOpen = false"
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0 transform scale-95"
-         x-transition:enter-end="opacity-100 transform scale-100"
-         x-transition:leave="transition ease-in duration-150"
-         x-transition:leave-start="opacity-100 transform scale-100"
-         x-transition:leave-end="opacity-0 transform scale-95"
-         class="absolute right-0 mt-2 w-96 bg-white rounded-2xl shadow-2xl z-50 overflow-hidden border border-gray-200"
-         style="display: none;">
-        
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h3 class="text-lg font-bold text-white">Notifications</h3>
-                    <p class="text-sm text-white/90" x-text="unreadCount > 0 ? unreadCount + ' non lue(s)' : 'Aucune nouvelle'"></p>
-                </div>
-                <button @click="markAllAsRead()" 
-                        x-show="unreadCount > 0"
-                        class="text-white/90 hover:text-white text-sm font-medium transition">
-                    <i class="fas fa-check-double mr-1"></i>
-                    Tout lire
-                </button>
+    <!-- Dropdown Menu -->
+    <div id="notification-dropdown" class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50 hidden">
+        <div class="p-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-800">Notifications</h3>
+            <p class="text-sm text-gray-600">Vos dernières notifications</p>
+        </div>
+
+        <div id="notification-list" class="max-h-96 overflow-y-auto">
+            <!-- Notifications will be loaded here -->
+            <div class="p-4 text-center text-gray-500">
+                <i class="fas fa-spinner fa-spin text-xl mb-2"></i>
+                <p>Chargement...</p>
             </div>
         </div>
 
-        <!-- Notifications List -->
-        <div class="max-h-96 overflow-y-auto">
-            <template x-if="loading">
-                <div class="flex items-center justify-center py-12">
-                    <i class="fas fa-spinner fa-spin text-3xl text-gray-400"></i>
-                </div>
-            </template>
-
-            <template x-if="!loading && notifications.length === 0">
-                <div class="flex flex-col items-center justify-center py-12 px-6">
-                    <div class="bg-gray-100 p-4 rounded-full mb-4">
-                        <i class="fas fa-bell-slash text-gray-400 text-3xl"></i>
-                    </div>
-                    <p class="text-gray-600 font-medium">Aucune notification</p>
-                    <p class="text-gray-500 text-sm mt-1">Vous êtes à jour!</p>
-                </div>
-            </template>
-
-            <template x-for="notification in notifications" :key="notification.id">
-                <div @click="markAsReadAndNavigate(notification)"
-                     class="px-6 py-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition"
-                     :class="{ 'bg-blue-50': !notification.is_read }">
-                    <div class="flex items-start gap-3">
-                        <!-- Icon -->
-                        <div class="flex-shrink-0">
-                            <div class="w-10 h-10 rounded-full flex items-center justify-center"
-                                 :class="{
-                                     'bg-green-100 text-green-600': notification.color === 'green',
-                                     'bg-blue-100 text-blue-600': notification.color === 'blue',
-                                     'bg-red-100 text-red-600': notification.color === 'red',
-                                     'bg-yellow-100 text-yellow-600': notification.color === 'yellow',
-                                     'bg-purple-100 text-purple-600': notification.color === 'purple',
-                                     'bg-gray-100 text-gray-600': notification.color === 'gray'
-                                 }">
-                                <i :class="'fas ' + notification.icon"></i>
-                            </div>
-                        </div>
-
-                        <!-- Content -->
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-start justify-between gap-2">
-                                <h4 class="text-sm font-semibold text-gray-900" x-text="notification.title"></h4>
-                                <span x-show="!notification.is_read" 
-                                      class="flex-shrink-0 w-2 h-2 bg-blue-600 rounded-full"></span>
-                            </div>
-                            <p class="text-sm text-gray-600 mt-1 line-clamp-2" x-text="notification.message"></p>
-                            <p class="text-xs text-gray-500 mt-2" x-text="formatDate(notification.created_at)"></p>
-                        </div>
-                    </div>
-                </div>
-            </template>
-        </div>
-
-        <!-- Footer -->
-        <div class="bg-gray-50 px-6 py-3 border-t border-gray-200">
-            <a href="/notifications" 
-               class="text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center justify-center gap-2">
-                <span>Voir toutes les notifications</span>
-                <i class="fas fa-arrow-right"></i>
-            </a>
+        <div class="p-3 border-t border-gray-200 bg-gray-50 rounded-b-lg">
+            <div class="flex justify-between items-center">
+                <button id="mark-all-read" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                    Tout marquer comme lu
+                </button>
+                <a href="<?php echo e(route('notifications.index')); ?>" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                    Voir tout
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-function notificationBell() {
-    return {
-        isOpen: false,
-        loading: false,
-        notifications: [],
-        unreadCount: 0,
-        hasNewNotifications: false,
-        pollInterval: null,
-        audioContext: null,
+document.addEventListener('DOMContentLoaded', function() {
+    const bell = document.getElementById('notification-bell');
+    const dropdown = document.getElementById('notification-dropdown');
+    const count = document.getElementById('notification-count');
+    const list = document.getElementById('notification-list');
+    const markAllRead = document.getElementById('mark-all-read');
 
-        init() {
-            this.loadNotifications();
-            this.loadUnreadCount();
-            
-            // Initialize Audio Context
-            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            
-            // Poll every 30 seconds
-            this.pollInterval = setInterval(() => {
-                this.loadUnreadCount();
-            }, 30000);
-        },
+    let isOpen = false;
 
-        // Play notification sound
-        playNotificationSound() {
-            try {
-                const ctx = this.audioContext;
-                
-                // Create oscillator for the first beep
-                const oscillator1 = ctx.createOscillator();
-                const gainNode1 = ctx.createGain();
-                
-                oscillator1.connect(gainNode1);
-                gainNode1.connect(ctx.destination);
-                
-                // Set frequency (higher pitch)
-                oscillator1.frequency.value = 800;
-                oscillator1.type = 'sine';
-                
-                // Set volume envelope
-                gainNode1.gain.setValueAtTime(0, ctx.currentTime);
-                gainNode1.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.01);
-                gainNode1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-                
-                // Play first beep
-                oscillator1.start(ctx.currentTime);
-                oscillator1.stop(ctx.currentTime + 0.1);
-                
-                // Create second beep (slightly lower pitch)
-                const oscillator2 = ctx.createOscillator();
-                const gainNode2 = ctx.createGain();
-                
-                oscillator2.connect(gainNode2);
-                gainNode2.connect(ctx.destination);
-                
-                oscillator2.frequency.value = 600;
-                oscillator2.type = 'sine';
-                
-                gainNode2.gain.setValueAtTime(0, ctx.currentTime + 0.15);
-                gainNode2.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.16);
-                gainNode2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
-                
-                oscillator2.start(ctx.currentTime + 0.15);
-                oscillator2.stop(ctx.currentTime + 0.25);
-                
-            } catch (error) {
-                console.error('Error playing notification sound:', error);
-            }
-        },
+    // Toggle dropdown
+    bell.addEventListener('click', function(e) {
+        e.stopPropagation();
+        isOpen = !isOpen;
 
-        toggleDropdown() {
-            this.isOpen = !this.isOpen;
-            if (this.isOpen) {
-                this.loadNotifications();
-            }
-        },
-
-        async loadNotifications() {
-            this.loading = true;
-            try {
-                const response = await fetch('/notifications/recent');
-                const data = await response.json();
-                if (data.success) {
-                    this.notifications = data.notifications;
-                }
-            } catch (error) {
-                console.error('Error loading notifications:', error);
-            } finally {
-                this.loading = false;
-            }
-        },
-
-        async loadUnreadCount() {
-            try {
-                const response = await fetch('/notifications/unread-count');
-                const data = await response.json();
-                if (data.success) {
-                    const oldCount = this.unreadCount;
-                    this.unreadCount = data.count;
-                    
-                    // Animate and play sound if new notifications
-                    if (data.count > oldCount) {
-                        this.hasNewNotifications = true;
-                        
-                        // Play notification sound
-                        this.playNotificationSound();
-                        
-                        setTimeout(() => {
-                            this.hasNewNotifications = false;
-                        }, 3000);
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading unread count:', error);
-            }
-        },
-
-        async markAsReadAndNavigate(notification) {
-            if (!notification.is_read) {
-                try {
-                    await fetch(`/notifications/${notification.id}/read`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                        }
-                    });
-                    
-                    notification.is_read = true;
-                    this.unreadCount = Math.max(0, this.unreadCount - 1);
-                } catch (error) {
-                    console.error('Error marking notification as read:', error);
-                }
-            }
-
-            // Navigate if action_url exists
-            if (notification.action_url) {
-                window.location.href = notification.action_url;
-            }
-        },
-
-        async markAllAsRead() {
-            try {
-                const response = await fetch('/notifications/mark-all-read', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    }
-                });
-
-                if (response.ok) {
-                    this.notifications.forEach(n => n.is_read = true);
-                    this.unreadCount = 0;
-                }
-            } catch (error) {
-                console.error('Error marking all as read:', error);
-            }
-        },
-
-        formatDate(dateString) {
-            const date = new Date(dateString);
-            const now = new Date();
-            const diffMs = now - date;
-            const diffMins = Math.floor(diffMs / 60000);
-            const diffHours = Math.floor(diffMs / 3600000);
-            const diffDays = Math.floor(diffMs / 86400000);
-
-            if (diffMins < 1) return 'À l\'instant';
-            if (diffMins < 60) return `Il y a ${diffMins} min`;
-            if (diffHours < 24) return `Il y a ${diffHours}h`;
-            if (diffDays < 7) return `Il y a ${diffDays}j`;
-            
-            return date.toLocaleDateString('fr-FR', { 
-                day: 'numeric', 
-                month: 'short' 
-            });
+        if (isOpen) {
+            dropdown.classList.remove('hidden');
+            loadNotifications();
+        } else {
+            dropdown.classList.add('hidden');
         }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!bell.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add('hidden');
+            isOpen = false;
+        }
+    });
+
+    // Load notifications
+    function loadNotifications() {
+        fetch('/notifications/recent')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    renderNotifications(data.notifications);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading notifications:', error);
+                list.innerHTML = '<div class="p-4 text-center text-gray-500"><p>Erreur de chargement</p></div>';
+            });
     }
-}
+
+    // Render notifications
+    function renderNotifications(notifications) {
+        if (notifications.length === 0) {
+            list.innerHTML = '<div class="p-4 text-center text-gray-500"><i class="fas fa-bell-slash text-2xl mb-2"></i><p>Aucune notification</p></div>';
+            return;
+        }
+
+        list.innerHTML = notifications.map(notification => `
+            <div class="p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer notification-item ${!notification.is_read ? 'bg-blue-50' : ''}"
+                 data-id="${notification.id}"
+                 onclick="markAsRead(${notification.id})">
+                <div class="flex items-start space-x-3">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 ${getIconColor(notification.type)} rounded-full flex items-center justify-center">
+                            <i class="${getIcon(notification.type)} text-white text-sm"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-gray-900 truncate">
+                            ${notification.title}
+                        </p>
+                        <p class="text-sm text-gray-600 line-clamp-2">
+                            ${notification.message}
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1">
+                            ${formatDate(notification.created_at)}
+                        </p>
+                    </div>
+                    ${!notification.is_read ? '<div class="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>' : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Mark notification as read
+    window.markAsRead = function(id) {
+        fetch(`/notifications/${id}/read`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(() => {
+            updateUnreadCount();
+            // Reload notifications to update UI
+            loadNotifications();
+        })
+        .catch(error => console.error('Error marking as read:', error));
+    };
+
+    // Mark all as read
+    markAllRead.addEventListener('click', function() {
+        fetch('/notifications/mark-all-read', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(() => {
+            updateUnreadCount();
+            loadNotifications();
+        })
+        .catch(error => console.error('Error marking all as read:', error));
+    });
+
+    // Update unread count
+    function updateUnreadCount() {
+        fetch('/notifications/unread-count')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.count > 0) {
+                    count.textContent = data.count > 99 ? '99+' : data.count;
+                    count.classList.remove('hidden');
+                } else {
+                    count.classList.add('hidden');
+                }
+            })
+            .catch(error => console.error('Error updating count:', error));
+    }
+
+    // Helper functions
+    function getIcon(type) {
+        const icons = {
+            'transaction': 'fas fa-exchange-alt',
+            'message': 'fas fa-envelope',
+            'account': 'fas fa-user',
+            'alert': 'fas fa-exclamation-triangle',
+            'system': 'fas fa-cog'
+        };
+        return icons[type] || 'fas fa-bell';
+    }
+
+    function getIconColor(type) {
+        const colors = {
+            'transaction': 'bg-green-500',
+            'message': 'fas fa-envelope',
+            'account': 'bg-blue-500',
+            'alert': 'bg-red-500',
+            'system': 'bg-gray-500'
+        };
+        return colors[type] || 'bg-gray-500';
+    }
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diff = now - date;
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(diff / 3600000);
+        const days = Math.floor(diff / 86400000);
+
+        if (minutes < 1) return 'À l\'instant';
+        if (minutes < 60) return `Il y a ${minutes} min`;
+        if (hours < 24) return `Il y a ${hours} h`;
+        if (days < 7) return `Il y a ${days} j`;
+        return date.toLocaleDateString('fr-FR');
+    }
+
+    // Initial load of unread count
+    updateUnreadCount();
+
+    // Auto-refresh every 30 seconds
+    setInterval(updateUnreadCount, 30000);
+});
 </script>
 
 <style>

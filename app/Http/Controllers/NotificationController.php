@@ -8,71 +8,31 @@ use Illuminate\Http\Request;
 class NotificationController extends Controller
 {
     /**
-     * Get all notifications for the authenticated user
-     */
-    public function index(Request $request)
-    {
-        $user = $request->user();
-        
-        $notifications = $user->notifications()
-            ->paginate(20);
-
-        return response()->json([
-            'success' => true,
-            'notifications' => $notifications,
-        ]);
-    }
-
-    /**
      * Get unread notifications count
      */
-    public function unreadCount(Request $request)
+    public function getUnreadCount()
     {
-        $user = $request->user();
-        $count = $user->unreadNotifications()->count();
+        $count = auth()->user()->unreadNotifications()->count();
 
         return response()->json([
             'success' => true,
-            'count' => $count,
-        ]);
-    }
-
-    /**
-     * Get recent unread notifications (for dropdown)
-     */
-    public function recent(Request $request)
-    {
-        $user = $request->user();
-        
-        $notifications = $user->unreadNotifications()
-            ->take(5)
-            ->get();
-
-        return response()->json([
-            'success' => true,
-            'notifications' => $notifications,
+            'count' => $count
         ]);
     }
 
     /**
      * Mark a notification as read
      */
-    public function markAsRead(Request $request, Notification $notification)
+    public function markAsRead(Notification $notification)
     {
-        // Ensure the notification belongs to the authenticated user
-        if ($notification->user_id !== $request->user()->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized',
-            ], 403);
+        // Ensure user owns the notification
+        if ($notification->user_id !== auth()->id()) {
+            return response()->json(['success' => false, 'message' => 'Notification non trouvée.'], 404);
         }
 
-        $notification->markAsRead();
+        $notification->update(['is_read' => true]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Notification marked as read',
-        ]);
+        return response()->json(['success' => true, 'message' => 'Notification marquée comme lue.']);
     }
 
     /**
@@ -80,38 +40,9 @@ class NotificationController extends Controller
      */
     public function markAllAsRead(Request $request)
     {
-        $user = $request->user();
-        
-        $user->unreadNotifications()->update([
-            'is_read' => true,
-            'read_at' => now(),
-        ]);
+        auth()->user()->notifications()->where('is_read', false)->update(['is_read' => true]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'All notifications marked as read',
-        ]);
-    }
-
-    /**
-     * Delete a notification
-     */
-    public function destroy(Request $request, Notification $notification)
-    {
-        // Ensure the notification belongs to the authenticated user
-        if ($notification->user_id !== $request->user()->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized',
-            ], 403);
-        }
-
-        $notification->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Notification deleted',
-        ]);
+        return response()->json(['success' => true, 'message' => 'Toutes les notifications ont été marquées comme lues.']);
     }
 
     /**
@@ -119,38 +50,82 @@ class NotificationController extends Controller
      */
     public function deleteAllRead(Request $request)
     {
-        $user = $request->user();
-        
-        $user->notifications()->where('is_read', true)->delete();
+        auth()->user()->notifications()->where('is_read', true)->delete();
+
+        return response()->json(['success' => true, 'message' => 'Toutes les notifications lues ont été supprimées.']);
+    }
+
+    /**
+     * Display the notifications index page
+     */
+    public function index(Request $request)
+    {
+        return view('notifications.index');
+    }
+
+    /**
+     * Get notifications data for AJAX requests
+     */
+    public function getData(Request $request)
+    {
+        $query = auth()->user()->notifications()->orderBy('created_at', 'desc');
+
+        // Apply filters
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->filled('status')) {
+            if ($request->status === 'read') {
+                $query->where('is_read', true);
+            } elseif ($request->status === 'unread') {
+                $query->where('is_read', false);
+            }
+        }
+
+        $notifications = $query->paginate(20);
 
         return response()->json([
             'success' => true,
-            'message' => 'All read notifications deleted',
+            'notifications' => $notifications->items(),
+            'pagination' => [
+                'current_page' => $notifications->currentPage(),
+                'last_page' => $notifications->lastPage(),
+                'per_page' => $notifications->perPage(),
+                'total' => $notifications->total()
+            ]
         ]);
     }
 
     /**
-     * Create a test notification (for development)
+     * Get a single notification details
      */
-    public function createTest(Request $request)
+    public function show(Notification $notification)
     {
-        $user = $request->user();
-
-        $notification = Notification::create([
-            'user_id' => $user->id,
-            'type' => 'system',
-            'title' => 'Test Notification',
-            'message' => 'This is a test notification created at ' . now()->format('H:i:s'),
-            'icon' => 'fa-bell',
-            'color' => 'blue',
-            'action_url' => '/dashboard',
-        ]);
+        // Ensure user owns the notification
+        if ($notification->user_id !== auth()->id()) {
+            return response()->json(['success' => false, 'message' => 'Notification non trouvée.'], 404);
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'Test notification created',
-            'notification' => $notification,
+            'notification' => $notification
+        ]);
+    }
+
+    /**
+     * Get recent notifications for dropdown
+     */
+    public function getRecent(Request $request)
+    {
+        $notifications = auth()->user()->notifications()
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'notifications' => $notifications
         ]);
     }
 }
-
