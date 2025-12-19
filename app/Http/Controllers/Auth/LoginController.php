@@ -9,13 +9,20 @@ class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
+    /**
+     * Get the post-login redirect path with locale.
+     *
+     * @return string
+     */
     protected function redirectTo()
     {
+        $locale = app()->getLocale();
+        
         if (auth()->user()->isAdmin()) {
-            return '/admin/dashboard';
+            return '/' . $locale . '/admin/dashboard';
         }
 
-        return '/dashboard';
+        return '/' . $locale . '/dashboard';
     }
 
     public function __construct()

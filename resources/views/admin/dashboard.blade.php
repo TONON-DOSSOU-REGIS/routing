@@ -139,7 +139,7 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-red-900 via-red-800 to-red-700 min-h-screen">
+<body class="bg-gradient-to-br from-red-900 via-red-400 to-red-700 min-h-screen">
     <div class="min-h-screen">
         <!-- Navigation améliorée -->
         <nav class="glass-nav sticky top-0 z-50">
@@ -148,10 +148,11 @@
                     <div class="flex items-center">
                         <div class="flex items-center space-x-3">
                             <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
-                                <i class="fas fa-building-columns text-white text-xl"></i>
+                                <img src='{{ asset("images/logobank.png") }}' class="w-9 h-9" alt="">
+                                {{-- <i class="fas fa-building-columns text-white text-xl"></i> --}}
                             </div>
                             <div>
-                                <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SB BANK Admin</a>
+                                <a href="{{ localized_route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SB BANK Admin</a>
                                 <div class="text-xs text-gray-500 -mt-1">Tableau de bord</div>
                             </div>
                         </div>
@@ -159,32 +160,32 @@
 
                     <!-- Desktop Navigation -->
                     <div class="hidden md:flex items-center space-x-6">
-                        <a href="{{ route('admin.dashboard') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
+                        <a href="{{ localized_route('admin.dashboard') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
                             <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
-                        <a href="{{ route('admin.users') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
+                        <a href="{{ localized_route('admin.users') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
                             <i class="fas fa-users mr-2"></i> Utilisateurs
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
-                        <a href="{{ route('admin.transactions') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
+                        <a href="{{ localized_route('admin.transactions') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
                             <i class="fas fa-exchange-alt mr-2"></i> Virements
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
-                        <a href="{{ route('admin.deposit') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
+                        <a href="{{ localized_route('admin.deposit') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
                             <i class="fas fa-plus-circle mr-2"></i> Dépôt
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
-                        <a href="{{ route('admin.settings') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
+                        <a href="{{ localized_route('admin.settings') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
                             <i class="fas fa-cog mr-2"></i> Paramètres
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
-                        <a href="{{ route('dashboard') }}" class="relative text-gray-700 hover:text-green-600 transition duration-300 font-medium group">
+                        <a href="{{ localized_route('dashboard', ['locale' => app()->getLocale()]) }}" class="relative text-gray-700 hover:text-green-600 transition duration-300 font-medium group">
                             <i class="fas fa-arrow-left mr-2"></i> Retour au site
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
                         @include('components.notification-bell')
-                        <form method="POST" action="{{ route('logout') }}">
+                        <form method="POST" action="{{ localized_route('logout', ['locale' => app()->getLocale()]) }}">
                             @csrf
                             <button type="submit" class="relative text-gray-700 hover:text-red-600 transition duration-300 font-medium group">
                                 <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
@@ -206,25 +207,25 @@
                 <!-- Mobile Navigation Menu -->
                 <div class="md:hidden hidden" id="mobile-menu">
                     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/95 backdrop-blur-lg border border-gray-200 rounded-lg shadow-xl mt-2">
-                        <a href="{{ route('admin.dashboard') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
+                        <a href="{{ localized_route('admin.dashboard') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
                             <i class="fas fa-tachometer-alt w-5 mr-3 text-center"></i> Dashboard
                         </a>
-                        <a href="{{ route('admin.users') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
+                        <a href="{{ localized_route('admin.users') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
                             <i class="fas fa-users w-5 mr-3 text-center"></i> Utilisateurs
                         </a>
-                        <a href="{{ route('admin.transactions') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
+                        <a href="{{ localized_route('admin.transactions') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
                             <i class="fas fa-exchange-alt w-5 mr-3 text-center"></i> Virements
                         </a>
-                        <a href="{{ route('admin.deposit') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
+                        <a href="{{ localized_route('admin.deposit') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
                             <i class="fas fa-plus-circle w-5 mr-3 text-center"></i> Dépôt
                         </a>
-                        <a href="{{ route('admin.settings') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
+                        <a href="{{ localized_route('admin.settings') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
                             <i class="fas fa-cog w-5 mr-3 text-center"></i> Paramètres
                         </a>
-                        <a href="{{ route('dashboard') }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-lg transition duration-300">
+                        <a href="{{ localized_route('dashboard', ['locale' => app()->getLocale()]) }}" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-lg transition duration-300">
                             <i class="fas fa-arrow-left w-5 mr-3 text-center"></i> Retour au site
                         </a>
-                        <form method="POST" action="{{ route('logout') }}" class="block">
+                        <form method="POST" action="{{ localized_route('logout', ['locale' => app()->getLocale()]) }}" class="block">
                             @csrf
                             <button type="submit" class="flex items-center w-full px-3 py-3 text-base font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition duration-300">
                                 <i class="fas fa-sign-out-alt w-5 mr-3 text-center"></i> Déconnexion
@@ -357,21 +358,21 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <a href="{{ route('admin.settings') }}" class="action-btn bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-6 rounded-xl hover:from-blue-600 hover:to-blue-700 text-center shadow-lg transform hover:scale-105">
+                        <a href="{{ localized_route('admin.settings') }}" class="action-btn bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-6 rounded-xl hover:from-blue-600 hover:to-blue-700 text-center shadow-lg transform hover:scale-105">
                             <div class="bg-white/20 p-3 rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-4">
                                 <i class="fas fa-cog text-2xl"></i>
                             </div>
                             <div class="font-bold text-lg">Paramètres système</div>
                             <p class="text-sm opacity-90 mt-2">Configurer les préférences</p>
                         </a>
-                        <a href="{{ route('admin.users') }}" class="action-btn bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-6 rounded-xl hover:from-green-600 hover:to-green-700 text-center shadow-lg transform hover:scale-105">
+                        <a href="{{ localized_route('admin.users') }}" class="action-btn bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-6 rounded-xl hover:from-green-600 hover:to-green-700 text-center shadow-lg transform hover:scale-105">
                             <div class="bg-white/20 p-3 rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-4">
                                 <i class="fas fa-users text-2xl"></i>
                             </div>
                             <div class="font-bold text-lg">Gestion des utilisateurs</div>
                             <p class="text-sm opacity-90 mt-2">Voir et gérer les clients</p>
                         </a>
-                        <a href="{{ route('admin.deposit') }}" class="action-btn bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-6 rounded-xl hover:from-purple-600 hover:to-purple-700 text-center shadow-lg transform hover:scale-105">
+                        <a href="{{ localized_route('admin.deposit') }}" class="action-btn bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-6 rounded-xl hover:from-purple-600 hover:to-purple-700 text-center shadow-lg transform hover:scale-105">
                             <div class="bg-white/20 p-3 rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-4">
                                 <i class="fas fa-plus-circle text-2xl"></i>
                             </div>

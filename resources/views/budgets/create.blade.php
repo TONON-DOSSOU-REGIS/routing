@@ -10,7 +10,7 @@
             <p class="text-gray-600 mt-2">Définissez un budget pour une catégorie de dépenses</p>
         </div>
 
-        <form action="{{ route('budgets.store') }}" method="POST">
+        <form action="{{ localized_route('budgets.store') }}" method="POST">
             @csrf
 
             <div class="mb-6">
@@ -93,7 +93,7 @@
             </div>
 
             <div class="flex justify-end space-x-4">
-                <a href="{{ route('budgets.index') }}"
+                <a href="{{ localized_route('budgets.index') }}"
                    class="px-6 py-3 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition duration-200">
                     Annuler
                 </a>

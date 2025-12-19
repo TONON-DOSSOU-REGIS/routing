@@ -10,11 +10,15 @@ class ResetPasswordController extends Controller
     use ResetsPasswords;
 
     /**
-     * Where to redirect users after resetting their password.
+     * Get the post-password reset redirect path with locale.
      *
-     * @var string
+     * @return string
      */
-    protected $redirectTo = '/dashboard';
+    protected function redirectTo()
+    {
+        $locale = app()->getLocale();
+        return '/' . $locale . '/dashboard';
+    }
 
     /**
      * Create a new controller instance.

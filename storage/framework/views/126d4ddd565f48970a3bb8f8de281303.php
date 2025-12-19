@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historique des transactions - SG BANK</title>
+    <title><?php echo e(__('transactions.history_page_title')); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
@@ -191,23 +191,23 @@
                                     <i class="fas fa-building-columns text-white text-xl"></i>
                                 </div>
                                 <div>
-                                    <a href="<?php echo e(route('dashboard')); ?>" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK</a>
-                                    <div class="text-xs text-gray-500 -mt-1">Historique des transactions</div>
+                                    <a href="<?php echo e(localized_route('dashboard', ['locale' => app()->getLocale()])); ?>" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK</a>
+                                    <div class="text-xs text-gray-500 -mt-1"><?php echo e(__('transactions.history_title')); ?></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Desktop Navigation -->
                         <div class="hidden md:flex items-center space-x-6">
-                            <a href="<?php echo e(route('dashboard')); ?>" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
+                            <a href="<?php echo e(localized_route('dashboard', ['locale' => app()->getLocale()])); ?>" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
                                 <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                                 <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                             </a>
-                            <a href="<?php echo e(route('transfer.create')); ?>" class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-xl hover:from-blue-600 hover:to-indigo-700 font-medium shadow-lg transition duration-300 flex items-center gap-2">
+                            <a href="<?php echo e(localized_route('transfer.create', ['locale' => app()->getLocale()])); ?>" class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-xl hover:from-blue-600 hover:to-indigo-700 font-medium shadow-lg transition duration-300 flex items-center gap-2">
                                 <i class="fas fa-paper-plane"></i>
                                 Nouveau virement
                             </a>
-                            <form method="POST" action="<?php echo e(route('logout')); ?>">
+                            <form method="POST" action="<?php echo e(localized_route('logout', ['locale' => app()->getLocale()])); ?>">
                                 <?php echo csrf_field(); ?>
                                 <button type="submit" class="relative text-gray-700 hover:text-red-600 transition duration-300 font-medium group">
                                     <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
@@ -227,15 +227,15 @@
                     <!-- Mobile menu -->
                     <div id="mobile-menu" class="hidden pb-4">
                         <div class="px-2 pt-2 pb-3 space-y-2 bg-white/95 backdrop-blur-lg border border-gray-200 rounded-lg shadow-xl mt-2">
-                            <a href="<?php echo e(route('dashboard')); ?>" class="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
+                            <a href="<?php echo e(localized_route('dashboard', ['locale' => app()->getLocale()])); ?>" class="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
                                 <i class="fas fa-tachometer-alt w-5 mr-3 text-center"></i>
                                 Dashboard
                             </a>
-                            <a href="<?php echo e(route('transfer.create')); ?>" class="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
+                            <a href="<?php echo e(localized_route('transfer.create', ['locale' => app()->getLocale()])); ?>" class="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
                                 <i class="fas fa-paper-plane w-5 mr-3 text-center"></i>
                                 Nouveau virement
                             </a>
-                            <form method="POST" action="<?php echo e(route('logout')); ?>" class="inline">
+                            <form method="POST" action="<?php echo e(localized_route('logout', ['locale' => app()->getLocale()])); ?>" class="inline">
                                 <?php echo csrf_field(); ?>
                                 <button type="submit" class="flex items-center w-full px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition duration-300">
                                     <i class="fas fa-sign-out-alt w-5 mr-3 text-center"></i>
@@ -250,8 +250,8 @@
             <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                 <!-- En-tête de la page -->
                 <div class="mb-8 fade-in-up">
-                    <h1 class="text-3xl font-bold text-white drop-shadow-lg text-center">Historique des transactions</h1>
-                    <p class="text-white/90 mt-2 drop-shadow text-center">Consultez l'ensemble de vos opérations financières</p>
+                    <h1 class="text-3xl font-bold text-white drop-shadow-lg text-center"><?php echo e(__('transactions.history_title')); ?></h1>
+                    <p class="text-white/90 mt-2 drop-shadow text-center"><?php echo e(__('transactions.history_subtitle')); ?></p>
                 </div>
 
                 <!-- Carte principale -->
@@ -264,19 +264,19 @@
                                     <i class="fas fa-history text-white text-2xl"></i>
                                 </div>
                                 <div>
-                                    <h1 class="text-2xl font-bold text-gray-900">Historique des transactions</h1>
-                                    <p class="text-gray-600 mt-1">Vue d'ensemble de vos opérations financières</p>
+                                    <h1 class="text-2xl font-bold text-gray-900"><?php echo e(__('transactions.history_title')); ?></h1>
+                                    <p class="text-gray-600 mt-1"><?php echo e(__('transactions.history_overview')); ?></p>
                                 </div>
                             </div>
                             
                             <?php if(auth()->user()->isAdmin()): ?>
                                 <div class="flex flex-col sm:flex-row gap-3">
-                                    <a href="<?php echo e(route('admin.export.pdf')); ?>" 
+                                    <a href="<?php echo e(localized_route('admin.export.pdf')); ?>" 
                                        class="action-btn bg-gradient-to-r from-red-500 to-pink-600 text-white px-6 py-3 rounded-xl hover:from-red-600 hover:to-pink-700 font-semibold shadow-lg transition duration-300 flex items-center gap-2">
                                         <i class="fas fa-file-pdf"></i>
                                         Export PDF
                                     </a>
-                                    <a href="<?php echo e(route('admin.export.excel')); ?>" 
+                                    <a href="<?php echo e(localized_route('admin.export.excel')); ?>" 
                                        class="action-btn bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 font-semibold shadow-lg transition duration-300 flex items-center gap-2">
                                         <i class="fas fa-file-excel"></i>
                                         Export Excel
@@ -483,7 +483,7 @@
                                                 <td class="px-6 py-4 whitespace-nowrap">
                                                     <div class="flex items-center gap-2">
                                                         <?php if($transaction->status == 'success' && in_array($transaction->type, ['transfer', 'deposit'])): ?>
-                                                            <a href="<?php echo e(route('transactions.receipt', $transaction)); ?>" 
+                                                            <a href="<?php echo e(localized_route('transactions.receipt', $transaction)); ?>" 
                                                                class="bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 px-3 py-2 rounded-lg hover:from-blue-100 hover:to-blue-200 transition duration-300 flex items-center gap-2 text-sm font-medium shadow-sm"
                                                                title="Télécharger le reçu">
                                                                 <i class="fas fa-download"></i>
@@ -509,7 +509,7 @@
                                                         </div>
                                                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Aucune transaction trouvée</h3>
                                                         <p class="text-gray-600 mb-4">Aucune transaction ne correspond à vos critères de recherche.</p>
-                                                        <a href="<?php echo e(route('transactions.history')); ?>" class="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2">
+                                                        <a href="<?php echo e(localized_route('transactions.history', ['locale' => app()->getLocale()])); ?>" class="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2">
                                                             <i class="fas fa-redo"></i>
                                                             Réinitialiser les filtres
                                                         </a>

@@ -211,10 +211,10 @@
                         <div class="flex items-center">
                             <div class="flex items-center space-x-3">
                                 <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
-                                    <i class="fas fa-building-columns text-white text-xl"></i>
+                                    <img src='<?php echo e(asset("images/logobank.png")); ?>' class="w-9 h-9" alt="">
                                 </div>
                                 <div>
-                                    <a href="<?php echo e(route('admin.dashboard')); ?>" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK Admin</a>
+                                    <a href="<?php echo e(localized_route('admin.dashboard')); ?>" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK Admin</a>
                                     <div class="text-xs text-gray-500 -mt-1">Paramètres système</div>
                                 </div>
                             </div>
@@ -222,27 +222,27 @@
 
                         <!-- Desktop Navigation -->
                         <div class="hidden md:flex items-center space-x-6">
-                            <a href="<?php echo e(route('admin.dashboard')); ?>" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
+                            <a href="<?php echo e(localized_route('admin.dashboard')); ?>" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
                                 <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                                 <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                             </a>
-                            <a href="<?php echo e(route('admin.settings')); ?>" class="relative text-blue-600 font-semibold transition duration-300 group">
+                            <a href="<?php echo e(localized_route('admin.settings')); ?>" class="relative text-blue-600 font-semibold transition duration-300 group">
                                 <i class="fas fa-cog mr-2"></i> Paramètres
                                 <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600"></span>
                             </a>
-                            <a href="<?php echo e(route('admin.users')); ?>" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
+                            <a href="<?php echo e(localized_route('admin.users')); ?>" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
                                 <i class="fas fa-users mr-2"></i> Utilisateurs
                                 <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                             </a>
-                            <a href="<?php echo e(route('admin.deposit')); ?>" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
+                            <a href="<?php echo e(localized_route('admin.deposit')); ?>" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
                                 <i class="fas fa-plus-circle mr-2"></i> Dépôt
                                 <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                             </a>
-                            <a href="<?php echo e(route('dashboard')); ?>" class="relative text-gray-700 hover:text-green-600 transition duration-300 font-medium group">
+                            <a href="<?php echo e(localized_route('dashboard', ['locale' => app()->getLocale()])); ?>" class="relative text-gray-700 hover:text-green-600 transition duration-300 font-medium group">
                                 <i class="fas fa-arrow-left mr-2"></i> Retour au site
                                 <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
                             </a>
-                            <form method="POST" action="<?php echo e(route('logout')); ?>">
+                            <form method="POST" action="<?php echo e(localized_route('logout', ['locale' => app()->getLocale()])); ?>">
                                 <?php echo csrf_field(); ?>
                                 <button type="submit" class="relative text-gray-700 hover:text-red-600 transition duration-300 font-medium group">
                                     <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
@@ -264,22 +264,22 @@
                     <!-- Mobile Navigation Menu -->
                     <div class="md:hidden hidden" id="mobile-menu">
                         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/95 backdrop-blur-lg border border-gray-200 rounded-lg shadow-xl mt-2">
-                            <a href="<?php echo e(route('admin.dashboard')); ?>" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
+                            <a href="<?php echo e(localized_route('admin.dashboard')); ?>" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
                                 <i class="fas fa-tachometer-alt w-5 mr-3 text-center"></i> Dashboard
                             </a>
-                            <a href="<?php echo e(route('admin.settings')); ?>" class="flex items-center px-3 py-3 text-base font-medium text-blue-600 bg-blue-50 rounded-lg transition duration-300">
+                            <a href="<?php echo e(localized_route('admin.settings')); ?>" class="flex items-center px-3 py-3 text-base font-medium text-blue-600 bg-blue-50 rounded-lg transition duration-300">
                                 <i class="fas fa-cog w-5 mr-3 text-center"></i> Paramètres
                             </a>
-                            <a href="<?php echo e(route('admin.users')); ?>" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
+                            <a href="<?php echo e(localized_route('admin.users')); ?>" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
                                 <i class="fas fa-users w-5 mr-3 text-center"></i> Utilisateurs
                             </a>
-                            <a href="<?php echo e(route('admin.deposit')); ?>" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
+                            <a href="<?php echo e(localized_route('admin.deposit')); ?>" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
                                 <i class="fas fa-plus-circle w-5 mr-3 text-center"></i> Dépôt
                             </a>
-                            <a href="<?php echo e(route('dashboard')); ?>" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-lg transition duration-300">
+                            <a href="<?php echo e(localized_route('dashboard', ['locale' => app()->getLocale()])); ?>" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-lg transition duration-300">
                                 <i class="fas fa-arrow-left w-5 mr-3 text-center"></i> Retour au site
                             </a>
-                            <form method="POST" action="<?php echo e(route('logout')); ?>" class="block">
+                            <form method="POST" action="<?php echo e(localized_route('logout', ['locale' => app()->getLocale()])); ?>" class="block">
                                 <?php echo csrf_field(); ?>
                                 <button type="submit" class="flex items-center w-full px-3 py-3 text-base font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition duration-300">
                                     <i class="fas fa-sign-out-alt w-5 mr-3 text-center"></i> Déconnexion
@@ -348,7 +348,7 @@
                                     </div>
                                 </div>
 
-                                <form method="POST" action="<?php echo e(route('admin.settings.save')); ?>" class="space-y-6">
+                                <form method="POST" action="<?php echo e(localized_route('admin.settings.save')); ?>" class="space-y-6">
                                     <?php echo csrf_field(); ?>
 
                                     <!-- Pourcentage d'arrêt -->
@@ -507,7 +507,7 @@
 
                                     <!-- Boutons d'action -->
                                     <div class="stagger-item flex justify-end space-x-4 pt-4">
-                                        <a href="<?php echo e(route('admin.dashboard')); ?>" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-200 transition duration-300 font-medium shadow-sm">
+                                        <a href="<?php echo e(localized_route('admin.dashboard')); ?>" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-200 transition duration-300 font-medium shadow-sm">
                                             <i class="fas fa-arrow-left mr-2"></i>Annuler
                                         </a>
                                         <button type="submit"

@@ -10,7 +10,7 @@
             <p class="text-gray-600 mt-2">Ajustez les paramètres de votre budget pour {{ $budget->category }}</p>
         </div>
 
-        <form action="{{ route('budgets.update', $budget) }}" method="POST">
+        <form action="{{ localized_route('budgets.update', $budget) }}" method="POST">
             @csrf
             @method('PUT')
 
@@ -59,7 +59,7 @@
             </div>
 
             <div class="flex justify-end space-x-4">
-                <a href="{{ route('budgets.index') }}"
+                <a href="{{ localized_route('budgets.index') }}"
                    class="px-6 py-3 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition duration-200">
                     Annuler
                 </a>

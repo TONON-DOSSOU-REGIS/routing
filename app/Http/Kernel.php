@@ -1,8 +1,9 @@
 <?php
+'isAdmin' => \App\Http\Middleware\IsAdmin::class,
 
-namespace App\Http;
-
-use Illuminate\Foundation\Http\Kernel as HttpKernel;
+        'admin' => \App\Http\Middleware\IsAdmin::class,
+        'isAdmin' => \App\Http\Middleware\IsAdmin::class,
+        'checkUserStatus' => \App\Http\Middleware\CheckUserStatus::class,
 use App\Http\Middleware\TrustProxies;
 use Fruitcake\Cors\HandleCors;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
@@ -57,6 +58,7 @@ class Kernel extends HttpKernel
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             SubstituteBindings::class,
+            \App\Http\Middleware\SetLocale::class,
         ],
 
         'api' => [

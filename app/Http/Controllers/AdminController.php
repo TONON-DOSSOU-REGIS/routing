@@ -22,7 +22,7 @@ use App\Services\NotificationService;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function index($locale)
     {
         $totalUsers = User::count();
         $totalTransactions = Transaction::count();
@@ -50,7 +50,7 @@ class AdminController extends Controller
         return view('admin.dashboard_with_chat', compact('users'));
     }
 
-    public function settings()
+    public function settings($locale)
     {
         $settings = Setting::first();
         return view('admin.settings', compact('settings'));
@@ -120,7 +120,7 @@ class AdminController extends Controller
         return view('admin.users', compact('users'));
     }
 
-    public function toggleUser(User $user)
+    public function toggleUser($locale, User $user)
     {
         $user->update(['status' => $user->status === 'active' ? 'suspended' : 'active']);
 
@@ -133,7 +133,7 @@ class AdminController extends Controller
         return back()->with('status', 'Statut utilisateur mis à jour.');
     }
 
-    public function depositForm()
+    public function depositForm($locale)
     {
         $users = User::where('role', 'user')->get();
         return view('admin.deposit', compact('users'));
@@ -176,7 +176,11 @@ class AdminController extends Controller
                                      ->first();
             
             if ($transaction) {
-                NotificationService::notifyTransaction($user, $transaction, 'success');
+                // Send in-app notification
+                NotificationService::notifyDeposit($user, $transaction);
+                
+                // Send email notification
+                Mail::to($user->email)->send(new \App\Mail\DepositNotificationMail($user, $transaction));
             }
         } catch (\Exception $e) {
             Log::error('Failed to notify user of deposit', [
@@ -184,9 +188,6 @@ class AdminController extends Controller
                 'error' => $e->getMessage(),
             ]);
         }
-
-        // TODO: Implement admin notifications for deposits
-        // This would require creating admin notification system
 
         return back()->with('status', 'Dépôt effectué avec succès. La devise par défaut de l\'utilisateur a été mise à jour.');
     }
@@ -203,7 +204,7 @@ class AdminController extends Controller
         return Excel::download(new \App\Exports\TransactionsExport, 'transactions.xlsx');
     }
 
-    public function resetPassword(User $user)
+    public function resetPassword($locale, User $user)
     {
         // Generate a random password
         $newPassword = Str::random(12);
@@ -230,10 +231,10 @@ class AdminController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.users')->with('status', 'Mot de passe réinitialisé avec succès. Un email a été envoyé à l\'utilisateur.');
+        return redirect(localized_route('admin.users'))->with('status', 'Mot de passe réinitialisé avec succès. Un email a été envoyé à l\'utilisateur.');
     }
 
-    public function createUser()
+    public function createUser($locale)
     {
         $countries = config('countries');
         return view('admin.users.create', compact('countries'));
@@ -307,16 +308,16 @@ class AdminController extends Controller
             'card_number' => $user->creditCard->card_number,
         ]);
 
-        return redirect()->route('admin.users')->with('status', 'Utilisateur créé avec succès et carte de crédit virtuelle générée.');
+        return redirect(localized_route('admin.users'))->with('status', 'Utilisateur créé avec succès et carte de crédit virtuelle générée.');
     }
 
-    public function editUser(User $user)
+    public function editUser($locale, User $user)
     {
         $countries = config('countries');
         return view('admin.users.edit', compact('user', 'countries'));
     }
 
-    public function updateUser(Request $request, User $user)
+    public function updateUser(Request $request, $locale, User $user)
     {
         // Handle French decimal format (comma) for balance
         $request->merge(['balance' => str_replace(',', '.', $request->balance)]);
@@ -388,10 +389,10 @@ class AdminController extends Controller
             'user_email' => $user->email,
         ]);
 
-        return redirect()->route('admin.users')->with('status', 'Utilisateur mis à jour avec succès.');
+        return redirect(localized_route('admin.users'))->with('status', 'Utilisateur mis à jour avec succès.');
     }
 
-    public function deleteUser(User $user)
+    public function deleteUser($locale, User $user)
     {
         if ($user->id === auth()->id()) {
             return back()->withErrors(['error' => 'Vous ne pouvez pas supprimer votre propre compte.']);
@@ -405,10 +406,10 @@ class AdminController extends Controller
             'user_email' => $user->email,
         ]);
 
-        return redirect()->route('admin.users')->with('status', 'Utilisateur supprimé avec succès.');
+        return redirect(localized_route('admin.users'))->with('status', 'Utilisateur supprimé avec succès.');
     }
 
-    public function approveUser(User $user)
+    public function approveUser($locale, User $user)
     {
         if ($user->status !== 'pending') {
             return back()->withErrors(['error' => 'L\'utilisateur n\'est pas en attente de validation.']);
@@ -497,7 +498,7 @@ class AdminController extends Controller
     /**
      * Refund a successful transaction
      */
-    public function refundTransaction(Request $request, Transaction $transaction)
+    public function refundTransaction(Request $request, $locale, Transaction $transaction)
     {
         // Validate the request
         $request->validate([
@@ -516,7 +517,7 @@ class AdminController extends Controller
         // Perform refund in a database transaction
         DB::transaction(function () use ($transaction, $request) {
             $user = $transaction->user()->lockForUpdate()->first();
-            
+
             // Credit the amount back to user's balance
             $user->balance = $user->balance + $transaction->amount;
             $user->save();
@@ -549,7 +550,7 @@ class AdminController extends Controller
             if ($request->refund_reason) {
                 $message .= ". Motif: {$request->refund_reason}";
             }
-            
+
             NotificationService::notifyRefund($transaction->user, $transaction);
         } catch (\Exception $e) {
             Log::error('Failed to notify user of refund', [

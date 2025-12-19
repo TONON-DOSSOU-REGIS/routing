@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nouveau virement - SG BANK</title>
+    <title>{{ __('transactions.page_title') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
@@ -234,22 +234,22 @@
                                     <i class="fas fa-building-columns text-white text-xl"></i>
                                 </div>
                                 <div>
-                                    <a href="{{ route('dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK</a>
-                                    <div class="text-xs text-gray-500 -mt-1">Nouveau virement</div>
+                                    <a href="{{ localized_route('dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK</a>
+                                    <div class="text-xs text-gray-500 -mt-1">{{ __('transactions.new_transfer') }}</div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Desktop Navigation -->
                         <div class="hidden md:flex items-center space-x-6">
-                            <a href="{{ route('dashboard') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
-                                <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                            <a href="{{ localized_route('dashboard') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
+                                <i class="fas fa-tachometer-alt mr-2"></i> {{ __('transactions.dashboard') }}
                                 <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                             </a>
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form method="POST" action="{{ localized_route('logout') }}">
                                 @csrf
                                 <button type="submit" class="relative text-gray-700 hover:text-red-600 transition duration-300 font-medium group">
-                                    <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
+                                    <i class="fas fa-sign-out-alt mr-2"></i> {{ __('transactions.logout') }}
                                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
                                 </button>
                             </form>
@@ -266,15 +266,15 @@
                     <!-- Mobile menu -->
                     <div id="mobile-menu" class="hidden pb-4">
                         <div class="px-2 pt-2 pb-3 space-y-2 bg-white/95 backdrop-blur-lg border border-gray-200 rounded-lg shadow-xl mt-2">
-                            <a href="{{ route('dashboard') }}" class="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
+                            <a href="{{ localized_route('dashboard') }}" class="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
                                 <i class="fas fa-tachometer-alt w-5 mr-3 text-center"></i>
-                                Dashboard
+                                {{ __('transactions.dashboard') }}
                             </a>
-                            <form method="POST" action="{{ route('logout') }}" class="inline">
+                            <form method="POST" action="{{ localized_route('logout') }}" class="inline">
                                 @csrf
                                 <button type="submit" class="flex items-center w-full px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition duration-300">
                                     <i class="fas fa-sign-out-alt w-5 mr-3 text-center"></i>
-                                    Déconnexion
+                                    {{ __('transactions.logout') }}
                                 </button>
                             </form>
                         </div>
@@ -285,8 +285,8 @@
             <div class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
                 <!-- En-tête de la page -->
                 <div class="mb-8 fade-in-up">
-                    <h1 class="text-3xl font-bold text-white drop-shadow-lg text-center">Nouveau virement</h1>
-                    <p class="text-white/90 mt-2 drop-shadow text-center">Effectuez un transfert sécurisé vers un bénéficiaire</p>
+                    <h1 class="text-3xl font-bold text-white drop-shadow-lg text-center">{{ __('transactions.transfer_title') }}</h1>
+                    <p class="text-white/90 mt-2 drop-shadow text-center">{{ __('transactions.transfer_subtitle') }}</p>
                 </div>
 
                 <!-- Indicateur d'étapes -->
@@ -296,21 +296,21 @@
                             <div class="step-indicator step-active">
                                 <i class="fas fa-edit"></i>
                             </div>
-                            <span class="text-sm font-medium text-gray-700 mt-2">Informations</span>
+                            <span class="text-sm font-medium text-gray-700 mt-2">{{ __('transactions.step_information') }}</span>
                         </div>
                         <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
                         <div class="flex flex-col items-center">
                             <div class="step-indicator step-inactive">
                                 <i class="fas fa-cog"></i>
                             </div>
-                            <span class="text-sm font-medium text-gray-500 mt-2">Traitement</span>
+                            <span class="text-sm font-medium text-gray-500 mt-2">{{ __('transactions.step_processing') }}</span>
                         </div>
                         <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
                         <div class="flex flex-col items-center">
                             <div class="step-indicator step-inactive">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <span class="text-sm font-medium text-gray-500 mt-2">Confirmation</span>
+                            <span class="text-sm font-medium text-gray-500 mt-2">{{ __('transactions.step_confirmation') }}</span>
                         </div>
                     </div>
                 </div>
@@ -323,8 +323,8 @@
                                 <i class="fas fa-paper-plane text-white text-2xl"></i>
                             </div>
                             <div>
-                                <h1 class="text-2xl font-bold text-gray-900">Détails du virement</h1>
-                                <p class="text-gray-600 mt-1">Renseignez les informations du bénéficiaire</p>
+                                <h1 class="text-2xl font-bold text-gray-900">{{ __('transactions.transfer_details') }}</h1>
+                                <p class="text-gray-600 mt-1">{{ __('transactions.beneficiary_info') }}</p>
                             </div>
                         </div>
 
@@ -335,7 +335,7 @@
                             <div class="stagger-item">
                                 <label for="amount" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
                                     <i class="fas fa-euro-sign mr-2 text-green-500"></i>
-                                    Montant du virement
+                                    {{ __('transactions.transfer_amount') }}
                                 </label>
                                 <div class="relative rounded-xl shadow-sm">
                                     <input type="number" 
@@ -361,14 +361,14 @@
                                 <div class="stagger-item">
                                     <label for="recipient_name" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
                                         <i class="fas fa-user mr-2 text-blue-500"></i>
-                                        Nom du bénéficiaire
+                                        {{ __('transactions.recipient_name') }}
                                     </label>
                                     <input type="text" 
                                            id="recipient_name" 
                                            name="recipient_name" 
                                            required
                                            class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 input-field"
-                                           placeholder="Jean Dupont">
+                                           placeholder="{{ __('transactions.recipient_name_placeholder') }}">
                                     @error('recipient_name') 
                                         <p class="text-red-500 text-sm mt-2 flex items-center">
                                             <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
@@ -379,14 +379,14 @@
                                 <div class="stagger-item">
                                     <label for="bank_name" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
                                         <i class="fas fa-university mr-2 text-purple-500"></i>
-                                        Nom de la banque
+                                        {{ __('transactions.bank_name') }}
                                     </label>
                                     <input type="text" 
                                            id="bank_name" 
                                            name="bank_name" 
                                            required
                                            class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 input-field"
-                                           placeholder="Banque Nationale">
+                                           placeholder="{{ __('transactions.bank_name_placeholder') }}">
                                     @error('bank_name') 
                                         <p class="text-red-500 text-sm mt-2 flex items-center">
                                             <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
@@ -400,14 +400,14 @@
                                 <div class="stagger-item">
                                     <label for="recipient_iban" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
                                         <i class="fas fa-credit-card mr-2 text-indigo-500"></i>
-                                        IBAN du bénéficiaire
+                                        {{ __('transactions.recipient_iban') }}
                                     </label>
                                     <input type="text" 
                                            id="recipient_iban" 
                                            name="recipient_iban" 
                                            required
                                            class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 input-field"
-                                           placeholder="FR76 1234 5678 9012 3456 7890 123">
+                                           placeholder="{{ __('transactions.recipient_iban_placeholder') }}">
                                     @error('recipient_iban') 
                                         <p class="text-red-500 text-sm mt-2 flex items-center">
                                             <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
@@ -418,14 +418,14 @@
                                 <div class="stagger-item">
                                     <label for="recipient_bic" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
                                         <i class="fas fa-code mr-2 text-orange-500"></i>
-                                        BIC du bénéficiaire
+                                        {{ __('transactions.recipient_bic') }}
                                     </label>
                                     <input type="text" 
                                            id="recipient_bic" 
                                            name="recipient_bic" 
                                            required
                                            class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 input-field"
-                                           placeholder="BNPAFRPP">
+                                           placeholder="{{ __('transactions.recipient_bic_placeholder') }}">
                                     @error('recipient_bic') 
                                         <p class="text-red-500 text-sm mt-2 flex items-center">
                                             <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
@@ -439,13 +439,13 @@
                                 <div class="stagger-item">
                                     <label for="reason" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
                                         <i class="fas fa-comment mr-2 text-gray-500"></i>
-                                        Motif du virement (optionnel)
+                                        {{ __('transactions.transfer_reason') }}
                                     </label>
                                     <input type="text" 
                                            id="reason" 
                                            name="reason"
                                            class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 input-field"
-                                           placeholder="Remboursement, cadeau...">
+                                           placeholder="{{ __('transactions.transfer_reason_placeholder') }}">
                                     @error('reason') 
                                         <p class="text-red-500 text-sm mt-2 flex items-center">
                                             <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
@@ -456,14 +456,14 @@
                                 <div class="stagger-item">
                                     <label for="activation_code" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
                                         <i class="fas fa-shield-alt mr-2 text-red-500"></i>
-                                        Code d'activation
+                                        {{ __('transactions.activation_code') }}
                                     </label>
                                     <input type="text"
                                            id="activation_code"
                                            name="activation_code"
                                            required
                                            class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 input-field"
-                                           placeholder="Votre code d'activation personnel">
+                                           placeholder="{{ __('transactions.activation_code_placeholder') }}">
                                     @error('activation_code')
                                         <p class="text-red-500 text-sm mt-2 flex items-center">
                                             <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
@@ -474,16 +474,16 @@
 
                             <!-- Boutons d'action -->
                             <div class="stagger-item flex justify-end space-x-4 pt-6">
-                                <a href="{{ route('dashboard') }}" 
+                                <a href="{{ localized_route('dashboard') }}"
                                    class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-200 transition duration-300 font-medium shadow-sm flex items-center gap-2">
                                     <i class="fas fa-arrow-left"></i>
-                                    Annuler
+                                    {{ __('transactions.cancel') }}
                                 </a>
                                 <button type="button" 
                                         id="startBtn" 
                                         class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-3 rounded-xl hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-semibold shadow-lg transform hover:scale-105 transition duration-300 pulse-glow flex items-center gap-2">
                                     <i class="fas fa-paper-plane"></i>
-                                    Lancer le virement
+                                    {{ __('transactions.start_transfer') }}
                                 </button>
                             </div>
                         </form>
@@ -495,13 +495,13 @@
                                     <div class="bg-blue-100 p-2 rounded-lg mr-3">
                                         <i class="fas fa-cog text-blue-500 text-lg"></i>
                                     </div>
-                                    <h3 class="text-lg font-semibold text-gray-900">Traitement en cours</h3>
+                                    <h3 class="text-lg font-semibold text-gray-900">{{ __('transactions.processing') }}</h3>
                                 </div>
                                 
                                 <div class="space-y-4">
                                     <div>
                                         <div class="flex justify-between text-sm text-gray-600 mb-2">
-                                            <span>Progression du virement</span>
+                                            <span>{{ __('transactions.progress_label') }}</span>
                                             <span id="progressText">0%</span>
                                         </div>
                                         <div class="w-full bg-gray-200 rounded-full h-3">
@@ -511,7 +511,7 @@
                                     
                                     <div class="text-sm text-gray-500 flex items-center gap-2">
                                         <i class="fas fa-info-circle text-blue-500"></i>
-                                        <span>Votre virement est en cours de traitement. Veuillez patienter...</span>
+                                        <span>{{ __('transactions.processing_message') }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -528,10 +528,10 @@
             <div id="flashIconContainer" class="bg-red-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <i id="flashIcon" class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
             </div>
-            <h3 id="flashTitle" class="text-xl font-bold text-gray-900 mb-3">Opération interrompue</h3>
+            <h3 id="flashTitle" class="text-xl font-bold text-gray-900 mb-3">{{ __('transactions.operation_interrupted') }}</h3>
             <p id="flashMessage" class="text-gray-700 mb-6 leading-relaxed"></p>
             <button id="closeFlash" class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-indigo-700 font-medium shadow-lg w-full">
-                <i class="fas fa-check mr-2"></i>J'ai compris
+                <i class="fas fa-check mr-2"></i>{{ __('transactions.understood') }}
             </button>
         </div>
     </div>
@@ -578,7 +578,7 @@
             const payload = new FormData(form);
 
             try {
-                const res = await fetch('{{ route('transactions.start') }}', {
+                const res = await fetch('{{ localized_route('transactions.start') }}', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -593,14 +593,14 @@
                     ticking = true;
                     progressSection.classList.remove('hidden');
                     startBtn.disabled = true;
-                    startBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Traitement en cours...';
+                    startBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>{{ __('transactions.processing_in_progress') }}';
                     tick();
                 } else {
-                    showMessage('Erreur lors du lancement du virement', 'error');
+                    showMessage('{{ __('transactions.error_starting_transfer') }}', 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showMessage('Une erreur est survenue lors de la connexion', 'error');
+                showMessage('{{ __('transactions.connection_error') }}', 'error');
             }
         });
 
@@ -608,7 +608,7 @@
             if (!ticking || !txId) return;
 
             try {
-                const res = await fetch('{{ route('transactions.progress') }}', {
+                const res = await fetch('{{ localized_route('transactions.progress') }}', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -619,12 +619,13 @@
 
                 const data = await res.json();
 
+                console.log('Progress response:', data);
                 setProgress(data.progress);
 
                 if (data.status === 'on_hold') {
                     ticking = false;
                     resetStartButton();
-                    showMessage(data.message || 'Transaction en attente de vérification de sécurité.', 'error');
+                    showMessage(data.message || '{{ __('transactions.transaction_on_hold') }}', 'error');
                     return;
                 }
 
@@ -633,27 +634,27 @@
                     resetStartButton();
                     // Animation de succès avant redirection
                     progressBar.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-                    showMessage('Virement effectué avec succès ! Vous allez être redirigé...', 'success');
+                    showMessage('{{ __('transactions.transfer_success_message') }}', 'success');
                     // Let the success message show for 2 seconds before redirect
                     setTimeout(() => {
-                        window.location.href = '{{ route('transactions.history') }}';
+                        window.location.href = '{{ localized_route('transactions.history') }}';
                     }, 2000);
                     return;
                 }
 
-                // Continue ticking
-                setTimeout(tick, 700);
+                // Continue ticking avec un délai réduit pour une progression plus fluide
+                setTimeout(tick, 500);
             } catch (error) {
                 console.error('Error:', error);
                 ticking = false;
                 resetStartButton();
-                showMessage('Erreur de connexion lors du traitement', 'error');
+                showMessage('{{ __('transactions.connection_error_processing') }}', 'error');
             }
         }
 
         function resetStartButton() {
             startBtn.disabled = false;
-            startBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Lancer le virement';
+            startBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>{{ __('transactions.start_transfer') }}';
         }
 
         function showMessage(message, type = 'error') {
@@ -667,7 +668,7 @@
                 flashIcon.className = 'fas fa-check-circle text-green-500 text-2xl icon-fade-transition';
                 flashIconContainer.className = 'bg-green-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4';
                 flashCard.className = 'glass-card max-w-md w-full mx-auto p-8 rounded-2xl shadow-2xl text-center border border-green-200';
-                flashTitle.textContent = 'Opération réussie';
+                flashTitle.textContent = '{{ __('transactions.operation_success') }}';
 
                 // Animate icon appearance
                 setTimeout(() => {
@@ -678,7 +679,7 @@
                 flashIcon.className = 'fas fa-exclamation-triangle text-red-500 text-2xl icon-fade-transition';
                 flashIconContainer.className = 'bg-red-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4';
                 flashCard.className = 'glass-card max-w-md w-full mx-auto p-8 rounded-2xl shadow-2xl text-center border border-red-200';
-                flashTitle.textContent = 'Opération interrompue';
+                flashTitle.textContent = '{{ __('transactions.operation_interrupted') }}';
 
                 // Animate icon appearance
                 setTimeout(() => {
@@ -713,4 +714,3 @@
     </script>
 </body>
 </html>
-

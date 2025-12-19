@@ -6,10 +6,29 @@ use App\Models\ChatMessage;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ChatController extends Controller
 {
+    /**
+     * Get online users based on recent session activity
+     */
+    private function getOnlineUsers()
+    {
+        // Consider users online if they have an active session within the last 5 minutes
+        $onlineThreshold = now()->subMinutes(5);
+
+        $onlineUserIds = DB::table('sessions')
+            ->where('last_activity', '>=', $onlineThreshold->timestamp)
+            ->whereNotNull('user_id')
+            ->pluck('user_id')
+            ->unique()
+            ->toArray();
+
+        return $onlineUserIds;
+    }
+
     /**
      * Send a message
      */
@@ -75,19 +94,33 @@ class ChatController extends Controller
     {
         $currentUserId = Auth::id();
         $currentUser = Auth::user();
-        
+
+        // Handle case where locale prefix is passed as userId (e.g., "pl", "fr")
+        if ($userId && !is_numeric($userId)) {
+            $userId = null;
+        }
+
+        Log::info('ChatController@getMessages called', [
+            'current_user_id' => $currentUserId,
+            'requested_user_id' => $userId,
+            'is_admin' => $currentUser ? $currentUser->isAdmin() : false
+        ]);
+
         // If user is admin and no userId specified, get all conversations
         if ($currentUser && $currentUser->isAdmin() && !$userId) {
+            Log::info('Admin requesting all conversations');
             return $this->getAdminConversations();
         }
-        
+
         // If userId not specified, get messages with admin
         if (!$userId) {
             $admin = User::where('role', 'admin')->first();
             $userId = $admin ? $admin->id : null;
+            Log::info('No userId specified, using admin', ['admin_id' => $userId]);
         }
 
         if (!$userId) {
+            Log::error('No admin found in system');
             return response()->json([
                 'success' => false,
                 'message' => 'No admin found',
@@ -107,6 +140,43 @@ class ChatController extends Controller
             ->orderBy('created_at', 'asc')
             ->get();
 
+        Log::info('Messages retrieved', [
+            'count' => $messages->count(),
+            'current_user_id' => $currentUserId,
+            'other_user_id' => $userId
+        ]);
+
+        // Transform messages to ensure proper format
+        $formattedMessages = $messages->map(function($message) {
+            return [
+                'id' => $message->id,
+                'sender_id' => $message->sender_id,
+                'receiver_id' => $message->receiver_id,
+                'message' => $message->message,
+                'is_read' => $message->is_read,
+                'attachment_path' => $message->attachment_path,
+                'attachment_name' => $message->attachment_name,
+                'attachment_type' => $message->attachment_type,
+                'attachment_size' => $message->attachment_size,
+                'created_at' => $message->created_at ? $message->created_at->toISOString() : null,
+                'updated_at' => $message->updated_at ? $message->updated_at->toISOString() : null,
+                'sender' => $message->sender ? [
+                    'id' => $message->sender->id,
+                    'first_name' => $message->sender->first_name,
+                    'last_name' => $message->sender->last_name,
+                    'email' => $message->sender->email,
+                ] : null,
+                'receiver' => $message->receiver ? [
+                    'id' => $message->receiver->id,
+                    'first_name' => $message->receiver->first_name,
+                    'last_name' => $message->receiver->last_name,
+                    'email' => $message->receiver->email,
+                ] : null,
+            ];
+        });
+
+        Log::info('Formatted messages', ['sample' => $formattedMessages->take(1)]);
+
         // Mark messages as read
         ChatMessage::where('receiver_id', $currentUserId)
             ->where('sender_id', $userId)
@@ -115,7 +185,7 @@ class ChatController extends Controller
 
         return response()->json([
             'success' => true,
-            'messages' => $messages,
+            'messages' => $formattedMessages,
         ]);
     }
 
@@ -166,6 +236,9 @@ class ChatController extends Controller
                 ->where('is_read', false)
                 ->count();
             
+            // Get online users
+            $onlineUserIds = $this->getOnlineUsers();
+
             // Ensure user data is properly formatted
             $conversations[] = [
                 'user' => [
@@ -174,6 +247,7 @@ class ChatController extends Controller
                     'last_name' => $user->last_name ?? '',
                     'email' => $user->email ?? '',
                     'role' => $user->role ?? 'user',
+                    'is_online' => in_array($user->id, $onlineUserIds),
                 ],
                 'last_message' => $lastMessage ? [
                     'id' => $lastMessage->id,

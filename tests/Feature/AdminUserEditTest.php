@@ -34,7 +34,7 @@ test('admin can update user details', function () {
             'status' => 'active',
         ]);
 
-    $response->assertRedirect(route('admin.users'));
+    $response->assertRedirect(localized_route('admin.users'));
     $response->assertSessionHas('status', 'Utilisateur mis à jour avec succès.');
 
     $user->refresh();
@@ -73,7 +73,7 @@ test('admin can update and create credit card info with user', function () {
             'expiry_date' => now()->addYear()->format('Y-m-d'),
         ]);
 
-    $response->assertRedirect(route('admin.users'));
+    $response->assertRedirect(localized_route('admin.users'));
     $response->assertSessionHas('status', 'Utilisateur mis à jour avec succès.');
 
     $user->refresh();
@@ -114,7 +114,7 @@ test('admin can delete credit card info', function () {
             'expiry_date' => '',
         ]);
 
-    $response->assertRedirect(route('admin.users'));
+    $response->assertRedirect(localized_route('admin.users'));
     $response->assertSessionHas('status', 'Utilisateur mis à jour avec succès.');
 
     $user->refresh();
@@ -133,7 +133,7 @@ test('admin can reset user password', function () {
             '_token' => 'test',
         ]);
 
-    $response->assertRedirect(route('admin.users'));
+    $response->assertRedirect(localized_route('admin.users'));
     $response->assertSessionHas('status', 'Mot de passe réinitialisé avec succès. Un email a été envoyé à l\'utilisateur.');
 
     // Check that password was changed

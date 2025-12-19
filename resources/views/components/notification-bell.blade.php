@@ -28,7 +28,7 @@
                 <button id="mark-all-read" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
                     Tout marquer comme lu
                 </button>
-                <a href="{{ route('notifications.index') }}" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                <a href="{{ localized_route('notifications.index', ['locale' => app()->getLocale()]) }}" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
                     Voir tout
                 </a>
             </div>

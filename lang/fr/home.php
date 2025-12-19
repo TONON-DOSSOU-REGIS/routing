@@ -1,0 +1,175 @@
+<?php
+
+return [
+    // Section Hero
+    'hero_badge' => 'Plateforme bancaire 100% sécurisée',
+    'hero_title_1' => 'Votre banque en ligne',
+    'hero_title_2' => 'professionnelle & certifiée',
+    'hero_description' => 'Ouvrez votre compte en quelques minutes, suivez vos virements en temps réel et recevez des justificatifs officiels certifiés par SG BANK.',
+    'hero_feature_1' => 'Inscription 100% en ligne, sans déplacement.',
+    'hero_feature_2' => 'Suivi de virement étape par étape avec barre de progression.',
+    'hero_feature_3' => 'Notifications par e-mail pour chaque mouvement.',
+    'hero_feature_4' => 'Reçus PDF sécurisés et archivés dans votre espace client.',
+    'hero_cta_register' => 'Créer mon compte',
+    'hero_cta_login' => 'Accéder à mon espace',
+    'hero_security_note' => 'SG BANK respecte les normes de sécurité les plus strictes pour protéger vos données financières.',
+    
+    // Aperçu Dashboard
+    'dashboard_preview_title' => 'Aperçu de votre tableau de bord',
+    'dashboard_transfers_in_progress' => 'Virements en cours',
+    'dashboard_operations' => 'opérations',
+    'dashboard_priority_transfer' => 'Progression d\'un virement prioritaire',
+    'dashboard_step' => 'Étape 3/4 - Contrôle final de conformité',
+    'dashboard_transfers' => 'Virements',
+    'dashboard_reception' => 'Réception',
+    'dashboard_alerts' => 'Alertes',
+    'dashboard_description' => 'Interface moderne, claire et pensée pour les virements professionnels.',
+    
+    // Navigation
+    'nav_home' => 'Accueil',
+    'nav_services' => 'Services',
+    'nav_testimonials' => 'Témoignage client',
+    'nav_faq' => 'FAQ',
+    'nav_contact' => 'Formulaire de contact',
+    'nav_login' => 'Connexion',
+    'nav_register' => 'Créer un compte',
+    
+    // Menu Services
+    'services_business_accounts' => 'Comptes professionnels',
+    'services_international_transfers' => 'Virements internationaux',
+    'services_treasury_management' => 'Gestion de trésorerie',
+    'services_payment_cards' => 'Cartes de paiement',
+    
+    // Section Fonctionnalités
+    'features_title' => 'Des fonctionnalités puissantes, pensées pour les professionnels',
+    'features_description' => 'SG BANK vous offre une expérience bancaire moderne : sécurité avancée, transparence totale et gestion intelligente de vos opérations.',
+    
+    'feature_1_title' => 'Sécurité bancaire AES 256-bit',
+    'feature_1_description' => 'Vos données sont chiffrées de bout en bout et protégées par les mêmes protocoles que les grandes institutions bancaires.',
+    'feature_1_item_1' => 'Connexion sécurisée (HTTPS / SSL)',
+    'feature_1_item_2' => 'Détection de connexions suspectes',
+    'feature_1_item_3' => 'Archivage sécurisé et protégé',
+    
+    'feature_2_title' => 'Surveillance anti-fraude en temps réel',
+    'feature_2_description' => 'Un système intelligent analyse en continu vos opérations pour détecter toute activité anormale.',
+    'feature_2_item_1' => 'Alerte en temps réel par e-mail',
+    'feature_2_item_2' => 'Analyse automatique des anomalies',
+    'feature_2_item_3' => 'Contrôle manuel possible par l\'administrateur',
+    
+    'feature_3_title' => 'Progression des virements supervisée',
+    'feature_3_description' => 'Chaque virement passe par un processus de validation certifié pour garantir sécurité et transparence.',
+    'feature_3_item_1' => 'Suivi étape par étape',
+    'feature_3_item_2' => 'Barre de progression dynamique',
+    'feature_3_item_3' => 'Justificatif PDF certifié',
+    
+    // Section Pourquoi Choisir
+    'why_choose_title' => 'Pourquoi choisir SG BANK ?',
+    'why_choose_description' => 'SG BANK accompagne aussi bien les particuliers que les professionnels avec une solution bancaire moderne, accessible, rapide et extrêmement fiable.',
+    
+    'advantage_1_title' => 'Aucun déplacement nécessaire',
+    'advantage_1_description' => 'Ouvrez et gérez vos comptes depuis votre ordinateur, smartphone ou tablette, où que vous soyez.',
+    
+    'advantage_2_title' => 'Approbation rapide',
+    'advantage_2_description' => 'Processus de validation accéléré pour vos virements et demandes importantes.',
+    
+    'advantage_3_title' => 'Virements + reçu PDF',
+    'advantage_3_description' => 'Recevez un justificatif PDF certifié après chaque virement effectué avec succès.',
+    
+    'advantage_4_title' => 'Support client humain',
+    'advantage_4_description' => 'Une équipe disponible pour vous assister, vous conseiller et répondre à vos questions.',
+    
+    // Section Statistiques
+    'stats_clients' => 'Clients satisfaits',
+    'stats_clients_description' => 'Des milliers d\'utilisateurs font confiance à SG BANK pour leurs opérations quotidiennes.',
+    'stats_volume' => 'Volume de transactions (M€)',
+    'stats_volume_description' => 'Un volume important de flux financiers géré avec précision et transparence.',
+    'stats_satisfaction' => 'Taux de satisfaction',
+    'stats_satisfaction_description' => 'Nos utilisateurs recommandent SG BANK pour sa simplicité, sa rapidité et son sérieux.',
+    
+    // Section Partenaires
+    'partners_title' => 'Ils nous font confiance',
+    'partners_description' => 'SG BANK collabore avec des institutions financières reconnues mondialement, afin de garantir fiabilité, sécurité et qualité de service.',
+    'partners_note' => 'Les logos affichés sont présentés à titre illustratif pour une démonstration visuelle.',
+    
+    // Section Certifications
+    'certifications_title' => 'Certifiée par les meilleurs standards',
+    'certifications_description' => 'SG BANK applique les normes les plus strictes du secteur bancaire pour assurer des opérations fiables, transparentes et sécurisées.',
+    
+    'cert_1_badge' => 'Certification Sécurité',
+    'cert_1_title' => 'Normes de sécurité renforcées',
+    'cert_1_description' => 'Conforme aux standards internationaux de cybersécurité, assurant un chiffrement de qualité bancaire.',
+    
+    'cert_2_badge' => 'Qualité de Service',
+    'cert_2_title' => 'Excellence & transparence',
+    'cert_2_description' => 'Un suivi détaillé, des frais affichés clairement et une interface pensée pour les utilisateurs.',
+    'cert_2_distinction' => 'Distinction Premium Service',
+    
+    'cert_3_badge' => 'Protection des données',
+    'cert_3_title' => 'Confidentialité garantie',
+    'cert_3_description' => 'Gestion stricte des accès sensibles et conformité inspirée des directives RGPD.',
+    'cert_3_compliance' => 'Conformité & sécurité des données',
+    
+    // Section Témoignages
+    'testimonials_title' => 'Ce que disent nos clients',
+    'testimonials_description' => 'Des utilisateurs réels, des expériences réelles. SG BANK simplifie la gestion des virements au quotidien.',
+    
+    'testimonial_1_name' => 'Sarah M.',
+    'testimonial_1_role' => 'Entrepreneure - E-commerce',
+    'testimonial_1_text' => 'SG BANK m\'a permis de suivre mes virements fournisseurs en temps réel. La barre de progression et les reçus PDF sont vraiment rassurants.',
+    'testimonial_1_rating' => 'Service impeccable',
+    
+    'testimonial_2_name' => 'Jean-Paul D.',
+    'testimonial_2_role' => 'Consultant financier',
+    'testimonial_2_text' => 'J\'apprécie particulièrement la surveillance anti-fraude et les alertes e-mail. Je sais immédiatement quand un virement important est en cours ou finalisé.',
+    'testimonial_2_rating' => 'Très fiable',
+    
+    'testimonial_3_name' => 'Karim L.',
+    'testimonial_3_role' => 'Indépendant - Service B2B',
+    'testimonial_3_text' => 'L\'interface est claire et très simple. Je peux montrer directement à mes clients les preuves de virement avec les reçus PDF.',
+    'testimonial_3_rating' => 'Pratique et moderne',
+    
+    // Section FAQ
+    'faq_title' => 'Questions fréquentes (FAQ)',
+    'faq_description' => 'Retrouvez les réponses aux questions les plus courantes sur SG BANK, l\'ouverture de compte et la gestion de vos virements en ligne.',
+    
+    'faq_1_question' => 'Comment ouvrir un compte sur SG BANK ?',
+    'faq_1_subtitle' => 'Inscription simple en quelques étapes.',
+    'faq_1_answer' => 'Cliquez sur « Créer un compte », remplissez le formulaire avec vos informations (nom, e-mail, téléphone, etc.), confirmez votre adresse e-mail, puis accédez à votre espace sécurisé pour réaliser vos premières opérations.',
+    
+    'faq_2_question' => 'Mes virements sont-ils vraiment surveillés ?',
+    'faq_2_subtitle' => 'Suivi et contrôle manuel des opérations.',
+    'faq_2_answer' => 'Oui. Chaque virement passe par plusieurs étapes de validation. Les administrateurs SG BANK peuvent contrôler et certifier les opérations sensibles, ce qui réduit fortement les risques d\'erreur ou de fraude.',
+    
+    'faq_3_question' => 'Puis-je télécharger un reçu pour chaque virement ?',
+    'faq_3_subtitle' => 'Justificatif PDF disponible.',
+    'faq_3_answer' => 'Bien sûr. Une fois le virement finalisé et certifié, un reçu PDF est généré automatiquement. Vous pouvez le télécharger, l\'imprimer ou le partager avec vos partenaires.',
+    
+    'faq_4_question' => 'Que faire en cas de problème ou de doute ?',
+    'faq_4_subtitle' => 'Support humain disponible.',
+    'faq_4_answer' => 'Vous pouvez contacter notre support client via votre espace sécurisé ou par les coordonnées indiquées sur le site. Un conseiller vous répondra dans les meilleurs délais.',
+    
+    // Section CTA
+    'cta_title' => 'Prêt à commencer ?',
+    'cta_description' => 'Rejoignez des milliers de clients satisfaits qui font confiance à SG BANK pour leurs virements et opérations bancaires en ligne.',
+    'cta_button' => 'Commencer maintenant',
+    'cta_security' => 'L\'ouverture de compte se fait en quelques minutes, sans déplacement, et avec un haut niveau de sécurité.',
+    
+    // Footer
+    'footer_description' => 'Une solution bancaire 100% sécurisée, simple et rapide pour les professionnels.',
+    'footer_services' => 'Services',
+    'footer_about' => 'À propos',
+    'footer_support' => 'Support',
+    'footer_our_story' => 'Notre histoire',
+    'footer_careers' => 'Carrières',
+    'footer_press' => 'Presse',
+    'footer_blog' => 'Blog',
+    'footer_help_center' => 'Centre d\'aide',
+    'footer_contact_us' => 'Nous contacter',
+    'footer_security' => 'Sécurité',
+    'footer_legal' => 'Mentions légales',
+    'footer_copyright' => 'Tous droits réservés.',
+    'footer_disclaimer' => 'Les informations affichées sur ce site ont une valeur indicative et peuvent être adaptées selon votre projet réel.',
+
+    'accompagne_description' => 'SG BANK accompagne aussi bien les particuliers que les professionnels avec une solution bancaire moderne, accessible, rapide et extrêmement fiable.',
+    'collabore_description' => 'SG BANK collabore avec des institutions financières reconnues mondialement, afin de garantir fiabilité, sécurité et qualité de service.',
+];

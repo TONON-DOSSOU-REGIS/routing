@@ -11,7 +11,16 @@ class RegisterController extends Controller
 {
     use RegistersUsers;
 
-    protected $redirectTo = '/dashboard';
+    /**
+     * Get the post-register redirect path with locale.
+     *
+     * @return string
+     */
+    protected function redirectTo()
+    {
+        $locale = app()->getLocale();
+        return '/' . $locale . '/dashboard';
+    }
 
     public function __construct()
     {
@@ -57,6 +66,29 @@ class RegisterController extends Controller
             'status' => 'pending',
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    /**
+     * The user has been registered.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function registered(\Illuminate\Http\Request $request, $user)
+    {
+        // If user status is pending, don't log them in
+        if ($user->status === 'pending') {
+            // Log out the user if they were automatically logged in
+            auth()->logout();
+
+            // Redirect to pending approval page
+            $locale = app()->getLocale();
+            return redirect('/' . $locale . '/pending-approval');
+        }
+
+        // For active users, continue with normal flow
+        return redirect($this->redirectTo());
     }
 }
 

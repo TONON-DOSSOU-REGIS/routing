@@ -541,9 +541,45 @@ document.addEventListener('DOMContentLoaded', function() {
             'GBG': '<div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">G</span></div>',
             'SBD': '<div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">S</span></div>',
             'GOLOS': '<div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">G</span></div>',
-            'GBG': '<div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">G</span></div>',
-            'SBD': '<div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">S</span></div>',
-            'GOLOS': '<div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">G</span></div>',
+            'GBG': '<div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">G</span></div>'
+        };
+
+        if (cryptoLogos[symbol]) {
+            return cryptoLogos[symbol];
+        }
+
+        // Stock logos
+        const stockLogos = {
+            'AAPL': '<div class="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">A</span></div>',
+            'GOOGL': '<div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">G</span></div>',
+            'MSFT': '<div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">M</span></div>',
+            'AMZN': '<div class="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">A</span></div>',
+            'TSLA': '<div class="w-8 h-8 bg-gradient-to-br from-red-400 to-red-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">T</span></div>',
+            'META': '<div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">M</span></div>',
+            'NVDA': '<div class="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">N</span></div>',
+            'NFLX': '<div class="w-8 h-8 bg-gradient-to-br from-red-500 to-red-700 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">N</span></div>'
+        };
+
+        if (stockLogos[symbol]) {
+            return stockLogos[symbol];
+        }
+
+        // Forex logos
+        const forexLogos = {
+            'EUR': '<div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">€</span></div>',
+            'USD': '<div class="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">$</span></div>',
+            'GBP': '<div class="w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">£</span></div>',
+            'JPY': '<div class="w-8 h-8 bg-gradient-to-br from-red-400 to-red-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">¥</span></div>'
+        };
+
+        const baseCurrency = symbol.split('/')[0];
+        if (forexLogos[baseCurrency]) {
+            return forexLogos[baseCurrency];
+        }
+
+        // Default fallback
+        return '<div class="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">?</span></div>';
+    }
 
     function showLoading() {
         loadingState.classList.remove('hidden');

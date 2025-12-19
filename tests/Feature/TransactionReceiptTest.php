@@ -21,7 +21,7 @@ class TransactionReceiptTest extends TestCase
         ]);
 
         $this->actingAs($user);
-        $response = $this->get(route('transactions.receipt.html', ['transaction' => $transaction->id]));
+        $response = $this->get(route('transactions.receipt.html', ['locale' => 'fr', 'transaction' => $transaction->id]));
         $response->assertStatus(200);
         $response->assertSee('validate-icon.png');
         $response->assertSee('Le virement a été effectué à 100% avec succès.');
@@ -37,7 +37,7 @@ class TransactionReceiptTest extends TestCase
         ]);
 
         $this->actingAs($user);
-        $response = $this->get(route('transactions.receipt.html', ['transaction' => $transaction->id]));
+        $response = $this->get(route('transactions.receipt.html', ['locale' => 'fr', 'transaction' => $transaction->id]));
         $response->assertStatus(200);
         $response->assertSee('alert-icon.png');
         $response->assertSee('Le virement est en cours, à 75% de progression.');
@@ -57,7 +57,7 @@ class TransactionReceiptTest extends TestCase
 
         // Test sending valid stop_percentage values
         foreach ([0, 50, 100] as $value) {
-            $response = $this->post(route('admin.settings.save'), [
+            $response = $this->post(route('admin.settings.save', ['locale' => 'fr']), [
                 'stop_percentage' => $value,
                 'stop_message' => 'Test message',
                 'target_user_id' => null,
@@ -67,7 +67,7 @@ class TransactionReceiptTest extends TestCase
         }
 
         // Test invalid value
-        $response = $this->post(route('admin.settings.save'), [
+        $response = $this->post(route('admin.settings.save', ['locale' => 'fr']), [
             'stop_percentage' => 101,
             'stop_message' => 'Test message',
             'target_user_id' => null,

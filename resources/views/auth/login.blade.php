@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Connexion - SG BANK</title>
+  <title>{{ __('auth.login_page_title') }}</title>
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
@@ -46,17 +46,19 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <div class="flex items-center space-x-2">
-          <i class="fas fa-building-columns text-blue-600 text-2xl"></i>
-          <a href="{{ route('home') }}" class="text-xl font-semibold text-slate-800 hover:text-blue-700 transition">
+          <img src='{{ asset("images/logobank.png") }}' class="w-9 h-9" alt="">
+          {{-- <i class="fas fa-building-columns text-blue-600 text-2xl"></i> --}}
+          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-xl font-semibold text-slate-800 hover:text-blue-700 transition">
             SG BANK
           </a>
         </div>
         <div class="flex items-center space-x-4">
-          <a href="{{ route('register') }}" class="hidden sm:inline-block text-slate-700 hover:text-blue-600 transition">
-            Créer un compte
+          @include('components.language-selector')
+          <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="hidden sm:inline-block text-slate-700 hover:text-blue-600 transition">
+            {{ __('auth.nav_create_account') }}
           </a>
-          <a href="{{ route('login') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg btn-hover shadow">
-            <i class="fa-solid fa-right-to-bracket mr-2"></i> Connexion
+          <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg btn-hover shadow">
+            <i class="fa-solid fa-right-to-bracket mr-2"></i> {{ __('auth.nav_login') }}
           </a>
         </div>
       </div>
@@ -70,15 +72,15 @@
         <!-- Left panel -->
         <div class="text-white fade-in-up">
           <h1 class="text-3xl sm:text-4xl font-extrabold">
-            Accédez à votre espace sécurisé
+            {{ __('auth.login_hero_title') }}
           </h1>
           <p class="mt-3 text-slate-200">
-            Gérez vos comptes, suivez vos transactions, recevez des notifications en temps réel et accédez à nos services professionnels.
+            {{ __('auth.login_hero_description') }}
           </p>
           <ul class="mt-6 space-y-3 text-slate-200">
-            <li class="flex items-center"><i class="fa-solid fa-shield-halved text-blue-300 mr-3"></i> Sécurité de niveau bancaire</li>
-            <li class="flex items-center"><i class="fa-solid fa-bell text-blue-300 mr-3"></i> Notifications en temps réel</li>
-            <li class="flex items-center"><i class="fa-solid fa-chart-line text-blue-300 mr-3"></i> Tableau de bord analytique</li>
+            <li class="flex items-center"><i class="fa-solid fa-shield-halved text-blue-300 mr-3"></i> {{ __('auth.login_feature_security') }}</li>
+            <li class="flex items-center"><i class="fa-solid fa-bell text-blue-300 mr-3"></i> {{ __('auth.login_feature_notifications') }}</li>
+            <li class="flex items-center"><i class="fa-solid fa-chart-line text-blue-300 mr-3"></i> {{ __('auth.login_feature_analytics') }}</li>
           </ul>
         </div>
 
@@ -100,28 +102,28 @@
             </div>
           @endif
 
-          <h2 class="text-2xl font-bold mb-1">Connexion</h2>
-          <p class="text-slate-200 mb-6">Entrez vos identifiants pour accéder à votre compte.</p>
+          <h2 class="text-2xl font-bold mb-1">{{ __('auth.login_title') }}</h2>
+          <p class="text-slate-200 mb-6">{{ __('auth.login_subtitle') }}</p>
 
-          <form method="POST" action="{{ route('login') }}" class="space-y-5">
+          <form method="POST" action="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="space-y-5">
             @csrf
 
             <div>
-              <label for="email" class="block mb-1 text-sm text-slate-200">Adresse email</label>
+              <label for="email" class="block mb-1 text-sm text-slate-200">{{ __('auth.email') }}</label>
               <input id="email" name="email" type="email" required autocomplete="email" value="{{ old('email') }}"
                      class="input-field w-full px-4 py-3 rounded-lg bg-white/90 text-slate-900 placeholder-slate-500 focus:outline-none"
-                     placeholder="vous@exemple.com">
+                     placeholder="{{ __('auth.email_placeholder') }}">
               @error('email')
                 <p class="error-text text-red-300 mt-1">{{ $message }}</p>
               @enderror
             </div>
 
             <div>
-              <label for="password" class="block mb-1 text-sm text-slate-200">Mot de passe</label>
+              <label for="password" class="block mb-1 text-sm text-slate-200">{{ __('auth.password') }}</label>
               <div class="relative">
                 <input id="password" name="password" type="password" required autocomplete="current-password"
                        class="input-field w-full px-4 py-3 pr-12 rounded-lg bg-white/90 text-slate-900 placeholder-slate-500 focus:outline-none"
-                       placeholder="••••••••">
+                       placeholder="{{ __('auth.password_placeholder') }}">
                 <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 px-3 text-slate-600 hover:text-slate-800">
                   <i class="fa-regular fa-eye"></i>
                 </button>
@@ -135,16 +137,16 @@
               <div class="flex items-center space-x-2">
                 <input id="remember" type="checkbox" name="remember"
                        class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                <label for="remember" class="text-sm text-slate-200">Se souvenir de moi</label>
+                <label for="remember" class="text-sm text-slate-200">{{ __('auth.remember_me') }}</label>
               </div>
               <div class="text-sm">
-                <a href="#" class="text-blue-300 hover:text-blue-200">Mot de passe oublié ?</a>
+                <a href="#" class="text-blue-300 hover:text-blue-200">{{ __('auth.forgot_password') }}</a>
               </div>
             </div>
 
             <button type="submit"
                     class="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 btn-hover shadow-lg font-semibold">
-              Se connecter
+              {{ __('auth.login_button') }}
             </button>
 
             <div class="relative my-6">
@@ -152,22 +154,22 @@
                 <div class="w-full border-t border-white/20"></div>
               </div>
               <div class="relative flex justify-center text-sm">
-                <span class="px-2 bg-transparent text-slate-200">Ou</span>
+                <span class="px-2 bg-transparent text-slate-200">{{ __('auth.or') }}</span>
               </div>
             </div>
 
             <div class="text-center">
-              <span class="text-slate-200">Pas de compte ?</span>
-              <a href="{{ route('register') }}" class="text-blue-300 hover:text-blue-200 font-semibold ml-1">Inscrivez-vous</a>
+              <span class="text-slate-200">{{ __('auth.no_account') }}</span>
+              <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="text-blue-300 hover:text-blue-200 font-semibold ml-1">{{ __('auth.register_link') }}</a>
             </div>
           </form>
 
           <div class="mt-6 grid grid-cols-2 gap-3">
             <button type="button" class="bg-white text-slate-700 py-2.5 px-4 rounded-lg flex items-center justify-center hover:bg-slate-100 transition btn-hover">
-              <i class="fab fa-google text-red-500 mr-2"></i> Google
+              <i class="fab fa-google text-red-500 mr-2"></i> {{ __('auth.login_with_google') }}
             </button>
             <button type="button" class="bg-white text-slate-700 py-2.5 px-4 rounded-lg flex items-center justify-center hover:bg-slate-100 transition btn-hover">
-              <i class="fab fa-apple text-slate-800 mr-2"></i> Apple
+              <i class="fab fa-apple text-slate-800 mr-2"></i> {{ __('auth.login_with_apple') }}
             </button>
           </div>
         </div>
@@ -178,11 +180,11 @@
   <!-- Footer -->
   <footer class="mt-auto text-center text-slate-200 py-6 bg-black/40 backdrop-blur-sm">
     <div class="max-w-7xl mx-auto px-4">
-      <p>&copy; {{ date('Y') }} <span class="text-blue-300 font-semibold">SG BANK</span>. Tous droits réservés.</p>
+      <p>&copy; {{ date('Y') }} <span class="text-blue-300 font-semibold">SG BANK</span>. {{ __('auth.footer_copyright') }}</p>
       <div class="mt-2 flex justify-center space-x-4 text-sm">
-        <a href="#" class="hover:text-blue-300 transition">Confidentialité</a>
-        <a href="#" class="hover:text-blue-300 transition">Conditions</a>
-        <a href="#" class="hover:text-blue-300 transition">Assistance</a>
+        <a href="#" class="hover:text-blue-300 transition">{{ __('auth.footer_privacy') }}</a>
+        <a href="#" class="hover:text-blue-300 transition">{{ __('auth.footer_terms') }}</a>
+        <a href="#" class="hover:text-blue-300 transition">{{ __('auth.footer_support') }}</a>
       </div>
     </div>
   </footer>

@@ -28,7 +28,17 @@ class NotificationService
     public static function notifyTransaction(User $user, $transaction): void
     {
         $amount = \App\Helpers\CurrencyHelper::format($transaction->amount, $user->default_currency ?? 'EUR');
-        $type = $transaction->type === 'credit' ? 'dépôt' : 'retrait';
+        
+        // Déterminer le type de transaction
+        $typeLabels = [
+            'deposit' => 'dépôt',
+            'withdrawal' => 'retrait',
+            'transfer' => 'virement',
+            'credit' => 'crédit',
+            'debit' => 'débit'
+        ];
+        
+        $type = $typeLabels[$transaction->type] ?? $transaction->type;
 
         self::create(
             $user,

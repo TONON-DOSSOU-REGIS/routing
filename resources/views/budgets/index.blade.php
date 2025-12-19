@@ -10,7 +10,7 @@
             <h1 class="text-3xl font-bold text-gray-900">Gestion des Budgets</h1>
             <p class="text-gray-600 mt-1">Suivez et gérez les budgets de vos utilisateurs</p>
         </div>
-        <a href="{{ route('budgets.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-300 shadow-lg">
+        <a href="{{ localized_route('budgets.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-300 shadow-lg">
             <i class="fas fa-plus mr-2"></i> Nouveau Budget
         </a>
     </div>
@@ -72,10 +72,10 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex items-center space-x-2">
-                                <a href="{{ route('budgets.edit', $budget) }}" class="inline-flex items-center px-3 py-2 border border-yellow-300 rounded-lg text-yellow-700 bg-yellow-50 hover:bg-yellow-100 transition-colors duration-200" title="Modifier">
+                                <a href="{{ localized_route('budgets.edit', $budget) }}" class="inline-flex items-center px-3 py-2 border border-yellow-300 rounded-lg text-yellow-700 bg-yellow-50 hover:bg-yellow-100 transition-colors duration-200" title="Modifier">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="{{ route('budgets.destroy', $budget) }}" method="POST" class="inline">
+                                <form action="{{ localized_route('budgets.destroy', $budget) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="inline-flex items-center px-3 py-2 border border-red-300 rounded-lg text-red-700 bg-red-50 hover:bg-red-100 transition-colors duration-200" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce budget ?')">
@@ -94,7 +94,7 @@
                                 </div>
                                 <h3 class="text-lg font-medium text-gray-900 mb-2">Aucun budget trouvé</h3>
                                 <p class="text-gray-500 mb-6 max-w-sm">Commencez par créer votre premier budget pour suivre vos dépenses.</p>
-                                <a href="{{ route('budgets.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-300 shadow-lg">
+                                <a href="{{ localized_route('budgets.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-300 shadow-lg">
                                     <i class="fas fa-plus mr-2"></i> Créer un budget
                                 </a>
                             </div>

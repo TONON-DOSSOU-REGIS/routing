@@ -77,10 +77,12 @@ class AuthController extends Controller
                 }
             }
 
+            $locale = app()->getLocale();
+            
             if ($user->isAdmin()) {
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('admin.dashboard', ['locale' => $locale]);
             }
-            return redirect()->intended('/dashboard');
+            return redirect()->intended('/' . $locale . '/dashboard');
         }
 
         return back()->withErrors([
@@ -155,7 +157,8 @@ class AuthController extends Controller
             Log::error('Failed to send in-app registration notification to admins: ' . $e->getMessage());
         }
 
-        return redirect('/login')->with('success', 'Inscription réussie ! Votre compte est en attente de validation par un administrateur. Vous recevrez un email une fois votre compte validé.');
+        $locale = app()->getLocale();
+        return redirect('/' . $locale . '/login')->with('success', 'Inscription réussie ! Votre compte est en attente de validation par un administrateur. Vous recevrez un email une fois votre compte validé.');
     }
 
     public function logout(Request $request)

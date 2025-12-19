@@ -33,12 +33,12 @@
                     <div class="bg-white p-2 rounded-lg">
                         <i class="fas fa-building-columns text-premium text-2xl"></i>
                     </div>
-                    <a href="{{ route('home') }}" class="text-2xl font-bold text-white">SG BANK</a>
+                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white">SG BANK</a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
-                    <a href="{{ route('login') }}" class="text-white hover:text-blue-200 transition font-medium">Connexion</a>
-                    <a href="{{ route('register') }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">Créer un compte</a>
+                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">Connexion</a>
+                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">Créer un compte</a>
                 </div>
 
                 <div class="md:hidden flex items-center">
@@ -50,8 +50,8 @@
 
             <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-800 border-t border-blue-700">
                 <div class="px-4 py-6 space-y-4">
-                    <a href="{{ route('login') }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Connexion</a>
-                    <a href="{{ route('register') }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Créer un compte</a>
+                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Connexion</a>
+                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Créer un compte</a>
                 </div>
             </div>
         </div>
@@ -107,7 +107,7 @@
                     <p class="text-gray-600 text-sm">Tutoriels détaillés</p>
                 </a>
 
-                <a href="{{ route('support.nous-contacter') }}" class="premium-card rounded-xl p-6 text-center hover:shadow-xl transition">
+                <a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}" class="premium-card rounded-xl p-6 text-center hover:shadow-xl transition">
                     <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-headset text-orange-600 text-2xl"></i>
                     </div>
@@ -242,7 +242,7 @@
                             (nom, e-mail, téléphone, etc.), confirmez votre adresse e-mail, puis accédez à votre
                             espace sécurisé pour réaliser vos premières opérations.
                         </p>
-                        <a href="{{ route('register') }}" class="btn-premium px-4 py-2 rounded-lg font-semibold text-sm">
+                        <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-4 py-2 rounded-lg font-semibold text-sm">
                             Créer un compte
                         </a>
                     </div>
@@ -293,7 +293,7 @@
                             Vous pouvez contacter notre support client via votre espace sécurisé ou par les coordonnées
                             indiquées sur le site. Un conseiller vous répondra dans les meilleurs délais.
                         </p>
-                        <a href="{{ route('support.nous-contacter') }}" class="btn-premium px-4 py-2 rounded-lg font-semibold text-sm">
+                        <a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}" class="btn-premium px-4 py-2 rounded-lg font-semibold text-sm">
                             Nous contacter
                         </a>
                     </div>
@@ -342,7 +342,7 @@
                 Notre équipe de support est là pour vous accompagner dans toutes vos démarches.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ route('support.nous-contacter') }}" class="btn-premium px-8 py-4 rounded-lg font-semibold">
+                <a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}" class="btn-premium px-8 py-4 rounded-lg font-semibold">
                     Contacter le support
                 </a>
                 <a href="tel:+33123456789" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-900 transition">

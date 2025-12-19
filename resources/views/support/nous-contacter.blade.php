@@ -57,12 +57,12 @@
                     <div class="bg-white p-2 rounded-lg">
                         <i class="fas fa-building-columns text-premium text-2xl"></i>
                     </div>
-                    <a href="{{ route('home') }}" class="text-2xl font-bold text-white">SG BANK</a>
+                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white">SG BANK</a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
-                    <a href="{{ route('login') }}" class="text-white hover:text-blue-200 transition font-medium">Connexion</a>
-                    <a href="{{ route('register') }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">Créer un compte</a>
+                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">Connexion</a>
+                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">Créer un compte</a>
                 </div>
 
                 <button id="mobile-menu-button" class="md:hidden text-white text-3xl">
@@ -73,8 +73,8 @@
 
             <div id="mobile-menu" class="hidden md:hidden bg-blue-900 border-t border-blue-700">
                 <div class="px-4 py-4 space-y-4 text-center">
-                    <a href="{{ route('login') }}" class="block text-white py-2">Connexion</a>
-                    <a href="{{ route('register') }}" class="block text-white py-2">Créer un compte</a>
+                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="block text-white py-2">Connexion</a>
+                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="block text-white py-2">Créer un compte</a>
                 </div>
             </div>
         </div>
@@ -147,7 +147,7 @@
 
                 <!-- FORMULAIRE -->
                 <div class="premium-card p-8 text-gray-800 rounded-2xl">
-                    <form method="POST" action="{{ route('support.nous-contacter.store') }}" class="space-y-6">
+                    <form method="POST" action="{{ localized_route('support.nous-contacter.store', ['locale' => app()->getLocale()]) }}" class="space-y-6">
                         @csrf
 
                         <div class="grid grid-cols-2 gap-6">

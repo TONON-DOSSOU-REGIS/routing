@@ -138,6 +138,7 @@
     <div class="receipt-container">
         <!-- Header -->
         <div class="header">
+            <img src='{{ asset("images/logobank.png") }}' class="w-9 h-9" alt="">
             <h1>SG BANK</h1>
             <p>Système Bancaire Sécurisé</p>
         </div>

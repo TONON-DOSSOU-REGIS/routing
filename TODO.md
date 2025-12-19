@@ -1,10 +1,19 @@
-# Amélioration de la page Gestion des Budgets
+# TODO: Fix TransactionController receiptPdf Type Error
 
-## Étapes à suivre :
-- [x] Améliorer le style du tableau : Centrer le texte des colonnes numériques
-- [x] Améliorer les badges : Utiliser des couleurs plus appropriées et des icônes
-- [x] Améliorer l'état vide : Ajouter une icône et un bouton pour créer un budget
-- [x] Ajouter des classes responsive et améliorer l'espacement
-- [x] Aligner correctement les boutons d'actions
-- [x] Tester l'affichage après modifications
-- [x] Ajouter des styles CSS personnalisés pour badge-lg si nécessaire
+## Issue
+- Error: `App\Http\Controllers\TransactionController::receiptPdf(): Argument #1 ($transaction) must be of type App\Models\Transaction, string given`
+- Caused by route locale prefix not being handled in method signature
+
+## Changes Made
+- [x] Updated `receiptPdf` method signature to include `$locale` parameter first
+- [x] Method now accepts `($locale, Transaction $transaction)` instead of `(Transaction $transaction)`
+
+## Verification
+- [ ] Test the receipt PDF generation to ensure it works correctly
+- [ ] Check that the route resolves properly with locale prefix
+- [ ] Verify no other methods are affected by similar issues
+
+## Notes
+- The route is defined with locale prefix: `/{locale}/transactions/{transaction}/receipt`
+- Laravel's route model binding expects parameters in the order they appear in the route
+- Locale parameter comes first, then the transaction model binding

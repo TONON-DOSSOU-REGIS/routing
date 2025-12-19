@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tableau de bord - SG BANK</title>
+  <title><?php echo e(__('dashboard.dashboard_title')); ?> - <?php echo e(__('dashboard.bank_name')); ?></title>
   <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -41,23 +41,26 @@
   <header class="bg-white shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <i class="fas fa-building-columns text-blue-600 text-2xl"></i>
-        <a href="<?php echo e(route('home')); ?>" class="text-2xl font-bold text-white">SG BANK</a>
-        <span class="ml-3 hidden sm:inline-block text-sm text-slate-500">Espace client</span>
+        <img src='<?php echo e(asset("images/logobank.png")); ?>' class="w-9 h-9" alt="">
+        
+        <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>" class="text-2xl font-bold text-blue-600"><?php echo e(__('dashboard.bank_name')); ?></a>
+        <span class="ml-3 hidden sm:inline-block text-sm text-slate-500"><?php echo e(__('dashboard.client_area')); ?></span>
       </div>
 
       <nav class="flex items-center gap-3">
         
         <?php echo $__env->make('components.notification-bell', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-        <a href="<?php echo e(route('profile')); ?>" class="hidden sm:inline-flex items-center px-3 py-2 text-sm rounded-lg text-slate-700 hover:text-blue-700 hover:bg-blue-50">
-          <i class="fa-regular fa-user mr-2"></i> Profil
+        <a href="<?php echo e(localized_route('profile', ['locale' => app()->getLocale()])); ?>" class="hidden sm:inline-flex items-center px-3 py-2 text-sm rounded-lg text-slate-700 hover:text-blue-700 hover:bg-blue-50">
+          <i class="fa-regular fa-user mr-2"></i> <?php echo e(__('dashboard.profile')); ?>
+
         </a>
 
-        <form method="POST" action="<?php echo e(route('logout')); ?>">
+        <form method="POST" action="<?php echo e(localized_route('logout', ['locale' => app()->getLocale()])); ?>">
           <?php echo csrf_field(); ?>
           <button type="submit" class="inline-flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-            <i class="fa-solid fa-right-from-bracket mr-2"></i> Déconnexion
+            <i class="fa-solid fa-right-from-bracket mr-2"></i> <?php echo e(__('dashboard.logout')); ?>
+
           </button>
         </form>
       </nav>
@@ -72,16 +75,19 @@
         <div class="bg-gradient-to-r from-white via-blue-50/30 to-indigo-50/30 rounded-2xl shadow-lg border border-white/60 px-6 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between backdrop-blur-sm">
           <div>
             <h1 class="text-2xl sm:text-3xl font-bold text-slate-800">
-              Bonjour <?php echo e(isset($user) && $user->first_name && $user->last_name ? $user->first_name . ' ' . $user->last_name : (isset($user) && $user->first_name ? $user->first_name : 'Utilisateur')); ?> 👋
+              <?php echo e(__('dashboard.welcome_greeting', ['name' => isset($user) && $user->first_name && $user->last_name ? $user->first_name . ' ' . $user->last_name : (isset($user) && $user->first_name ? $user->first_name : __('common.user'))])); ?>
+
             </h1>
-            <p class="mt-1 text-slate-500">Voici un aperçu de votre activité récente et des marchés.</p>
+            <p class="mt-1 text-slate-500"><?php echo e(__('dashboard.welcome_subtitle')); ?></p>
           </div>
           <div class="flex items-center gap-2 mt-4 sm:mt-0">
-            <a href="<?php echo e(route('transfer.create')); ?>" class="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 card-hover">
-              <i class="fa-solid fa-paper-plane mr-2"></i> Nouveau virement
+            <a href="<?php echo e(localized_route('transfer.create', ['locale' => app()->getLocale()])); ?>" class="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 card-hover">
+              <i class="fa-solid fa-paper-plane mr-2"></i> <?php echo e(__('dashboard.new_transfer')); ?>
+
             </a>
-            <a href="<?php echo e(route('transactions.history')); ?>" class="inline-flex items-center px-4 py-2 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 card-hover">
-              <i class="fa-solid fa-clock-rotate-left mr-2"></i> Historique
+            <a href="<?php echo e(localized_route('transactions.history', ['locale' => app()->getLocale()])); ?>" class="inline-flex items-center px-4 py-2 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 card-hover">
+              <i class="fa-solid fa-clock-rotate-left mr-2"></i> <?php echo e(__('dashboard.history')); ?>
+
             </a>
           </div>
         </div>
@@ -91,7 +97,7 @@
       <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8 fade-in-up">
         <div class="glass-card card-hover rounded-2xl p-5">
           <div class="flex items-center justify-between">
-            <span class="text-slate-500 text-sm">Solde courant</span>
+            <span class="text-slate-500 text-sm"><?php echo e(__('dashboard.current_balance')); ?></span>
             <i class="fa-solid fa-wallet text-blue-600"></i>
           </div>
           <div class="mt-3 text-2xl font-bold text-slate-800">
@@ -99,17 +105,19 @@
               <?php echo e(\App\Helpers\CurrencyHelper::format($user->balance, $user->default_currency ?? 'EUR')); ?>
 
             <?php else: ?>
-              —
+              <?php echo e(__('dashboard.empty_value')); ?>
+
             <?php endif; ?>
           </div>
           <div class="mt-2 text-xs stat-chip inline-block px-2 py-1 rounded-full text-slate-700">
-            Mise à jour aujourd’hui
+            <?php echo e(__('dashboard.updated_today')); ?>
+
           </div>
         </div>
 
         <div class="glass-card card-hover rounded-2xl p-5">
           <div class="flex items-center justify-between">
-            <span class="text-slate-500 text-sm">Transactions (30j)</span>
+            <span class="text-slate-500 text-sm"><?php echo e(__('dashboard.transactions_30_days')); ?></span>
             <i class="fa-solid fa-arrow-right-arrow-left text-indigo-600"></i>
           </div>
           <div class="mt-3 text-2xl font-bold text-slate-800">
@@ -117,13 +125,14 @@
 
           </div>
           <div class="mt-2 text-xs stat-chip inline-block px-2 py-1 rounded-full text-slate-700">
-            Dernier mois
+            <?php echo e(__('dashboard.last_month')); ?>
+
           </div>
         </div>
 
         <div class="glass-card card-hover rounded-2xl p-5">
           <div class="flex items-center justify-between">
-            <span class="text-slate-500 text-sm">Statut</span>
+            <span class="text-slate-500 text-sm"><?php echo e(__('dashboard.status')); ?></span>
             <i class="fa-solid fa-circle-check text-emerald-600"></i>
           </div>
           <div class="mt-3 text-2xl font-bold text-slate-800 text-emerald-600">
@@ -131,21 +140,23 @@
 
           </div>
           <div class="mt-2 text-xs stat-chip inline-block px-2 py-1 rounded-full text-slate-700">
-            Compte vérifié
+            <?php echo e(__('dashboard.verified_account')); ?>
+
           </div>
         </div>
 
         <div class="glass-card card-hover rounded-2xl p-5">
           <div class="flex items-center justify-between">
-            <span class="text-slate-500 text-sm">Carte</span>
+            <span class="text-slate-500 text-sm"><?php echo e(__('dashboard.card')); ?></span>
             <i class="fa-regular fa-credit-card text-fuchsia-600"></i>
           </div>
           <div class="mt-3 text-2xl font-bold text-slate-800">
-            <?php echo e(isset($user) && $user->creditCard ? '**** **** **** '.substr($user->creditCard->card_number ?? '0000', -4) : '—'); ?>
+            <?php echo e(isset($user) && $user->creditCard ? __('dashboard.card_mask_prefix').substr($user->creditCard->card_number ?? '0000', -4) : __('dashboard.empty_value')); ?>
 
           </div>
           <div class="mt-2 text-xs stat-chip inline-block px-2 py-1 rounded-full text-slate-700">
-            Moyen de paiement
+            <?php echo e(__('dashboard.payment_method')); ?>
+
           </div>
         </div>
       </section>
@@ -166,17 +177,19 @@
         </div>
       </section>
 
-      <!-- Transactions récentes + actions rapides -->
+      <!-- <?php echo e(__('dashboard.recent_transactions_and_quick_actions')); ?> -->
       <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 fade-in-up">
         <!-- Transactions -->
         <div class="lg:col-span-2">
           <div class="bg-white rounded-2xl shadow-sm p-6">
             <div class="flex items-center justify-between mb-4">
               <h2 class="text-lg font-semibold text-slate-800">
-                <i class="fa-solid fa-list-ul mr-2 text-slate-500"></i> Transactions récentes
+                <i class="fa-solid fa-list-ul mr-2 text-slate-500"></i> <?php echo e(__('dashboard.recent_transactions')); ?>
+
               </h2>
-              <a href="<?php echo e(route('transactions.history')); ?>" class="text-sm text-blue-600 hover:text-blue-700">
-                Voir tout
+              <a href="<?php echo e(localized_route('transactions.history', ['locale' => app()->getLocale()])); ?>" class="text-sm text-blue-600 hover:text-blue-700">
+                <?php echo e(__('dashboard.view_all')); ?>
+
               </a>
             </div>
 
@@ -186,7 +199,8 @@
 
             <?php if($items->count() === 0): ?>
               <div class="text-slate-500 text-sm">
-                Aucune transaction récente.
+                <?php echo e(__('dashboard.no_recent_transactions')); ?>
+
               </div>
             <?php else: ?>
               <div class="divide-y divide-slate-100">
@@ -202,12 +216,12 @@
                       </div>
                       <div>
                         <div class="text-slate-800 font-medium">
-                          <?php echo e(ucfirst($tx->type ?? 'transaction')); ?>
+                          <?php echo e(ucfirst($tx->type ?? __('dashboard.transaction_type'))); ?>
 
-                          <span class="text-xs text-slate-400 ml-2">#<?php echo e($tx->id); ?></span>
+                          <span class="text-xs text-slate-400 ml-2"><?php echo e(__('dashboard.transaction_id_prefix')); ?><?php echo e($tx->id); ?></span>
                         </div>
                         <div class="text-xs text-slate-500">
-                          <?php echo e(\Carbon\Carbon::parse($tx->created_at)->format('d/m/Y H:i')); ?>
+                          <?php echo e(\Carbon\Carbon::parse($tx->created_at)->format(__('dashboard.date_format'))); ?>
 
                         </div>
                       </div>
@@ -218,7 +232,8 @@
                           <?php echo e(\App\Helpers\CurrencyHelper::format($tx->amount, $user->default_currency ?? 'EUR')); ?>
 
                         <?php else: ?>
-                          0,00
+                          <?php echo e(__('dashboard.zero_amount')); ?>
+
                         <?php endif; ?>
                       </div>
                       <div class="text-xs text-slate-500 capitalize">
@@ -236,40 +251,40 @@
         <!-- Actions rapides -->
         <div class="lg:col-span-1">
           <div class="bg-white rounded-2xl shadow-sm p-6">
-            <h3 class="text-lg font-semibold text-slate-800 mb-4">Actions rapides</h3>
+            <h3 class="text-lg font-semibold text-slate-800 mb-4"><?php echo e(__('dashboard.quick_actions')); ?></h3>
             <div class="space-y-3">
-              <a href="<?php echo e(route('transfer.create')); ?>" class="block action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 rounded-xl hover:from-blue-600 hover:to-indigo-700 transition card-hover">
+              <a href="<?php echo e(localized_route('transfer.create', ['locale' => app()->getLocale()])); ?>" class="block action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 rounded-xl hover:from-blue-600 hover:to-indigo-700 transition card-hover">
                 <div class="flex items-center">
                   <div class="bg-white/20 p-2 rounded-full w-10 h-10 flex items-center justify-center mr-3">
                     <i class="fas fa-paper-plane text-lg"></i>
                   </div>
                   <div>
-                    <div class="font-bold text-sm">Nouveau virement</div>
-                    <div class="text-xs text-white/90">Envoyer un paiement</div>
+                    <div class="font-bold text-sm"><?php echo e(__('dashboard.new_transfer')); ?></div>
+                    <div class="text-xs text-white/90"><?php echo e(__('dashboard.send_payment')); ?></div>
                   </div>
                 </div>
               </a>
 
-              <a href="<?php echo e(route('transactions.history')); ?>" class="block action-btn bg-gradient-to-r from-slate-600 to-slate-700 text-white p-4 rounded-xl hover:from-slate-700 hover:to-slate-800 transition card-hover">
+              <a href="<?php echo e(localized_route('transactions.history', ['locale' => app()->getLocale()])); ?>" class="block action-btn bg-gradient-to-r from-slate-600 to-slate-700 text-white p-4 rounded-xl hover:from-slate-700 hover:to-slate-800 transition card-hover">
                 <div class="flex items-center">
                   <div class="bg-white/20 p-2 rounded-full w-10 h-10 flex items-center justify-center mr-3">
                     <i class="fas fa-history text-lg"></i>
                   </div>
                   <div>
-                    <div class="font-bold text-sm">Historique</div>
-                    <div class="text-xs text-white/90">Voir vos opérations</div>
+                    <div class="font-bold text-sm"><?php echo e(__('dashboard.history')); ?></div>
+                    <div class="text-xs text-white/90"><?php echo e(__('dashboard.view_operations')); ?></div>
                   </div>
                 </div>
               </a>
 
-              <a href="<?php echo e(route('profile')); ?>" class="block action-btn bg-gradient-to-r from-emerald-500 to-green-600 text-white p-4 rounded-xl hover:from-emerald-600 hover:to-green-700 transition card-hover">
+              <a href="<?php echo e(localized_route('profile', ['locale' => app()->getLocale()])); ?>" class="block action-btn bg-gradient-to-r from-emerald-500 to-green-600 text-white p-4 rounded-xl hover:from-emerald-600 hover:to-green-700 transition card-hover">
                 <div class="flex items-center">
                   <div class="bg-white/20 p-2 rounded-full w-10 h-10 flex items-center justify-center mr-3">
                     <i class="fas fa-user-cog text-lg"></i>
                   </div>
                   <div>
-                    <div class="font-bold text-sm">Mon profil</div>
-                    <div class="text-xs text-white/90">Gérer mes informations</div>
+                    <div class="font-bold text-sm"><?php echo e(__('dashboard.my_profile')); ?></div>
+                    <div class="text-xs text-white/90"><?php echo e(__('dashboard.manage_my_information')); ?></div>
                   </div>
                 </div>
               </a>
@@ -283,14 +298,17 @@
   <!-- Footer -->
   <footer class="mt-10 py-8 bg-white border-t">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-sm text-slate-500 flex items-center justify-between">
-      <p>&copy; <?php echo e(date('Y')); ?> SG BANK. Tous droits réservés.</p>
+      <p>&copy; <?php echo e(date('Y')); ?> SG BANK. <?php echo e(__('dashboard.all_rights_reserved')); ?></p>
       <div class="space-x-4">
-        <a href="#" class="hover:text-slate-700">Confidentialité</a>
-        <a href="#" class="hover:text-slate-700">Conditions</a>
-        <a href="#" class="hover:text-slate-700">Assistance</a>
+        <a href="#" class="hover:text-slate-700"><?php echo e(__('dashboard.privacy')); ?></a>
+        <a href="#" class="hover:text-slate-700"><?php echo e(__('dashboard.terms')); ?></a>
+        <a href="#" class="hover:text-slate-700"><?php echo e(__('dashboard.support')); ?></a>
       </div>
     </div>
   </footer>
+
+  
+  <?php echo $__env->make('components.client-chat-widget', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 </body>
 </html>
 

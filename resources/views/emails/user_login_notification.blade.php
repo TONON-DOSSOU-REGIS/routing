@@ -175,10 +175,10 @@
 
             <!-- Action Buttons -->
             <div style="text-align: center; margin: 30px 0;">
-                <a href="{{ route('admin.users') }}" class="action-button">
+                <a href="{{ localized_route('admin.users') }}" class="action-button">
                     👥 Voir tous les utilisateurs
                 </a>
-                <a href="{{ route('admin.dashboard') }}" class="action-button">
+                <a href="{{ localized_route('admin.dashboard') }}" class="action-button">
                     📊 Accéder au tableau de bord
                 </a>
             </div>

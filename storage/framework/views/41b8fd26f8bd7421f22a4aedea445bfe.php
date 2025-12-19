@@ -47,9 +47,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-4">
-                    <a href="<?php echo e(route('admin.dashboard')); ?>" class="flex items-center space-x-3">
+                    <a href="<?php echo e(localized_route('admin.dashboard')); ?>" class="flex items-center space-x-3">
                         <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-university text-white text-lg"></i>
+                            <img src='<?php echo e(asset("images/logobank.png")); ?>' class="w-9 h-9" alt="">
                         </div>
                         <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                             SG BANK Admin
@@ -58,19 +58,19 @@
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
-                    <a href="<?php echo e(route('admin.dashboard')); ?>" class="text-gray-600 hover:text-blue-600 transition">
+                    <a href="<?php echo e(localized_route('admin.dashboard')); ?>" class="text-gray-600 hover:text-blue-600 transition">
                         <i class="fas fa-chart-line mr-2"></i>Dashboard
                     </a>
-                    <a href="<?php echo e(route('admin.users')); ?>" class="text-gray-600 hover:text-blue-600 transition">
+                    <a href="<?php echo e(localized_route('admin.users')); ?>" class="text-gray-600 hover:text-blue-600 transition">
                         <i class="fas fa-users mr-2"></i>Utilisateurs
                     </a>
-                    <a href="<?php echo e(route('admin.transactions')); ?>" class="text-blue-600 font-semibold">
+                    <a href="<?php echo e(localized_route('admin.transactions')); ?>" class="text-blue-600 font-semibold">
                         <i class="fas fa-exchange-alt mr-2"></i>Virements
                     </a>
-                    <a href="<?php echo e(route('admin.settings')); ?>" class="text-gray-600 hover:text-blue-600 transition">
+                    <a href="<?php echo e(localized_route('admin.settings')); ?>" class="text-gray-600 hover:text-blue-600 transition">
                         <i class="fas fa-cog mr-2"></i>Paramètres
                     </a>
-                    <form action="<?php echo e(route('logout')); ?>" method="POST" class="inline">
+                    <form action="<?php echo e(localized_route('logout', ['locale' => app()->getLocale()])); ?>" method="POST" class="inline">
                         <?php echo csrf_field(); ?>
                         <button type="submit" class="text-red-600 hover:text-red-700 transition">
                             <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
@@ -87,19 +87,19 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
             <div class="px-4 py-3 space-y-3">
-                <a href="<?php echo e(route('admin.dashboard')); ?>" class="block text-gray-600 hover:text-blue-600">
+                <a href="<?php echo e(localized_route('admin.dashboard')); ?>" class="block text-gray-600 hover:text-blue-600">
                     <i class="fas fa-chart-line mr-2"></i>Dashboard
                 </a>
-                <a href="<?php echo e(route('admin.users')); ?>" class="block text-gray-600 hover:text-blue-600">
+                <a href="<?php echo e(localized_route('admin.users')); ?>" class="block text-gray-600 hover:text-blue-600">
                     <i class="fas fa-users mr-2"></i>Utilisateurs
                 </a>
-                <a href="<?php echo e(route('admin.transactions')); ?>" class="block text-blue-600 font-semibold">
+                <a href="<?php echo e(localized_route('admin.transactions')); ?>" class="block text-blue-600 font-semibold">
                     <i class="fas fa-exchange-alt mr-2"></i>Virements
                 </a>
-                <a href="<?php echo e(route('admin.settings')); ?>" class="block text-gray-600 hover:text-blue-600">
+                <a href="<?php echo e(localized_route('admin.settings')); ?>" class="block text-gray-600 hover:text-blue-600">
                     <i class="fas fa-cog mr-2"></i>Paramètres
                 </a>
-                <form action="<?php echo e(route('logout')); ?>" method="POST">
+                <form action="<?php echo e(localized_route('logout', ['locale' => app()->getLocale()])); ?>" method="POST">
                     <?php echo csrf_field(); ?>
                     <button type="submit" class="block w-full text-left text-red-600 hover:text-red-700">
                         <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
@@ -143,7 +143,7 @@
                 <i class="fas fa-filter text-blue-600 mr-2"></i>Filtres
             </h2>
             
-            <form method="GET" action="<?php echo e(route('admin.transactions')); ?>" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <form method="GET" action="<?php echo e(localized_route('admin.transactions')); ?>" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Search -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Recherche</label>
@@ -208,7 +208,7 @@
                     <button type="submit" class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition">
                         <i class="fas fa-search mr-2"></i>Filtrer
                     </button>
-                    <a href="<?php echo e(route('admin.transactions')); ?>" class="flex-1 bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition text-center">
+                    <a href="<?php echo e(localized_route('admin.transactions')); ?>" class="flex-1 bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition text-center">
                         <i class="fas fa-redo mr-2"></i>Réinitialiser
                     </a>
                 </div>
@@ -389,20 +389,21 @@
                 'VND': '₫', 'ARS': 'ARS$', 'EGP': 'E£', 'PKR': '₨', 'BDT': '৳',
                 'NGN': '₦', 'UAH': '₴', 'KES': 'KSh', 'MAD': 'د.م.', 'XOF': 'CFA'
             };
-            
+
             const symbol = currencySymbols[currency] || currency;
             const formattedAmount = new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2 }).format(amount);
-            
+
             // Currencies that go before the amount
             const prefixCurrencies = ['USD', 'GBP', 'CAD', 'AUD', 'HKD', 'SGD', 'MXN', 'NZD', 'ARS', 'CLP', 'COP', 'EGP'];
-            
-            const displayAmount = prefixCurrencies.includes(currency) 
-                ? symbol + formattedAmount 
+
+            const displayAmount = prefixCurrencies.includes(currency)
+                ? symbol + formattedAmount
                 : formattedAmount + ' ' + symbol;
-            
+
             document.getElementById('modalUserName').textContent = userName;
             document.getElementById('modalAmount').textContent = displayAmount;
-            document.getElementById('refundForm').action = `/admin/transactions/${transactionId}/refund`;
+            const locale = '<?php echo e(app()->getLocale()); ?>';
+            document.getElementById('refundForm').action = `/${locale}/admin/transactions/${transactionId}/refund`;
             document.getElementById('refundModal').classList.remove('hidden');
         }
 

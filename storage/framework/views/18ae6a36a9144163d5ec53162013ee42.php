@@ -60,24 +60,59 @@
                     <!-- Messages will be loaded here -->
                 </div>
                 
-                <div class="p-4 bg-white border-t">
-                    <div class="flex gap-2">
-                        <input 
-                            type="text" 
-                            id="admin-chat-input-v2"
-                            placeholder="Répondre au client..." 
-                            class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            onkeypress="if(event.key === 'Enter') sendAdminMessageV2()"
-                        >
-                        <button 
-                            onclick="sendAdminMessageV2()"
-                            class="bg-purple-600 hover:bg-purple-700 text-white rounded-lg px-4 py-2 transition-colors"
-                        >
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                            </svg>
+                
+                <div id="admin-file-preview-v2" class="hidden px-4 py-2 bg-gray-100 border-t">
+                    <div class="flex items-center justify-between bg-white p-2 rounded">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-file text-blue-600"></i>
+                            <span id="admin-file-name-v2" class="text-sm text-gray-700"></span>
+                            <span id="admin-file-size-v2" class="text-xs text-gray-500"></span>
+                        </div>
+                        <button onclick="removeAdminFileV2()" class="text-red-500 hover:text-red-700">
+                            <i class="fas fa-times"></i>
                         </button>
                     </div>
+                </div>
+
+                <div class="p-4 bg-white border-t">
+                    <form id="admin-chat-form-v2" enctype="multipart/form-data">
+                        <div class="flex gap-2 items-end">
+                            
+                            <input type="file" id="admin-file-input-v2" class="hidden" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip" onchange="handleAdminFileSelectV2(event)">
+
+                            
+                            <button
+                                type="button"
+                                onclick="document.getElementById('admin-file-input-v2').click()"
+                                class="bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg px-3 py-2 transition-colors"
+                                title="Joindre un fichier"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                                </svg>
+                            </button>
+
+                            
+                            <input
+                                type="text"
+                                id="admin-chat-input-v2"
+                                placeholder="Répondre au client..."
+                                class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                onkeypress="if(event.key === 'Enter') { event.preventDefault(); sendAdminMessageV2(); }"
+                            >
+
+                            
+                            <button
+                                type="button"
+                                onclick="sendAdminMessageV2()"
+                                class="bg-purple-600 hover:bg-purple-700 text-white rounded-lg px-4 py-2 transition-colors"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -89,6 +124,7 @@
 (function() {
     let adminChatIntervalV2 = null;
     let currentChatUserIdV2 = null;
+    let selectedAdminFileV2 = null;
     const currentAdminId = <?php echo e(auth()->id()); ?>;
 
     window.toggleAdminChatV2 = function() {
@@ -110,7 +146,7 @@
     };
 
     function loadConversationsV2() {
-        fetch('/chat/messages', {
+        fetch('<?php echo e(route("chat.messages")); ?>', {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': 'application/json',
@@ -172,11 +208,16 @@
             const messageText = lastMsg && lastMsg.message ? lastMsg.message : 'Aucun message';
             const preview = messageText.length > 50 ? messageText.substring(0, 50) + '...' : messageText;
             
+            const onlineIndicator = user.is_online ? '<div class="w-2 h-2 bg-green-500 rounded-full ml-2" title="En ligne"></div>' : '';
+
             convDiv.innerHTML = `
                 <div class="flex items-start justify-between">
                     <div class="flex-1">
                         <div class="flex items-center justify-between mb-1">
-                            <div class="font-semibold text-gray-800">${escapeHtmlV2(firstName + ' ' + lastName)}</div>
+                            <div class="flex items-center">
+                                <div class="font-semibold text-gray-800">${escapeHtmlV2(firstName + ' ' + lastName)}</div>
+                                ${onlineIndicator}
+                            </div>
                             ${unreadCount > 0 ? `<span class="bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">${unreadCount}</span>` : ''}
                         </div>
                         <div class="text-xs text-gray-500 mb-1">${escapeHtmlV2(email)}</div>
@@ -228,44 +269,94 @@
     };
 
     function loadChatWithUserV2(userId) {
-        if (!userId) return;
+        if (!userId) {
+            console.error('[ChatV2] No userId provided to loadChatWithUserV2');
+            return;
+        }
         
-        fetch(`/chat/messages/${userId}`, {
+        console.log('[ChatV2] Loading chat with user:', userId);
+        
+        fetch('<?php echo e(route("chat.messages")); ?>/' + userId, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': 'application/json',
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('[ChatV2] Response status:', response.status);
+            return response.json();
+        })
         .then(data => {
-            if (data.success && data.messages) {
-                displayChatMessagesV2(data.messages);
+            console.log('[ChatV2] Response data:', data);
+            
+            if (data.success) {
+                if (data.messages && Array.isArray(data.messages)) {
+                    console.log('[ChatV2] Messages count:', data.messages.length);
+                    displayChatMessagesV2(data.messages);
+                } else {
+                    console.warn('[ChatV2] No messages array in response');
+                    displayChatMessagesV2([]);
+                }
+            } else {
+                console.error('[ChatV2] API returned success=false');
+                const container = document.getElementById('chat-messages-container-v2');
+                if (container) {
+                    container.innerHTML = `
+                        <div class="text-center text-red-500 py-8">
+                            <i class="fas fa-exclamation-triangle text-4xl mb-3"></i>
+                            <p>Erreur de chargement des messages</p>
+                        </div>
+                    `;
+                }
             }
         })
         .catch(error => {
             console.error('[ChatV2] Error loading chat:', error);
+            const container = document.getElementById('chat-messages-container-v2');
+            if (container) {
+                container.innerHTML = `
+                    <div class="text-center text-red-500 py-8">
+                        <i class="fas fa-exclamation-triangle text-4xl mb-3"></i>
+                        <p>Erreur de connexion</p>
+                        <p class="text-xs mt-2">${error.message}</p>
+                    </div>
+                `;
+            }
         });
     }
 
     function displayChatMessagesV2(messages) {
+        console.log('[ChatV2] displayChatMessagesV2 called with:', messages);
+        
         const container = document.getElementById('chat-messages-container-v2');
         
-        if (!container) return;
+        if (!container) {
+            console.error('[ChatV2] Container not found: chat-messages-container-v2');
+            return;
+        }
         
-        if (!messages || messages.length === 0) {
+        if (!messages || !Array.isArray(messages) || messages.length === 0) {
+            console.log('[ChatV2] No messages to display');
             container.innerHTML = `
                 <div class="text-center text-gray-500 py-8">
                     <i class="fas fa-comments text-4xl mb-3"></i>
                     <p>Aucun message</p>
+                    <p class="text-xs mt-2">Commencez la conversation</p>
                 </div>
             `;
             return;
         }
         
+        console.log('[ChatV2] Displaying', messages.length, 'messages');
         container.innerHTML = '';
         
-        messages.forEach(msg => {
-            if (!msg) return;
+        messages.forEach((msg, index) => {
+            if (!msg) {
+                console.warn('[ChatV2] Skipping null message at index', index);
+                return;
+            }
+            
+            console.log('[ChatV2] Processing message:', msg);
             
             const isAdmin = msg.sender_id === currentAdminId;
             const messageDiv = document.createElement('div');
@@ -274,9 +365,34 @@
             const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '';
             const messageText = msg.message || '';
             
+            // Handle attachments if present
+            let attachmentHtml = '';
+            if (msg.attachment_path) {
+                const attachmentUrl = msg.attachment_url || `<?php echo e(url('/storage')); ?>/${msg.attachment_path}`;
+                const attachmentName = msg.attachment_name || 'Fichier';
+                
+                if (msg.attachment_type && msg.attachment_type.startsWith('image/')) {
+                    attachmentHtml = `
+                        <div class="mt-2">
+                            <img src="${attachmentUrl}" alt="${escapeHtmlV2(attachmentName)}" class="max-w-full rounded-lg" style="max-height: 200px;">
+                        </div>
+                    `;
+                } else {
+                    attachmentHtml = `
+                        <div class="mt-2">
+                            <a href="${attachmentUrl}" target="_blank" class="flex items-center text-sm ${isAdmin ? 'text-white/90 hover:text-white' : 'text-blue-600 hover:text-blue-800'}">
+                                <i class="fas fa-paperclip mr-2"></i>
+                                ${escapeHtmlV2(attachmentName)}
+                            </a>
+                        </div>
+                    `;
+                }
+            }
+            
             messageDiv.innerHTML = `
                 <div class="${isAdmin ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-800'} rounded-lg p-3 max-w-xs">
-                    ${messageText ? `<p class="text-sm">${escapeHtmlV2(messageText)}</p>` : ''}
+                    ${messageText ? `<p class="text-sm whitespace-pre-wrap">${escapeHtmlV2(messageText)}</p>` : ''}
+                    ${attachmentHtml}
                     <span class="text-xs ${isAdmin ? 'opacity-75' : 'text-gray-500'} mt-1 block">
                         ${time}
                     </span>
@@ -285,35 +401,56 @@
             container.appendChild(messageDiv);
         });
         
+        // Scroll to bottom
         container.scrollTop = container.scrollHeight;
+        console.log('[ChatV2] Messages displayed successfully');
     }
 
     window.sendAdminMessageV2 = function() {
         if (!currentChatUserIdV2) return;
-        
+
         const input = document.getElementById('admin-chat-input-v2');
         const message = input.value.trim();
-        
-        if (message === '') return;
-        
+
+        // Allow sending if there's either a message or a file
+        if (message === '' && !selectedAdminFileV2) return;
+
         input.disabled = true;
-        
-        fetch('/chat/send', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({ 
+
+        // Prepare request data
+        let requestData;
+        let headers = {
+            'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
+            'Accept': 'application/json',
+        };
+
+        if (selectedAdminFileV2) {
+            // Use FormData for file uploads
+            requestData = new FormData();
+            requestData.append('receiver_id', currentChatUserIdV2);
+            if (message) {
+                requestData.append('message', message);
+            }
+            requestData.append('attachment', selectedAdminFileV2);
+        } else {
+            // Use JSON for text-only messages
+            headers['Content-Type'] = 'application/json';
+            requestData = JSON.stringify({
                 message: message,
                 receiver_id: currentChatUserIdV2
-            })
+            });
+        }
+
+        fetch('<?php echo e(route("chat.send")); ?>', {
+            method: 'POST',
+            headers: headers,
+            body: requestData
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 input.value = '';
+                removeAdminFileV2(); // Clear file selection
                 loadChatWithUserV2(currentChatUserIdV2);
             }
         })
@@ -325,7 +462,7 @@
     };
 
     function updateAdminUnreadCountV2() {
-        fetch('/chat/unread-count', {
+        fetch('<?php echo e(route("chat.unread-count")); ?>', {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': 'application/json',
@@ -344,6 +481,43 @@
             }
         })
         .catch(error => console.error('[ChatV2] Error updating unread count:', error));
+    }
+
+    window.handleAdminFileSelectV2 = function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // Check file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            alert('Le fichier est trop volumineux. Taille maximale: 10MB');
+            event.target.value = '';
+            return;
+        }
+
+        selectedAdminFileV2 = file;
+
+        // Show file preview
+        const preview = document.getElementById('admin-file-preview-v2');
+        const fileName = document.getElementById('admin-file-name-v2');
+        const fileSize = document.getElementById('admin-file-size-v2');
+
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSizeV2(file.size);
+        preview.classList.remove('hidden');
+    };
+
+    window.removeAdminFileV2 = function() {
+        selectedAdminFileV2 = null;
+        document.getElementById('admin-file-input-v2').value = '';
+        document.getElementById('admin-file-preview-v2').classList.add('hidden');
+    };
+
+    function formatFileSizeV2(bytes) {
+        if (bytes === 0) return '0 B';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
     }
 
     function escapeHtmlV2(text) {

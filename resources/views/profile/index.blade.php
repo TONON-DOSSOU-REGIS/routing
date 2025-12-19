@@ -219,7 +219,7 @@
                                     <i class="fas fa-building-columns text-white text-xl"></i>
                                 </div>
                                 <div>
-                                    <a href="{{ route('home') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK</a>
+                                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK</a>
                                     <div class="text-xs text-gray-500 -mt-1">Mon Profil</div>
                                 </div>
                             </div>
@@ -236,11 +236,11 @@
                                     <div class="text-xs text-gray-600">Compte N° {{ $user->id }}</div>
                                 </div>
                             </div>
-                            <a href="{{ route('dashboard') }}" class="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2">
+                            <a href="{{ localized_route('dashboard', ['locale' => app()->getLocale()]) }}" class="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2">
                                 <i class="fas fa-arrow-left"></i>
                                 Retour au tableau de bord
                             </a>
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form method="POST" action="{{ localized_route('logout', ['locale' => app()->getLocale()]) }}">
                                 @csrf
                                 <button type="submit" class="relative text-gray-700 hover:text-red-600 transition duration-300 font-medium group flex items-center gap-2">
                                     <i class="fas fa-sign-out-alt"></i>
@@ -270,11 +270,11 @@
                                     <div class="text-xs text-gray-600">Compte N° {{ $user->id }}</div>
                                 </div>
                             </div>
-                            <a href="{{ route('dashboard') }}" class="flex items-center w-full px-3 py-2 text-base font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition duration-300">
+                            <a href="{{ localized_route('dashboard', ['locale' => app()->getLocale()]) }}" class="flex items-center w-full px-3 py-2 text-base font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition duration-300">
                                 <i class="fas fa-arrow-left w-5 mr-3 text-center"></i>
                                 Retour au tableau de bord
                             </a>
-                            <form method="POST" action="{{ route('logout') }}" class="inline">
+                            <form method="POST" action="{{ localized_route('logout', ['locale' => app()->getLocale()]) }}" class="inline">
                                 @csrf
                                 <button type="submit" class="flex items-center w-full px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition duration-300">
                                     <i class="fas fa-sign-out-alt w-5 mr-3 text-center"></i>
@@ -430,7 +430,7 @@
                                             <p class="text-gray-600 mt-1">Vos dernières transactions</p>
                                         </div>
                                     </div>
-                                    <a href="{{ route('transactions.history') }}" class="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2">
+                                    <a href="{{ localized_route('transactions.history', ['locale' => app()->getLocale()]) }}" class="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2">
                                         <span>Voir tout</span>
                                         <i class="fas fa-arrow-right"></i>
                                     </a>
@@ -689,14 +689,14 @@
                                 </div>
 
                                 <div class="space-y-3">
-                                    <a href="{{ route('transfer.create') }}" class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 rounded-xl hover:from-blue-600 hover:to-indigo-700 text-center transition duration-300 transform hover:scale-105 shadow-lg block">
+                                    <a href="{{ localized_route('transfer.create', ['locale' => app()->getLocale()]) }}" class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 rounded-xl hover:from-blue-600 hover:to-indigo-700 text-center transition duration-300 transform hover:scale-105 shadow-lg block">
                                         <div class="bg-white/20 p-2 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-2">
                                             <i class="fas fa-paper-plane text-lg"></i>
                                         </div>
                                         <div class="font-bold text-sm">Nouveau virement</div>
                                     </a>
 
-                                    <a href="{{ route('transactions.history') }}" class="action-btn bg-gradient-to-r from-gray-600 to-gray-700 text-white p-4 rounded-xl hover:from-gray-700 hover:to-gray-800 text-center transition duration-300 transform hover:scale-105 shadow-lg block">
+                                    <a href="{{ localized_route('transactions.history', ['locale' => app()->getLocale()]) }}" class="action-btn bg-gradient-to-r from-gray-600 to-gray-700 text-white p-4 rounded-xl hover:from-gray-700 hover:to-gray-800 text-center transition duration-300 transform hover:scale-105 shadow-lg block">
                                         <div class="bg-white/20 p-2 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-2">
                                             <i class="fas fa-history text-lg"></i>
                                         </div>

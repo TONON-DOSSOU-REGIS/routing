@@ -71,7 +71,7 @@ class ContactController extends Controller
             }
 
             // Redirect to thank you page without creating a new record
-            return redirect()->route('support.nous-contacter.thankyou')
+            return redirect()->route('support.nous-contacter.thankyou', ['locale' => app()->getLocale()])
                 ->with('status', 'Votre demande a déjà été enregistrée. Un email de confirmation vous a été envoyé.');
         }
 
@@ -86,7 +86,7 @@ class ContactController extends Controller
         Log::info('Confirmation mail sent to:', ['email' => $contact->email]);
 
         // Redirect to thank you page
-        return redirect()->route('support.nous-contacter.thankyou');
+        return redirect()->route('support.nous-contacter.thankyou', ['locale' => app()->getLocale()]);
     }
 
     public function thankYou()

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -248,33 +248,35 @@
       <div class="flex justify-between h-20">
         <div class="flex items-center space-x-3">
           <div class="bg-white p-2 rounded-lg">
-            <i class="fas fa-building-columns text-premium text-2xl"></i>
+            <img src='{{ asset("images/logobank.png") }}' class="w-9 h-9" alt="">
+            {{-- <i class="fas fa-building-columns text-premium text-2xl"></i> --}}
           </div>
-          <a href="{{ route('home') }}" class="text-2xl font-bold text-white">SG BANK</a>
+          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white">SG BANK</a>
         </div>
         
         <!-- Menu Desktop -->
         <div class="hidden md:flex items-center space-x-6">
-          <a href="{{ route('home') }}" class="text-white hover:text-blue-200 transition font-medium">Accueil</a>
+          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">{{ __('home.nav_home') }}</a>
           <div class="relative group">
             <button class="text-white hover:text-blue-200 transition font-medium inline-flex items-center">
-              Services
+              {{ __('home.nav_services') }}
               <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
               </svg>
             </button>
             <div class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-1 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
-              <a href="{{ route('services.comptes-professionnels') }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900">Comptes professionnels</a>
-              <a href="{{ route('services.virements-internationaux') }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900">Virements internationaux</a>
-              <a href="{{ route('services.gestion-tresorerie') }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900">Gestion de trésorerie</a>
-              <a href="{{ route('services.cartes-paiement') }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900">Cartes de paiement</a>
+              <a href="{{ localized_route('services.comptes-professionnels', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900">{{ __('home.services_business_accounts') }}</a>
+              <a href="{{ localized_route('services.virements-internationaux', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900">{{ __('home.services_international_transfers') }}</a>
+              <a href="{{ localized_route('services.gestion-tresorerie', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900">{{ __('home.services_treasury_management') }}</a>
+              <a href="{{ localized_route('services.cartes-paiement', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900">{{ __('home.services_payment_cards') }}</a>
             </div>
           </div>
-          <a href="#testimonial-slider" class="text-white hover:text-blue-200 transition font-medium">Témoignage client</a>
-          <a href="#faq-list" class="text-white hover:text-blue-200 transition font-medium">FAQ</a>
-          <a href="{{ route('support.nous-contacter') }}" class="text-white hover:text-blue-200 transition font-medium">Formulaire de contact</a>
-          <a href="{{ route('login') }}" class="text-white hover:text-blue-200 transition font-medium">Connexion</a>
-          <a href="{{ route('register') }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">Créer un compte</a>
+          <a href="#testimonial-slider" class="text-white hover:text-blue-200 transition font-medium">{{ __('home.nav_testimonials') }}</a>
+          <a href="#faq-list" class="text-white hover:text-blue-200 transition font-medium">{{ __('home.nav_faq') }}</a>
+          <a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">{{ __('home.nav_contact') }}</a>
+          <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">{{ __('home.nav_login') }}</a>
+          <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">{{ __('home.nav_register') }}</a>
+          <x-language-selector />
         </div>
         
         <!-- Bouton Menu Mobile -->
@@ -288,26 +290,29 @@
       <!-- Menu Mobile -->
       <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-800 border-t border-blue-700">
         <div class="px-4 py-6 space-y-4">
-          <a href="{{ route('home') }}" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Accueil</a>
+          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">{{ __('home.nav_home') }}</a>
           <div class="mobile-menu-item relative group">
             <button class="w-full text-left text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 inline-flex items-center justify-between">
-              Services
+              {{ __('home.nav_services') }}
               <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
               </svg>
             </button>
             <div class="mobile-submenu hidden flex-col bg-blue-900 border border-blue-700 rounded-md mt-2 p-2 space-y-1">
-              <a href="{{ route('services.comptes-professionnels') }}" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md">Comptes professionnels</a>
-              <a href="{{ route('services.virements-internationaux') }}" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md">Virements internationaux</a>
-              <a href="{{ route('services.gestion-tresorerie') }}" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md">Gestion de trésorerie</a>
-              <a href="{{ route('services.cartes-paiement') }}" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md">Cartes de paiement</a>
+              <a href="{{ localized_route('services.comptes-professionnels', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md">{{ __('home.services_business_accounts') }}</a>
+              <a href="{{ localized_route('services.virements-internationaux', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md">{{ __('home.services_international_transfers') }}</a>
+              <a href="{{ localized_route('services.gestion-tresorerie', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md">{{ __('home.services_treasury_management') }}</a>
+              <a href="{{ localized_route('services.cartes-paiement', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md">{{ __('home.services_payment_cards') }}</a>
             </div>
           </div>
-          <a href="#testimonial-slider" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Témoignage client</a>
-          <a href="#faq-list" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">FAQ</a>
-          <a href="{{ route('support.nous-contacter') }}" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Formulaire de contact</a>
-          <a href="{{ route('login') }}" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Connexion</a>
-          <a href="{{ route('register') }}" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Créer un compte</a>
+          <a href="#testimonial-slider" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">{{ __('home.nav_testimonials') }}</a>
+          <a href="#faq-list" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">{{ __('home.nav_faq') }}</a>
+          <a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">{{ __('home.nav_contact') }}</a>
+          <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">{{ __('home.nav_login') }}</a>
+          <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">{{ __('home.nav_register') }}</a>
+          <div class="mobile-menu-item">
+            <x-language-selector />
+          </div>
         </div>
       </div>
     </div>
@@ -329,44 +334,43 @@
       <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center fade-in-up">
         <div>
           <span class="inline-flex items-center px-4 py-2 rounded-full security-badge text-sm mb-6">
-            <i class="fas fa-shield-alt mr-2"></i> Plateforme bancaire 100% sécurisée
+            <i class="fas fa-shield-alt mr-2"></i> {{ __('home.hero_badge') }}
           </span>
           <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-            Votre banque en ligne<br>
-            <span class="text-blue-300">professionnelle & certifiée</span>
+            {{ __('home.hero_title_1') }}<br>
+            <span class="text-blue-300">{{ __('home.hero_title_2') }}</span>
           </h1>
           <p class="text-xl mb-8 max-w-xl leading-relaxed">
-            Ouvrez votre compte en quelques minutes, suivez vos virements en temps réel
-            et recevez des justificatifs officiels certifiés par SG BANK.
+            {{ __('home.hero_description') }}
           </p>
           <ul class="grid sm:grid-cols-2 gap-4 text-base mb-8">
             <li class="flex items-start space-x-3">
               <i class="fas fa-check-circle text-green-400 mt-1"></i>
-              <span>Inscription 100% en ligne, sans déplacement.</span>
+              <span>{{ __('home.hero_feature_1') }}</span>
             </li>
             <li class="flex items-start space-x-3">
               <i class="fas fa-check-circle text-green-400 mt-1"></i>
-              <span>Suivi de virement étape par étape avec barre de progression.</span>
+              <span>{{ __('home.hero_feature_2') }}</span>
             </li>
             <li class="flex items-start space-x-3">
               <i class="fas fa-check-circle text-green-400 mt-1"></i>
-              <span>Notifications par e-mail pour chaque mouvement.</span>
+              <span>{{ __('home.hero_feature_3') }}</span>
             </li>
             <li class="flex items-start space-x-3">
               <i class="fas fa-check-circle text-green-400 mt-1"></i>
-              <span>Reçus PDF sécurisés et archivés dans votre espace client.</span>
+              <span>{{ __('home.hero_feature_4') }}</span>
             </li>
           </ul>
           <div class="flex flex-col sm:flex-row gap-4">
-            <a href="{{ route('register') }}" class="btn-premium px-8 py-4 rounded-lg font-semibold text-center">
-              Créer mon compte
+            <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-8 py-4 rounded-lg font-semibold text-center">
+              {{ __('home.hero_cta_register') }}
             </a>
-            <a href="{{ route('login') }}" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-amber-400 hover:text-premium transition text-center">
-              Accéder à mon espace
+            <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-amber-400 hover:text-premium transition text-center">
+              {{ __('home.hero_cta_login') }}
             </a>
           </div>
           <p class="text-sm text-gray-300 mt-6 flex items-center">
-            <i class="fas fa-lock mr-2"></i> SG BANK respecte les normes de sécurité les plus strictes pour protéger vos données financières.
+            <i class="fas fa-lock mr-2"></i> {{ __('home.hero_security_note') }}
           </p>
         </div>
 
@@ -374,36 +378,36 @@
           <div class="premium-card rounded-2xl p-8">
             <h3 class="text-2xl font-semibold mb-6 flex items-center text-premium">
               <i class="fas fa-chart-line mr-3"></i>
-              Aperçu de votre tableau de bord
+              {{ __('home.dashboard_preview_title') }}
             </h3>
             <div class="space-y-6 text-gray-700">
               <div class="flex justify-between items-center border-b pb-4">
-                <span class="font-medium">Virements en cours</span>
-                <span class="font-bold text-premium">3 opérations</span>
+                <span class="font-medium">{{ __('home.dashboard_transfers_in_progress') }}</span>
+                <span class="font-bold text-premium">3 {{ __('home.dashboard_operations') }}</span>
               </div>
               <div class="mt-6">
-                <p class="mb-3 text-sm uppercase tracking-wide text-gray-500">Progression d'un virement prioritaire</p>
+                <p class="mb-3 text-sm uppercase tracking-wide text-gray-500">{{ __('home.dashboard_priority_transfer') }}</p>
                 <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                   <div class="bg-gradient-to-r from-green-500 to-blue-600 h-3 w-3/4 rounded-full"></div>
                 </div>
-                <p class="text-sm text-gray-500 mt-2">Étape 3/4 - Contrôle final de conformité</p>
+                <p class="text-sm text-gray-500 mt-2">{{ __('home.dashboard_step') }}</p>
               </div>
               <div class="grid grid-cols-3 gap-4 mt-6 text-center">
                 <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
-                  <p class="text-gray-600 mb-2">Virements</p>
+                  <p class="text-gray-600 mb-2">{{ __('home.dashboard_transfers') }}</p>
                   <p class="font-bold text-premium text-xl">+32</p>
                 </div>
                 <div class="bg-green-50 rounded-xl p-4 border border-green-100">
-                  <p class="text-gray-600 mb-2">Réception</p>
+                  <p class="text-gray-600 mb-2">{{ __('home.dashboard_reception') }}</p>
                   <p class="font-bold text-green-600 text-xl">+18</p>
                 </div>
                 <div class="bg-red-50 rounded-xl p-4 border border-red-100">
-                  <p class="text-gray-600 mb-2">Alertes</p>
+                  <p class="text-gray-600 mb-2">{{ __('home.dashboard_alerts') }}</p>
                   <p class="font-bold text-red-500 text-xl">0</p>
                 </div>
               </div>
               <p class="text-sm text-gray-500 mt-4">
-                Interface moderne, claire et pensée pour les virements professionnels.
+                {{ __('home.dashboard_description') }}
               </p>
             </div>
           </div>
@@ -420,10 +424,10 @@
     <!-- Title -->
     <div class="text-center max-w-3xl mx-auto mb-16">
       <h2 class="text-4xl font-extrabold mb-6 text-gray-900 tracking-tight">
-        Des fonctionnalités puissantes, pensées pour les professionnels
+        {{ __('home.features_title') }}
       </h2>
       <p class="text-xl text-gray-600 leading-relaxed">
-        SG BANK vous offre une expérience bancaire moderne : sécurité avancée, transparence totale et gestion intelligente de vos opérations.
+        {{ __('home.features_description') }}
       </p>
     </div>
 
@@ -440,24 +444,24 @@
 
         <div class="p-8">
           <h3 class="text-2xl font-semibold mb-4 text-gray-800">
-            Sécurité bancaire AES 256-bit
+            {{ __('home.feature_1_title') }}
           </h3>
           <p class="text-gray-600 mb-6 leading-relaxed">
-            Vos données sont chiffrées de bout en bout et protégées par les mêmes protocoles que les grandes institutions bancaires.
+            {{ __('home.feature_1_description') }}
           </p>
 
           <ul class="text-gray-600 space-y-3 text-left">
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              Connexion sécurisée (HTTPS / SSL)
+              {{ __('home.feature_1_item_1') }}
             </li>
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              Détection de connexions suspectes
+              {{ __('home.feature_1_item_2') }}
             </li>
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              Archivage sécurisé et protégé
+              {{ __('home.feature_1_item_3') }}
             </li>
           </ul>
         </div>
@@ -473,20 +477,20 @@
 
         <div class="p-8">
           <h3 class="text-2xl font-semibold mb-4 text-gray-800">
-            Surveillance anti-fraude en temps réel
+            {{ __('home.feature_2_title') }}
           </h3>
           <p class="text-gray-600 mb-6 leading-relaxed">
-            Un système intelligent analyse en continu vos opérations pour détecter toute activité anormale.
+            {{ __('home.feature_2_description') }}
           </p>
 
           <ul class="text-gray-600 space-y-3 text-left">
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              Alerte en temps réel par e-mail
+              {{ __('home.feature_2_item_1') }}
             </li>
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              Analyse automatique des anomalies
+              {{ __('home.feature_2_item_2') }}
             </li>
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
@@ -506,24 +510,24 @@
 
         <div class="p-8">
           <h3 class="text-2xl font-semibold mb-4 text-gray-800">
-            Progression des virements supervisée
+            {{ __('home.feature_3_title') }}
           </h3>
           <p class="text-gray-600 mb-6 leading-relaxed">
-            Chaque virement passe par un processus de validation certifié pour garantir sécurité et transparence.
+            {{ __('home.feature_3_description') }}
           </p>
 
           <ul class="text-gray-600 space-y-3 text-left">
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              Suivi étape par étape
+              {{ __('home.feature_3_item_1') }}
             </li>
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              Barre de progression dynamique
+              {{ __('home.feature_3_item_2') }}
             </li>
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              Justificatif PDF certifié
+              {{ __('home.feature_3_item_3') }}
             </li>
           </ul>
         </div>
@@ -566,10 +570,9 @@ document.addEventListener("DOMContentLoaded", () => {
   <section class="py-24 parallax" style="background-image: url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1920&q=80');">
     <div class="gradient-bg bg-opacity-95 py-20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
-        <h2 class="text-4xl font-bold text-center mb-12">Pourquoi choisir SG BANK ?</h2>
+        <h2 class="text-4xl font-bold text-center mb-12">{{ __('home.why_choose_title') }}</h2>
         <p class="max-w-3xl mx-auto text-center mb-16 text-xl text-blue-100 leading-relaxed">
-          SG BANK accompagne aussi bien les particuliers que les professionnels avec une solution bancaire
-          moderne, accessible, rapide et extrêmement fiable.
+          {{ __('home.accompagne_description') }}
         </p>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
@@ -577,36 +580,36 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="bg-white bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
               <i class="fas fa-home text-3xl text-yellow-300"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-4">Aucun déplacement nécessaire</h3>
+            <h3 class="text-xl font-semibold mb-4">{{ __('home.advantage_1_title') }}</h3>
             <p class="text-blue-100 leading-relaxed">
-              Ouvrez et gérez vos comptes depuis votre ordinateur, smartphone ou tablette, où que vous soyez.
+              {{ __('home.advantage_1_description') }}
             </p>
           </div>
           <div class="text-center p-6">
             <div class="bg-white bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
               <i class="fas fa-clock text-3xl text-green-300"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-4">Approbation rapide</h3>
+            <h3 class="text-xl font-semibold mb-4">{{ __('home.advantage_2_title') }}</h3>
             <p class="text-blue-100 leading-relaxed">
-              Processus de validation accéléré pour vos virements et demandes importantes.
+              {{ __('home.advantage_2_description') }}
             </p>
           </div>
           <div class="text-center p-6">
             <div class="bg-white bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
               <i class="fas fa-check-circle text-3xl text-purple-300"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-4">Virements + reçu PDF</h3>
+            <h3 class="text-xl font-semibold mb-4">{{ __('home.advantage_3_title') }}</h3>
             <p class="text-blue-100 leading-relaxed">
-              Recevez un justificatif PDF certifié après chaque virement effectué avec succès.
+              {{ __('home.advantage_3_description') }}
             </p>
           </div>
           <div class="text-center p-6">
             <div class="bg-white bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
               <i class="fas fa-headset text-3xl text-orange-300"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-4">Support client humain</h3>
+            <h3 class="text-xl font-semibold mb-4">{{ __('home.advantage_4_title') }}</h3>
             <p class="text-blue-100 leading-relaxed">
-              Une équipe disponible pour vous assister, vous conseiller et répondre à vos questions.
+              {{ __('home.advantage_4_description') }}
             </p>
           </div>
         </div>
@@ -620,23 +623,23 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="grid md:grid-cols-3 gap-12 text-center">
         <div class="transform hover:scale-105 transition duration-300 p-6">
           <div class="text-6xl font-bold mb-4" id="client-count">0</div>
-          <div class="text-2xl mb-4">Clients satisfaits</div>
+          <div class="text-2xl mb-4">{{ __('home.stats_clients') }}</div>
           <p class="text-blue-100 text-lg leading-relaxed">
-            Des milliers d'utilisateurs font confiance à SG BANK pour leurs opérations quotidiennes.
+            {{ __('home.stats_clients_description') }}
           </p>
         </div>
         <div class="transform hover:scale-105 transition duration-300 p-6">
           <div class="text-6xl font-bold mb-4" id="transaction-volume">0</div>
-          <div class="text-2xl mb-4">Volume de transactions (M€)</div>
+          <div class="text-2xl mb-4">{{ __('home.stats_volume') }}</div>
           <p class="text-blue-100 text-lg leading-relaxed">
-            Un volume important de flux financiers géré avec précision et transparence.
+            {{ __('home.stats_volume_description') }}
           </p>
         </div>
         <div class="transform hover:scale-105 transition duration-300 p-6">
           <div class="text-6xl font-bold mb-4" id="satisfaction-rate">0%</div>
-          <div class="text-2xl mb-4">Taux de satisfaction</div>
+          <div class="text-2xl mb-4">{{ __('home.stats_satisfaction') }}</div>
           <p class="text-blue-100 text-lg leading-relaxed">
-            Nos utilisateurs recommandent SG BANK pour sa simplicité, sa rapidité et son sérieux.
+            {{ __('home.stats_satisfaction_description') }}
           </p>
         </div>
       </div>
@@ -648,10 +651,9 @@ document.addEventListener("DOMContentLoaded", () => {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-4xl font-bold mb-6 text-premium">Ils nous font confiance</h2>
+        <h2 class="text-4xl font-bold mb-6 text-premium">{{ __('home.partners_title') }}</h2>
         <p class="text-xl text-gray-600 leading-relaxed">
-          SG BANK collabore avec des institutions financières reconnues mondialement, afin de garantir
-          fiabilité, sécurité et qualité de service.
+          {{ __('home.collabore_description') }}
         </p>
       </div>
 
@@ -705,7 +707,7 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
 
       <p class="text-center text-gray-500 mt-10">
-        Les logos affichés sont présentés à titre illustratif pour une démonstration visuelle.
+        {{ __('home.partners_note') }}
       </p>
 
     </div>
@@ -723,7 +725,7 @@ document.addEventListener("DOMContentLoaded", () => {
     <!-- Title -->
     <div class="text-center max-w-3xl mx-auto mb-16 fade-up">
       <h2 class="text-4xl font-extrabold mb-6 text-gray-900">
-        Certifiée par les meilleurs standards
+        {{ __('home.certifications_title') }}
       </h2>
       <p class="text-xl text-gray-600 leading-relaxed">
         SG BANK applique les normes les plus strictes du secteur bancaire pour assurer des opérations
@@ -742,14 +744,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <div class="flex justify-center mb-6">
           <span class="inline-flex items-center px-5 py-3 rounded-full bg-blue-50 text-blue-600 text-sm font-semibold">
-            <i class="fas fa-shield-alt mr-2"></i>Certification Sécurité
+            <i class="fas fa-shield-alt mr-2"></i>{{ __('home.cert_1_badge') }}
           </span>
         </div>
 
-        <h3 class="font-bold text-2xl mb-4 text-gray-900">Normes de sécurité renforcées</h3>
+        <h3 class="font-bold text-2xl mb-4 text-gray-900">{{ __('home.cert_1_title') }}</h3>
 
         <p class="text-gray-600 mb-6 leading-relaxed">
-          Conforme aux standards internationaux de cybersécurité, assurant un chiffrement de qualité bancaire.
+          {{ __('home.cert_1_description') }}
         </p>
 
         <div class="flex items-center justify-center space-x-1 text-yellow-400 text-xl">
@@ -766,19 +768,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <div class="flex justify-center mb-6">
           <span class="inline-flex items-center px-5 py-3 rounded-full bg-indigo-50 text-indigo-600 text-sm font-semibold">
-            <i class="fas fa-award mr-2"></i>Qualité de Service
+            <i class="fas fa-award mr-2"></i>{{ __('home.cert_2_badge') }}
           </span>
         </div>
 
-        <h3 class="font-bold text-2xl mb-4 text-gray-900">Excellence & transparence</h3>
+        <h3 class="font-bold text-2xl mb-4 text-gray-900">{{ __('home.cert_2_title') }}</h3>
 
         <p class="text-gray-600 mb-6 leading-relaxed">
-          Un suivi détaillé, des frais affichés clairement et une interface pensée pour les utilisateurs.
+          {{ __('home.cert_2_description') }}
         </p>
 
         <div class="flex items-center justify-center space-x-2">
           <i class="fas fa-medal text-yellow-500 text-2xl"></i>
-          <span class="text-sm text-gray-500 font-medium">Distinction Premium Service</span>
+          <span class="text-sm text-gray-500 font-medium">{{ __('home.cert_2_distinction') }}</span>
         </div>
 
       </div>
@@ -791,19 +793,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <div class="flex justify-center mb-6">
           <span class="inline-flex items-center px-5 py-3 rounded-full bg-purple-50 text-purple-700 text-sm font-semibold">
-            <i class="fas fa-user-shield mr-2"></i>Protection des données
+            <i class="fas fa-user-shield mr-2"></i>{{ __('home.cert_3_badge') }}
           </span>
         </div>
 
-        <h3 class="font-bold text-2xl mb-4 text-gray-900">Confidentialité garantie</h3>
+        <h3 class="font-bold text-2xl mb-4 text-gray-900">{{ __('home.cert_3_title') }}</h3>
 
         <p class="text-gray-600 mb-6 leading-relaxed">
-          Gestion stricte des accès sensibles et conformité inspirée des directives RGPD.
+          {{ __('home.cert_3_description') }}
         </p>
 
         <div class="flex items-center justify-center space-x-2 text-gray-700">
           <i class="fas fa-lock"></i>
-          <span class="text-sm font-medium">Conformité & sécurité des données</span>
+          <span class="text-sm font-medium">{{ __('home.cert_3_compliance') }}</span>
         </div>
 
       </div>
@@ -845,9 +847,9 @@ document.addEventListener("DOMContentLoaded", () => {
   <section class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-4xl font-bold mb-6 text-premium">Ce que disent nos clients</h2>
+        <h2 class="text-4xl font-bold mb-6 text-premium">{{ __('home.testimonials_title') }}</h2>
         <p class="text-xl text-gray-600 leading-relaxed">
-          Des utilisateurs réels, des expériences réelles. SG BANK simplifie la gestion des virements au quotidien.
+          {{ __('home.testimonials_description') }}
         </p>
       </div>
 
@@ -861,8 +863,8 @@ document.addEventListener("DOMContentLoaded", () => {
                   <i class="fas fa-user text-premium text-2xl"></i>
                 </div>
                 <div>
-                  <p class="font-bold text-gray-800 text-lg">Sarah M.</p>
-                  <p class="text-sm text-gray-500">Entrepreneure - E-commerce</p>
+                  <p class="font-bold text-gray-800 text-lg">{{ __('home.testimonial_1_name') }}</p>
+                  <p class="text-sm text-gray-500">{{ __('home.testimonial_1_role') }}</p>
                 </div>
               </div>
               <div class="flex-1">
@@ -872,7 +874,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </p>
                 <div class="flex items-center space-x-2 text-yellow-400 text-lg">
                   <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                  <span class="text-gray-500 text-sm ml-2">Service impeccable</span>
+                  <span class="text-gray-500 text-sm ml-2">{{ __('home.testimonial_1_rating') }}</span>
                 </div>
               </div>
             </div>
@@ -886,8 +888,8 @@ document.addEventListener("DOMContentLoaded", () => {
                   <i class="fas fa-user-tie text-emerald-600 text-2xl"></i>
                 </div>
                 <div>
-                  <p class="font-bold text-gray-800 text-lg">Jean-Paul D.</p>
-                  <p class="text-sm text-gray-500">Consultant financier</p>
+                  <p class="font-bold text-gray-800 text-lg">{{ __('home.testimonial_2_name') }}</p>
+                  <p class="text-sm text-gray-500">{{ __('home.testimonial_2_role') }}</p>
                 </div>
               </div>
               <div class="flex-1">
@@ -897,7 +899,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </p>
                 <div class="flex items-center space-x-2 text-yellow-400 text-lg">
                   <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                  <span class="text-gray-500 text-sm ml-2">Très fiable</span>
+                  <span class="text-gray-500 text-sm ml-2">{{ __('home.testimonial_2_rating') }}</span>
                 </div>
               </div>
             </div>
@@ -911,8 +913,8 @@ document.addEventListener("DOMContentLoaded", () => {
                   <i class="fas fa-user-circle text-purple-600 text-2xl"></i>
                 </div>
                 <div>
-                  <p class="font-bold text-gray-800 text-lg">Karim L.</p>
-                  <p class="text-sm text-gray-500">Indépendant - Service B2B</p>
+                  <p class="font-bold text-gray-800 text-lg">{{ __('home.testimonial_3_name') }}</p>
+                  <p class="text-sm text-gray-500">{{ __('home.testimonial_3_role') }}</p>
                 </div>
               </div>
               <div class="flex-1">
@@ -922,7 +924,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </p>
                 <div class="flex items-center space-x-2 text-yellow-400 text-lg">
                   <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                  <span class="text-gray-500 text-sm ml-2">Pratique et moderne</span>
+                  <span class="text-gray-500 text-sm ml-2">{{ __('home.testimonial_3_rating') }}</span>
                 </div>
               </div>
             </div>
@@ -943,7 +945,7 @@ document.addEventListener("DOMContentLoaded", () => {
   <section class="py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-4xl font-bold mb-6 text-premium">Questions fréquentes (FAQ)</h2>
+        <h2 class="text-4xl font-bold mb-6 text-premium">{{ __('home.faq_title') }}</h2>
         <p class="text-xl text-gray-600 leading-relaxed">
           Retrouvez les réponses aux questions les plus courantes sur SG BANK, l'ouverture de compte
           et la gestion de vos virements en ligne.
@@ -955,8 +957,8 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="faq-item">
           <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
             <div>
-              <p class="font-bold text-xl text-gray-800">Comment ouvrir un compte sur SG BANK ?</p>
-              <p class="text-gray-500 mt-2">Inscription simple en quelques étapes.</p>
+              <p class="font-bold text-xl text-gray-800">{{ __('home.faq_1_question') }}</p>
+              <p class="text-gray-500 mt-2">{{ __('home.faq_1_subtitle') }}</p>
             </div>
             <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
           </button>
@@ -972,8 +974,8 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="faq-item">
           <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
             <div>
-              <p class="font-bold text-xl text-gray-800">Mes virements sont-ils vraiment surveillés ?</p>
-              <p class="text-gray-500 mt-2">Suivi et contrôle manuel des opérations.</p>
+              <p class="font-bold text-xl text-gray-800">{{ __('home.faq_2_question') }}</p>
+              <p class="text-gray-500 mt-2">{{ __('home.faq_2_subtitle') }}</p>
             </div>
             <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
           </button>
@@ -988,8 +990,8 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="faq-item">
           <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
             <div>
-              <p class="font-bold text-xl text-gray-800">Puis-je télécharger un reçu pour chaque virement ?</p>
-              <p class="text-gray-500 mt-2">Justificatif PDF disponible.</p>
+              <p class="font-bold text-xl text-gray-800">{{ __('home.faq_3_question') }}</p>
+              <p class="text-gray-500 mt-2">{{ __('home.faq_3_subtitle') }}</p>
             </div>
             <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
           </button>
@@ -1004,8 +1006,8 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="faq-item">
           <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
             <div>
-              <p class="font-bold text-xl text-gray-800">Que faire en cas de problème ou de doute ?</p>
-              <p class="text-gray-500 mt-2">Support humain disponible.</p>
+              <p class="font-bold text-xl text-gray-800">{{ __('home.faq_4_question') }}</p>
+              <p class="text-gray-500 mt-2">{{ __('home.faq_4_subtitle') }}</p>
             </div>
             <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
           </button>
@@ -1028,23 +1030,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   <div class="max-w-5xl mx-auto px-6 text-center relative z-10 cta-animate">
     <h2 class="text-5xl font-extrabold mb-8 text-gray-900 tracking-tight animate-title">
-      Prêt à commencer ?
+      {{ __('home.cta_title') }}
     </h2>
 
     <p class="text-2xl text-gray-600 mb-10 leading-relaxed animate-text">
-      Rejoignez des milliers de clients satisfaits qui font confiance à SG BANK pour leurs virements et opérations bancaires en ligne.
+      {{ __('home.cta_description') }}
     </p>
 
     <!-- BUTTON -->
-    <a href="{{ route('register') }}" 
+    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" 
        class="cta-button px-14 py-5 rounded-xl text-2xl font-bold inline-block relative overflow-hidden">
-       <span>Commencer maintenant</span>
+       <span>{{ __('home.cta_button') }}</span>
     </a>
 
     <!-- SECURITY TEXT -->
     <p class="text-gray-500 mt-6 flex items-center justify-center animate-text">
       <i class="fas fa-lock mr-2"></i>
-      L'ouverture de compte se fait en quelques minutes, sans déplacement, et avec un haut niveau de sécurité.
+      {{ __('home.cta_security') }}
     </p>
   </div>
 </section>
@@ -1149,10 +1151,10 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="bg-white p-2 rounded-lg">
               <i class="fas fa-building-columns text-premium text-2xl"></i>
             </div>
-            <a href="{{ route('home') }}" class="text-2xl font-bold text-white">SG BANK</a>
+            <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white">SG BANK</a>
           </div>
           <p class="text-gray-400 mb-4">
-            Une solution bancaire 100% sécurisée, simple et rapide pour les professionnels.
+            {{ __('home.footer_description') }}
           </p>
           <div class="flex space-x-4">
             <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-linkedin text-xl"></i></a>
@@ -1162,32 +1164,32 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         
         <div>
-          <h3 class="text-white font-bold text-lg mb-6">Services</h3>
+          <h3 class="text-white font-bold text-lg mb-6">{{ __('home.footer_services') }}</h3>
           <ul class="space-y-3">
-            <li><a href="{{ route('services.comptes-professionnels') }}" class="text-gray-400 hover:text-white transition">Comptes professionnels</a></li>
-            <li><a href="{{ route('services.virements-internationaux') }}" class="text-gray-400 hover:text-white transition">Virements internationaux</a></li>
-            <li><a href="{{ route('services.gestion-tresorerie') }}" class="text-gray-400 hover:text-white transition">Gestion de trésorerie</a></li>
-            <li><a href="{{ route('services.cartes-paiement') }}" class="text-gray-400 hover:text-white transition">Cartes de paiement</a></li>
+            <li><a href="{{ localized_route('services.comptes-professionnels', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">Comptes professionnels</a></li>
+            <li><a href="{{ localized_route('services.virements-internationaux', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">Virements internationaux</a></li>
+            <li><a href="{{ localized_route('services.gestion-tresorerie', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">Gestion de trésorerie</a></li>
+            <li><a href="{{ localized_route('services.cartes-paiement', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">Cartes de paiement</a></li>
           </ul>
         </div>
 
         <div>
-          <h3 class="text-white font-bold text-lg mb-6">À propos</h3>
+          <h3 class="text-white font-bold text-lg mb-6">{{ __('home.footer_about') }}</h3>
           <ul class="space-y-3">
-            <li><a href="{{ route('about.notre-histoire') }}" class="text-gray-400 hover:text-white transition">Notre histoire</a></li>
-            <li><a href="{{ route('about.carrieres') }}" class="text-gray-400 hover:text-white transition">Carrières</a></li>
-            <li><a href="{{ route('about.presse') }}" class="text-gray-400 hover:text-white transition">Presse</a></li>
-            <li><a href="{{ route('about.blog') }}" class="text-gray-400 hover:text-white transition">Blog</a></li>
+            <li><a href="{{ localized_route('about.notre-histoire', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.footer_our_story') }}</a></li>
+            <li><a href="{{ localized_route('about.carrieres', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.footer_careers') }}</a></li>
+            <li><a href="{{ localized_route('about.presse', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.footer_press') }}</a></li>
+            <li><a href="{{ localized_route('about.blog', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.footer_blog') }}</a></li>
           </ul>
         </div>
 
         <div>
-          <h3 class="text-white font-bold text-lg mb-6">Support</h3>
+          <h3 class="text-white font-bold text-lg mb-6">{{ __('home.footer_support') }}</h3>
           <ul class="space-y-3">
-            <li><a href="{{ route('support.centre-aide') }}" class="text-gray-400 hover:text-white transition">Centre d'aide</a></li>
-            <li><a href="{{ route('support.nous-contacter') }}" class="text-gray-400 hover:text-white transition">Nous contacter</a></li>
-            <li><a href="{{ route('support.securite') }}" class="text-gray-400 hover:text-white transition">Sécurité</a></li>
-            <li><a href="{{ route('support.mentions-legales') }}" class="text-gray-400 hover:text-white transition">Mentions légales</a></li>
+            <li><a href="{{ localized_route('support.centre-aide', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.footer_help_center') }}</a></li>
+            <li><a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.footer_contact_us') }}</a></li>
+            <li><a href="{{ localized_route('support.securite', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.footer_security') }}</a></li>
+            <li><a href="{{ localized_route('support.mentions-legales', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.footer_legal') }}</a></li>
           </ul>
         </div>
       </div>
@@ -1195,7 +1197,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="section-divider my-8"></div>
       
       <div class="text-center">
-        <p>&copy; 2025 <span class="text-blue-400 font-semibold">SG BANK</span>. Tous droits réservés.</p>
+        <p>&copy; 2025 <span class="text-blue-400 font-semibold">SG BANK</span>. {{ __('home.footer_copyright') }}</p>
         <p class="text-sm text-gray-500 mt-2">
           Les informations affichées sur ce site ont une valeur indicative et peuvent être adaptées selon votre
           projet réel.
@@ -1311,7 +1313,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
 
-        // Toggle submenu for Services in mobile menu
+        // Toggle submenu for {{ __('home.footer_services') }} in mobile menu
         const servicesButton = mobileMenu.querySelector('.mobile-menu-item.relative.group > button');
         const servicesSubmenu = mobileMenu.querySelector('.mobile-submenu');
 

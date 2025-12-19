@@ -51,9 +51,28 @@ class TransactionController extends Controller
             ->first();
 
         if (!$settings) {
-            $settings = Setting::where('is_global', true)->firstOrFail();
+            $settings = Setting::where('is_global', true)->first();
         }
-        $increment = 1; // pas de progression
+
+        // Si aucun setting n'existe, créer des valeurs par défaut
+        if (!$settings) {
+            $settings = new Setting([
+                'stop_percentage' => 0,
+                'stop_message' => '',
+                'is_global' => true,
+                'target_user_id' => null
+            ]);
+        }
+
+        \Illuminate\Support\Facades\Log::info('Progress check', [
+            'transaction_id' => $tx->id,
+            'current_progress' => $tx->progress,
+            'status' => $tx->status,
+            'stop_percentage' => $settings->stop_percentage,
+            'user_id' => auth()->id(),
+        ]);
+
+        $increment = 1; // Incrément de 10% pour une progression visible et rapide
         $p = min(100, (int)$tx->progress + $increment);
 
         if ($tx->status === 'pending') {
@@ -100,7 +119,7 @@ class TransactionController extends Controller
                     'status'   => 'on_hold',
                     'message'  => $settings->stop_message,
                 ]);
-                
+
                 // Notify user that transaction is on hold
                 try {
                     NotificationService::notifySystem(
@@ -114,7 +133,7 @@ class TransactionController extends Controller
                         'error' => $e->getMessage(),
                     ]);
                 }
-                
+
                 return response()->json([
                     'status' => 'on_hold',
                     'progress' => (int)$settings->stop_percentage,
@@ -159,7 +178,7 @@ class TransactionController extends Controller
         return view('transactions.history', compact('transactions'));
     }
 
-    public function receiptPdf(Transaction $transaction)
+    public function receiptPdf($locale, Transaction $transaction)
     {
         if ($transaction->user_id !== auth()->id()) {
             abort(403);
@@ -170,7 +189,7 @@ class TransactionController extends Controller
     }
 
     // New method to return HTML receipt view
-    public function receiptHtml(Transaction $transaction)
+    public function receiptHtml($locale, Transaction $transaction)
     {
         if ($transaction->user_id !== auth()->id()) {
             abort(403);

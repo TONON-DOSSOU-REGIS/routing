@@ -145,7 +145,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
-                        <a href="{{ route('admin.dashboard') }}" class="flex items-center text-xl font-bold text-gray-900">
+                        <a href="{{ localized_route('admin.dashboard') }}" class="flex items-center text-xl font-bold text-gray-900">
                             <i class="fas fa-university text-primary-500 mr-2"></i>
                             SG BANK <span class="text-primary-500 ml-1">Admin</span>
                         </a>
@@ -153,12 +153,12 @@
 
                     <!-- Desktop Navigation -->
                     <div class="hidden md:flex items-center space-x-6">
-                        <a href="{{ route('admin.dashboard') }}" class="nav-link text-gray-600 hover:text-gray-900">Dashboard</a>
-                        <a href="{{ route('admin.settings') }}" class="nav-link text-gray-600 hover:text-gray-900">Paramètres</a>
-                        <a href="{{ route('admin.users') }}" class="nav-link text-gray-600 hover:text-gray-900 active">Utilisateurs</a>
-                        <a href="{{ route('admin.deposit') }}" class="nav-link text-gray-600 hover:text-gray-900">Dépôt</a>
-                        <a href="{{ route('dashboard') }}" class="nav-link text-gray-600 hover:text-gray-900">Retour au site</a>
-                        <form method="POST" action="{{ route('logout') }}">
+                        <a href="{{ localized_route('admin.dashboard') }}" class="nav-link text-gray-600 hover:text-gray-900">Dashboard</a>
+                        <a href="{{ localized_route('admin.settings') }}" class="nav-link text-gray-600 hover:text-gray-900">Paramètres</a>
+                        <a href="{{ localized_route('admin.users') }}" class="nav-link text-gray-600 hover:text-gray-900 active">Utilisateurs</a>
+                        <a href="{{ localized_route('admin.deposit') }}" class="nav-link text-gray-600 hover:text-gray-900">Dépôt</a>
+                        <a href="{{ localized_route('dashboard', ['locale' => app()->getLocale()]) }}" class="nav-link text-gray-600 hover:text-gray-900">Retour au site</a>
+                        <form method="POST" action="{{ localized_route('logout', ['locale' => app()->getLocale()]) }}">
                             @csrf
                             <button type="submit" class="flex items-center text-gray-600 hover:text-gray-900 transition-colors">
                                 <i class="fas fa-sign-out-alt mr-1"></i> Déconnexion
@@ -179,12 +179,12 @@
                 <!-- Mobile Navigation Menu -->
                 <div class="md:hidden hidden" id="mobile-menu">
                     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 glass-effect border-t border-gray-200 rounded-b-lg">
-                        <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors">Dashboard</a>
-                        <a href="{{ route('admin.settings') }}" class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors">Paramètres</a>
-                        <a href="{{ route('admin.users') }}" class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors">Utilisateurs</a>
-                        <a href="{{ route('admin.deposit') }}" class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors">Dépôt</a>
-                        <a href="{{ route('dashboard') }}" class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors">Retour au site</a>
-                        <form method="POST" action="{{ route('logout') }}" class="block px-3 py-2">
+                        <a href="{{ localized_route('admin.dashboard') }}" class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors">Dashboard</a>
+                        <a href="{{ localized_route('admin.settings') }}" class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors">Paramètres</a>
+                        <a href="{{ localized_route('admin.users') }}" class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors">Utilisateurs</a>
+                        <a href="{{ localized_route('admin.deposit') }}" class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors">Dépôt</a>
+                        <a href="{{ localized_route('dashboard', ['locale' => app()->getLocale()]) }}" class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors">Retour au site</a>
+                        <form method="POST" action="{{ localized_route('logout', ['locale' => app()->getLocale()]) }}" class="block px-3 py-2">
                             @csrf
                             <button type="submit" class="text-base font-medium text-gray-600 hover:text-gray-900 w-full text-left transition-colors">Déconnexion</button>
                         </form>
@@ -245,14 +245,14 @@
                         </div>
                     </div>
                     <div class="flex space-x-3">
-                        <a href="{{ route('admin.users') }}" class="flex items-center glass-effect text-gray-700 px-4 py-2 rounded-lg hover:bg-white/70 shadow-sm transition-all border border-gray-200/50">
+                        <a href="{{ localized_route('admin.users') }}" class="flex items-center glass-effect text-gray-700 px-4 py-2 rounded-lg hover:bg-white/70 shadow-sm transition-all border border-gray-200/50">
                             <i class="fas fa-arrow-left mr-2"></i> Retour
                         </a>
                     </div>
                 </div>
             </div>
 
-            <form method="POST" action="{{ route('admin.users.update', $user) }}" class="space-y-6">
+            <form method="POST" action="{{ localized_route('admin.users.update', $user) }}" class="space-y-6">
                 @csrf
                 @method('PUT')
 
@@ -636,7 +636,7 @@ value="{{ old('expiry_date', optional(optional($user->creditCard)->expiry_date)-
                                 <button type="submit" class="w-full flex justify-center items-center bg-primary-600 text-white px-4 py-3 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all shadow-md hover:shadow-lg">
                                     <i class="fas fa-save mr-2"></i>Enregistrer les modifications
                                 </button>
-                                <a href="{{ route('admin.users') }}" class="w-full flex justify-center items-center bg-gray-200/80 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-300/80 transition-colors">
+                                <a href="{{ localized_route('admin.users') }}" class="w-full flex justify-center items-center bg-gray-200/80 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-300/80 transition-colors">
                                     <i class="fas fa-times mr-2"></i>Annuler
                                 </a>
                             </div>
@@ -661,7 +661,7 @@ value="{{ old('expiry_date', optional(optional($user->creditCard)->expiry_date)-
                             <strong>Attention :</strong> Cette action est irréversible et l'utilisateur devra utiliser le nouveau mot de passe pour se connecter.
                         </p>
                     </div>
-                    <form method="POST" action="{{ route('admin.users.reset-password', $user) }}" class="md:ml-4">
+                    <form method="POST" action="{{ localized_route('admin.users.reset-password', $user) }}" class="md:ml-4">
                         @csrf
                         @method('PATCH')
                         <button type="submit"

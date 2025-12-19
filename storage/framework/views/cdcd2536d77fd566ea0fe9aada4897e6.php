@@ -56,7 +56,7 @@ unset($__defined_vars, $__key, $__value); ?>
                 <button id="mark-all-read" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
                     Tout marquer comme lu
                 </button>
-                <a href="<?php echo e(route('notifications.index')); ?>" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                <a href="<?php echo e(localized_route('notifications.index', ['locale' => app()->getLocale()])); ?>" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
                     Voir tout
                 </a>
             </div>
