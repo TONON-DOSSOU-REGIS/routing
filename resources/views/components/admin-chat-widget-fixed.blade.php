@@ -346,9 +346,9 @@ function displayChatMessages(messages) {
             const isImage = msg.attachment_type && msg.attachment_type.startsWith('image/');
             if (isImage) {
                 attachmentHtml = `
-                    <a href="/storage/${msg.attachment_path}" target="_blank" class="block mt-2">
-                        <img src="/storage/${msg.attachment_path}" alt="${escapeHtml(msg.attachment_name)}" class="max-w-full rounded" style="max-height: 200px;">
-                    </a>
+                    <button type="button" class="block mt-2 focus:outline-none" data-chat-image="/storage/${msg.attachment_path}">
+                        <img src="/storage/${msg.attachment_path}" alt="${escapeHtml(msg.attachment_name)}" class="max-w-full rounded cursor-zoom-in" style="max-height: 200px;">
+                    </button>
                 `;
             } else {
                 attachmentHtml = `
@@ -380,6 +380,93 @@ function displayChatMessages(messages) {
     
     container.scrollTop = container.scrollHeight;
     console.log('[Admin Chat] Messages displayed successfully');
+}
+
+let adminChatImageState = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
+
+function clampAdminChatImage(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+}
+
+function applyAdminChatImageTransform() {
+    const image = document.getElementById('admin-chat-image-full');
+    const modal = document.getElementById('admin-chat-image-modal');
+    if (!image || !modal) return;
+    const modalRect = modal.getBoundingClientRect();
+    const displayWidth = image.naturalWidth * adminChatImageState.scale;
+    const displayHeight = image.naturalHeight * adminChatImageState.scale;
+    const maxX = Math.max(0, (displayWidth - modalRect.width) / 2);
+    const maxY = Math.max(0, (displayHeight - modalRect.height) / 2);
+    adminChatImageState.x = clampAdminChatImage(adminChatImageState.x, -maxX, maxX);
+    adminChatImageState.y = clampAdminChatImage(adminChatImageState.y, -maxY, maxY);
+    image.style.transform = `translate(${adminChatImageState.x}px, ${adminChatImageState.y}px) scale(${adminChatImageState.scale})`;
+}
+
+function openAdminChatImage(src) {
+    const modal = document.getElementById('admin-chat-image-modal');
+    const image = document.getElementById('admin-chat-image-full');
+    const download = document.getElementById('admin-chat-image-download');
+    if (!modal || !image) return;
+    image.src = src;
+    if (download) download.href = src;
+    adminChatImageState = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
+    applyAdminChatImageTransform();
+    modal.classList.remove('hidden');
+}
+
+function resetAdminChatImage() {
+    adminChatImageState = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
+    applyAdminChatImageTransform();
+}
+
+function closeAdminChatImage() {
+    const modal = document.getElementById('admin-chat-image-modal');
+    const image = document.getElementById('admin-chat-image-full');
+    const download = document.getElementById('admin-chat-image-download');
+    if (!modal || !image) return;
+    image.src = '';
+    if (download) download.removeAttribute('href');
+    modal.classList.add('hidden');
+}
+
+document.getElementById('chat-messages-container')?.addEventListener('click', function (event) {
+    const target = event.target.closest('[data-chat-image]');
+    if (!target) return;
+    openAdminChatImage(target.getAttribute('data-chat-image'));
+});
+
+const adminChatImage = document.getElementById('admin-chat-image-full');
+const adminChatModal = document.getElementById('admin-chat-image-modal');
+if (adminChatImage && adminChatModal) {
+    adminChatImage.addEventListener('wheel', function (event) {
+        event.preventDefault();
+        const delta = event.deltaY < 0 ? 1.1 : 0.9;
+        adminChatImageState.scale = Math.min(4, Math.max(1, adminChatImageState.scale * delta));
+        applyAdminChatImageTransform();
+    });
+    adminChatImage.addEventListener('mousedown', function (event) {
+        adminChatImageState.dragging = true;
+        adminChatImageState.startX = event.clientX - adminChatImageState.x;
+        adminChatImageState.startY = event.clientY - adminChatImageState.y;
+        adminChatImage.style.cursor = 'grabbing';
+    });
+    adminChatModal.addEventListener('mousemove', function (event) {
+        if (!adminChatImageState.dragging) return;
+        adminChatImageState.x = event.clientX - adminChatImageState.startX;
+        adminChatImageState.y = event.clientY - adminChatImageState.startY;
+        applyAdminChatImageTransform();
+    });
+    adminChatModal.addEventListener('mouseup', function () {
+        adminChatImageState.dragging = false;
+        adminChatImage.style.cursor = 'grab';
+    });
+    adminChatModal.addEventListener('mouseleave', function () {
+        adminChatImageState.dragging = false;
+        adminChatImage.style.cursor = 'grab';
+    });
+    adminChatImage.addEventListener('load', function () {
+        applyAdminChatImageTransform();
+    });
 }
 
 function sendAdminMessage() {
@@ -473,3 +560,11 @@ updateAdminUnreadCount();
 
 console.log('[Admin Chat] Widget initialized');
 </script>
+
+<div id="admin-chat-image-modal" class="hidden fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4">
+    <button type="button" class="absolute top-4 right-4 text-white text-2xl" onclick="closeAdminChatImage()">×</button>
+    <a id="admin-chat-image-download" class="absolute top-4 left-4 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" download>Tlcharger</a>
+    <button type="button" class="absolute top-4 left-32 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" onclick="resetAdminChatImage()">Rinitialiser</button>
+    <img id="admin-chat-image-full" src="" alt="Aperçu image" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
+</div>
+

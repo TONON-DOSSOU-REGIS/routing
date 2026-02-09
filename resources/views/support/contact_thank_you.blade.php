@@ -45,8 +45,8 @@
 </head>
 
 <body class="min-h-screen">
-
-    <!-- SECTION PRINCIPALE -->
+  @include('components.background-slider')
+<!-- SECTION PRINCIPALE -->
     <section class="hero-bg min-h-screen flex items-center justify-center relative">
 
         <!-- Overlay -->
@@ -132,3 +132,8 @@
 
 </body>
 </html>
+
+
+
+
+

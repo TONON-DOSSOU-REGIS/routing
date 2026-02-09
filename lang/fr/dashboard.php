@@ -1,13 +1,7 @@
 <?php
 
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | Lignes de Langue du Tableau de Bord
-    |--------------------------------------------------------------------------
-    */
-
-    'welcome_greeting' => 'Bonjour :name 👋',
+    'welcome_greeting' => '&#128075; Bonjour :name',
     'welcome_subtitle' => 'Voici un aperçu de votre activité récente et des marchés.',
     'new_transfer' => 'Nouveau virement',
     'history' => 'Historique',

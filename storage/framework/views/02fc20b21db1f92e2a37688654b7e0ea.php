@@ -8,5 +8,4 @@
         </clipPath>
     </defs>
 </svg>
-
 <?php /**PATH C:\xampp\htdocs\cerveau\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/icons/alert.blade.php ENDPATH**/ ?>

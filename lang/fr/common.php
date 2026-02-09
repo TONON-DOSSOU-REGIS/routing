@@ -1,13 +1,6 @@
 <?php
 
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | Lignes de Langue Communes
-    |--------------------------------------------------------------------------
-    */
-
-    // Navigation
     'welcome' => 'Bienvenue',
     'home' => 'Accueil',
     'about' => 'À propos',
@@ -18,8 +11,6 @@ return [
     'logout' => 'Déconnexion',
     'dashboard' => 'Tableau de bord',
     'profile' => 'Profil',
-
-    // Actions
     'save' => 'Enregistrer',
     'cancel' => 'Annuler',
     'delete' => 'Supprimer',

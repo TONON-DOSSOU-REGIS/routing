@@ -1,3 +1,38 @@
+<style>
+    .market-tracker-widget {
+        background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 16px;
+        padding: 16px;
+        color: #e5e7eb;
+    }
+    .market-tracker-widget .market-tab {
+        background: rgba(148, 163, 184, 0.12);
+        color: #cbd5e1;
+    }
+    .market-tracker-widget .market-tab.active {
+        background: #f8fafc;
+        color: #0f172a;
+    }
+    .market-tracker-widget .market-card {
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        box-shadow: 0 10px 24px rgba(2, 6, 23, 0.35);
+    }
+    .market-tracker-widget .market-label {
+        color: #f8fafc;
+    }
+    .market-tracker-widget .market-sub {
+        color: #94a3b8;
+    }
+    .market-tracker-widget .market-price {
+        color: #f8fafc;
+    }
+    .market-tracker-widget .market-muted {
+        color: #94a3b8;
+    }
+</style>
+
 <div class="market-tracker-widget">
     <div class="flex items-center justify-between mb-6">
         <div class="flex items-center space-x-3">
@@ -7,8 +42,8 @@
                 </svg>
             </div>
             <div>
-                <h3 class="text-xl font-bold text-black">Suivi des Marchés</h3>
-                <p class="text-gray-400 text-sm" id="last-update">À l'instant</p>
+                <h3 class="text-xl font-bold text-white">Suivi des Marchés</h3>
+                <p class="market-muted text-sm" id="last-update">À l'instant</p>
             </div>
         </div>
         <button id="refresh-btn" class="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors duration-200" title="Actualiser">
@@ -20,23 +55,23 @@
 
     <!-- Market Type Tabs -->
     <div class="flex space-x-2 mb-6">
-        <button class="market-tab active px-4 py-2 bg-white/20 text-white rounded-lg text-sm font-medium transition-colors duration-200" data-type="all">
+        <button class="market-tab active px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200" data-type="all">
             Tous
         </button>
-        <button class="market-tab px-4 py-2 bg-white/10 text-gray-300 hover:text-white hover:bg-white/20 rounded-lg text-sm font-medium transition-colors duration-200" data-type="crypto">
+        <button class="market-tab px-4 py-2 hover:text-white hover:bg-white/20 rounded-lg text-sm font-medium transition-colors duration-200" data-type="crypto">
             <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v1.252a3.078 3.078 0 01-2.353-1.253 1 1 0 00-1.51-1.31c-.163.187-.452.377-.843.504V8.662c.622-.117 1.196-.342 1.676-.662C10.398 7.766 11 6.991 11 6V5.092z" clip-rule="evenodd"/>
             </svg>
             Crypto
         </button>
-        <button class="market-tab px-4 py-2 bg-white/10 text-gray-300 hover:text-white hover:bg-white/20 rounded-lg text-sm font-medium transition-colors duration-200" data-type="stocks">
+        <button class="market-tab px-4 py-2 hover:text-white hover:bg-white/20 rounded-lg text-sm font-medium transition-colors duration-200" data-type="stocks">
             <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"/>
             </svg>
             Actions
         </button>
-        <button class="market-tab px-4 py-2 bg-white/10 text-gray-300 hover:text-white hover:bg-white/20 rounded-lg text-sm font-medium transition-colors duration-200" data-type="forex">
+        <button class="market-tab px-4 py-2 hover:text-white hover:bg-white/20 rounded-lg text-sm font-medium transition-colors duration-200" data-type="forex">
             <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v1.252a3.078 3.078 0 01-2.353-1.253 1 1 0 00-1.51-1.31c-.163.187-.452.377-.843.504V8.662c.622-.117 1.196-.342 1.676-.662C10.398 7.766 11 6.991 11 6V5.092z" clip-rule="evenodd"/>
@@ -48,7 +83,7 @@
     <!-- Loading State -->
     <div id="loading-state" class="hidden flex items-center justify-center py-12">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-        <span class="ml-3 text-gray-400">Chargement des données du marché...</span>
+        <span class="ml-3 market-muted">Chargement des données du marché...</span>
     </div>
 
     <!-- Error State -->
@@ -357,7 +392,7 @@ document.addEventListener('DOMContentLoaded', function() {
         );
 
         const changeClass = changePercent >= 0 ? 'text-green-400' : 'text-red-400';
-        const changeIcon = changePercent >= 0 ? '↗' : '↘';
+        const changeIcon = changePercent >= 0 ? '+' : '-';
         const bgColor = getBackgroundColor(item.type);
 
         // Build a stable key to track previous price and animate changes
@@ -379,18 +414,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const logoHtml = getProfessionalLogo(item);
 
         return `
-            <div class="glass-card p-4 rounded-xl hover:scale-105 transition-transform duration-200 cursor-pointer">
+            <div class="market-card p-4 rounded-xl hover:scale-105 transition-transform duration-200 cursor-pointer">
                 <div class="flex items-center justify-between mb-3">
                     <div class="flex items-center space-x-2">
                         ${logoHtml}
                         <div>
-                            <p class="text-white font-semibold text-sm">${primaryLabel}</p>
-                            <p class="text-gray-400 text-xs">${secondaryLabel}</p>
+                            <p class="market-label font-semibold text-sm">${primaryLabel}</p>
+                            <p class="market-sub text-xs">${secondaryLabel}</p>
                         </div>
                     </div>
                 </div>
                 <div class="text-right">
-                    <p class="text-white font-bold text-lg ${priceChangeClass}">$${isFinite(price) ? price.toLocaleString() : '0'}</p>
+                    <p class="market-price font-bold text-lg ${priceChangeClass}">$${isFinite(price) ? price.toLocaleString() : '0'}</p>
                     <p class="text-sm ${changeClass} font-medium">
                         ${changeIcon} ${isFinite(changePercent) ? Math.abs(changePercent).toFixed(2) : '0.00'}%
                     </p>
@@ -414,30 +449,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Cryptocurrency logos
         const cryptoLogos = {
-            'BTC': '<div class="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">₿</span></div>',
-            'ETH': '<div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">Ξ</span></div>',
+            'BTC': '<div class="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-[10px]">BTC</span></div>',
+            'ETH': '<div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-[10px]">ETH</span></div>',
             'BNB': '<div class="w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">B</span></div>',
-            'ADA': '<div class="w-8 h-8 bg-gradient-to-br from-blue-300 to-blue-500 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">₳</span></div>',
-            'SOL': '<div class="w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">◎</span></div>',
-            'DOT': '<div class="w-8 h-8 bg-gradient-to-br from-pink-400 to-pink-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">●</span></div>',
-            'DOGE': '<div class="w-8 h-8 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">Ð</span></div>',
+            'ADA': '<div class="w-8 h-8 bg-gradient-to-br from-blue-300 to-blue-500 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-[10px]">ADA</span></div>',
+            'SOL': '<div class="w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-[10px]">SOL</span></div>',
+            'DOT': '<div class="w-8 h-8 bg-gradient-to-br from-pink-400 to-pink-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-[10px]">DOT</span></div>',
+            'DOGE': '<div class="w-8 h-8 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-[10px]">DOGE</span></div>',
             'AVAX': '<div class="w-8 h-8 bg-gradient-to-br from-red-400 to-red-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">A</span></div>',
-            'LTC': '<div class="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">Ł</span></div>',
+            'LTC': '<div class="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-[10px]">LTC</span></div>',
             'MATIC': '<div class="w-8 h-8 bg-gradient-to-br from-purple-300 to-purple-500 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">M</span></div>',
             'USDT': '<div class="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">$</span></div>',
             'USDC': '<div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">$</span></div>',
             'BUSD': '<div class="w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">$</span></div>',
-            'XRP': '<div class="w-8 h-8 bg-gradient-to-br from-blue-300 to-blue-500 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">✕</span></div>',
+            'XRP': '<div class="w-8 h-8 bg-gradient-to-br from-blue-300 to-blue-500 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-[10px]">XRP</span></div>',
             'LINK': '<div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">L</span></div>',
             'UNI': '<div class="w-8 h-8 bg-gradient-to-br from-pink-400 to-pink-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">U</span></div>',
             'ALGO': '<div class="w-8 h-8 bg-gradient-to-br from-black to-gray-800 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">A</span></div>',
             'VET': '<div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">V</span></div>',
-            'ICP': '<div class="w-8 h-8 bg-gradient-to-br from-red-400 to-red-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">∞</span></div>',
+            'ICP': '<div class="w-8 h-8 bg-gradient-to-br from-red-400 to-red-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-[10px]">ICP</span></div>',
             'FIL': '<div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">F</span></div>',
             'TRX': '<div class="w-8 h-8 bg-gradient-to-br from-red-400 to-red-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">T</span></div>',
             'ETC': '<div class="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">E</span></div>',
             'XLM': '<div class="w-8 h-8 bg-gradient-to-br from-blue-300 to-blue-500 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">*</span></div>',
-            'THETA': '<div class="w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">θ</span></div>',
+            'THETA': '<div class="w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-[10px]">TH</span></div>',
             'FTT': '<div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">F</span></div>',
             'HBAR': '<div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">H</span></div>',
             'NEAR': '<div class="w-8 h-8 bg-gradient-to-br from-black to-gray-800 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">N</span></div>',
@@ -578,7 +613,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Default fallback
-        return '<div class="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-xs">?</span></div>';
+        return '<div class="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-600 rounded-lg flex items-center justify-center"><span class="text-white font-bold text-[10px]">TH</span></div>';
     }
 
     function showLoading() {
@@ -608,7 +643,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function startAutoRefresh() {
-        refreshInterval = setInterval(fetchMarketData, 5000); // Refresh every 5 seconds
+        refreshInterval = setInterval(fetchMarketData, 60000); // Refresh every 60 seconds
     }
 
     function stopAutoRefresh() {
@@ -630,6 +665,7 @@ document.addEventListener('DOMContentLoaded', function() {
 .flash-up { animation: flashUp 0.6s ease-out; }
 .flash-down { animation: flashDown 0.6s ease-out; }
 </style>
+
 
 
 <?php /**PATH C:\xampp\htdocs\cerveau\resources\views/components/market-tracker-fixed.blade.php ENDPATH**/ ?>

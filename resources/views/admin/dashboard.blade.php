@@ -137,10 +137,53 @@
         .pulse-glow {
             animation: pulse-glow 2s infinite;
         }
+
+        /* Background slider */
+        .dashboard-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .dashboard-bg::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.65), rgba(15, 23, 42, 0.35));
+            z-index: 2;
+        }
+
+        .dashboard-slide {
+            position: absolute;
+            inset: 0;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            opacity: 0;
+            transition: opacity 1.8s ease-in-out;
+            z-index: 1;
+            filter: saturate(1.05) contrast(1.05);
+        }
+
+        .dashboard-slide.active {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-red-900 via-red-400 to-red-700 min-h-screen">
-    <div class="min-h-screen">
+    <div class="dashboard-bg" aria-hidden="true">
+        <div class="dashboard-slide active" style="background-image: url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="dashboard-slide" style="background-image: url('https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg');"></div>
+        <div class="dashboard-slide" style="background-image: url('https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg');"></div>
+    </div>
+    <div class="min-h-screen relative z-10">
         <!-- Navigation améliorée -->
         <nav class="glass-nav sticky top-0 z-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -148,11 +191,11 @@
                     <div class="flex items-center">
                         <div class="flex items-center space-x-3">
                             <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
-                                <img src='{{ asset("images/logobank.png") }}' class="w-9 h-9" alt="">
-                                {{-- <i class="fas fa-building-columns text-white text-xl"></i> --}}
+                                <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
+                                {{-- <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a> --}}
                             </div>
                             <div>
-                                <a href="{{ localized_route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SB BANK Admin</a>
+                                <a href="{{ localized_route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"><span class="sr-only">SB BANK Admin</span></a>
                                 <div class="text-xs text-gray-500 -mt-1">Tableau de bord</div>
                             </div>
                         </div>
@@ -462,6 +505,17 @@
     </div>
 
     <script>
+        (function () {
+            const slides = document.querySelectorAll('.dashboard-bg .dashboard-slide');
+            if (!slides.length) return;
+            let current = 0;
+            setInterval(() => {
+                slides[current].classList.remove('active');
+                current = (current + 1) % slides.length;
+                slides[current].classList.add('active');
+            }, 6000);
+        })();
+
         // Toggle mobile menu
         document.getElementById('mobile-menu-button').addEventListener('click', function() {
             const menu = document.getElementById('mobile-menu');
@@ -541,4 +595,9 @@
     @include('components.admin-chat-widget-v2')
 </body>
 </html>
+
+
+
+
+
 

@@ -178,7 +178,8 @@
     </style>
 </head>
 <body class="min-h-screen">
-    <!-- Container avec image de fond -->
+  <?php echo $__env->make('components.background-slider', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<!-- Container avec image de fond -->
     <div class="background-container min-h-screen">
         <div class="min-h-screen relative z-10">
             <!-- Navigation améliorée -->
@@ -188,10 +189,10 @@
                         <div class="flex items-center">
                             <div class="flex items-center space-x-3">
                                 <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
-                                    <i class="fas fa-building-columns text-white text-xl"></i>
+                                    <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>"><img src='<?php echo e(asset("images/Logosite.png")); ?>' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                                 </div>
                                 <div>
-                                    <a href="<?php echo e(localized_route('dashboard', ['locale' => app()->getLocale()])); ?>" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK</a>
+                                    <a href="<?php echo e(localized_route('dashboard', ['locale' => app()->getLocale()])); ?>" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"><span class="sr-only">SG BANK</span></a>
                                     <div class="text-xs text-gray-500 -mt-1"><?php echo e(__('transactions.history_title')); ?></div>
                                 </div>
                             </div>
@@ -594,5 +595,12 @@
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
 
 <?php /**PATH C:\xampp\htdocs\cerveau\resources\views/transactions/history.blade.php ENDPATH**/ ?>

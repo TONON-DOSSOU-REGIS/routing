@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SG BANK - Banque en Ligne Professionnelle</title>
+  <title><?php echo e(__('home.page_title')); ?></title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -155,6 +155,19 @@
       transform: translateY(-2px);
       box-shadow: 0 10px 20px rgba(30, 64, 175, 0.3);
     }
+
+    .btn-auth {
+      background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+      color: #ffffff;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(249, 115, 22, 0.25);
+    }
+
+    .btn-auth:hover {
+      background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(249, 115, 22, 0.35);
+    }
     
     .section-divider {
       height: 1px;
@@ -248,10 +261,10 @@
       <div class="flex justify-between h-20">
         <div class="flex items-center space-x-3">
           <div class="bg-white p-2 rounded-lg">
-            <img src='<?php echo e(asset("images/logobank.png")); ?>' class="w-9 h-9" alt="">
+            <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>"><img src='<?php echo e(asset("images/Logosite.png")); ?>' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
             
           </div>
-          <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>" class="text-2xl font-bold text-white">SG BANK</a>
+          <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>" class="text-2xl font-bold text-white"><span class="sr-only">SG BANK</span></a>
         </div>
         
         <!-- Menu Desktop -->
@@ -275,8 +288,8 @@
           <a href="#testimonial-slider" class="text-white hover:text-blue-200 transition font-medium"><?php echo e(__('home.nav_testimonials')); ?></a>
           <a href="#faq-list" class="text-white hover:text-blue-200 transition font-medium"><?php echo e(__('home.nav_faq')); ?></a>
           <a href="<?php echo e(localized_route('support.nous-contacter', ['locale' => app()->getLocale()])); ?>" class="text-white hover:text-blue-200 transition font-medium"><?php echo e(__('home.nav_contact')); ?></a>
-          <a href="<?php echo e(localized_route('login', ['locale' => app()->getLocale()])); ?>" class="text-white hover:text-blue-200 transition font-medium"><?php echo e(__('home.nav_login')); ?></a>
-          <a href="<?php echo e(localized_route('register', ['locale' => app()->getLocale()])); ?>" class="btn-premium px-6 py-3 rounded-lg font-semibold"><?php echo e(__('home.nav_register')); ?></a>
+          <a href="<?php echo e(localized_route('login', ['locale' => app()->getLocale()])); ?>" class="btn-auth px-6 py-3 rounded-lg font-semibold"><?php echo e(__('home.nav_login')); ?></a>
+          <a href="<?php echo e(localized_route('register', ['locale' => app()->getLocale()])); ?>" class="btn-auth px-6 py-3 rounded-lg font-semibold"><?php echo e(__('home.nav_register')); ?></a>
           <?php if (isset($component)) { $__componentOriginal27dc6277b85491d47ded5f7c284c1a13 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal27dc6277b85491d47ded5f7c284c1a13 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.language-selector','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -329,8 +342,8 @@
           <a href="#testimonial-slider" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center"><?php echo e(__('home.nav_testimonials')); ?></a>
           <a href="#faq-list" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center"><?php echo e(__('home.nav_faq')); ?></a>
           <a href="<?php echo e(localized_route('support.nous-contacter', ['locale' => app()->getLocale()])); ?>" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center"><?php echo e(__('home.nav_contact')); ?></a>
-          <a href="<?php echo e(localized_route('login', ['locale' => app()->getLocale()])); ?>" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center"><?php echo e(__('home.nav_login')); ?></a>
-          <a href="<?php echo e(localized_route('register', ['locale' => app()->getLocale()])); ?>" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center"><?php echo e(__('home.nav_register')); ?></a>
+          <a href="<?php echo e(localized_route('login', ['locale' => app()->getLocale()])); ?>" class="mobile-menu-item btn-auth block font-semibold py-3 px-4 rounded-lg text-center"><?php echo e(__('home.nav_login')); ?></a>
+          <a href="<?php echo e(localized_route('register', ['locale' => app()->getLocale()])); ?>" class="mobile-menu-item btn-auth block font-semibold py-3 px-4 rounded-lg text-center"><?php echo e(__('home.nav_register')); ?></a>
           <div class="mobile-menu-item">
             <?php if (isset($component)) { $__componentOriginal27dc6277b85491d47ded5f7c284c1a13 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal27dc6277b85491d47ded5f7c284c1a13 = $attributes; } ?>
@@ -404,11 +417,11 @@
             </li>
           </ul>
           <div class="flex flex-col sm:flex-row gap-4">
-            <a href="<?php echo e(localized_route('register', ['locale' => app()->getLocale()])); ?>" class="btn-premium px-8 py-4 rounded-lg font-semibold text-center">
+            <a href="<?php echo e(localized_route('register', ['locale' => app()->getLocale()])); ?>" class="btn-auth px-8 py-4 rounded-lg font-semibold text-center">
               <?php echo e(__('home.hero_cta_register')); ?>
 
             </a>
-            <a href="<?php echo e(localized_route('login', ['locale' => app()->getLocale()])); ?>" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-amber-400 hover:text-premium transition text-center">
+            <a href="<?php echo e(localized_route('login', ['locale' => app()->getLocale()])); ?>" class="btn-auth px-8 py-4 rounded-lg font-semibold text-center">
               <?php echo e(__('home.hero_cta_login')); ?>
 
             </a>
@@ -802,8 +815,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       </h2>
       <p class="text-xl text-gray-600 leading-relaxed">
-        SG BANK applique les normes les plus strictes du secteur bancaire pour assurer des opérations
-        fiables, transparentes et sécurisées.
+        <?php echo e(__('home.certifications_description')); ?>
+
       </p>
     </div>
 
@@ -950,8 +963,8 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>
               <div class="flex-1">
                 <p class="text-gray-600 mb-4 text-lg leading-relaxed">
-                  « SG BANK m'a permis de suivre mes virements fournisseurs en temps réel.
-                  La barre de progression et les reçus PDF sont vraiment rassurants. »
+                  <?php echo e(__('home.testimonial_1_text')); ?>
+
                 </p>
                 <div class="flex items-center space-x-2 text-yellow-400 text-lg">
                   <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
@@ -975,8 +988,8 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>
               <div class="flex-1">
                 <p class="text-gray-600 mb-4 text-lg leading-relaxed">
-                  « J'apprécie particulièrement la surveillance anti-fraude et les alertes e-mail.
-                  Je sais immédiatement quand un virement important est en cours ou finalisé. »
+                  <?php echo e(__('home.testimonial_2_text')); ?>
+
                 </p>
                 <div class="flex items-center space-x-2 text-yellow-400 text-lg">
                   <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
@@ -1000,8 +1013,8 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>
               <div class="flex-1">
                 <p class="text-gray-600 mb-4 text-lg leading-relaxed">
-                  « L'interface est claire et très simple. Je peux montrer directement à mes clients
-                  les preuves de virement avec les reçus PDF. »
+                  <?php echo e(__('home.testimonial_3_text')); ?>
+
                 </p>
                 <div class="flex items-center space-x-2 text-yellow-400 text-lg">
                   <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
@@ -1028,8 +1041,8 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="text-center max-w-3xl mx-auto mb-16">
         <h2 class="text-4xl font-bold mb-6 text-premium"><?php echo e(__('home.faq_title')); ?></h2>
         <p class="text-xl text-gray-600 leading-relaxed">
-          Retrouvez les réponses aux questions les plus courantes sur SG BANK, l'ouverture de compte
-          et la gestion de vos virements en ligne.
+          <?php echo e(__('home.faq_description')); ?>
+
         </p>
       </div>
 
@@ -1045,9 +1058,8 @@ document.addEventListener("DOMContentLoaded", () => {
           </button>
           <div class="faq-answer px-8 pb-6">
             <p class="text-gray-600 leading-relaxed">
-              Cliquez sur « Créer un compte », remplissez le formulaire avec vos informations
-              (nom, e-mail, téléphone, etc.), confirmez votre adresse e-mail, puis accédez à votre
-              espace sécurisé pour réaliser vos premières opérations.
+              <?php echo e(__('home.faq_1_answer')); ?>
+
             </p>
           </div>
         </div>
@@ -1062,8 +1074,8 @@ document.addEventListener("DOMContentLoaded", () => {
           </button>
           <div class="faq-answer px-8 pb-6">
             <p class="text-gray-600 leading-relaxed">
-              Oui. Chaque virement passe par plusieurs étapes de validation. Les administrateurs SG BANK
-              peuvent contrôler et certifier les opérations sensibles, ce qui réduit fortement les risques d'erreur ou de fraude.
+              <?php echo e(__('home.faq_2_answer')); ?>
+
             </p>
           </div>
         </div>
@@ -1078,8 +1090,8 @@ document.addEventListener("DOMContentLoaded", () => {
           </button>
           <div class="faq-answer px-8 pb-6">
             <p class="text-gray-600 leading-relaxed">
-              Bien sûr. Une fois le virement finalisé et certifié, un reçu PDF est généré automatiquement.
-              Vous pouvez le télécharger, l'imprimer ou le partager avec vos partenaires.
+              <?php echo e(__('home.faq_3_answer')); ?>
+
             </p>
           </div>
         </div>
@@ -1094,8 +1106,8 @@ document.addEventListener("DOMContentLoaded", () => {
           </button>
           <div class="faq-answer px-8 pb-6">
             <p class="text-gray-600 leading-relaxed">
-              Vous pouvez contacter notre support client via votre espace sécurisé ou par les coordonnées
-              indiquées sur le site. Un conseiller vous répondra dans les meilleurs délais.
+              <?php echo e(__('home.faq_4_answer')); ?>
+
             </p>
           </div>
         </div>
@@ -1231,11 +1243,10 @@ document.addEventListener("DOMContentLoaded", () => {
     <div class="max-w-7xl mx-auto px-6">
       <div class="grid md:grid-cols-4 gap-10 mb-12">
         <div>
-          <div class="flex items-center space-x-3 mb-6">
-            <div class="bg-white p-2 rounded-lg">
-              <i class="fas fa-building-columns text-premium text-2xl"></i>
-            </div>
-            <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>" class="text-2xl font-bold text-white">SG BANK</a>
+          <div class="flex items-center mb-6">
+            <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>" class="inline-flex items-center justify-center bg-white/95 p-2 rounded-xl shadow-md ring-1 ring-white/60">
+              <img src='<?php echo e(asset("images/Logosite.png")); ?>' class="w-11 h-11 object-contain" alt="logo SG BANK" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
+            </a>
           </div>
           <p class="text-gray-400 mb-4">
             <?php echo e(__('home.footer_description')); ?>
@@ -1251,10 +1262,10 @@ document.addEventListener("DOMContentLoaded", () => {
         <div>
           <h3 class="text-white font-bold text-lg mb-6"><?php echo e(__('home.footer_services')); ?></h3>
           <ul class="space-y-3">
-            <li><a href="<?php echo e(localized_route('services.comptes-professionnels', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition">Comptes professionnels</a></li>
-            <li><a href="<?php echo e(localized_route('services.virements-internationaux', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition">Virements internationaux</a></li>
-            <li><a href="<?php echo e(localized_route('services.gestion-tresorerie', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition">Gestion de trésorerie</a></li>
-            <li><a href="<?php echo e(localized_route('services.cartes-paiement', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition">Cartes de paiement</a></li>
+            <li><a href="<?php echo e(localized_route('services.comptes-professionnels', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition"><?php echo e(__('home.services_business_accounts')); ?></a></li>
+            <li><a href="<?php echo e(localized_route('services.virements-internationaux', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition"><?php echo e(__('home.services_international_transfers')); ?></a></li>
+            <li><a href="<?php echo e(localized_route('services.gestion-tresorerie', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition"><?php echo e(__('home.services_treasury_management')); ?></a></li>
+            <li><a href="<?php echo e(localized_route('services.cartes-paiement', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition"><?php echo e(__('home.services_payment_cards')); ?></a></li>
           </ul>
         </div>
 
@@ -1284,8 +1295,8 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="text-center">
         <p>&copy; 2025 <span class="text-blue-400 font-semibold">SG BANK</span>. <?php echo e(__('home.footer_copyright')); ?></p>
         <p class="text-sm text-gray-500 mt-2">
-          Les informations affichées sur ce site ont une valeur indicative et peuvent être adaptées selon votre
-          projet réel.
+          <?php echo e(__('home.footer_disclaimer')); ?>
+
         </p>
       </div>
     </div>
@@ -1483,5 +1494,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
+
+
+
+
+
+
 
 <?php /**PATH C:\xampp\htdocs\cerveau\resources\views/home.blade.php ENDPATH**/ ?>

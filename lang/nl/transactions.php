@@ -1,141 +1,128 @@
 <?php
 
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | Transactie Taalregels
-    |--------------------------------------------------------------------------
-    */
-
-    // Paginatitels
-    'page_title' => 'Nieuwe overschrijving - SG BANK',
-    'new_transfer' => 'Nieuwe overschrijving',
-
-    // Navigatie
-    'dashboard' => 'Dashboard',
-    'logout' => 'Uitloggen',
-
-    // Koppen
-    'transfer_title' => 'Nieuwe overschrijving',
-    'transfer_subtitle' => 'Voer een veilige overschrijving uit naar een begunstigde',
-
-    // Stapindicatoren
+    'page_title' => 'Nieuwe overdracht - SG BANK',
+    'new_transfer' => 'Nieuwe overdracht',
+    'dashboard' => 'Scorebord',
+    'logout' => 'Afmelden',
+    'transfer_title' => 'Nieuwe overdracht',
+    'transfer_subtitle' => 'Zorgen voor een veilige overdracht aan een begunstigde',
     'step_information' => 'Informatie',
-    'step_processing' => 'Verwerking',
+    'step_processing' => 'Behandeling',
     'step_confirmation' => 'Bevestiging',
-
-    // Formuliersecties
-    'transfer_details' => 'Overschrijvingsdetails',
-    'beneficiary_info' => 'Voer begunstigdeninformatie in',
+    'transfer_details' => 'Gegevens over de overdracht',
+    'beneficiary_info' => 'Informeer de begunstigde informatie',
     'banking_details' => 'Bankgegevens',
     'additional_info' => 'Aanvullende informatie',
-
-    // Formulierlabels
-    'amount' => 'Overschrijvingsbedrag',
-    'recipient_name' => 'Naam begunstigde',
+    'amount' => 'Overdracht',
+    'transfer_amount' => 'Overboekingsbedrag',
+    'recipient_name' => 'Naam van de begunstigde',
     'bank_name' => 'Naam bank',
-    'recipient_iban' => 'IBAN begunstigde',
-    'recipient_bic' => 'BIC begunstigde',
-    'reason' => 'Reden overschrijving (optioneel)',
-    'activation_code' => 'Activeringscode',
-
-    // Plaatsaanduidingen
-    'amount_placeholder' => '0.00',
-    'recipient_name_placeholder' => 'Jan Jansen',
+    'recipient_iban' => 'IBAN van de begunstigde',
+    'recipient_bic' => 'Begunstigde BIC',
+    'reason' => 'Reden voor de overdracht (facultatief)',
+    'transfer_reason' => 'Reden van de overboeking',
+    'activation_code' => 'Activatiecode',
+    'amount_placeholder' => '0,00',
+    'recipient_name_placeholder' => 'Jean Dupont',
     'bank_name_placeholder' => 'Nationale Bank',
-    'iban_placeholder' => 'NL91 ABNA 0417 1643 00',
-    'bic_placeholder' => 'ABNANL2A',
-    'reason_placeholder' => 'Terugbetaling, cadeau...',
+    'recipient_iban_placeholder' => 'FR76 1234 5678 9012 3456 7890 123',
+    'recipient_bic_placeholder' => 'BNPAFRPP',
+    'transfer_reason_placeholder' => 'Restitutie, geschenk...',
     'activation_code_placeholder' => 'Uw persoonlijke activeringscode',
-
-    // Knoppen
     'cancel' => 'Annuleren',
-    'start_transfer' => 'Overschrijving starten',
-    'processing' => 'Verwerking bezig...',
-
-    // Voortgangssectie
-    'processing_in_progress' => 'Verwerking bezig',
-    'transfer_progress' => 'Overschrijvingsvoortgang',
-    'processing_message' => 'Uw overschrijving wordt verwerkt. Even geduld...',
-
-    // Flitsberichten
-    'operation_interrupted' => 'Bewerking onderbroken',
-    'operation_successful' => 'Bewerking geslaagd',
-    'transfer_successful' => 'Overschrijving succesvol uitgevoerd! U wordt doorgestuurd...',
-    'transfer_success_message' => 'Overschrijving succesvol uitgevoerd!',
-    'understood' => 'Begrepen',
-
-    // Foutmeldingen
-    'amount_required' => 'Het bedrag veld is verplicht.',
-    'recipient_name_required' => 'Het veld naam begunstigde is verplicht.',
-    'bank_name_required' => 'Het veld banknaam is verplicht.',
-    'iban_required' => 'Het IBAN veld is verplicht.',
-    'bic_required' => 'Het BIC veld is verplicht.',
-    'activation_code_required' => 'Het veld activeringscode is verplicht.',
-    'reason_required' => 'Het veld reden is verplicht.',
-
-    // Validatieberichten
+    'start_transfer' => 'Lanceeroverdracht',
+    'processing' => 'Behandeling in uitvoering...',
+    'processing_in_progress' => 'Behandeling aan de gang',
+    'transfer_progress' => 'Vorderingen bij de overdracht',
+    'processing_message' => 'Je transfer wordt verwerkt. Wacht even...',
+    'operation_interrupted' => 'Operatie onderbroken',
+    'operation_successful' => 'Succesvolle werking',
+    'operation_success' => 'Succesvolle werking',
+    'transfer_successful' => 'Succesvolle overdracht! Je wordt omgeleid...',
+    'transfer_success_message' => 'Succesvolle overdracht!',
+    'understood' => 'Ik snap het.',
+    'amount_required' => 'Het bedrag veld is vereist.',
+    'recipient_name_required' => 'De naam van het begunstigde veld is vereist.',
+    'bank_name_required' => 'Het naamveld van de bank is verplicht.',
+    'iban_required' => 'Het IBAN veld is vereist.',
+    'bic_required' => 'Het BIC-veld is vereist.',
+    'activation_code_required' => 'Het veld activeringscode is vereist.',
+    'reason_required' => 'Het patroonveld is vereist.',
     'invalid_amount' => 'Voer een geldig bedrag in.',
-    'invalid_iban' => 'Voer een geldige IBAN in.',
+    'invalid_iban' => 'Voer een geldig IBAN in.',
     'invalid_bic' => 'Voer een geldige BIC in.',
     'invalid_activation_code' => 'Voer een geldige activeringscode in.',
-
-    // Statusberichten
-    'transfer_pending' => 'Overschrijving wacht op beveiligingscontrole.',
-    'connection_error' => 'Verbindingsfout tijdens verwerking.',
-
-    // Geschiedenispagina
+    'transfer_pending' => 'Overdracht in afwachting van de veiligheidscontrole.',
+    'connection_error' => 'Verbindingsfout tijdens het verwerken.',
     'history_page_title' => 'Transactiegeschiedenis - SG BANK',
     'history_title' => 'Transactiegeschiedenis',
     'history_subtitle' => 'Bekijk al uw financiële transacties',
     'history_overview' => 'Overzicht van uw financiële transacties',
-    
-    // Exportknoppen
-    'export_pdf' => 'Exporteer PDF',
-    'export_excel' => 'Exporteer Excel',
-    
-    // Filters
+    'export_pdf' => 'PDF exporteren',
+    'export_excel' => 'Excel-export',
     'filter_type' => 'Type',
     'filter_status' => 'Status',
-    'filter_date_from' => 'Startdatum',
+    'filter_date_from' => 'Begindatum',
     'filter_date_to' => 'Einddatum',
     'filter_apply' => 'Toepassen',
-    
-    // Filteropties - Types
-    'all_types' => 'Alle types',
-    'type_transfer' => 'Overschrijving',
-    'type_deposit' => 'Storting',
-    'type_withdrawal' => 'Opname',
-    
-    // Filteropties - Statussen
-    'all_statuses' => 'Alle statussen',
-    'status_pending' => 'In behandeling',
-    'status_on_hold' => 'In de wacht',
-    'status_success' => 'Geslaagd',
-    'status_failed' => 'Mislukt',
-    
-    // Tabelkoppen
+    'all_types' => 'Alle soorten',
+    'type_transfer' => 'Overdracht',
+    'type_deposit' => 'Deposito',
+    'type_withdrawal' => 'Intrekking',
+    'all_statuses' => 'Alle statuten',
+    'status_pending' => 'In afwachting',
+    'status_on_hold' => 'Geschorst',
+    'status_success' => 'Succesvol',
+    'status_failed' => 'Gemiste',
     'table_transaction' => 'Transactie',
     'table_type' => 'Type',
     'table_amount' => 'Bedrag',
-    'table_recipient' => 'Ontvanger',
+    'table_recipient' => 'Geheven ten behoeve van:',
     'table_status' => 'Status',
     'table_progress' => 'Voortgang',
     'table_date' => 'Datum',
     'table_actions' => 'Acties',
-    
-    // Acties
-    'action_receipt' => 'Ontvangstbewijs',
-    'action_download_receipt' => 'Download ontvangstbewijs',
-    
-    // Lege berichten
+    'action_receipt' => 'Ontvangen',
+    'action_download_receipt' => 'Download ontvangst',
+    'receipt' => 'Ontvangen',
+    'download_receipt' => 'Download ontvangst',
+    'table_beneficiary' => 'Geheven ten behoeve van:',
     'no_transactions' => 'Geen transacties gevonden',
-    'no_transactions_message' => 'Geen transacties komen overeen met uw zoekcriteria.',
+    'no_transactions_message' => 'Geen transacties voldoen aan uw zoekcriteria.',
+    'no_transactions_found' => 'Geen transacties gevonden',
+    'no_transactions_matching_criteria' => 'Geen transactie voldoet aan criteria',
     'reset_filters' => 'Filters resetten',
-    
-    // Paginering
-    'showing_results' => ':first tot :last van :total transacties weergeven',
-    
-    // JavaScript
-    'generating' => 'Genereren...',
+    'showing_results' => 'Weergave van:first to :last on:Total transactions',
+    'generating' => 'Generatie...',
+    'progress_label' => 'Voortgang',
+    'operation_sucess' => 'Succesvolle werking',
+    'status_refunded' => 'Terugbetaald',
+    'receipt_page_title' => 'Transactiebon - SG BANK',
+    'receipt_title' => 'Bon',
+    'receipt_brand_tag' => 'Beveiligd Banksysteem',
+    'receipt_generated_at' => 'Gegenereerd op :date',
+    'receipt_transaction_details' => 'Transactiedetails',
+    'receipt_client_section' => 'Klant',
+    'receipt_client_name' => 'Klantnaam',
+    'receipt_email' => 'E-mail',
+    'receipt_beneficiary_section' => 'Begunstigde',
+    'receipt_additional_section' => 'Aanvullende informatie',
+    'receipt_transaction_id' => 'Transactie-ID',
+    'receipt_type' => 'Type',
+    'receipt_date' => 'Datum',
+    'receipt_status' => 'Status',
+    'receipt_progress' => 'Voortgang',
+    'receipt_amount' => 'Bedrag',
+    'receipt_currency' => 'Valuta',
+    'receipt_recipient_name' => 'Naam begunstigde',
+    'receipt_recipient_iban' => 'IBAN begunstigde',
+    'receipt_recipient_bic' => 'BIC begunstigde',
+    'receipt_bank_name' => 'Banknaam',
+    'receipt_reason' => 'Reden van de overboeking',
+    'receipt_message' => 'Bericht',
+    'receipt_refunded_at' => 'Terugbetaald op',
+    'receipt_refunded_by' => 'Terugbetaald door',
+    'receipt_refund_reason' => 'Reden van terugbetaling',
+    'receipt_notice' => 'Dit document is elektronisch gegenereerd en vormt een officieel bewijs van de transactie.',
 ];

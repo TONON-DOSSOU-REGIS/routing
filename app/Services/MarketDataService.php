@@ -35,47 +35,72 @@ class MarketDataService
      */
     public function getCryptoData()
     {
-        // For real-time updates, bypass cache and fetch fresh data each time
-        try {
-            $cryptos = config('market.cryptocurrencies', []);
-            $ids = implode(',', array_column($cryptos, 'id'));
+        $cacheKey = $this->cachePrefix . 'crypto';
 
-            $response = Http::timeout(10)->get(config('market.apis.coingecko.base_url') . '/simple/price', [
-                'ids' => $ids,
-                'vs_currencies' => 'usd,eur',
-                'include_24hr_change' => 'true',
-                'include_24hr_vol' => 'true',
-            ]);
+        return Cache::remember($cacheKey, $this->cacheDuration, function () {
+            $maxRetries = 3;
+            $retryDelay = 1; // seconds
 
-            if ($response->successful()) {
-                $data = $response->json();
-                $result = [];
+            for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {
+                try {
+                    $cryptos = config('market.cryptocurrencies', []);
+                    $ids = implode(',', array_column($cryptos, 'id'));
 
-                foreach ($cryptos as $key => $crypto) {
-                    if (isset($data[$crypto['id']])) {
-                        $result[] = [
-                            'id' => $crypto['id'],
-                            'symbol' => $crypto['symbol'],
-                            'name' => $crypto['name'],
-                            'icon' => $crypto['icon'],
-                            'image' => $crypto['image'] ?? null,
-                            'price_usd' => $data[$crypto['id']]['usd'] ?? 0,
-                            'price_eur' => $data[$crypto['id']]['eur'] ?? 0,
-                            'change_24h' => $data[$crypto['id']]['usd_24h_change'] ?? 0,
-                            'volume_24h' => $data[$crypto['id']]['usd_24h_vol'] ?? 0,
-                            'type' => 'crypto',
-                        ];
+                    $response = Http::timeout(30)->retry(2, 100)->get(config('market.apis.coingecko.base_url') . '/simple/price', [
+                        'ids' => $ids,
+                        'vs_currencies' => 'usd,eur',
+                        'include_24hr_change' => 'true',
+                        'include_24hr_vol' => 'true',
+                    ]);
+
+                    if ($response->successful()) {
+                        $data = $response->json();
+                        $result = [];
+
+                        foreach ($cryptos as $key => $crypto) {
+                            if (isset($data[$crypto['id']])) {
+                                $result[] = [
+                                    'id' => $crypto['id'],
+                                    'symbol' => $crypto['symbol'],
+                                    'name' => $crypto['name'],
+                                    'icon' => $crypto['icon'],
+                                    'image' => $crypto['image'] ?? null,
+                                    'price_usd' => $data[$crypto['id']]['usd'] ?? 0,
+                                    'price_eur' => $data[$crypto['id']]['eur'] ?? 0,
+                                    'change_24h' => $data[$crypto['id']]['usd_24h_change'] ?? 0,
+                                    'volume_24h' => $data[$crypto['id']]['usd_24h_vol'] ?? 0,
+                                    'type' => 'crypto',
+                                ];
+                            }
+                        }
+
+                        return $result;
                     }
-                }
 
-                return $result;
+                    // If not successful and not the last attempt, wait before retrying
+                    if ($attempt < $maxRetries) {
+                        sleep($retryDelay);
+                        $retryDelay *= 2; // Exponential backoff
+                        continue;
+                    }
+
+                    return $this->getMockCryptoData();
+                } catch (\Exception $e) {
+                    Log::error('Error fetching crypto data (attempt ' . $attempt . '): ' . $e->getMessage());
+
+                    // If not the last attempt, wait before retrying
+                    if ($attempt < $maxRetries) {
+                        sleep($retryDelay);
+                        $retryDelay *= 2; // Exponential backoff
+                        continue;
+                    }
+
+                    return $this->getMockCryptoData();
+                }
             }
 
             return $this->getMockCryptoData();
-        } catch (\Exception $e) {
-            Log::error('Error fetching crypto data: ' . $e->getMessage());
-            return $this->getMockCryptoData();
-        }
+        });
     }
 
     /**

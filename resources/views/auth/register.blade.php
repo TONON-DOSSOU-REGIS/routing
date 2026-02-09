@@ -68,21 +68,23 @@
   </style>
 </head>
 
-<body
-  class="bg-cover bg-center bg-no-repeat min-h-screen flex flex-col justify-between"
-  style="background-image: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1920&q=80');"
->
-  <!-- Overlay sombre amélioré -->
-  <div class="absolute inset-0 bg-gradient-to-br from-blue-900/70 to-indigo-900/70"></div>
+<body class="bg-slate-900 min-h-screen flex flex-col">
+  @include('components.background-slider')
+  <!-- Hero background -->
+  <div class="pointer-events-none fixed inset-0 -z-10">
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-900/70 to-indigo-900/70"></div>
+    <img alt="" class="w-full h-full object-cover opacity-30"
+         src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&amp;fit=crop&amp;w=1920&amp;q=80">
+  </div>
 
   <!-- Navigation améliorée -->
-  <nav class="relative z-10 bg-white/90 shadow-lg backdrop-blur-md">
+  <nav class="relative z-50 bg-white/90 shadow-lg backdrop-blur-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <div class="flex items-center space-x-2">
-          <img src='{{ asset("images/logobank.png") }}' class="w-9 h-9" alt="">
+          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
           {{-- <i class="fas fa-building-columns text-blue-600 text-2xl"></i> --}}
-          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-blue-600">SG BANK</a>
+          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-blue-600"><span class="sr-only">SG BANK</span></a>
         </div>
         <div class="hidden md:flex items-center space-x-4">
           @include('components.language-selector')
@@ -135,6 +137,17 @@
           </a>
         </p>
       </div>
+
+      @if ($errors->any())
+        <div class="stagger-item rounded-lg border border-red-400/60 bg-red-500/20 px-4 py-3 text-sm text-red-100">
+          <div class="font-semibold mb-1">{{ __('auth.register_error_title') ?? 'Merci de corriger les erreurs ci-dessous.' }}</div>
+          <ul class="list-disc list-inside space-y-1">
+            @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div>
+      @endif
 
       <form class="space-y-6" method="POST" action="{{ localized_route('register', ['locale' => app()->getLocale()]) }}">
         @csrf
@@ -419,4 +432,12 @@
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
 

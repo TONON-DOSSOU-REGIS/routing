@@ -32,8 +32,18 @@ class AuthController extends Controller
             // Prevent login if user status is not 'active'
             if ($user->status !== 'active') {
                 Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                $locale = app()->getLocale();
+
+                if ($user->status === 'pending') {
+                    return redirect('/' . $locale . '/pending-approval')
+                        ->with('status', 'Votre compte n\'est pas encore approuvé. Veuillez patienter.');
+                }
+
                 return back()->withErrors([
-                    'email' => 'Votre compte est ' . $user->status . '. Veuillez contacter l\'administrateur.',
+                    'email' => 'Votre compte est suspendu. Veuillez contacter l\'administrateur.',
                 ]);
             }
 
@@ -82,6 +92,12 @@ class AuthController extends Controller
             if ($user->isAdmin()) {
                 return redirect()->route('admin.dashboard', ['locale' => $locale]);
             }
+
+            $intended = session()->get('url.intended');
+            if ($intended && str_contains($intended, '/notifications/')) {
+                session()->forget('url.intended');
+            }
+
             return redirect()->intended('/' . $locale . '/dashboard');
         }
 
@@ -163,10 +179,20 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        $user = Auth::user();
+
+        // Send logout notification to admins if user is not admin
+        if ($user && !$user->isAdmin()) {
+            try {
+                \App\Services\NotificationService::notifyAdminUserLogout($user, $request->ip());
+            } catch (\Exception $e) {
+                \Log::error('Failed to send logout notification to admins: ' . $e->getMessage());
+            }
+        }
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/');
     }
 }
-

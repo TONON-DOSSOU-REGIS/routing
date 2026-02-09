@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="<?php echo e(app()->getLocale()); ?>">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -33,17 +33,60 @@
     .flash-down { animation: flashDown 0.8s ease; }
     @keyframes flashUp { 0%{ background-color: rgba(34,197,94,0.25);} 100%{ background-color: transparent;} }
     @keyframes flashDown { 0%{ background-color: rgba(239,68,68,0.25);} 100%{ background-color: transparent;} }
+
+    /* Background slider */
+    .dashboard-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .dashboard-bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.35));
+      z-index: 2;
+    }
+
+    .dashboard-slide {
+      position: absolute;
+      inset: 0;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      opacity: 0;
+      transition: opacity 1.8s ease-in-out;
+      z-index: 1;
+      filter: saturate(1.05) contrast(1.05);
+    }
+
+    .dashboard-slide.active {
+      opacity: 1;
+    }
   </style>
 </head>
 
 <body class="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-red-700">
+  <div class="dashboard-bg" aria-hidden="true">
+    <div class="dashboard-slide active" style="background-image: url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="dashboard-slide" style="background-image: url('https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg');"></div>
+    <div class="dashboard-slide" style="background-image: url('https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg');"></div>
+  </div>
   <!-- Top Navigation -->
-  <header class="bg-white shadow-sm">
+  <header class="bg-white shadow-sm relative z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <img src='<?php echo e(asset("images/logobank.png")); ?>' class="w-9 h-9" alt="">
+        <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>"><img src='<?php echo e(asset("images/Logosite.png")); ?>' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
         
-        <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>" class="text-2xl font-bold text-blue-600"><?php echo e(__('dashboard.bank_name')); ?></a>
+        <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>" class="text-2xl font-bold text-blue-600"><span class="sr-only"><?php echo e(__('dashboard.bank_name')); ?></span></a>
         <span class="ml-3 hidden sm:inline-block text-sm text-slate-500"><?php echo e(__('dashboard.client_area')); ?></span>
       </div>
 
@@ -68,14 +111,20 @@
   </header>
 
   <!-- Page container -->
-  <main class="py-8">
+  <main class="py-8 relative z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Welcome + quick stats -->
       <section class="mb-8 fade-in-up">
         <div class="bg-gradient-to-r from-white via-blue-50/30 to-indigo-50/30 rounded-2xl shadow-lg border border-white/60 px-6 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between backdrop-blur-sm">
           <div>
+            <?php
+              $currentUser = $user ?? auth()->user();
+              $displayName = $currentUser && $currentUser->first_name && $currentUser->last_name
+                ? $currentUser->first_name . ' ' . $currentUser->last_name
+                : ($currentUser && $currentUser->first_name ? $currentUser->first_name : __('common.user'));
+            ?>
             <h1 class="text-2xl sm:text-3xl font-bold text-slate-800">
-              <?php echo e(__('dashboard.welcome_greeting', ['name' => isset($user) && $user->first_name && $user->last_name ? $user->first_name . ' ' . $user->last_name : (isset($user) && $user->first_name ? $user->first_name : __('common.user'))])); ?>
+              <?php echo __('dashboard.welcome_greeting', ['name' => $displayName]); ?>
 
             </h1>
             <p class="mt-1 text-slate-500"><?php echo e(__('dashboard.welcome_subtitle')); ?></p>
@@ -121,7 +170,7 @@
             <i class="fa-solid fa-arrow-right-arrow-left text-indigo-600"></i>
           </div>
           <div class="mt-3 text-2xl font-bold text-slate-800">
-            <?php echo e(isset($user) && method_exists($user, 'transactions') ? $user->transactions()->where('created_at','>=',now()->subDays(30))->count() : '—'); ?>
+            <?php echo e(isset($user) && method_exists($user, 'transactions') ? $user->transactions()->where('created_at','>=',now()->subDays(30))->count() : ''); ?>
 
           </div>
           <div class="mt-2 text-xs stat-chip inline-block px-2 py-1 rounded-full text-slate-700">
@@ -136,7 +185,7 @@
             <i class="fa-solid fa-circle-check text-emerald-600"></i>
           </div>
           <div class="mt-3 text-2xl font-bold text-slate-800 text-emerald-600">
-            <?php echo e(isset($user) && $user->status ? ucfirst($user->status) : '—'); ?>
+            <?php echo e(isset($user) && $user->status ? ucfirst($user->status) : ''); ?>
 
           </div>
           <div class="mt-2 text-xs stat-chip inline-block px-2 py-1 rounded-full text-slate-700">
@@ -237,7 +286,7 @@
                         <?php endif; ?>
                       </div>
                       <div class="text-xs text-slate-500 capitalize">
-                        <?php echo e(str_replace('_', ' ', $tx->status ?? '—')); ?>
+                        <?php echo e(str_replace('_', ' ', $tx->status ?? '')); ?>
 
                       </div>
                     </div>
@@ -296,7 +345,7 @@
   </main>
 
   <!-- Footer -->
-  <footer class="mt-10 py-8 bg-white border-t">
+  <footer class="mt-10 py-8 bg-white border-t relative z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-sm text-slate-500 flex items-center justify-between">
       <p>&copy; <?php echo e(date('Y')); ?> SG BANK. <?php echo e(__('dashboard.all_rights_reserved')); ?></p>
       <div class="space-x-4">
@@ -309,8 +358,25 @@
 
   
   <?php echo $__env->make('components.client-chat-widget', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+
+  <script>
+    (function () {
+      const slides = document.querySelectorAll('.dashboard-bg .dashboard-slide');
+      if (!slides.length) return;
+      let current = 0;
+      setInterval(() => {
+        slides[current].classList.remove('active');
+        current = (current + 1) % slides.length;
+        slides[current].classList.add('active');
+      }, 6000);
+    })();
+  </script>
 </body>
 </html>
+
+
+
+
 
 
 <?php /**PATH C:\xampp\htdocs\cerveau\resources\views/dashboard/index.blade.php ENDPATH**/ ?>

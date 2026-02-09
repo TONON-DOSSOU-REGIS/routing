@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Notification;
 use App\Models\User;
+use App\Events\NotificationCreated;
 
 class NotificationService
 {
@@ -12,7 +13,7 @@ class NotificationService
      */
     public static function create(User $user, string $type, string $title, string $message, array $data = []): Notification
     {
-        return Notification::create([
+        $notification = Notification::create([
             'user_id' => $user->id,
             'type' => $type,
             'title' => $title,
@@ -20,6 +21,10 @@ class NotificationService
             'data' => $data,
             'is_read' => false,
         ]);
+
+        event(new NotificationCreated($notification));
+
+        return $notification;
     }
 
     /**
@@ -180,4 +185,193 @@ class NotificationService
             ]
         );
     }
+
+    /**
+     * Notification pour connexion utilisateur (vers tous les admins sauf l'utilisateur lui-même si c'est un admin)
+     */
+    public static function notifyAdminUserLogin(User $user, string $ipAddress, string $userAgent): void
+    {
+        $admins = User::where('role', 'admin')->where('id', '!=', $user->id)->get();
+
+        foreach ($admins as $admin) {
+            self::create(
+                $admin,
+                'account',
+                'Connexion utilisateur',
+                "L'utilisateur {$user->first_name} {$user->last_name} ({$user->email}) s'est connecté depuis {$ipAddress}. Navigateur: {$userAgent}",
+                [
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                    'ip_address' => $ipAddress,
+                    'user_agent' => $userAgent,
+                    'action' => 'login'
+                ],
+                'blue',
+                'fa-sign-in-alt'
+            );
+        }
+    }
+
+    /**
+     * Notification pour connexion utilisateur (vers l'utilisateur lui-même)
+     */
+    public static function notifyUserLogin(User $user, string $ipAddress, string $userAgent): void
+    {
+        self::create(
+            $user,
+            'account',
+            'Connexion réussie',
+            "Vous vous êtes connecté avec succès depuis {$ipAddress}.",
+            [
+                'ip_address' => $ipAddress,
+                'user_agent' => $userAgent,
+                'action' => 'login'
+            ],
+            'green',
+            'fa-check-circle'
+        );
+    }
+
+    /**
+     * Notification pour inscription utilisateur (vers tous les admins)
+     */
+    public static function notifyAdminUserRegistration(User $user, string $ipAddress): void
+    {
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            self::create(
+                $admin,
+                'account',
+                'Nouvelle inscription',
+                "Nouvel utilisateur inscrit: {$user->first_name} {$user->last_name} ({$user->email}) depuis {$ipAddress}. Statut: en attente de validation.",
+                [
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                    'ip_address' => $ipAddress,
+                    'status' => $user->status,
+                    'action' => 'registration'
+                ],
+                'purple',
+                'fa-user-plus'
+            );
+        }
+    }
+
+    /**
+     * Notification pour déconnexion utilisateur (vers tous les admins sauf l'utilisateur lui-même si c'est un admin)
+     */
+    public static function notifyAdminUserLogout(User $user, string $ipAddress): void
+    {
+        $admins = User::where('role', 'admin')->where('id', '!=', $user->id)->get();
+
+        foreach ($admins as $admin) {
+            self::create(
+                $admin,
+                'account',
+                'Déconnexion utilisateur',
+                "L'utilisateur {$user->first_name} {$user->last_name} ({$user->email}) s'est déconnecté depuis {$ipAddress}.",
+                [
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                    'ip_address' => $ipAddress,
+                    'action' => 'logout'
+                ],
+                'gray',
+                'fa-sign-out-alt'
+            );
+        }
+    }
+
+    /**
+     * Notification pour virement réussi (vers tous les admins)
+     */
+    public static function notifyAdminTransfer(User $user, $transaction): void
+    {
+        $amount = \App\Helpers\CurrencyHelper::format($transaction->amount, $user->default_currency ?? 'EUR');
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            self::create(
+                $admin,
+                'transaction',
+                'Nouveau virement',
+                "Virement effectué: {$user->first_name} {$user->last_name} ({$user->email}) a transféré {$amount} à {$transaction->recipient_name}.",
+                [
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                    'transaction_id' => $transaction->id,
+                    'amount' => $transaction->amount,
+                    'recipient_name' => $transaction->recipient_name,
+                    'recipient_iban' => $transaction->recipient_iban,
+                    'action' => 'transfer_success'
+                ],
+                'green',
+                'fa-exchange-alt'
+            );
+        }
+    }
+
+    /**
+     * Notification pour virement échoué (vers tous les admins)
+     */
+    public static function notifyAdminTransferFailed(User $user, $transaction, string $reason = null): void
+    {
+        $amount = \App\Helpers\CurrencyHelper::format($transaction->amount, $user->default_currency ?? 'EUR');
+        $admins = User::where('role', 'admin')->get();
+
+        $message = "Échec de virement: {$user->first_name} {$user->last_name} ({$user->email}) - {$amount} à {$transaction->recipient_name}.";
+        if ($reason) {
+            $message .= " Raison: {$reason}";
+        }
+
+        foreach ($admins as $admin) {
+            self::create(
+                $admin,
+                'transaction',
+                'Virement échoué',
+                $message,
+                [
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                    'transaction_id' => $transaction->id,
+                    'amount' => $transaction->amount,
+                    'recipient_name' => $transaction->recipient_name,
+                    'recipient_iban' => $transaction->recipient_iban,
+                    'reason' => $reason,
+                    'action' => 'transfer_failed'
+                ],
+                'red',
+                'fa-exclamation-triangle'
+            );
+        }
+    }
+
+    /**
+     * Notification pour dépôt admin (vers tous les admins)
+     */
+    public static function notifyAdminDeposit(User $user, float $amount, string $currency = 'EUR'): void
+    {
+        $formattedAmount = \App\Helpers\CurrencyHelper::format($amount, $currency);
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            self::create(
+                $admin,
+                'transaction',
+                'Dépôt effectué',
+                "Dépôt admin: {$formattedAmount} crédité sur le compte de {$user->first_name} {$user->last_name} ({$user->email}).",
+                [
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                    'amount' => $amount,
+                    'currency' => $currency,
+                    'action' => 'deposit'
+                ],
+                'green',
+                'fa-money-bill-wave'
+            );
+        }
+    }
+
 }

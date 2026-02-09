@@ -127,6 +127,38 @@
         .pulse-glow {
             animation: pulse-glow 2s infinite;
         }
+
+        /* Background slider */
+        .dashboard-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .dashboard-bg::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.35));
+            z-index: 2;
+        }
+
+        .dashboard-slide {
+            position: absolute;
+            inset: 0;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            opacity: 0;
+            transition: opacity 1.8s ease-in-out;
+            z-index: 1;
+            filter: saturate(1.05) contrast(1.05);
+        }
+
+        .dashboard-slide.active {
+            opacity: 1;
+        }
         /* Additional styles for chat widget to avoid collision */
         #chat-widget {
             z-index: 1050;
@@ -134,7 +166,18 @@
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
-    <div class="min-h-screen">
+    <div class="dashboard-bg" aria-hidden="true">
+        <div class="dashboard-slide active" style="background-image: url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="dashboard-slide" style="background-image: url('https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg');"></div>
+        <div class="dashboard-slide" style="background-image: url('https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg');"></div>
+    </div>
+    <div class="min-h-screen relative z-10">
         <!-- Existing admin dashboard content here -->
         {{-- Paste the full admin dashboard content here as in original file --}}
 
@@ -143,6 +186,17 @@
     </div>
 
     <script>
+        (function () {
+            const slides = document.querySelectorAll('.dashboard-bg .dashboard-slide');
+            if (!slides.length) return;
+            let current = 0;
+            setInterval(() => {
+                slides[current].classList.remove('active');
+                current = (current + 1) % slides.length;
+                slides[current].classList.add('active');
+            }, 6000);
+        })();
+
         // Existing scripts of admin dashboard, e.g. mobile menu toggle and chart.js initialization
         // Paste existing scripts here as in original file
 
@@ -150,5 +204,6 @@
     </script>
 </body>
 </html>
+
 
 

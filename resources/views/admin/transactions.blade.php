@@ -47,13 +47,11 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-4">
-                    <a href="{{ localized_route('admin.dashboard') }}" class="flex items-center space-x-3">
+                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}">
                         <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                            <img src='{{ asset("images/logobank.png") }}' class="w-9 h-9" alt="">
+                            <img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
                         </div>
-                        <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                            SG BANK Admin
-                        </span>
+                        <span class="sr-only">SG BANK Admin</span>
                     </a>
                 </div>
 
@@ -414,5 +412,9 @@
     </script>
 </body>
 </html>
+
+
+
+
 
 

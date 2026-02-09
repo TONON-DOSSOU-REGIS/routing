@@ -1,29 +1,29 @@
 <?php
-'isAdmin' => \App\Http\Middleware\IsAdmin::class,
 
-        'admin' => \App\Http\Middleware\IsAdmin::class,
-        'isAdmin' => \App\Http\Middleware\IsAdmin::class,
-        'checkUserStatus' => \App\Http\Middleware\CheckUserStatus::class,
-use App\Http\Middleware\TrustProxies;
-use Fruitcake\Cors\HandleCors;
-use App\Http\Middleware\PreventRequestsDuringMaintenance;
-use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
-use App\Http\Middleware\TrimStrings;
+namespace App\Http;
+
+use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\EncryptCookies;
+use App\Http\Middleware\PreventRequestsDuringMaintenance;
+use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\SetLocale;
+use App\Http\Middleware\TrimStrings;
+use App\Http\Middleware\TrustProxies;
+use App\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
+use Illuminate\Auth\Middleware\Authorize;
+use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
+use Illuminate\Auth\Middleware\RequirePassword;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
+use Illuminate\Http\Middleware\SetCacheHeaders;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Routing\Middleware\ThrottleRequests;
+use Illuminate\Routing\Middleware\ValidateSignature;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Http\Middleware\VerifyCsrfToken;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use App\Http\Middleware\Authenticate;
-use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
-use Illuminate\Http\Middleware\SetCacheHeaders;
-use Illuminate\Auth\Middleware\Authorize;
-use App\Http\Middleware\RedirectIfAuthenticated;
-use Illuminate\Auth\Middleware\RequirePassword;
-use Illuminate\Routing\Middleware\ValidateSignature;
-use Illuminate\Routing\Middleware\ThrottleRequests;
-use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
+use Fruitcake\Cors\HandleCors;
 
 class Kernel extends HttpKernel
 {
@@ -35,7 +35,6 @@ class Kernel extends HttpKernel
      * @var array<int, class-string|string>
      */
     protected $middleware = [
-        // TrustHosts::class,
         TrustProxies::class,
         HandleCors::class,
         PreventRequestsDuringMaintenance::class,
@@ -54,11 +53,10 @@ class Kernel extends HttpKernel
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
             StartSession::class,
-            // AuthenticateSession::class,
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             SubstituteBindings::class,
-            \App\Http\Middleware\SetLocale::class,
+            SetLocale::class,
         ],
 
         'api' => [
@@ -74,6 +72,22 @@ class Kernel extends HttpKernel
      *
      * @var array<string, class-string|string>
      */
+    protected $middlewareAliases = [
+        'auth' => Authenticate::class,
+        'auth.basic' => AuthenticateWithBasicAuth::class,
+        'cache.headers' => SetCacheHeaders::class,
+        'can' => Authorize::class,
+        'guest' => RedirectIfAuthenticated::class,
+        'password.confirm' => RequirePassword::class,
+        'signed' => ValidateSignature::class,
+        'throttle' => ThrottleRequests::class,
+        'verified' => EnsureEmailIsVerified::class,
+        'admin' => \App\Http\Middleware\IsAdmin::class,
+        'isAdmin' => \App\Http\Middleware\IsAdmin::class,
+        'checkUserStatus' => \App\Http\Middleware\CheckUserStatus::class,
+        'twofactor' => \App\Http\Middleware\EnsureTwoFactorVerified::class,
+    ];
+
     protected $routeMiddleware = [
         'auth' => Authenticate::class,
         'auth.basic' => AuthenticateWithBasicAuth::class,
@@ -86,6 +100,8 @@ class Kernel extends HttpKernel
         'verified' => EnsureEmailIsVerified::class,
         'admin' => \App\Http\Middleware\IsAdmin::class,
         'isAdmin' => \App\Http\Middleware\IsAdmin::class,
+        'checkUserStatus' => \App\Http\Middleware\CheckUserStatus::class,
+        'twofactor' => \App\Http\Middleware\EnsureTwoFactorVerified::class,
     ];
 }
 

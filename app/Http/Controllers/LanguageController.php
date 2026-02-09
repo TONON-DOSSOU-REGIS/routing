@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Session;
 class LanguageController extends Controller
 {
     /**
-     * Locales supportées par l'application
+     * Locales supportees par l'application
      */
     protected $supportedLocales = [
         'en' => 'English',
-        'fr' => 'Français',
+        'fr' => 'Fran?ais',
         'de' => 'Deutsch',
         'nl' => 'Nederlands',
-        'es' => 'Español',
+        'es' => 'Espa?ol',
         'pl' => 'Polski',
         'it' => 'Italiano'
     ];
@@ -29,40 +29,45 @@ class LanguageController extends Controller
      */
     public function switch($locale)
     {
-        // Vérifier si la locale est supportée
+        // Verifier si la locale est supportee
         if (!array_key_exists($locale, $this->supportedLocales)) {
-            return redirect()->back()->with('error', 'Langue non supportée.');
+            return redirect()->back()->with('error', 'Langue non supportee.');
         }
 
-        // Définir la locale pour la session en cours
+        // Definir la locale pour la session en cours
         App::setLocale($locale);
-        
+
         // Sauvegarder la locale en session
         Session::put('locale', $locale);
 
-        // Si l'utilisateur est authentifié, sauvegarder sa préférence en base de données
+        // Si l'utilisateur est authentifie, sauvegarder sa preference en base de donnees
         if (auth()->check()) {
             auth()->user()->update(['locale' => $locale]);
         }
 
-        // Récupérer l'URL précédente
+        // Recuperer l'URL precedente
         $previousUrl = url()->previous();
-        $currentPath = parse_url($previousUrl, PHP_URL_PATH);
-        
-        // Supprimer l'ancien préfixe de langue s'il existe
+        $currentPath = parse_url($previousUrl, PHP_URL_PATH) ?? '';
+
+        // Si referer est vide ou on vient de /language/{locale}, rediriger vers la racine localisee
+        if ($currentPath === '' || $currentPath === '/' || str_starts_with($currentPath, '/language/')) {
+            return redirect('/' . $locale)->with('success', __('common.language_changed'));
+        }
+
+        // Supprimer l'ancien prefixe de langue s'il existe
         $pathWithoutLocale = preg_replace('#^/(' . implode('|', array_keys($this->supportedLocales)) . ')(/|$)#', '/', $currentPath);
-        
-        // Construire la nouvelle URL avec le préfixe de langue
+
+        // Construire la nouvelle URL avec le prefixe de langue
         $newPath = '/' . $locale . $pathWithoutLocale;
-        
+
         // Nettoyer les doubles slashes
         $newPath = preg_replace('#/+#', '/', $newPath);
-        
+
         return redirect($newPath)->with('success', __('common.language_changed'));
     }
 
     /**
-     * Obtenir la liste des locales supportées
+     * Obtenir la liste des locales supportees
      *
      * @return array
      */

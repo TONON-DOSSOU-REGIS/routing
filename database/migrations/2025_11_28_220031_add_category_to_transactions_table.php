@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -22,11 +23,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        DB::statement('DROP INDEX IF EXISTS transactions_user_id_category_index ON transactions');
         Schema::table('transactions', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-            $table->dropIndex(['user_id', 'category']);
             $table->dropColumn('category');
-            $table->foreign('user_id')->constrained()->onDelete('cascade');
         });
     }
 };

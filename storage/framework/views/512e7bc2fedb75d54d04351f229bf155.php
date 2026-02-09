@@ -177,5 +177,4 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php endif; ?>
     <?php endif; ?>
 </div>
-
 <?php /**PATH C:\xampp\htdocs\cerveau\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/frame.blade.php ENDPATH**/ ?>

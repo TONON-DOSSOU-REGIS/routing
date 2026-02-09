@@ -106,8 +106,15 @@ class TransactionController extends Controller
                     ]);
                 }
 
-                // TODO: Implement admin notifications for new transfers
-                // This would require creating admin notification system
+                // Notify admins of successful transfer
+                try {
+                    NotificationService::notifyAdminTransfer($tx->user, $tx);
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Failed to notify admins of transfer', [
+                        'transaction_id' => $tx->id,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
 
                 return response()->json(['status' => 'success', 'progress' => 100]);
             }
@@ -129,6 +136,20 @@ class TransactionController extends Controller
                     );
                 } catch (\Exception $e) {
                     \Illuminate\Support\Facades\Log::error('Failed to create on-hold notification', [
+                        'transaction_id' => $tx->id,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+
+                // Notify admins that transaction is on hold
+                try {
+                    NotificationService::notifyAdminTransferFailed(
+                        $tx->user,
+                        $tx,
+                        "Transaction mise en attente à {$settings->stop_percentage}%"
+                    );
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Failed to notify admins of on-hold transfer', [
                         'transaction_id' => $tx->id,
                         'error' => $e->getMessage(),
                     ]);
@@ -184,7 +205,8 @@ class TransactionController extends Controller
             abort(403);
         }
 
-        $pdf = Pdf::loadView('transactions.receipt', compact('transaction'));
+        $pdf = Pdf::loadView('transactions.receipt', compact('transaction'))
+            ->setOption('defaultFont', 'dejavu sans');
         return $pdf->download('receipt_' . $transaction->id . '.pdf');
     }
 
@@ -198,4 +220,3 @@ class TransactionController extends Controller
         return view('transactions.receipt', compact('transaction'));
     }
 }
-

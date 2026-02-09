@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Schema;
 use Symfony\Component\HttpFoundation\Response;
 
 class SetLocale
@@ -30,7 +31,7 @@ class SetLocale
             Session::put('locale', $locale);
             
             // Si l'utilisateur est authentifié, sauvegarder sa préférence
-            if (auth()->check()) {
+            if (auth()->check() && Schema::hasColumn('users', 'locale')) {
                 auth()->user()->update(['locale' => $locale]);
             }
         }

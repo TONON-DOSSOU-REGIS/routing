@@ -106,6 +106,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalTitle = document.getElementById('modal-title');
     const modalContent = document.getElementById('modal-content');
     const modalDate = document.getElementById('modal-date');
+    const locale = window.location.pathname.split('/')[1] || 'fr';
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+    function requireCsrf() {
+        if (!csrfToken) {
+            console.error('CSRF token missing');
+            return false;
+        }
+        return true;
+    }
 
     // Load notifications
     function loadNotifications(page = 1, filters = {}) {
@@ -117,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ...filters
         });
 
-        fetch(`/notifications/data?${params}`)
+        fetch(`/${locale}/notifications/data?${params}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -225,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Show notification detail
     function showNotificationDetail(id) {
-        fetch(`/notifications/${id}`)
+        fetch(`/${locale}/notifications/${id}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -238,10 +248,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Mark as read
                     if (!notification.is_read) {
-                        fetch(`/notifications/${id}/read`, {
+                        if (!requireCsrf()) return;
+                        fetch(`/${locale}/notifications/${id}/read`, {
                             method: 'POST',
                             headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                'X-CSRF-TOKEN': csrfToken
                             }
                         }).then(() => {
                             loadNotifications(currentPage, currentFilters);
@@ -266,10 +277,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('mark-all-read-btn').addEventListener('click', function() {
         if (confirm('Marquer toutes les notifications comme lues ?')) {
-            fetch('/notifications/mark-all-read', {
+            if (!requireCsrf()) return;
+            fetch(`/${locale}/notifications/mark-all-read`, {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-CSRF-TOKEN': csrfToken
                 }
             }).then(() => {
                 loadNotifications(currentPage, currentFilters);
@@ -279,10 +291,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('delete-read-btn').addEventListener('click', function() {
         if (confirm('Supprimer toutes les notifications lues ?')) {
-            fetch('/notifications/delete-all-read', {
+            if (!requireCsrf()) return;
+            fetch(`/${locale}/notifications/delete-all-read`, {
                 method: 'DELETE',
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-CSRF-TOKEN': csrfToken
                 }
             }).then(() => {
                 loadNotifications(1, currentFilters);
@@ -352,3 +365,4 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 </style>
 @endsection
+

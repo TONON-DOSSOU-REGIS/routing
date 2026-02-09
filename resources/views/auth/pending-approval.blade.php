@@ -29,7 +29,8 @@
 </head>
 
 <body class="bg-slate-900 min-h-screen flex flex-col">
-  <!-- Hero background -->
+  @include('components.background-slider')
+<!-- Hero background -->
   <div class="pointer-events-none fixed inset-0 -z-10">
     <div class="absolute inset-0 bg-gradient-to-br from-blue-900/70 to-indigo-900/70"></div>
     <img alt="" class="w-full h-full object-cover opacity-30"
@@ -37,14 +38,12 @@
   </div>
 
   <!-- Navigation -->
-  <nav class="bg-white/90 shadow-lg backdrop-blur-md">
+  <nav class="relative z-50 bg-white/90 shadow-lg backdrop-blur-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <div class="flex items-center space-x-2">
-          <img src='{{ asset("images/logobank.png") }}' class="w-9 h-9" alt="">
-          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-xl font-semibold text-slate-800 hover:text-blue-700 transition">
-            SG BANK
-          </a>
+          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
+          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-xl font-semibold text-slate-800 hover:text-blue-700 transition"><span class="sr-only">SG BANK</span></a>
         </div>
         <div class="flex items-center space-x-4">
           @include('components.language-selector')
@@ -78,6 +77,11 @@
         <!-- Pending approval card -->
         <div class="glass rounded-2xl p-6 sm:p-8 text-white fade-in-up">
           <div class="text-center">
+            @if (session('status'))
+              <div class="mb-6 rounded-lg border border-yellow-500/30 bg-yellow-500/15 px-4 py-3 text-sm text-yellow-100">
+                <i class="fa-solid fa-circle-info mr-2 text-yellow-300"></i>{{ session('status') }}
+              </div>
+            @endif
             <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-yellow-500/20 mb-4">
               <i class="fa-solid fa-clock text-yellow-400 text-2xl"></i>
             </div>
@@ -125,3 +129,11 @@
   </footer>
 </body>
 </html>
+
+
+
+
+
+
+
+

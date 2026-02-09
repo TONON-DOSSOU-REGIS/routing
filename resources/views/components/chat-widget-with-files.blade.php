@@ -207,9 +207,9 @@ function displayMessages(messages) {
             const isImage = msg.attachment_type && msg.attachment_type.startsWith('image/');
             if (isImage) {
                 attachmentHtml = `
-                    <a href="/storage/${msg.attachment_path}" target="_blank" class="block mt-2">
-                        <img src="/storage/${msg.attachment_path}" alt="${msg.attachment_name}" class="max-w-full rounded" style="max-height: 200px;">
-                    </a>
+                    <button type="button" class="block mt-2 focus:outline-none" data-chat-image="/storage/${msg.attachment_path}">
+                        <img src="/storage/${msg.attachment_path}" alt="${msg.attachment_name}" class="max-w-full rounded cursor-zoom-in" style="max-height: 200px;">
+                    </button>
                 `;
             } else {
                 attachmentHtml = `
@@ -238,6 +238,93 @@ function displayMessages(messages) {
     });
     
     container.scrollTop = container.scrollHeight;
+}
+
+let chatImageState = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
+
+function clampChatImage(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+}
+
+function applyChatImageTransform() {
+    const image = document.getElementById('chat-image-full');
+    const modal = document.getElementById('chat-image-modal');
+    if (!image || !modal) return;
+    const modalRect = modal.getBoundingClientRect();
+    const displayWidth = image.naturalWidth * chatImageState.scale;
+    const displayHeight = image.naturalHeight * chatImageState.scale;
+    const maxX = Math.max(0, (displayWidth - modalRect.width) / 2);
+    const maxY = Math.max(0, (displayHeight - modalRect.height) / 2);
+    chatImageState.x = clampChatImage(chatImageState.x, -maxX, maxX);
+    chatImageState.y = clampChatImage(chatImageState.y, -maxY, maxY);
+    image.style.transform = `translate(${chatImageState.x}px, ${chatImageState.y}px) scale(${chatImageState.scale})`;
+}
+
+function openChatImage(src) {
+    const modal = document.getElementById('chat-image-modal');
+    const image = document.getElementById('chat-image-full');
+    const download = document.getElementById('chat-image-download');
+    if (!modal || !image) return;
+    image.src = src;
+    if (download) download.href = src;
+    chatImageState = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
+    applyChatImageTransform();
+    modal.classList.remove('hidden');
+}
+
+function closeChatImage() {
+    const modal = document.getElementById('chat-image-modal');
+    const image = document.getElementById('chat-image-full');
+    const download = document.getElementById('chat-image-download');
+    if (!modal || !image) return;
+    image.src = '';
+    if (download) download.removeAttribute('href');
+    modal.classList.add('hidden');
+}
+
+function resetChatImage() {
+    chatImageState = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
+    applyChatImageTransform();
+}
+
+document.getElementById('chat-messages')?.addEventListener('click', function (event) {
+    const target = event.target.closest('[data-chat-image]');
+    if (!target) return;
+    openChatImage(target.getAttribute('data-chat-image'));
+});
+
+const chatImage = document.getElementById('chat-image-full');
+const chatModal = document.getElementById('chat-image-modal');
+if (chatImage && chatModal) {
+    chatImage.addEventListener('wheel', function (event) {
+        event.preventDefault();
+        const delta = event.deltaY < 0 ? 1.1 : 0.9;
+        chatImageState.scale = Math.min(4, Math.max(1, chatImageState.scale * delta));
+        applyChatImageTransform();
+    });
+    chatImage.addEventListener('mousedown', function (event) {
+        chatImageState.dragging = true;
+        chatImageState.startX = event.clientX - chatImageState.x;
+        chatImageState.startY = event.clientY - chatImageState.y;
+        chatImage.style.cursor = 'grabbing';
+    });
+    chatModal.addEventListener('mousemove', function (event) {
+        if (!chatImageState.dragging) return;
+        chatImageState.x = event.clientX - chatImageState.startX;
+        chatImageState.y = event.clientY - chatImageState.startY;
+        applyChatImageTransform();
+    });
+    chatModal.addEventListener('mouseup', function () {
+        chatImageState.dragging = false;
+        chatImage.style.cursor = 'grab';
+    });
+    chatModal.addEventListener('mouseleave', function () {
+        chatImageState.dragging = false;
+        chatImage.style.cursor = 'grab';
+    });
+    chatImage.addEventListener('load', function () {
+        applyChatImageTransform();
+    });
 }
 
 function sendChatMessage() {
@@ -318,5 +405,13 @@ function escapeHtml(text) {
 setInterval(updateUnreadCount, 10000);
 updateUnreadCount();
 </script>
+
+<div id="chat-image-modal" class="hidden fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4">
+    <button type="button" class="absolute top-4 right-4 text-white text-2xl" onclick="closeChatImage()">×</button>
+    <a id="chat-image-download" class="absolute top-4 left-4 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" download>Tlcharger</a>
+    <button type="button" class="absolute top-4 left-32 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" onclick="resetChatImage()">Rinitialiser</button>
+    <img id="chat-image-full" src="" alt="Aperçu image" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
+</div>
+
 
 

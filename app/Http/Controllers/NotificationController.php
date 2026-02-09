@@ -23,7 +23,7 @@ class NotificationController extends Controller
     /**
      * Mark a notification as read
      */
-    public function markAsRead(Notification $notification)
+    public function markAsRead($locale, Notification $notification)
     {
         // Ensure user owns the notification
         if ($notification->user_id !== auth()->id()) {
@@ -100,7 +100,7 @@ class NotificationController extends Controller
     /**
      * Get a single notification details
      */
-    public function show(Notification $notification)
+    public function show($locale, Notification $notification)
     {
         // Ensure user owns the notification
         if ($notification->user_id !== auth()->id()) {

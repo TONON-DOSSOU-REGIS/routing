@@ -20,16 +20,16 @@
     </style>
 </head>
 <body class="bg-gray-50">
-
-    <!-- Navigation -->
+  @include('components.background-slider')
+<!-- Navigation -->
     <nav class="nav-gradient shadow-xl fixed w-full top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20">
                 <div class="flex items-center space-x-3">
                     <div class="bg-white p-2 rounded-lg">
-                        <i class="fas fa-building-columns text-premium text-2xl"></i>
+                        <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                     </div>
-                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white">SG BANK</a>
+                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">SG BANK</span></a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
@@ -423,5 +423,14 @@
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
 
 

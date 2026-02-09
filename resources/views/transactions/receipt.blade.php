@@ -1,292 +1,386 @@
-<!DOCTYPE html>
-<html lang="fr">
+﻿<!DOCTYPE html>
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reçu de Transaction - SG BANK</title>
+    <title>{{ __('transactions.receipt_page_title') }}</title>
+
     <style>
+    * {
+        box-sizing: border-box;
+    }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 210mm;
+        height: 297mm;
+        font-family: "DejaVu Sans", Arial, Helvetica, sans-serif;
+        background: #ffffff;
+        color: #0f172a;
+        font-size: 11px;
+    }
+
+    .page {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+    }
+
+    .receipt {
+        width: 100%;
+        height: 100%;
+        max-height: 277mm;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    /* ================= HEADER ================= */
+    .receipt-header {
+        background: #0f172a;
+        color: #ffffff;
+        padding: 14px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .logo {
+        width: 42px;
+        height: 42px;
+        background: #ffffff;
+        padding: 5px;
+        border-radius: 6px;
+    }
+
+    .brand-name {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .brand-tag {
+        font-size: 11px;
+        opacity: 0.85;
+    }
+
+    .receipt-meta {
+        text-align: right;
+        font-size: 11px;
+    }
+
+    .receipt-meta strong {
+        font-size: 17px;
+        display: block;
+    }
+
+    /* ================= CONTENT ================= */
+    .content {
+        flex: 1;
+        padding: 14px 18px;
+        overflow: hidden;
+    }
+
+    .status-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .status {
+        padding: 6px 14px;
+        font-size: 11px;
+        border-radius: 20px;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+    }
+
+    .success { background: #dcfce7; color: #166534; }
+    .pending { background: #fef9c3; color: #854d0e; }
+    .hold { background: #fee2e2; color: #991b1b; }
+
+    .amount {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .section {
+        margin-top: 12px;
+    }
+
+    .section-title {
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+    }
+
+    .kv-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px 14px;
+    }
+
+    .kv-item {
+        font-size: 11px;
+        border-bottom: 1px dashed #e5e7eb;
+        padding-bottom: 4px;
+    }
+
+    .kv-label {
+        color: #64748b;
+        font-size: 9px;
+        text-transform: uppercase;
+    }
+
+    .kv-value {
+        font-weight: 600;
+        margin-top: 3px;
+        font-size: 12px;
+    }
+
+    .notice {
+        margin-top: 12px;
+        font-size: 10.5px;
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        padding: 8px;
+        border-radius: 6px;
+        line-height: 1.4;
+    }
+
+    /* ================= FOOTER ================= */
+    .footer {
+        border-top: 1px solid #e2e8f0;
+        padding: 10px 18px;
+        font-size: 10.5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f8fafc;
+    }
+
+    /* ================= PRINT ================= */
+    @media print {
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f8f9fa;
-            color: #333;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
-        .receipt-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            overflow: hidden;
+
+        .receipt {
+            page-break-inside: avoid;
         }
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .header p {
-            margin: 5px 0 0 0;
-            opacity: 0.9;
-            font-size: 14px;
-        }
-        .content {
-            padding: 30px;
-        }
-        .transaction-info {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e9ecef;
-        }
-        .info-row:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        .label {
-            font-weight: bold;
-            color: #495057;
-        }
-        .value {
-            color: #212529;
-        }
-        .amount {
-            font-size: 24px;
-            font-weight: bold;
-            color: #28a745;
-            text-align: center;
-            margin: 20px 0;
-            padding: 15px;
-            background: #d4edda;
-            border-radius: 8px;
-            border: 2px solid #c3e6cb;
-        }
-        .status {
-            text-align: center;
-            margin: 20px 0;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 12px;
-        }
-        .status-success {
-            background: #d4edda;
-            color: #155724;
-        }
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-        .status-on_hold {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        .footer {
-            background: #f8f9fa;
-            padding: 20px;
-            text-align: center;
-            border-top: 1px solid #e9ecef;
-            font-size: 12px;
-            color: #6c757d;
-        }
-        .security-notice {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 20px 0;
-            font-size: 12px;
-            color: #856404;
-        }
-        .bank-details {
-            background: #e9ecef;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-        .transaction-id {
-            background: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 16px;
-            margin: 20px 0;
-        }
-    </style>
+    }
+</style>
+
 </head>
+
 <body>
-    <div class="receipt-container">
-        <!-- Header -->
-        <div class="header">
-            <img src='{{ asset("images/logobank.png") }}' class="w-9 h-9" alt="">
-            <h1>SG BANK</h1>
-            <p>Système Bancaire Sécurisé</p>
+@php
+    $logoData = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/Logosite.png')));
+    $currency = $transaction->user->default_currency ?? 'EUR';
+    $amountFormatted = \App\Helpers\CurrencyHelper::format($transaction->amount, $currency);
+    $statusKey = match ($transaction->status) {
+        'success' => 'status_success',
+        'pending' => 'status_pending',
+        'on_hold' => 'status_on_hold',
+        'failed' => 'status_failed',
+        'refunded' => 'status_refunded',
+        default => null,
+    };
+    $statusLabel = $statusKey ? __('transactions.' . $statusKey) : ucfirst(str_replace('_', ' ', $transaction->status));
+    $statusClass = match ($transaction->status) {
+        'success' => 'success',
+        'pending' => 'pending',
+        'on_hold' => 'hold',
+        'failed' => 'hold',
+        'refunded' => 'pending',
+        default => 'pending',
+    };
+    $typeKey = match ($transaction->type) {
+        'transfer' => 'type_transfer',
+        'deposit' => 'type_deposit',
+        'withdrawal' => 'type_withdrawal',
+        default => null,
+    };
+    $typeLabel = $typeKey ? __('transactions.' . $typeKey) : ucfirst($transaction->type);
+    $hasBeneficiary = (bool) ($transaction->recipient_name || $transaction->recipient_iban || $transaction->recipient_bic || $transaction->bank_name);
+    $hasAdditional = (bool) ($transaction->reason || $transaction->message || $transaction->refunded_at || $transaction->refund_reason || $transaction->refunded_by);
+@endphp
+
+<div class="page">
+    <div class="receipt">
+
+        <!-- HEADER -->
+        <div class="receipt-header">
+            <div class="brand">
+                <img src="{{ $logoData }}" class="logo">
+                <div>
+                    <div class="brand-name">SG BANK</div>
+                    <div class="brand-tag">{{ __('transactions.receipt_brand_tag') }}</div>
+                </div>
+            </div>
+            <div class="receipt-meta">
+                {{ __('transactions.receipt_title') }}<br>
+                <strong>#{{ $transaction->id }}</strong>
+                {{ __('transactions.receipt_generated_at', ['date' => now()->format('d/m/Y H:i')]) }}
+            </div>
         </div>
 
-        <!-- Content -->
+        <!-- CONTENT -->
         <div class="content">
-            <!-- Transaction ID -->
-            <div class="transaction-id">
-                Transaction #{{ $transaction->id }}
+
+            <div class="status-row">
+                <div class="status {{ $statusClass }}">
+                    {{ strtoupper($statusLabel) }}
+                </div>
+                <div class="amount">{{ $amountFormatted }}</div>
             </div>
 
-            <!-- Transaction Amount -->
-            <div class="amount">
-                {{ number_format($transaction->amount, 2) }} €
-            </div>
-
-            <!-- Message Prompt with appropriate icon based on progress -->
-            <div class="message-prompt">
-                @if($transaction->progress == 100)
-                    <img src="/images/validate-icon.png" alt="Validated"/>
-                    Le virement a été effectué à 100% avec succès.
-                @elseif($transaction->progress < 100)
-                    <img src="/images/alert-icon.png" alt="Alert"/>
-                    Le virement est en cours, à {{ $transaction->progress }}% de progression.
-                @endif
-            </div>
-
-            <!-- Status -->
-            <div class="status">
-                <span class="status-badge
-                    @if($transaction->status == 'success') status-success
-                    @elseif($transaction->status == 'pending') status-pending
-                    @else status-on_hold @endif">
-                    @if($transaction->status == 'success')
-                        Transaction Réussie
-                    @elseif($transaction->status == 'pending')
-                        En Cours de Traitement
-                    @else
-                        Transaction Suspendue
-                    @endif
-                </span>
-            </div>
-
-            <!-- Transaction Details -->
-            <div class="transaction-info">
-                <h3 style="margin-top: 0; color: #495057; border-bottom: 2px solid #007bff; padding-bottom: 10px;">
-                    Détails de la Transaction
-                </h3>
-
-                <div class="info-row">
-                    <span class="label">Type de Transaction:</span>
-                    <span class="value">{{ ucfirst($transaction->type) }}</span>
-                </div>
-
-                <div class="info-row">
-                    <span class="label">Date et Heure:</span>
-                    <span class="value">{{ $transaction->created_at->format('d/m/Y H:i:s') }}</span>
-                </div>
-
-                @if($transaction->recipient_name)
-                <div class="info-row">
-                    <span class="label">Bénéficiaire:</span>
-                    <span class="value">{{ $transaction->recipient_name }}</span>
-                </div>
-                @endif
-
-                @if($transaction->recipient_iban)
-                <div class="info-row">
-                    <span class="label">IBAN Bénéficiaire:</span>
-                    <span class="value">{{ $transaction->recipient_iban }}</span>
-                </div>
-                @endif
-
-                @if($transaction->recipient_bic)
-                <div class="info-row">
-                    <span class="label">BIC Bénéficiaire:</span>
-                    <span class="value">{{ $transaction->recipient_bic }}</span>
-                </div>
-                @endif
-
-                @if($transaction->bank_name)
-                <div class="info-row">
-                    <span class="label">Banque Bénéficiaire:</span>
-                    <span class="value">{{ $transaction->bank_name }}</span>
-                </div>
-                @endif
-
-                @if($transaction->reason)
-                <div class="info-row">
-                    <span class="label">Motif:</span>
-                    <span class="value">{{ $transaction->reason }}</span>
-                </div>
-                @endif
-
-                @if($transaction->activation_code)
-                <div class="info-row">
-                    <span class="label">Code d'Activation:</span>
-                    <span class="value">****</span>
-                </div>
-                @endif
-
-                <div class="info-row">
-                    <span class="label">Progression:</span>
-                    <span class="value">{{ $transaction->progress }}%</span>
+            <div class="section">
+                <div class="section-title">{{ __('transactions.receipt_transaction_details') }}</div>
+                <div class="kv-grid">
+                    <div class="kv-item">
+                        <div class="kv-label">{{ __('transactions.receipt_transaction_id') }}</div>
+                        <div class="kv-value">#{{ $transaction->id }}</div>
+                    </div>
+                    <div class="kv-item">
+                        <div class="kv-label">{{ __('transactions.receipt_type') }}</div>
+                        <div class="kv-value">{{ $typeLabel }}</div>
+                    </div>
+                    <div class="kv-item">
+                        <div class="kv-label">{{ __('transactions.receipt_date') }}</div>
+                        <div class="kv-value">{{ $transaction->created_at->format('d/m/Y H:i') }}</div>
+                    </div>
+                    <div class="kv-item">
+                        <div class="kv-label">{{ __('transactions.receipt_status') }}</div>
+                        <div class="kv-value">{{ $statusLabel }}</div>
+                    </div>
+                    <div class="kv-item">
+                        <div class="kv-label">{{ __('transactions.receipt_progress') }}</div>
+                        <div class="kv-value">{{ $transaction->progress }}%</div>
+                    </div>
+                    <div class="kv-item">
+                        <div class="kv-label">{{ __('transactions.receipt_amount') }}</div>
+                        <div class="kv-value">{{ $amountFormatted }}</div>
+                    </div>
+                    <div class="kv-item">
+                        <div class="kv-label">{{ __('transactions.receipt_currency') }}</div>
+                        <div class="kv-value">{{ $currency }}</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- User Information -->
-            <div class="bank-details">
-                <h4 style="margin-top: 0; color: #495057;">Informations Client</h4>
-                <div class="info-row" style="border: none; margin-bottom: 5px;">
-                    <span class="label">Nom:</span>
-                    <span class="value">{{ $transaction->user->first_name }} {{ $transaction->user->last_name }}</span>
+            <div class="section">
+                <div class="section-title">{{ __('transactions.receipt_client_section') }}</div>
+                <div class="kv-grid">
+                    <div class="kv-item">
+                        <div class="kv-label">{{ __('transactions.receipt_client_name') }}</div>
+                        <div class="kv-value">{{ $transaction->user->first_name }} {{ $transaction->user->last_name }}</div>
+                    </div>
+                    <div class="kv-item">
+                        <div class="kv-label">{{ __('transactions.receipt_email') }}</div>
+                        <div class="kv-value">{{ $transaction->user->email }}</div>
+                    </div>
                 </div>
-                <div class="info-row" style="border: none; margin-bottom: 5px;">
-                    <span class="label">Email:</span>
-                    <span class="value">{{ $transaction->user->email }}</span>
-                </div>
-                @if($transaction->user->phone)
-                <div class="info-row" style="border: none; margin-bottom: 0;">
-                    <span class="label">Téléphone:</span>
-                    <span class="value">{{ $transaction->user->phone }}</span>
-                </div>
-                @endif
             </div>
 
-            <!-- Security Notice -->
-            <div class="security-notice">
-                <strong>⚠️ Avis de Sécurité:</strong> Ce reçu est généré électroniquement et constitue une preuve officielle de votre transaction.
-                Conservez-le en lieu sûr. En cas de contestation, contactez immédiatement le service client de SG BANK.
-            </div>
-
-            @if($transaction->status == 'on_hold' && $transaction->message)
-            <div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px; padding: 15px; margin: 20px 0; color: #721c24;">
-                <strong>Message de l'Administrateur:</strong><br>
-                {{ $transaction->message }}
-            </div>
+            @if($hasBeneficiary)
+                <div class="section">
+                    <div class="section-title">{{ __('transactions.receipt_beneficiary_section') }}</div>
+                    <div class="kv-grid">
+                        @if($transaction->recipient_name)
+                            <div class="kv-item">
+                                <div class="kv-label">{{ __('transactions.receipt_recipient_name') }}</div>
+                                <div class="kv-value">{{ $transaction->recipient_name }}</div>
+                            </div>
+                        @endif
+                        @if($transaction->bank_name)
+                            <div class="kv-item">
+                                <div class="kv-label">{{ __('transactions.receipt_bank_name') }}</div>
+                                <div class="kv-value">{{ $transaction->bank_name }}</div>
+                            </div>
+                        @endif
+                        @if($transaction->recipient_iban)
+                            <div class="kv-item">
+                                <div class="kv-label">{{ __('transactions.receipt_recipient_iban') }}</div>
+                                <div class="kv-value">{{ $transaction->recipient_iban }}</div>
+                            </div>
+                        @endif
+                        @if($transaction->recipient_bic)
+                            <div class="kv-item">
+                                <div class="kv-label">{{ __('transactions.receipt_recipient_bic') }}</div>
+                                <div class="kv-value">{{ $transaction->recipient_bic }}</div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
             @endif
+
+            @if($hasAdditional)
+                <div class="section">
+                    <div class="section-title">{{ __('transactions.receipt_additional_section') }}</div>
+                    <div class="kv-grid">
+                        @if($transaction->reason)
+                            <div class="kv-item">
+                                <div class="kv-label">{{ __('transactions.receipt_reason') }}</div>
+                                <div class="kv-value">{{ $transaction->reason }}</div>
+                            </div>
+                        @endif
+                        @if($transaction->message)
+                            <div class="kv-item">
+                                <div class="kv-label">{{ __('transactions.receipt_message') }}</div>
+                                <div class="kv-value">{{ $transaction->message }}</div>
+                            </div>
+                        @endif
+                        @if($transaction->refunded_at)
+                            <div class="kv-item">
+                                <div class="kv-label">{{ __('transactions.receipt_refunded_at') }}</div>
+                                <div class="kv-value">{{ $transaction->refunded_at->format('d/m/Y H:i') }}</div>
+                            </div>
+                        @endif
+                        @if($transaction->refundedBy)
+                            <div class="kv-item">
+                                <div class="kv-label">{{ __('transactions.receipt_refunded_by') }}</div>
+                                <div class="kv-value">{{ $transaction->refundedBy->first_name }} {{ $transaction->refundedBy->last_name }}</div>
+                            </div>
+                        @endif
+                        @if($transaction->refund_reason)
+                            <div class="kv-item">
+                                <div class="kv-label">{{ __('transactions.receipt_refund_reason') }}</div>
+                                <div class="kv-value">{{ $transaction->refund_reason }}</div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            <div class="notice">
+                {{ __('transactions.receipt_notice') }}
+            </div>
+
         </div>
 
-        <!-- Footer -->
+<!-- FOOTER -->
         <div class="footer">
-            <p><strong>SG BANK - Système Bancaire Sécurisé</strong></p>
-            <p>Ce document a été généré automatiquement le {{ now()->format('d/m/Y à H:i:s') }}</p>
-            <p>Pour toute question, contactez notre service client</p>
+            <div>SG BANK © {{ date('Y') }}</div>
+            <div>support@sgbank.com</div>
         </div>
+
     </div>
+</div>
 </body>
 </html>
-
-

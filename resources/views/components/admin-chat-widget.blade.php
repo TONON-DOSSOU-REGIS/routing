@@ -369,9 +369,9 @@ function displayChatMessages(messages) {
 
             if (isImage) {
                 attachmentHtml = `
-                    <a href="/storage/${msg.attachment_path}" target="_blank" class="block mt-2">
-                        <img src="/storage/${msg.attachment_path}" alt="${escapeHtml(attachmentName)}" class="max-w-full rounded" style="max-height: 200px;">
-                    </a>
+                    <button type="button" class="block mt-2 focus:outline-none" data-chat-image="/storage/${msg.attachment_path}">
+                        <img src="/storage/${msg.attachment_path}" alt="${escapeHtml(attachmentName)}" class="max-w-full rounded cursor-zoom-in" style="max-height: 200px;">
+                    </button>
                 `;
             } else {
                 attachmentHtml = `
@@ -403,6 +403,93 @@ function displayChatMessages(messages) {
     
     // Scroll to bottom
     container.scrollTop = container.scrollHeight;
+}
+
+let adminChatImageStateLegacy = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
+
+function clampAdminChatImageLegacy(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+}
+
+function applyAdminChatImageTransformLegacy() {
+    const image = document.getElementById('admin-chat-image-full-legacy');
+    const modal = document.getElementById('admin-chat-image-modal-legacy');
+    if (!image || !modal) return;
+    const modalRect = modal.getBoundingClientRect();
+    const displayWidth = image.naturalWidth * adminChatImageStateLegacy.scale;
+    const displayHeight = image.naturalHeight * adminChatImageStateLegacy.scale;
+    const maxX = Math.max(0, (displayWidth - modalRect.width) / 2);
+    const maxY = Math.max(0, (displayHeight - modalRect.height) / 2);
+    adminChatImageStateLegacy.x = clampAdminChatImageLegacy(adminChatImageStateLegacy.x, -maxX, maxX);
+    adminChatImageStateLegacy.y = clampAdminChatImageLegacy(adminChatImageStateLegacy.y, -maxY, maxY);
+    image.style.transform = `translate(${adminChatImageStateLegacy.x}px, ${adminChatImageStateLegacy.y}px) scale(${adminChatImageStateLegacy.scale})`;
+}
+
+function openAdminChatImageLegacy(src) {
+    const modal = document.getElementById('admin-chat-image-modal-legacy');
+    const image = document.getElementById('admin-chat-image-full-legacy');
+    const download = document.getElementById('admin-chat-image-download-legacy');
+    if (!modal || !image) return;
+    image.src = src;
+    if (download) download.href = src;
+    adminChatImageStateLegacy = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
+    applyAdminChatImageTransformLegacy();
+    modal.classList.remove('hidden');
+}
+
+function closeAdminChatImageLegacy() {
+    const modal = document.getElementById('admin-chat-image-modal-legacy');
+    const image = document.getElementById('admin-chat-image-full-legacy');
+    const download = document.getElementById('admin-chat-image-download-legacy');
+    if (!modal || !image) return;
+    image.src = '';
+    if (download) download.removeAttribute('href');
+    modal.classList.add('hidden');
+}
+
+function resetAdminChatImageLegacy() {
+    adminChatImageStateLegacy = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
+    applyAdminChatImageTransformLegacy();
+}
+
+document.getElementById('chat-messages-container')?.addEventListener('click', function (event) {
+    const target = event.target.closest('[data-chat-image]');
+    if (!target) return;
+    openAdminChatImageLegacy(target.getAttribute('data-chat-image'));
+});
+
+const adminChatImageLegacy = document.getElementById('admin-chat-image-full-legacy');
+const adminChatModalLegacy = document.getElementById('admin-chat-image-modal-legacy');
+if (adminChatImageLegacy && adminChatModalLegacy) {
+    adminChatImageLegacy.addEventListener('wheel', function (event) {
+        event.preventDefault();
+        const delta = event.deltaY < 0 ? 1.1 : 0.9;
+        adminChatImageStateLegacy.scale = Math.min(4, Math.max(1, adminChatImageStateLegacy.scale * delta));
+        applyAdminChatImageTransformLegacy();
+    });
+    adminChatImageLegacy.addEventListener('mousedown', function (event) {
+        adminChatImageStateLegacy.dragging = true;
+        adminChatImageStateLegacy.startX = event.clientX - adminChatImageStateLegacy.x;
+        adminChatImageStateLegacy.startY = event.clientY - adminChatImageStateLegacy.y;
+        adminChatImageLegacy.style.cursor = 'grabbing';
+    });
+    adminChatModalLegacy.addEventListener('mousemove', function (event) {
+        if (!adminChatImageStateLegacy.dragging) return;
+        adminChatImageStateLegacy.x = event.clientX - adminChatImageStateLegacy.startX;
+        adminChatImageStateLegacy.y = event.clientY - adminChatImageStateLegacy.startY;
+        applyAdminChatImageTransformLegacy();
+    });
+    adminChatModalLegacy.addEventListener('mouseup', function () {
+        adminChatImageStateLegacy.dragging = false;
+        adminChatImageLegacy.style.cursor = 'grab';
+    });
+    adminChatModalLegacy.addEventListener('mouseleave', function () {
+        adminChatImageStateLegacy.dragging = false;
+        adminChatImageLegacy.style.cursor = 'grab';
+    });
+    adminChatImageLegacy.addEventListener('load', function () {
+        applyAdminChatImageTransformLegacy();
+    });
 }
 
 function updateFileLabel() {
@@ -492,5 +579,13 @@ function escapeHtml(text) {
 setInterval(updateAdminUnreadCount, 10000);
 updateAdminUnreadCount();
 </script>
+
+<div id="admin-chat-image-modal-legacy" class="hidden fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4">
+    <button type="button" class="absolute top-4 right-4 text-white text-2xl" onclick="closeAdminChatImageLegacy()">×</button>
+    <a id="admin-chat-image-download-legacy" class="absolute top-4 left-4 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" download>Tlcharger</a>
+    <button type="button" class="absolute top-4 left-32 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" onclick="resetAdminChatImageLegacy()">Rinitialiser</button>
+    <img id="admin-chat-image-full-legacy" src="" alt="Aperçu image" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
+</div>
+
 
 

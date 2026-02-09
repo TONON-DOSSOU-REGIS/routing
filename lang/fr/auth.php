@@ -1,39 +1,23 @@
 <?php
 
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | Lignes de langue pour l'authentification
-    |--------------------------------------------------------------------------
-    */
-
-    // Messages d'erreur
     'failed' => 'Ces identifiants ne correspondent pas à nos enregistrements.',
-    'password' => 'Le mot de passe fourni est incorrect.',
+    'password' => 'Mot de passe',
     'throttle' => 'Trop de tentatives de connexion. Veuillez réessayer dans :seconds secondes.',
-
-    // Page de connexion - Titre et meta
     'login_page_title' => 'Connexion - SG BANK',
-    
-    // Navigation
     'nav_home' => 'Accueil',
-    'nav_create_account' => 'Créer un compte',
+    'nav_create_account' => "S'inscrire",
     'nav_login' => 'Connexion',
-    
-    // Panneau gauche - Login
     'login_hero_title' => 'Accédez à votre espace sécurisé',
     'login_hero_description' => 'Gérez vos comptes, suivez vos transactions, recevez des notifications en temps réel et accédez à nos services professionnels.',
     'login_feature_security' => 'Sécurité de niveau bancaire',
     'login_feature_notifications' => 'Notifications en temps réel',
     'login_feature_analytics' => 'Tableau de bord analytique',
-    
-    // Formulaire de connexion
     'login_title' => 'Connexion',
     'login_subtitle' => 'Entrez vos identifiants pour accéder à votre compte.',
     'email' => 'Adresse email',
     'email_placeholder' => 'vous@exemple.com',
-    'password' => 'Mot de passe',
-    'password_placeholder' => '••••••••',
+    'password_placeholder' => '**********',
     'remember_me' => 'Se souvenir de moi',
     'forgot_password' => 'Mot de passe oublié ?',
     'login_button' => 'Se connecter',
@@ -42,11 +26,10 @@ return [
     'register_link' => 'Inscrivez-vous',
     'login_with_google' => 'Google',
     'login_with_apple' => 'Apple',
-    
-    // Page d'inscription - Titre et meta
+    'social_invalid_provider' => 'Fournisseur de connexion non pris en charge.',
+    'social_login_error' => 'Impossible de se connecter avec ce fournisseur pour le moment.',
+    'social_missing_email' => 'Votre compte n\'a pas partagé d\'adresse e-mail. Veuillez réessayer ou utiliser une autre méthode.',
     'register_page_title' => 'Inscription - SG BANK',
-    
-    // Panneau gauche - Register
     'register_hero_title_1' => 'Ouvrez votre',
     'register_hero_title_2' => 'compte',
     'register_hero_title_3' => 'en quelques',
@@ -61,13 +44,9 @@ return [
     'register_feature_security_bold' => 'bancaire',
     'register_feature_notifications' => 'Notifications en',
     'register_feature_notifications_bold' => 'temps réel',
-    
-    // Formulaire d'inscription
     'register_title' => 'Rejoignez SG BANK',
     'already_account' => 'Déjà inscrit ?',
     'login_link' => 'Connectez-vous',
-    
-    // Champs du formulaire
     'first_name' => 'Prénom',
     'first_name_placeholder' => 'Jean',
     'last_name' => 'Nom',
@@ -95,8 +74,6 @@ return [
     'password_field' => 'Mot de passe',
     'password_strength' => 'Force du mot de passe',
     'confirm_password' => 'Confirmer le mot de passe',
-    
-    // Pays
     'country_france' => '(FR) France',
     'country_germany' => '(DE) Allemagne',
     'country_austria' => '(AT) Autriche',
@@ -141,36 +118,65 @@ return [
     'country_vatican' => '(VA) Vatican',
     'country_canada' => 'Canada',
     'country_other' => 'Autre',
-    
-    // Conditions
     'terms_accept' => 'J\'accepte les',
     'terms_link' => 'conditions d\'utilisation',
     'terms_and' => 'et la',
     'privacy_link' => 'politique de confidentialité',
-    
-    // Bouton d'inscription
-    'register_button' => 'Créer mon compte',
-    
-    // Footer
+    'register_button' => "S'inscrire",
     'footer_copyright' => 'Tous droits réservés.',
     'footer_privacy' => 'Confidentialité',
     'footer_terms' => 'Conditions',
     'footer_support' => 'Assistance',
-    
-    // Messages de succès
     'login_success' => 'Connexion réussie !',
     'logout_success' => 'Déconnexion réussie !',
     'register_success' => 'Inscription réussie ! Veuillez attendre l\'approbation de l\'administrateur.',
     'password_reset_success' => 'Votre mot de passe a été réinitialisé avec succès !',
-    
-    // Réinitialisation du mot de passe
     'reset_password' => 'Réinitialiser le mot de passe',
     'send_reset_link' => 'Envoyer le lien de réinitialisation',
     'reset_link_sent' => 'Nous vous avons envoyé le lien de réinitialisation par e-mail !',
     'reset_password_title' => 'Réinitialisez votre mot de passe',
     'new_password' => 'Nouveau mot de passe',
     'confirm_new_password' => 'Confirmer le nouveau mot de passe',
-    
-    // Déconnexion
     'logout' => 'Déconnexion',
+    'pending_approval_hero_title' => 'Votre compte est en cours de validation',
+    'pending_approval_hero_description' => 'Nous vérifions vos informations. Cette étape ne prend généralement que quelques instants.',
+    'pending_approval_feature_review' => 'Examen manuel des informations',
+    'pending_approval_feature_notification' => 'Notification dès validation',
+    'pending_approval_feature_security' => 'Sécurité renforcée',
+    'pending_approval_title' => 'Validation en attente',
+    'pending_approval_message' => 'Votre demande est bien reçue. Vous serez informé dès l’approbation.',
+    'pending_approval_info' => 'Si vous avez des questions, contactez notre support.',
+    'back_to_home' => 'Retour à l’accueil',
+    'back_to_login' => 'Retour à la connexion',
+    '2fa_setup_title' => 'Configuration 2FA - SG BANK',
+    '2fa_setup_heading' => 'Double authentification',
+    '2fa_setup_description' => 'Prot?gez votre compte avec une application d?authentification.',
+    '2fa_secret_title' => 'Cl? secr?te',
+    '2fa_secret_hint' => 'Scannez le QR dans votre application ou saisissez la cl?.',
+    '2fa_otpauth_label' => 'URI OTP',
+    '2fa_enable_title' => 'Activer la 2FA',
+    '2fa_enable_hint' => 'Saisissez le code ? 6 chiffres de votre application.',
+    '2fa_code_placeholder' => '123456',
+    '2fa_enable_button' => 'Activer la 2FA',
+    '2fa_backup_title' => 'Codes de secours',
+    '2fa_backup_hint' => 'Conservez ces codes en lieu s?r. Chaque code est utilisable une seule fois.',
+    '2fa_disable_title' => 'D?sactiver la 2FA',
+    '2fa_disable_hint' => 'Confirmez avec votre mot de passe.',
+    '2fa_password_placeholder' => 'Votre mot de passe',
+    '2fa_disable_button' => 'D?sactiver la 2FA',
+    '2fa_back_dashboard' => 'Retour au tableau de bord',
+    '2fa_challenge_title' => 'V?rification 2FA - SG BANK',
+    '2fa_challenge_heading' => 'V?rifiez votre connexion',
+    '2fa_challenge_description' => 'Saisissez votre code ? 6 chiffres ou un code de secours.',
+    '2fa_code_label' => 'Code authentificateur',
+    '2fa_backup_label' => 'Code de secours',
+    '2fa_backup_placeholder' => 'Code de secours',
+    '2fa_verify_button' => 'V?rifier',
+    '2fa_invalid_code' => 'Code invalide. Veuillez r?essayer.',
+    '2fa_enabled' => 'Double authentification activ?e.',
+    '2fa_disabled' => 'Double authentification d?sactiv?e.',
+    '2fa_password_invalid' => 'Mot de passe incorrect.',
+    '2fa_missing_secret' => 'Cl? manquante. Reprenez la configuration.',
 ];
+
+

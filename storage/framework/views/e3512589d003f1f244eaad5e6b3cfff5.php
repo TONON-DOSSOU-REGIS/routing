@@ -642,4 +642,5 @@ document.addEventListener('visibilitychange', function() {
 </style>
 
 
+
 <?php /**PATH C:\xampp\htdocs\cerveau\resources\views/components/analytics-section.blade.php ENDPATH**/ ?>

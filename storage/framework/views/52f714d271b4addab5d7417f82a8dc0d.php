@@ -221,7 +221,8 @@
     </style>
 </head>
 <body class="min-h-screen">
-    <!-- Container avec image de fond -->
+  <?php echo $__env->make('components.background-slider', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<!-- Container avec image de fond -->
     <div class="background-container min-h-screen">
         <div class="min-h-screen relative z-10">
             <!-- Navigation améliorée -->
@@ -231,10 +232,10 @@
                         <div class="flex items-center">
                             <div class="flex items-center space-x-3">
                                 <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
-                                    <i class="fas fa-building-columns text-white text-xl"></i>
+                                    <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>"><img src='<?php echo e(asset("images/Logosite.png")); ?>' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                                 </div>
                                 <div>
-                                    <a href="<?php echo e(localized_route('dashboard')); ?>" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK</a>
+                                    <a href="<?php echo e(localized_route('dashboard')); ?>" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"><span class="sr-only">SG BANK</span></a>
                                     <div class="text-xs text-gray-500 -mt-1"><?php echo e(__('transactions.new_transfer')); ?></div>
                                 </div>
                             </div>
@@ -592,7 +593,7 @@ unset($__errorArgs, $__bag); ?>
     </div>
 
     <!-- Overlay d'interruption -->
-    <div id="flashOverlay" class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-70 z-50 p-4">
+    <div id="flashOverlay" class="fixed inset-0 hidden grid place-items-center bg-black bg-opacity-70 z-[9999] p-4">
         <div id="flashCard" class="glass-card max-w-md w-full mx-auto p-8 rounded-2xl shadow-2xl text-center animate-pulse border border-red-200">
             <div id="flashIconContainer" class="bg-red-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <i id="flashIcon" class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
@@ -759,7 +760,9 @@ unset($__errorArgs, $__bag); ?>
 
             // Show overlay with fade-in animation
             overlay.classList.remove('hidden');
-            overlay.classList.add('flex');
+            overlay.classList.remove('grid');
+            overlay.classList.remove('flex');
+            overlay.classList.add('grid');
             overlay.style.animation = 'fadeIn 0.3s ease forwards';
 
             console.log("Current icon class:", flashIcon.className); // Debug log
@@ -767,6 +770,7 @@ unset($__errorArgs, $__bag); ?>
 
         closeFlash.addEventListener('click', () => {
             overlay.classList.add('hidden');
+            overlay.classList.remove('grid');
             overlay.classList.remove('flex');
         });
 
@@ -784,4 +788,11 @@ unset($__errorArgs, $__bag); ?>
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
 <?php /**PATH C:\xampp\htdocs\cerveau\resources\views/transactions/create.blade.php ENDPATH**/ ?>

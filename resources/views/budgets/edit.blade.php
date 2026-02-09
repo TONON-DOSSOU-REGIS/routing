@@ -87,3 +87,4 @@ document.getElementById('alert_enabled').addEventListener('change', function() {
 });
 </script>
 @endsection
+

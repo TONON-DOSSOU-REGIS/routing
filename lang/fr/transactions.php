@@ -1,45 +1,28 @@
 <?php
 
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | Lignes de Langue des Transactions
-    |--------------------------------------------------------------------------
-    */
-
-    // Titres de page
     'page_title' => 'Nouveau virement - SG BANK',
     'new_transfer' => 'Nouveau virement',
-
-    // Navigation
     'dashboard' => 'Tableau de bord',
     'logout' => 'Déconnexion',
-
-    // En-têtes
     'transfer_title' => 'Nouveau virement',
     'transfer_subtitle' => 'Effectuez un transfert sécurisé vers un bénéficiaire',
-
-    // Indicateurs d'étapes
     'step_information' => 'Informations',
     'step_processing' => 'Traitement',
     'step_confirmation' => 'Confirmation',
-
-    // Sections du formulaire
     'transfer_details' => 'Détails du virement',
     'beneficiary_info' => 'Renseignez les informations du bénéficiaire',
     'banking_details' => 'Coordonnées bancaires',
     'additional_info' => 'Informations supplémentaires',
-
-    // Étiquettes du formulaire
     'amount' => 'Montant du virement',
+    'transfer_amount' => 'Montant du virement',
     'recipient_name' => 'Nom du bénéficiaire',
     'bank_name' => 'Nom de la banque',
     'recipient_iban' => 'IBAN du bénéficiaire',
     'recipient_bic' => 'BIC du bénéficiaire',
     'reason' => 'Motif du virement (optionnel)',
+    'transfer_reason' => 'Motif du virement',
     'activation_code' => 'Code d\'activation',
-
-    // Espaces réservés
     'amount_placeholder' => '0.00',
     'recipient_name_placeholder' => 'Jean Dupont',
     'bank_name_placeholder' => 'Banque Nationale',
@@ -47,25 +30,18 @@ return [
     'recipient_bic_placeholder' => 'BNPAFRPP',
     'transfer_reason_placeholder' => 'Remboursement, cadeau...',
     'activation_code_placeholder' => 'Votre code d\'activation personnel',
-
-    // Boutons
     'cancel' => 'Annuler',
     'start_transfer' => 'Lancer le virement',
     'processing' => 'Traitement en cours...',
-
-    // Section de progression
     'processing_in_progress' => 'Traitement en cours',
     'transfer_progress' => 'Progression du virement',
     'processing_message' => 'Votre virement est en cours de traitement. Veuillez patienter...',
-
-    // Messages flash
     'operation_interrupted' => 'Opération interrompue',
     'operation_successful' => 'Opération réussie',
+    'operation_success' => 'Opération réussie',
     'transfer_successful' => 'Virement effectué avec succès ! Vous allez être redirigé...',
     'transfer_success_message' => 'Virement effectué avec succès !',
     'understood' => 'J\'ai compris',
-
-    // Messages d'erreur
     'amount_required' => 'Le champ montant est requis.',
     'recipient_name_required' => 'Le champ nom du bénéficiaire est requis.',
     'bank_name_required' => 'Le champ nom de la banque est requis.',
@@ -73,48 +49,32 @@ return [
     'bic_required' => 'Le champ BIC est requis.',
     'activation_code_required' => 'Le champ code d\'activation est requis.',
     'reason_required' => 'Le champ motif est requis.',
-
-    // Messages de validation
     'invalid_amount' => 'Veuillez saisir un montant valide.',
     'invalid_iban' => 'Veuillez saisir un IBAN valide.',
     'invalid_bic' => 'Veuillez saisir un BIC valide.',
     'invalid_activation_code' => 'Veuillez saisir un code d\'activation valide.',
-
-    // Messages de statut
     'transfer_pending' => 'Virement en attente de vérification de sécurité.',
     'connection_error' => 'Erreur de connexion lors du traitement.',
-
-    // Page d'historique
     'history_page_title' => 'Historique des transactions - SG BANK',
     'history_title' => 'Historique des transactions',
     'history_subtitle' => 'Consultez l\'ensemble de vos opérations financières',
     'history_overview' => 'Vue d\'ensemble de vos opérations financières',
-    
-    // Boutons d'export
     'export_pdf' => 'Export PDF',
     'export_excel' => 'Export Excel',
-    
-    // Filtres
     'filter_type' => 'Type',
     'filter_status' => 'Statut',
     'filter_date_from' => 'Date de début',
     'filter_date_to' => 'Date de fin',
     'filter_apply' => 'Appliquer',
-    
-    // Options de filtres - Types
     'all_types' => 'Tous les types',
     'type_transfer' => 'Virement',
     'type_deposit' => 'Dépôt',
     'type_withdrawal' => 'Retrait',
-    
-    // Options de filtres - Statuts
     'all_statuses' => 'Tous les statuts',
     'status_pending' => 'En attente',
     'status_on_hold' => 'Suspendu',
     'status_success' => 'Réussi',
     'status_failed' => 'Échoué',
-    
-    // En-têtes de tableau
     'table_transaction' => 'Transaction',
     'table_type' => 'Type',
     'table_amount' => 'Montant',
@@ -123,19 +83,46 @@ return [
     'table_progress' => 'Progression',
     'table_date' => 'Date',
     'table_actions' => 'Actions',
-    
-    // Actions
     'action_receipt' => 'Reçu',
     'action_download_receipt' => 'Télécharger le reçu',
-    
-    // Messages vides
+    'receipt' => 'Reçu',
+    'download_receipt' => 'Télécharger le reçu',
+    'table_beneficiary' => 'Bénéficiaire',
     'no_transactions' => 'Aucune transaction trouvée',
     'no_transactions_message' => 'Aucune transaction ne correspond à vos critères de recherche.',
+    'no_transactions_found' => 'Aucune transaction trouvée',
+    'no_transactions_matching_criteria' => 'Aucune transaction ne correspond aux critères',
     'reset_filters' => 'Réinitialiser les filtres',
-    
-    // Pagination
     'showing_results' => 'Affichage de :first à :last sur :total transactions',
-    
-    // JavaScript
     'generating' => 'Génération...',
+    'progress_label' => 'Progression',
+    'operation_sucess' => 'Opération réussie',
+    'status_refunded' => 'Remboursé',
+    'receipt_page_title' => 'Reçu de transaction - SG BANK',
+    'receipt_title' => 'Reçu',
+    'receipt_brand_tag' => 'Système Bancaire Sécurisé',
+    'receipt_generated_at' => 'Généré le :date',
+    'receipt_transaction_details' => 'Détails de la transaction',
+    'receipt_client_section' => 'Client',
+    'receipt_client_name' => 'Nom du client',
+    'receipt_email' => 'Email',
+    'receipt_beneficiary_section' => 'Bénéficiaire',
+    'receipt_additional_section' => 'Informations complémentaires',
+    'receipt_transaction_id' => 'ID de transaction',
+    'receipt_type' => 'Type',
+    'receipt_date' => 'Date',
+    'receipt_status' => 'Statut',
+    'receipt_progress' => 'Progression',
+    'receipt_amount' => 'Montant',
+    'receipt_currency' => 'Devise',
+    'receipt_recipient_name' => 'Nom du bénéficiaire',
+    'receipt_recipient_iban' => 'IBAN du bénéficiaire',
+    'receipt_recipient_bic' => 'BIC du bénéficiaire',
+    'receipt_bank_name' => 'Nom de la banque',
+    'receipt_reason' => 'Motif du virement',
+    'receipt_message' => 'Message',
+    'receipt_refunded_at' => 'Remboursé le',
+    'receipt_refunded_by' => 'Remboursé par',
+    'receipt_refund_reason' => 'Motif du remboursement',
+    'receipt_notice' => 'Ce document est généré électroniquement et constitue une preuve officielle de transaction.',
 ];

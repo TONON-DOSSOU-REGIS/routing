@@ -37,11 +37,8 @@ class User extends Authenticatable
         'status',
         'password',
         'activation_code',
-        // KYC/AML fields
-        'kyc_status',
-        'kyc_risk_score',
-        'kyc_last_screened_at',
-        'kyc_pep_flag',
+        'oauth_provider',
+        'oauth_id',
     ];
 
     /**
@@ -52,6 +49,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_secret',
+        'two_factor_backup_codes',
     ];
 
     /**
@@ -66,10 +65,9 @@ class User extends Authenticatable
             'password' => 'hashed',
             'balance' => 'decimal:2',
             'date_of_birth' => 'date',
-            // KYC/AML casts
-            'kyc_last_screened_at' => 'datetime',
-            'kyc_pep_flag' => 'boolean',
-            'kyc_risk_score' => 'decimal:2',
+            'two_factor_enabled' => 'boolean',
+            'two_factor_backup_codes' => 'array',
+            'two_factor_confirmed_at' => 'datetime',
         ];
     }
 
@@ -111,17 +109,6 @@ class User extends Authenticatable
     public function unreadNotifications()
     {
         return $this->hasMany(Notification::class)->where('is_read', false)->orderBy('created_at', 'desc');
-    }
-
-    // KYC/AML relations
-    public function kycVerifications()
-    {
-        return $this->hasMany(KycVerification::class);
-    }
-
-    public function amlScreenings()
-    {
-        return $this->hasMany(AmlScreening::class);
     }
 
     /**
@@ -256,4 +243,3 @@ class User extends Authenticatable
         return $this->first_name . ' ' . $this->last_name;
     }
 }
-

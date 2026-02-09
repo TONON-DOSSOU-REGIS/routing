@@ -213,14 +213,23 @@
             if (msg.attachment_path) {
                 const fileName = msg.attachment_name || 'Fichier';
                 const fileUrl = `/storage/${msg.attachment_path}`;
-                attachmentHtml = `
-                    <a href="${fileUrl}" target="_blank" class="flex items-center gap-2 mt-2 text-xs ${isCurrentUser ? 'text-blue-100 hover:text-white' : 'text-blue-600 hover:text-blue-800'} underline">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                        </svg>
-                        ${escapeHtmlClient(fileName)}
-                    </a>
-                `;
+                const isImage = msg.attachment_type && msg.attachment_type.startsWith('image/');
+                if (isImage) {
+                    attachmentHtml = `
+                        <button type="button" class="block mt-2 focus:outline-none" data-chat-image="${fileUrl}">
+                            <img src="${fileUrl}" alt="${escapeHtmlClient(fileName)}" class="max-w-full rounded cursor-zoom-in" style="max-height: 200px;">
+                        </button>
+                    `;
+                } else {
+                    attachmentHtml = `
+                        <a href="${fileUrl}" target="_blank" class="flex items-center gap-2 mt-2 text-xs ${isCurrentUser ? 'text-blue-100 hover:text-white' : 'text-blue-600 hover:text-blue-800'} underline">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                            </svg>
+                            ${escapeHtmlClient(fileName)}
+                        </a>
+                    `;
+                }
             }
             
             messageDiv.innerHTML = `
@@ -237,6 +246,93 @@
         
         container.scrollTop = container.scrollHeight;
         console.log('[ClientChat] Messages displayed successfully');
+    }
+
+    let clientChatImageState = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
+
+    function clampClientChatImage(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+    }
+
+    function applyClientChatImageTransform() {
+        const image = document.getElementById('client-chat-image-full');
+        const modal = document.getElementById('client-chat-image-modal');
+        if (!image || !modal) return;
+        const modalRect = modal.getBoundingClientRect();
+        const displayWidth = image.naturalWidth * clientChatImageState.scale;
+        const displayHeight = image.naturalHeight * clientChatImageState.scale;
+        const maxX = Math.max(0, (displayWidth - modalRect.width) / 2);
+        const maxY = Math.max(0, (displayHeight - modalRect.height) / 2);
+        clientChatImageState.x = clampClientChatImage(clientChatImageState.x, -maxX, maxX);
+        clientChatImageState.y = clampClientChatImage(clientChatImageState.y, -maxY, maxY);
+        image.style.transform = `translate(${clientChatImageState.x}px, ${clientChatImageState.y}px) scale(${clientChatImageState.scale})`;
+    }
+
+    function openClientChatImage(src) {
+        const modal = document.getElementById('client-chat-image-modal');
+        const image = document.getElementById('client-chat-image-full');
+        const download = document.getElementById('client-chat-image-download');
+        if (!modal || !image) return;
+        image.src = src;
+        if (download) download.href = src;
+        clientChatImageState = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
+        applyClientChatImageTransform();
+        modal.classList.remove('hidden');
+    }
+
+    function closeClientChatImage() {
+        const modal = document.getElementById('client-chat-image-modal');
+        const image = document.getElementById('client-chat-image-full');
+        const download = document.getElementById('client-chat-image-download');
+        if (!modal || !image) return;
+        image.src = '';
+        if (download) download.removeAttribute('href');
+        modal.classList.add('hidden');
+    }
+
+    function resetClientChatImage() {
+        clientChatImageState = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
+        applyClientChatImageTransform();
+    }
+
+    document.getElementById('client-chat-messages')?.addEventListener('click', function (event) {
+        const target = event.target.closest('[data-chat-image]');
+        if (!target) return;
+        openClientChatImage(target.getAttribute('data-chat-image'));
+    });
+
+    const clientChatImage = document.getElementById('client-chat-image-full');
+    const clientChatModal = document.getElementById('client-chat-image-modal');
+    if (clientChatImage && clientChatModal) {
+        clientChatImage.addEventListener('wheel', function (event) {
+            event.preventDefault();
+            const delta = event.deltaY < 0 ? 1.1 : 0.9;
+            clientChatImageState.scale = Math.min(4, Math.max(1, clientChatImageState.scale * delta));
+            applyClientChatImageTransform();
+        });
+        clientChatImage.addEventListener('mousedown', function (event) {
+            clientChatImageState.dragging = true;
+            clientChatImageState.startX = event.clientX - clientChatImageState.x;
+            clientChatImageState.startY = event.clientY - clientChatImageState.y;
+            clientChatImage.style.cursor = 'grabbing';
+        });
+        clientChatModal.addEventListener('mousemove', function (event) {
+            if (!clientChatImageState.dragging) return;
+            clientChatImageState.x = event.clientX - clientChatImageState.startX;
+            clientChatImageState.y = event.clientY - clientChatImageState.startY;
+            applyClientChatImageTransform();
+        });
+        clientChatModal.addEventListener('mouseup', function () {
+            clientChatImageState.dragging = false;
+            clientChatImage.style.cursor = 'grab';
+        });
+        clientChatModal.addEventListener('mouseleave', function () {
+            clientChatImageState.dragging = false;
+            clientChatImage.style.cursor = 'grab';
+        });
+        clientChatImage.addEventListener('load', function () {
+            applyClientChatImageTransform();
+        });
     }
 
     window.sendClientMessage = async function() {
@@ -361,5 +457,17 @@
     // Update unread count every 10 seconds
     setInterval(updateClientUnreadCount, 10000);
     updateClientUnreadCount();
+
+    window.openClientChatImage = openClientChatImage;
+    window.closeClientChatImage = closeClientChatImage;
+    window.resetClientChatImage = resetClientChatImage;
 })();
 </script>
+
+<div id="client-chat-image-modal" class="hidden fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4">
+    <button type="button" class="absolute top-4 right-4 text-white text-2xl" onclick="closeClientChatImage()">×</button>
+    <a id="client-chat-image-download" class="absolute top-4 left-4 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" download>Tlcharger</a>
+    <button type="button" class="absolute top-4 left-32 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" onclick="resetClientChatImage()">Rinitialiser</button>
+    <img id="client-chat-image-full" src="" alt="Aperçu image" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
+</div>
+

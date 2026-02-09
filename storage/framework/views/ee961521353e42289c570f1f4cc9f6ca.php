@@ -105,5 +105,4 @@ unset($__defined_vars, $__key, $__value); ?>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </div>
 </div>
-
 <?php /**PATH C:\xampp\htdocs\cerveau\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/trace.blade.php ENDPATH**/ ?>

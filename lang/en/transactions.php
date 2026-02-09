@@ -1,143 +1,128 @@
 <?php
 
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | Transaction Language Lines
-    |--------------------------------------------------------------------------
-    */
-
-    // Page titles
-    'page_title' => 'New Transfer - SG BANK',
-    'new_transfer' => 'New Transfer',
-
-    // Navigation
-    'dashboard' => 'Dashboard',
+    'page_title' => 'New transfer - SG BANK',
+    'new_transfer' => 'New transfer',
+    'dashboard' => 'Scoreboard',
     'logout' => 'Logout',
-
-    // Headers
-    'transfer_title' => 'New Transfer',
+    'transfer_title' => 'New transfer',
     'transfer_subtitle' => 'Make a secure transfer to a beneficiary',
-
-    // Step indicators
     'step_information' => 'Information',
-    'step_processing' => 'Processing',
+    'step_processing' => 'Treatment',
     'step_confirmation' => 'Confirmation',
-
-    //Sections montant
-    'transfer_amount' => 'Transfer Amount',
-
-    // Form sections
-    'transfer_details' => 'Transfer Details',
-    'beneficiary_info' => 'Enter beneficiary information',
-    'banking_details' => 'Banking Details',
-    'additional_info' => 'Additional Information',
-
-    // Form labels
-    'amount' => 'Transfer Amount',
-    'recipient_name' => 'Beneficiary Name',
-    'bank_name' => 'Bank Name',
-    'recipient_iban' => 'Beneficiary IBAN',
+    'transfer_details' => 'Details of transfer',
+    'beneficiary_info' => 'Inform beneficiary information',
+    'banking_details' => 'Bank details',
+    'additional_info' => 'Further information',
+    'amount' => 'Transfer',
+    'transfer_amount' => 'Transfer amount',
+    'recipient_name' => 'Name of beneficiary',
+    'bank_name' => 'Name of bank',
+    'recipient_iban' => 'IBAN of the beneficiary',
     'recipient_bic' => 'Beneficiary BIC',
-    'reason' => 'Transfer Reason (optional)',
-    'activation_code' => 'Activation Code',
-
-    // Placeholders
+    'reason' => 'Reason for transfer (optional)',
+    'transfer_reason' => 'Transfer reason',
+    'activation_code' => 'Activation code',
     'amount_placeholder' => '0.00',
-    'recipient_name_placeholder' => 'John Doe',
+    'recipient_name_placeholder' => 'Jean Dupont',
     'bank_name_placeholder' => 'National Bank',
-    'iban_placeholder' => 'FR76 1234 5678 9012 3456 7890 123',
-    'bic_placeholder' => 'BNPAFRPP',
-    'reason_placeholder' => 'Refund, gift...',
+    'recipient_iban_placeholder' => 'FR76 1234 5678 9012 3456 7890 123',
+    'recipient_bic_placeholder' => 'BNPAFRPP',
+    'transfer_reason_placeholder' => 'Refund, gift...',
     'activation_code_placeholder' => 'Your personal activation code',
-
-    // Buttons
     'cancel' => 'Cancel',
-    'start_transfer' => 'Start Transfer',
-    'processing' => 'Processing...',
-
-    // Progress section
-    'processing_in_progress' => 'Processing in Progress',
-    'transfer_progress' => 'Transfer Progress',
+    'start_transfer' => 'Launch transfer',
+    'processing' => 'Treatment in progress...',
+    'processing_in_progress' => 'Treatment in progress',
+    'transfer_progress' => 'Progress in transfer',
     'processing_message' => 'Your transfer is being processed. Please wait...',
-
-    // Flash messages
-    'operation_interrupted' => 'Operation Interrupted',
-    'operation_successful' => 'Operation Successful',
-    'transfer_successful' => 'Transfer completed successfully! You will be redirected...',
-    'understood' => 'I understand',
-
-    // Error messages
+    'operation_interrupted' => 'Operation interrupted',
+    'operation_successful' => 'Successful operation',
+    'operation_success' => 'Successful operation',
+    'transfer_successful' => 'Successful transfer! You\'re going to be redirected...',
+    'transfer_success_message' => 'Successful transfer!',
+    'understood' => 'I get it.',
     'amount_required' => 'The amount field is required.',
-    'recipient_name_required' => 'The beneficiary name field is required.',
-    'bank_name_required' => 'The bank name field is required.',
+    'recipient_name_required' => 'The name of the beneficiary field is required.',
+    'bank_name_required' => 'The name field of the bank is required.',
     'iban_required' => 'The IBAN field is required.',
     'bic_required' => 'The BIC field is required.',
     'activation_code_required' => 'The activation code field is required.',
-    'reason_required' => 'The reason field is required.',
-
-    // Validation messages
+    'reason_required' => 'The pattern field is required.',
     'invalid_amount' => 'Please enter a valid amount.',
     'invalid_iban' => 'Please enter a valid IBAN.',
     'invalid_bic' => 'Please enter a valid BIC.',
     'invalid_activation_code' => 'Please enter a valid activation code.',
-
-    // Status messages
-    'transfer_pending' => 'Transfer pending security verification.',
-    'connection_error' => 'Connection error during processing.',
-
-    // History page
-    'history_page_title' => 'Transaction History - SG BANK',
-    'history_title' => 'Transaction History',
-    'history_subtitle' => 'View all your financial operations',
-    'history_overview' => 'Overview of your financial operations',
-    
-    // Export buttons
+    'transfer_pending' => 'Transfer pending security check.',
+    'connection_error' => 'Connection error while processing.',
+    'history_page_title' => 'Transaction history - SG BANK',
+    'history_title' => 'Transaction history',
+    'history_subtitle' => 'View all your financial transactions',
+    'history_overview' => 'Overview of your financial transactions',
     'export_pdf' => 'Export PDF',
-    'export_excel' => 'Export Excel',
-    
-    // Filters
+    'export_excel' => 'Excel export',
     'filter_type' => 'Type',
     'filter_status' => 'Status',
-    'filter_date_from' => 'Start Date',
+    'filter_date_from' => 'Start date',
     'filter_date_to' => 'End Date',
     'filter_apply' => 'Apply',
-    
-    // Filter options - Types
     'all_types' => 'All types',
     'type_transfer' => 'Transfer',
     'type_deposit' => 'Deposit',
     'type_withdrawal' => 'Withdrawal',
-    
-    // Filter options - Statuses
-    'all_statuses' => 'All statuses',
+    'all_statuses' => 'All statutes',
     'status_pending' => 'Pending',
-    'status_on_hold' => 'On Hold',
-    'status_success' => 'Success',
-    'status_failed' => 'Failed',
-    
-    // Table headers
+    'status_on_hold' => 'Suspended',
+    'status_success' => 'Successful',
+    'status_failed' => 'Missed',
     'table_transaction' => 'Transaction',
     'table_type' => 'Type',
     'table_amount' => 'Amount',
-    'table_recipient' => 'Recipient',
+    'table_recipient' => 'Beneficiary:',
     'table_status' => 'Status',
     'table_progress' => 'Progress',
     'table_date' => 'Date',
     'table_actions' => 'Actions',
-    
-    // Actions
-    'action_receipt' => 'Receipt',
+    'action_receipt' => 'Received',
     'action_download_receipt' => 'Download receipt',
-    
-    // Empty messages
+    'receipt' => 'Received',
+    'download_receipt' => 'Download receipt',
+    'table_beneficiary' => 'Beneficiary:',
     'no_transactions' => 'No transactions found',
     'no_transactions_message' => 'No transactions match your search criteria.',
-    'reset_filters' => 'Reset filters',
-    
-    // Pagination
-    'showing_results' => 'Showing :first to :last of :total transactions',
-    
-    // JavaScript
-    'generating' => 'Generating...',
+    'no_transactions_found' => 'No transactions found',
+    'no_transactions_matching_criteria' => 'No transaction meets criteria',
+    'reset_filters' => 'Reset Filters',
+    'showing_results' => 'Display from :first to :last on :total transactions',
+    'generating' => 'Generation...',
+    'progress_label' => 'Progress',
+    'operation_sucess' => 'Successful operation',
+    'status_refunded' => 'Refunded',
+    'receipt_page_title' => 'Transaction receipt - SG BANK',
+    'receipt_title' => 'Receipt',
+    'receipt_brand_tag' => 'Secure Banking System',
+    'receipt_generated_at' => 'Generated on :date',
+    'receipt_transaction_details' => 'Transaction details',
+    'receipt_client_section' => 'Customer',
+    'receipt_client_name' => 'Customer name',
+    'receipt_email' => 'Email',
+    'receipt_beneficiary_section' => 'Beneficiary',
+    'receipt_additional_section' => 'Additional information',
+    'receipt_transaction_id' => 'Transaction ID',
+    'receipt_type' => 'Type',
+    'receipt_date' => 'Date',
+    'receipt_status' => 'Status',
+    'receipt_progress' => 'Progress',
+    'receipt_amount' => 'Amount',
+    'receipt_currency' => 'Currency',
+    'receipt_recipient_name' => 'Beneficiary name',
+    'receipt_recipient_iban' => 'Beneficiary IBAN',
+    'receipt_recipient_bic' => 'Beneficiary BIC',
+    'receipt_bank_name' => 'Bank name',
+    'receipt_reason' => 'Transfer reason',
+    'receipt_message' => 'Message',
+    'receipt_refunded_at' => 'Refunded at',
+    'receipt_refunded_by' => 'Refunded by',
+    'receipt_refund_reason' => 'Refund reason',
+    'receipt_notice' => 'This document is generated electronically and serves as official proof of transaction.',
 ];

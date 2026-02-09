@@ -166,10 +166,10 @@
                         <div class="flex items-center">
                             <div class="flex items-center space-x-3">
                                 <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
-                                    <img src='{{ asset("images/logobank.png") }}' class="w-9 h-9" alt="">
+                                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                                 </div>
                                 <div>
-                                    <a href="{{ localized_route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SG BANK Admin</a>
+                                    <a href="{{ localized_route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"><span class="sr-only">SG BANK Admin</span></a>
                                     <div class="text-xs text-gray-500 -mt-1">Gestion des dépôts</div>
                                 </div>
                             </div>
@@ -598,4 +598,8 @@
     @include('components.admin-chat-widget')
 </body>
 </html>
+
+
+
+
 

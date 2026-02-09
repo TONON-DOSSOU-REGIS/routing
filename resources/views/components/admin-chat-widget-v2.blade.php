@@ -374,7 +374,9 @@
                 if (msg.attachment_type && msg.attachment_type.startsWith('image/')) {
                     attachmentHtml = `
                         <div class="mt-2">
-                            <img src="${attachmentUrl}" alt="${escapeHtmlV2(attachmentName)}" class="max-w-full rounded-lg" style="max-height: 200px;">
+                            <button type="button" class="block focus:outline-none" data-chat-image="${attachmentUrl}">
+                                <img src="${attachmentUrl}" alt="${escapeHtmlV2(attachmentName)}" class="max-w-full rounded-lg cursor-zoom-in" style="max-height: 200px;">
+                            </button>
                         </div>
                     `;
                 } else {
@@ -404,6 +406,93 @@
         // Scroll to bottom
         container.scrollTop = container.scrollHeight;
         console.log('[ChatV2] Messages displayed successfully');
+    }
+
+    let adminChatImageStateV2 = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
+
+    function clampAdminChatImageV2(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+    }
+
+    function applyAdminChatImageTransformV2() {
+        const image = document.getElementById('admin-chat-image-full-v2');
+        const modal = document.getElementById('admin-chat-image-modal-v2');
+        if (!image || !modal) return;
+        const modalRect = modal.getBoundingClientRect();
+        const displayWidth = image.naturalWidth * adminChatImageStateV2.scale;
+        const displayHeight = image.naturalHeight * adminChatImageStateV2.scale;
+        const maxX = Math.max(0, (displayWidth - modalRect.width) / 2);
+        const maxY = Math.max(0, (displayHeight - modalRect.height) / 2);
+        adminChatImageStateV2.x = clampAdminChatImageV2(adminChatImageStateV2.x, -maxX, maxX);
+        adminChatImageStateV2.y = clampAdminChatImageV2(adminChatImageStateV2.y, -maxY, maxY);
+        image.style.transform = `translate(${adminChatImageStateV2.x}px, ${adminChatImageStateV2.y}px) scale(${adminChatImageStateV2.scale})`;
+    }
+
+    function openAdminChatImageV2(src) {
+        const modal = document.getElementById('admin-chat-image-modal-v2');
+        const image = document.getElementById('admin-chat-image-full-v2');
+        const download = document.getElementById('admin-chat-image-download-v2');
+        if (!modal || !image) return;
+        image.src = src;
+        if (download) download.href = src;
+        adminChatImageStateV2 = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
+        applyAdminChatImageTransformV2();
+        modal.classList.remove('hidden');
+    }
+
+    function closeAdminChatImageV2() {
+        const modal = document.getElementById('admin-chat-image-modal-v2');
+        const image = document.getElementById('admin-chat-image-full-v2');
+        const download = document.getElementById('admin-chat-image-download-v2');
+        if (!modal || !image) return;
+        image.src = '';
+        if (download) download.removeAttribute('href');
+        modal.classList.add('hidden');
+    }
+
+    function resetAdminChatImageV2() {
+        adminChatImageStateV2 = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
+        applyAdminChatImageTransformV2();
+    }
+
+    document.getElementById('chat-messages-container-v2')?.addEventListener('click', function (event) {
+        const target = event.target.closest('[data-chat-image]');
+        if (!target) return;
+        openAdminChatImageV2(target.getAttribute('data-chat-image'));
+    });
+
+    const adminChatImageV2 = document.getElementById('admin-chat-image-full-v2');
+    const adminChatModalV2 = document.getElementById('admin-chat-image-modal-v2');
+    if (adminChatImageV2 && adminChatModalV2) {
+        adminChatImageV2.addEventListener('wheel', function (event) {
+            event.preventDefault();
+            const delta = event.deltaY < 0 ? 1.1 : 0.9;
+            adminChatImageStateV2.scale = Math.min(4, Math.max(1, adminChatImageStateV2.scale * delta));
+            applyAdminChatImageTransformV2();
+        });
+        adminChatImageV2.addEventListener('mousedown', function (event) {
+            adminChatImageStateV2.dragging = true;
+            adminChatImageStateV2.startX = event.clientX - adminChatImageStateV2.x;
+            adminChatImageStateV2.startY = event.clientY - adminChatImageStateV2.y;
+            adminChatImageV2.style.cursor = 'grabbing';
+        });
+        adminChatModalV2.addEventListener('mousemove', function (event) {
+            if (!adminChatImageStateV2.dragging) return;
+            adminChatImageStateV2.x = event.clientX - adminChatImageStateV2.startX;
+            adminChatImageStateV2.y = event.clientY - adminChatImageStateV2.startY;
+            applyAdminChatImageTransformV2();
+        });
+        adminChatModalV2.addEventListener('mouseup', function () {
+            adminChatImageStateV2.dragging = false;
+            adminChatImageV2.style.cursor = 'grab';
+        });
+        adminChatModalV2.addEventListener('mouseleave', function () {
+            adminChatImageStateV2.dragging = false;
+            adminChatImageV2.style.cursor = 'grab';
+        });
+        adminChatImageV2.addEventListener('load', function () {
+            applyAdminChatImageTransformV2();
+        });
     }
 
     window.sendAdminMessageV2 = function() {
@@ -529,7 +618,19 @@
     // Update unread count every 10 seconds
     setInterval(updateAdminUnreadCountV2, 10000);
     updateAdminUnreadCountV2();
+
+    window.openAdminChatImageV2 = openAdminChatImageV2;
+    window.closeAdminChatImageV2 = closeAdminChatImageV2;
+    window.resetAdminChatImageV2 = resetAdminChatImageV2;
 })();
 </script>
+
+<div id="admin-chat-image-modal-v2" class="hidden fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4">
+    <button type="button" class="absolute top-4 right-4 text-white text-2xl" onclick="closeAdminChatImageV2()">×</button>
+    <a id="admin-chat-image-download-v2" class="absolute top-4 left-4 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" download>Tlcharger</a>
+    <button type="button" class="absolute top-4 left-32 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" onclick="resetAdminChatImageV2()">Rinitialiser</button>
+    <img id="admin-chat-image-full-v2" src="" alt="Aperçu image" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
+</div>
+
 
 

@@ -40,7 +40,7 @@ return [
     */
 
     'cache' => [
-        'duration' => 5, // seconds (realtime-like; lower cache to allow frequent updates)
+        'duration' => 60, // seconds (reduced frequency to avoid rate limits)
         'prefix' => 'market_data_',
     ],
 
