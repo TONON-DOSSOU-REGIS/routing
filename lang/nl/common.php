@@ -55,6 +55,7 @@ return [
     'amount' => 'Bedrag',
     'date' => 'Datum',
     'time' => 'Tijd',
+    'days' => 'dagen',
     'description' => 'Omschrijving',
     'details' => 'Gegevens',
     'actions' => 'Acties',

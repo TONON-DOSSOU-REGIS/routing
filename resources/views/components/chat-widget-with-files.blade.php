@@ -1,4 +1,18 @@
 {{-- Chat Widget Component with File Upload Support --}}
+@php
+    $chatWidgetWithFilesI18n = [
+        'greeting' => __('chat.greeting'),
+        'supportLabel' => __('chat.support_label'),
+        'supportShort' => __('chat.support_short'),
+        'youLabel' => __('chat.you_label'),
+        'fileTooLarge' => __('chat.file_too_large'),
+        'sendError' => __('chat.send_error'),
+        'sendErrorConnection' => __('chat.send_error_connection'),
+        'download' => __('chat.download'),
+        'resetImage' => __('chat.reset_image'),
+        'imagePreviewAlt' => __('chat.image_preview_alt'),
+    ];
+@endphp
 <div id="chat-widget" class="fixed bottom-4 right-4 z-50">
     {{-- Unread badge --}}
     <span id="unread-badge" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">0</span>
@@ -23,8 +37,8 @@
         {{-- Chat header --}}
         <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 flex justify-between items-center">
             <div>
-                <h3 class="font-bold">Support SG BANK</h3>
-                <p class="text-xs opacity-90">Nous sommes là pour vous aider</p>
+                <h3 class="font-bold">{{ __('chat.support_title') }}</h3>
+                <p class="text-xs opacity-90">{{ __('chat.support_subtitle') }}</p>
             </div>
             <button onclick="toggleChat()" class="text-white hover:text-gray-200">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,7 +50,7 @@
         {{-- Chat messages --}}
         <div id="chat-messages" class="p-4 h-80 overflow-y-auto bg-gray-50">
             <div class="text-center text-gray-500 text-sm py-4">
-                <i class="fas fa-spinner fa-spin"></i> Chargement des messages...
+                <i class="fas fa-spinner fa-spin"></i> {{ __('chat.loading_messages') }}
             </div>
         </div>
 
@@ -66,7 +80,7 @@
                         type="button"
                         onclick="document.getElementById('file-input').click()"
                         class="bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg px-3 py-2 transition-colors"
-                        title="Joindre un fichier"
+                        title="{{ __('chat.attach_file') }}"
                     >
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
@@ -77,7 +91,7 @@
                     <input 
                         type="text" 
                         id="chat-input"
-                        placeholder="Tapez votre message..." 
+                        placeholder="{{ __('chat.message_placeholder') }}" 
                         class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         onkeypress="if(event.key === 'Enter') { event.preventDefault(); sendChatMessage(); }"
                     >
@@ -99,6 +113,8 @@
 </div>
 
 <script>
+const chatLocale = document.documentElement.lang || '{{ app()->getLocale() }}';
+const chatI18n = @json($chatWidgetWithFilesI18n);
 let chatInterval = null;
 let lastMessageId = 0;
 let selectedFile = null;
@@ -129,7 +145,7 @@ function handleFileSelect(event) {
     
     // Check file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
-        alert('Le fichier est trop volumineux. Taille maximale: 10MB');
+        alert(chatI18n.fileTooLarge.replace(':size', '10MB'));
         event.target.value = '';
         return;
     }
@@ -185,8 +201,8 @@ function displayMessages(messages) {
         container.innerHTML = `
             <div class="flex items-start mb-4">
                 <div class="bg-blue-100 rounded-lg p-3 max-w-xs">
-                    <p class="text-sm text-gray-800">Bonjour! Comment puis-je vous aider aujourd'hui?</p>
-                    <span class="text-xs text-gray-500 mt-1 block">Support SG BANK</span>
+                    <p class="text-sm text-gray-800">${chatI18n.greeting}</p>
+                    <span class="text-xs text-gray-500 mt-1 block">${chatI18n.supportLabel}</span>
                 </div>
             </div>
         `;
@@ -200,7 +216,7 @@ function displayMessages(messages) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `flex items-start mb-4 ${isCurrentUser ? 'justify-end' : ''}`;
         
-        const time = new Date(msg.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        const time = new Date(msg.created_at).toLocaleTimeString(chatLocale, { hour: '2-digit', minute: '2-digit' });
         
         let attachmentHtml = '';
         if (msg.attachment_path) {
@@ -226,7 +242,7 @@ function displayMessages(messages) {
                 ${msg.message ? `<p class="text-sm">${escapeHtml(msg.message)}</p>` : ''}
                 ${attachmentHtml}
                 <span class="text-xs ${isCurrentUser ? 'opacity-75' : 'text-gray-500'} mt-1 block">
-                    ${isCurrentUser ? 'Vous' : (msg.sender ? msg.sender.first_name : 'Support')} • ${time}
+                    ${isCurrentUser ? chatI18n.youLabel : (msg.sender ? msg.sender.first_name : chatI18n.supportShort)} • ${time}
                 </span>
             </div>
         `;
@@ -360,12 +376,12 @@ function sendChatMessage() {
             removeFile();
             loadChatMessages();
         } else {
-            alert(data.message || 'Erreur lors de l\'envoi du message');
+            alert(data.message || chatI18n.sendError);
         }
     })
     .catch(error => {
         console.error('Error sending message:', error);
-        alert('Erreur lors de l\'envoi du message');
+        alert(chatI18n.sendError);
     })
     .finally(() => {
         input.disabled = false;
@@ -408,9 +424,9 @@ updateUnreadCount();
 
 <div id="chat-image-modal" class="hidden fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4">
     <button type="button" class="absolute top-4 right-4 text-white text-2xl" onclick="closeChatImage()">×</button>
-    <a id="chat-image-download" class="absolute top-4 left-4 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" download>Tlcharger</a>
-    <button type="button" class="absolute top-4 left-32 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" onclick="resetChatImage()">Rinitialiser</button>
-    <img id="chat-image-full" src="" alt="Aperçu image" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
+    <a id="chat-image-download" class="absolute top-4 left-4 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" download>{{ __('chat.download') }}</a>
+    <button type="button" class="absolute top-4 left-32 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" onclick="resetChatImage()">{{ __('chat.reset_image') }}</button>
+    <img id="chat-image-full" src="" alt="{{ __('chat.image_preview_alt') }}" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
 </div>
 
 

@@ -186,14 +186,15 @@
             align-items: center;
             gap: 0.25rem;
         }
+
+        @include('components.admin-dashboard-background-styles')
     </style>
 </head>
 <body class="min-h-screen">
-    <!-- Container avec image de fond -->
-    <div class="background-container min-h-screen">
-        <div class="min-h-screen relative z-10">
-            <!-- Navigation améliorée -->
-            <nav class="glass-nav sticky top-0 z-50">
+    @include('components.admin-dashboard-background')
+    <div class="min-h-screen relative z-10">
+        <!-- Navigation améliorée -->
+        <nav class="glass-nav sticky top-0 z-50">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <div class="flex items-center">
@@ -335,7 +336,7 @@
                             </div>
                         </div>
 
-                        <form method="POST" action="{{ localized_route('admin.users.store') }}" class="space-y-8">
+                        <form method="POST" action="{{ localized_route('admin.users.store') }}" class="space-y-8" enctype="multipart/form-data">
                             @csrf
 
                             <!-- Informations personnelles -->
@@ -427,6 +428,22 @@
                                             <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>Client</option>
                                             <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrateur</option>
                                         </select>
+                                    </div>
+
+                                    <div class="md:col-span-2">
+                                        <label for="profile_photo" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
+                                            <i class="fas fa-camera mr-2 text-indigo-500"></i>
+                                            Photo du client
+                                        </label>
+                                        <input type="file"
+                                               name="profile_photo"
+                                               id="profile_photo"
+                                               accept="image/png,image/jpeg,image/webp"
+                                               class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 input-field">
+                                        <p class="mt-2 text-sm text-gray-500 flex items-center">
+                                            <i class="fas fa-info-circle mr-1 text-blue-500"></i>
+                                            Formats acceptés: JPG, PNG, WebP (2 Mo max).
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -653,7 +670,6 @@
                         </form>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 
@@ -719,6 +735,7 @@
             e.target.value = value;
         });
     </script>
+    @include('components.admin-dashboard-background-script')
 </body>
 </html>
 

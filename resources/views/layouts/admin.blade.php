@@ -123,11 +123,14 @@
         .empty-state {
             text-align: center;
         }
+        @include('components.admin-dashboard-background-styles')
     </style>
 @endpush
 
 @section('content')
 <div class="simple-bg min-h-screen font-inter">
+
+    @include('components.admin-dashboard-background')
 
     <div class="min-h-screen relative z-10">
         <!-- Navigation ultra-premium -->
@@ -260,6 +263,7 @@
             }
         });
     </script>
+    @include('components.admin-dashboard-background-script')
     @include('components.admin-chat-widget-v2')
 </div>
 @endsection

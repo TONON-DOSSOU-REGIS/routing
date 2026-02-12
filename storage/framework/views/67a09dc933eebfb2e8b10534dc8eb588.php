@@ -42,11 +42,11 @@
                 </svg>
             </div>
             <div>
-                <h3 class="text-xl font-bold text-white">Suivi des Marchés</h3>
-                <p class="market-muted text-sm" id="last-update">À l'instant</p>
+                <h3 class="text-xl font-bold text-white"><?php echo e(__('market.title_tracker')); ?></h3>
+                <p class="market-muted text-sm" id="last-update"><?php echo e(__('market.last_update_now')); ?></p>
             </div>
         </div>
-        <button id="refresh-btn" class="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors duration-200" title="Actualiser">
+        <button id="refresh-btn" class="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors duration-200" title="<?php echo e(__('market.refresh')); ?>">
             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
             </svg>
@@ -56,34 +56,38 @@
     <!-- Market Type Tabs -->
     <div class="flex space-x-2 mb-6">
         <button class="market-tab active px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200" data-type="all">
-            Tous
+            <?php echo e(__('market.tab_all')); ?>
+
         </button>
         <button class="market-tab px-4 py-2 hover:text-white hover:bg-white/20 rounded-lg text-sm font-medium transition-colors duration-200" data-type="crypto">
             <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v1.252a3.078 3.078 0 01-2.353-1.253 1 1 0 00-1.51-1.31c-.163.187-.452.377-.843.504V8.662c.622-.117 1.196-.342 1.676-.662C10.398 7.766 11 6.991 11 6V5.092z" clip-rule="evenodd"/>
             </svg>
-            Crypto
+            <?php echo e(__('market.tab_crypto')); ?>
+
         </button>
         <button class="market-tab px-4 py-2 hover:text-white hover:bg-white/20 rounded-lg text-sm font-medium transition-colors duration-200" data-type="stocks">
             <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"/>
             </svg>
-            Actions
+            <?php echo e(__('market.tab_stocks')); ?>
+
         </button>
         <button class="market-tab px-4 py-2 hover:text-white hover:bg-white/20 rounded-lg text-sm font-medium transition-colors duration-200" data-type="forex">
             <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v1.252a3.078 3.078 0 01-2.353-1.253 1 1 0 00-1.51-1.31c-.163.187-.452.377-.843.504V8.662c.622-.117 1.196-.342 1.676-.662C10.398 7.766 11 6.991 11 6V5.092z" clip-rule="evenodd"/>
             </svg>
-            Forex
+            <?php echo e(__('market.tab_forex')); ?>
+
         </button>
     </div>
 
     <!-- Loading State -->
     <div id="loading-state" class="hidden flex items-center justify-center py-12">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-        <span class="ml-3 market-muted">Chargement des données du marché...</span>
+        <span class="ml-3 market-muted"><?php echo e(__('market.loading')); ?></span>
     </div>
 
     <!-- Error State -->
@@ -91,9 +95,10 @@
         <svg class="w-12 h-12 text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
-        <p class="text-red-400 mb-4">Erreur lors du chargement des données</p>
+        <p class="text-red-400 mb-4"><?php echo e(__('market.error_loading')); ?></p>
         <button id="retry-btn" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200">
-            Réessayer
+            <?php echo e(__('market.retry')); ?>
+
         </button>
     </div>
 
@@ -117,6 +122,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const refreshBtn = document.getElementById('refresh-btn');
     const retryBtn = document.getElementById('retry-btn');
     const marketTabs = document.querySelectorAll('.market-tab');
+    const locale = document.documentElement.lang || '<?php echo e(app()->getLocale()); ?>';
+    const lastUpdatePrefix = <?php echo json_encode(__('market.last_update_prefix'), 15, 512) ?>;
 
     // Professional logo function with real images
     function getProfessionalLogo(item) {
@@ -639,7 +646,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateLastUpdate() {
         const now = new Date();
-        lastUpdateElement.textContent = `Mis à jour: ${now.toLocaleTimeString('fr-FR')}`;
+        lastUpdateElement.textContent = lastUpdatePrefix.replace(':time', now.toLocaleTimeString(locale));
     }
 
     function startAutoRefresh() {

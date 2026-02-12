@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\IsAdmin::class,
             'isAdmin' => \App\Http\Middleware\IsAdmin::class,
+            'notAdmin' => \App\Http\Middleware\EnsureNotAdmin::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
             'checkUserStatus' => \App\Http\Middleware\CheckUserStatus::class,
             'twofactor' => \App\Http\Middleware\EnsureTwoFactorVerified::class,

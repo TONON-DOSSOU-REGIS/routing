@@ -1,4 +1,9 @@
 {{-- Analytics Section Component --}}
+@php
+    $analyticsI18n = [
+        'transactions' => __('dashboard.transactions'),
+    ];
+@endphp
 <div class="mt-8 fade-in-up">
     <!-- En-tête de la section -->
     <div class="flex items-center justify-between mb-6">
@@ -93,7 +98,7 @@
                         <i class="fas fa-calculator text-purple-600 text-xl"></i>
                     </div>
                     <span class="text-xs font-semibold text-purple-600 bg-purple-100 px-2 py-1 rounded-full">
-                        <span id="transaction-count">--</span> ops
+                        <span id="transaction-count">--</span> {{ __('dashboard.transactions_label') }}
                     </span>
                 </div>
                 <p class="text-sm font-semibold text-gray-600 mb-1">{{ __('dashboard.average_transaction') }}</p>
@@ -179,6 +184,8 @@ let currentPeriod = 30;
 let balanceChart, typeChart, monthlyChart;
 let userCurrency = '{{ $user->default_currency ?? "EUR" }}';
 let userCurrencySymbol = '{{ $user->currency_symbol }}';
+const analyticsLocale = document.documentElement.lang || '{{ app()->getLocale() }}';
+const analyticsI18n = @json($analyticsI18n);
 let analyticsRefreshInterval;
 let isLoadingAnalytics = false;
 
@@ -198,7 +205,7 @@ function changePeriod(days) {
 
 // Fonction pour formater les montants avec la devise de l'utilisateur
 function formatCurrency(amount) {
-    return new Intl.NumberFormat('fr-FR', {
+    return new Intl.NumberFormat(analyticsLocale, {
         style: 'currency',
         currency: userCurrency
     }).format(amount);
@@ -490,7 +497,7 @@ function createTypeChart(data) {
                             const label = context.label || '';
                             const value = formatCurrency(context.parsed);
                             const count = data.counts[context.dataIndex];
-                            return `${label}: ${value} (${count} transactions)`;
+                            return `${label}: ${value} (${count} ${analyticsI18n.transactions})`;
                         }
                     }
                 }

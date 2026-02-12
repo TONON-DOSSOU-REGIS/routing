@@ -7,8 +7,8 @@
                 <i class="fas fa-chart-line text-white text-2xl"></i>
             </div>
             <div>
-                <h3 class="text-xl font-bold text-gray-900">Marchés en temps réel</h3>
-                <p class="text-gray-600 mt-1">Suivez les variations du marché boursier</p>
+                <h3 class="text-xl font-bold text-gray-900">{{ __('market.title_realtime') }}</h3>
+                <p class="text-gray-600 mt-1">{{ __('market.subtitle_realtime') }}</p>
             </div>
         </div>
         <div class="flex items-center space-x-3">
@@ -27,29 +27,29 @@
         <button @click="activeTab = 'all'" 
                 :class="activeTab === 'all' ? 'bg-white text-blue-600 shadow-md' : 'text-gray-600 hover:text-gray-900'"
                 class="flex-1 px-4 py-2 rounded-lg font-medium transition duration-200">
-            <i class="fas fa-globe mr-2"></i>Tous
+            <i class="fas fa-globe mr-2"></i>{{ __('market.tab_all') }}
         </button>
         <button @click="activeTab = 'crypto'" 
                 :class="activeTab === 'crypto' ? 'bg-white text-blue-600 shadow-md' : 'text-gray-600 hover:text-gray-900'"
                 class="flex-1 px-4 py-2 rounded-lg font-medium transition duration-200">
-            <i class="fab fa-bitcoin mr-2"></i>Crypto
+            <i class="fab fa-bitcoin mr-2"></i>{{ __('market.tab_crypto') }}
         </button>
         <button @click="activeTab = 'stocks'" 
                 :class="activeTab === 'stocks' ? 'bg-white text-blue-600 shadow-md' : 'text-gray-600 hover:text-gray-900'"
                 class="flex-1 px-4 py-2 rounded-lg font-medium transition duration-200">
-            <i class="fas fa-chart-bar mr-2"></i>Actions
+            <i class="fas fa-chart-bar mr-2"></i>{{ __('market.tab_stocks') }}
         </button>
         <button @click="activeTab = 'forex'" 
                 :class="activeTab === 'forex' ? 'bg-white text-blue-600 shadow-md' : 'text-gray-600 hover:text-gray-900'"
                 class="flex-1 px-4 py-2 rounded-lg font-medium transition duration-200">
-            <i class="fas fa-dollar-sign mr-2"></i>Forex
+            <i class="fas fa-dollar-sign mr-2"></i>{{ __('market.tab_forex') }}
         </button>
     </div>
 
     <!-- Loading State -->
     <div x-show="loading && !marketData.length" x-transition.opacity class="text-center py-12">
         <div class="inline-block animate-spin rounded-full h-10 w-10 border-2 border-blue-600 border-t-transparent"></div>
-        <p class="text-gray-600 mt-4">Chargement des données du marché...</p>
+        <p class="text-gray-600 mt-4">{{ __('market.loading') }}</p>
 
         <!-- Skeleton shimmer placeholders -->
         <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -78,9 +78,9 @@
         <div class="bg-red-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
             <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
         </div>
-        <p class="text-red-600 font-medium">Erreur lors du chargement des données</p>
+        <p class="text-red-600 font-medium">{{ __('market.error_loading') }}</p>
         <button @click="refreshData()" class="mt-4 text-blue-600 hover:text-blue-700 font-medium">
-            <i class="fas fa-redo mr-2"></i>Réessayer
+            <i class="fas fa-redo mr-2"></i>{{ __('market.retry') }}
         </button>
     </div>
 
@@ -141,7 +141,7 @@
                                   x-text="formatChange(item)"></span>
                         </div>
                         <div class="text-xs text-gray-500" x-show="item.volume_24h || item.volume">
-                            Vol: <span x-text="formatVolume(item)"></span>
+                            {{ __('market.volume_label') }} <span x-text="formatVolume(item)"></span>
                         </div>
                     </div>
 
@@ -158,6 +158,15 @@
 </div>
 
 <script>
+const marketLocale = document.documentElement.lang || '{{ app()->getLocale() }}';
+const marketI18n = {
+    lastUpdateLoading: @json(__('market.last_update_loading')),
+    lastUpdateNow: @json(__('market.last_update_now')),
+    typeCrypto: @json(__('market.type_crypto')),
+    typeStock: @json(__('market.type_stock')),
+    typeForex: @json(__('market.type_forex')),
+};
+
 function marketTracker() {
     return {
         marketData: [],
@@ -165,7 +174,7 @@ function marketTracker() {
         refreshing: false,
         error: false,
         activeTab: 'all',
-        lastUpdate: 'Chargement...',
+        lastUpdate: marketI18n.lastUpdateLoading,
 
         init() {
             this.fetchMarketData();
@@ -193,7 +202,7 @@ function marketTracker() {
                         ...result.data.stocks,
                         ...result.data.forex
                     ];
-                    this.lastUpdate = 'À l\'instant';
+                    this.lastUpdate = marketI18n.lastUpdateNow;
                     this.error = false;
                 } else {
                     this.error = true;
@@ -231,7 +240,7 @@ function marketTracker() {
 
         formatEurPrice(item) {
             if (item.price_eur) {
-                return '€' + item.price_eur.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                return '€' + item.price_eur.toLocaleString(marketLocale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
             return '';
         },
@@ -286,9 +295,9 @@ function marketTracker() {
 
         getTypeLabel(type) {
             const labels = {
-                'crypto': 'Crypto',
-                'stock': 'Action',
-                'forex': 'Forex'
+                'crypto': marketI18n.typeCrypto,
+                'stock': marketI18n.typeStock,
+                'forex': marketI18n.typeForex
             };
             return labels[type] || type;
         }

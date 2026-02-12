@@ -153,14 +153,15 @@
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.9) 0%, rgba(139, 92, 246, 0.85) 50%, rgba(14, 165, 233, 0.9) 100%);
             backdrop-filter: blur(2px);
         }
+
+        @include('components.admin-dashboard-background-styles')
     </style>
 </head>
 <body class="min-h-screen">
-    <!-- Container avec image de fond -->
-    <div class="background-container min-h-screen">
-        <div class="min-h-screen relative z-10">
-            <!-- Navigation améliorée -->
-            <nav class="glass-nav sticky top-0 z-50">
+    @include('components.admin-dashboard-background')
+    <div class="min-h-screen relative z-10">
+        <!-- Navigation améliorée -->
+        <nav class="glass-nav sticky top-0 z-50">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <div class="flex items-center">
@@ -245,17 +246,17 @@
                 </div>
             </nav>
 
-            <div class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
                 <!-- En-tête de la page -->
                 <div class="mb-8 fade-in-up">
-                    <h1 class="text-3xl font-bold text-white drop-shadow-lg text-center">Dépôt manuel</h1>
-                    <p class="text-white/90 mt-2 drop-shadow text-center">Effectuez un dépôt manuel sur le compte d'un client</p>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-white drop-shadow-lg text-center">Dépôt manuel</h1>
+                    <p class="text-white/90 mt-2 drop-shadow text-center">Effectuez un dépôt manuel sur le compte d'un utilisateur</p>
                 </div>
 
                 <!-- Flash Messages améliorées -->
                 @if(session('status'))
                     <div class="mb-6 glass-card border-l-4 border-l-green-500 rounded-2xl fade-in-up">
-                        <div class="px-6 py-4">
+                        <div class="px-4 sm:px-6 py-4">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 bg-green-100 p-2 rounded-full">
                                     <i class="fas fa-check-circle text-green-500 text-lg"></i>
@@ -270,7 +271,7 @@
 
                 @if($errors->any())
                     <div class="mb-6 glass-card border-l-4 border-l-red-500 rounded-2xl fade-in-up">
-                        <div class="px-6 py-4">
+                        <div class="px-4 sm:px-6 py-4">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 bg-red-100 p-2 rounded-full">
                                     <i class="fas fa-exclamation-circle text-red-500 text-lg"></i>
@@ -288,36 +289,36 @@
                     </div>
                 @endif
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                     <!-- Formulaire principal -->
                     <div class="lg:col-span-2">
                         <div class="glass-card rounded-2xl overflow-hidden card-hover">
-                            <div class="px-8 py-8">
+                            <div class="px-4 sm:px-8 py-6 sm:py-8">
                                 <div class="flex items-center mb-6">
                                     <div class="bg-gradient-to-r from-green-500 to-emerald-500 p-3 rounded-2xl mr-4 shadow-lg">
                                         <i class="fas fa-plus-circle text-white text-2xl"></i>
                                     </div>
                                     <div>
                                         <h1 class="text-2xl font-bold text-gray-900">Dépôt manuel</h1>
-                                        <p class="text-gray-600 mt-1">Créditez immédiatement le compte d'un client</p>
+                                        <p class="text-gray-600 mt-1">Créditez immédiatement le compte d'un utilisateur</p>
                                     </div>
                                 </div>
 
                                 <form method="POST" action="{{ localized_route('admin.deposit.store') }}" class="space-y-6">
                                     @csrf
 
-                                    <!-- Sélection du client -->
+                                    <!-- Sélection de l'utilisateur -->
                                     <div class="stagger-item">
                                         <label for="user_id" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
                                             <i class="fas fa-user mr-2 text-blue-500"></i>
-                                            Sélectionner un client
+                                            Sélectionner un utilisateur
                                         </label>
                                         <div class="relative">
                                             <select name="user_id"
                                                     id="user_id"
                                                     class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm input-field"
                                                     required>
-                                                <option value="">Choisir un client...</option>
+                                                <option value="">Choisir un utilisateur...</option>
                                                 @foreach($users as $user)
                                                     <option value="{{ $user->id }}"
                                                             {{ old('user_id') == $user->id ? 'selected' : '' }}
@@ -403,7 +404,7 @@
 
                                     <!-- Aperçu dynamique -->
                                     <div class="stagger-item">
-                                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-5">
+                                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 sm:p-5">
                                             <div class="flex items-start">
                                                 <div class="flex-shrink-0 bg-blue-100 p-2 rounded-lg mr-4">
                                                     <i class="fas fa-eye text-blue-500 text-lg"></i>
@@ -411,7 +412,7 @@
                                                 <div class="flex-1">
                                                     <h3 class="text-sm font-semibold text-blue-800 mb-2">Aperçu de l'opération</h3>
                                                     <div class="text-sm text-blue-700">
-                                                        <p id="preview-text" class="font-medium">Sélectionnez un client et un montant pour voir l'aperçu.</p>
+                                                        <p id="preview-text" class="font-medium">Sélectionnez un utilisateur et un montant pour voir l'aperçu.</p>
                                                         <div id="new-balance" class="mt-2 text-xs text-blue-600 hidden">
                                                             Nouveau solde: <span id="new-balance-amount" class="font-bold"></span> €
                                                         </div>
@@ -423,7 +424,7 @@
 
                                     <!-- Avertissement de confirmation -->
                                     <div class="stagger-item">
-                                        <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-5">
+                                        <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4 sm:p-5">
                                             <div class="flex items-start">
                                                 <div class="flex-shrink-0 bg-amber-100 p-2 rounded-lg mr-4">
                                                     <i class="fas fa-exclamation-triangle text-amber-500 text-lg"></i>
@@ -433,11 +434,11 @@
                                                     <div class="text-sm text-amber-700 space-y-1">
                                                         <p class="flex items-center">
                                                             <i class="fas fa-bolt mr-2"></i>
-                                                            Cette action créditera immédiatement le compte du client
+                                                            Cette action créditera immédiatement le compte de l'utilisateur
                                                         </p>
                                                         <p class="flex items-center">
                                                             <i class="fas fa-bell mr-2"></i>
-                                                            Le client recevra une notification par email et SMS
+                                                            L'utilisateur recevra une notification par email et SMS
                                                         </p>
                                                         <p class="flex items-center">
                                                             <i class="fas fa-ban mr-2"></i>
@@ -450,12 +451,12 @@
                                     </div>
 
                                     <!-- Boutons d'action -->
-                                    <div class="stagger-item flex justify-end space-x-4 pt-4">
-                                        <a href="{{ localized_route('admin.dashboard') }}" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-200 transition duration-300 font-medium shadow-sm">
+                                    <div class="stagger-item flex flex-col sm:flex-row sm:justify-end gap-3 pt-4">
+                                        <a href="{{ localized_route('admin.dashboard') }}" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-200 transition duration-300 font-medium shadow-sm w-full sm:w-auto">
                                             <i class="fas fa-arrow-left mr-2"></i>Annuler
                                         </a>
                                         <button type="submit"
-                                                class="action-btn bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 font-semibold shadow-lg transform hover:scale-105 transition duration-300 pulse-glow"
+                                                class="action-btn bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 font-semibold shadow-lg transform hover:scale-105 transition duration-300 pulse-glow w-full sm:w-auto"
                                                 onclick="return confirm('Êtes-vous sûr de vouloir effectuer ce dépôt ? Cette action est irréversible.')">
                                             <i class="fas fa-plus-circle mr-2"></i>Effectuer le dépôt
                                         </button>
@@ -468,7 +469,7 @@
                     <!-- Dépôts récents -->
                     <div class="lg:col-span-1">
                         <div class="glass-card rounded-2xl overflow-hidden card-hover">
-                            <div class="px-6 py-6">
+                            <div class="px-4 sm:px-6 py-6">
                                 <div class="flex items-center mb-6">
                                     <div class="bg-gradient-to-r from-purple-500 to-indigo-500 p-2 rounded-xl mr-3 shadow-lg">
                                         <i class="fas fa-history text-white"></i>
@@ -477,7 +478,7 @@
                                 </div>
                                 <div class="space-y-4 max-h-96 overflow-y-auto pr-2">
                                     @forelse($recentDeposits ?? collect() as $deposit)
-                                        <div class="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl border border-gray-200 hover:border-green-200 transition duration-300">
+                                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl border border-gray-200 hover:border-green-200 transition duration-300">
                                             <div class="flex-1">
                                                 <p class="text-sm font-semibold text-gray-900 truncate">
                                                     {{ $deposit->user->first_name }} {{ $deposit->user->last_name }}
@@ -490,7 +491,7 @@
                                                     {{ $deposit->reason ?? 'Dépôt manuel' }}
                                                 </p>
                                             </div>
-                                            <div class="text-right">
+                                            <div class="text-left sm:text-right">
                                                 <p class="text-sm font-bold text-green-600">
                                                     +{{ number_format($deposit->amount, 2) }} €
                                                 </p>
@@ -512,7 +513,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 
@@ -575,7 +575,7 @@
                     }
                 } else {
                     document.getElementById('preview-text').textContent =
-                        'Sélectionnez un client, un montant et une devise pour voir l\'aperçu.';
+                        'Sélectionnez un utilisateur, un montant et une devise pour voir l\'aperçu.';
                     balanceDisplay.classList.add('hidden');
                     newBalanceDiv.classList.add('hidden');
                     if (amountMinInfo) {
@@ -595,6 +595,7 @@
                 }
             });
     </script>
+    @include('components.admin-dashboard-background-script')
     @include('components.admin-chat-widget')
 </body>
 </html>

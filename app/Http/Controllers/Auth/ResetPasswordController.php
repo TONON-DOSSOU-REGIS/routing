@@ -17,6 +17,12 @@ class ResetPasswordController extends Controller
     protected function redirectTo()
     {
         $locale = app()->getLocale();
+        $user = auth()->user();
+
+        if ($user && $user->isAdmin()) {
+            return '/' . $locale . '/admin/dashboard';
+        }
+
         return '/' . $locale . '/dashboard';
     }
 

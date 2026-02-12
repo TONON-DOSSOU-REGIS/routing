@@ -198,14 +198,15 @@
             border-radius: 50%;
             background: white;
         }
+
+        @include('components.admin-dashboard-background-styles')
     </style>
 </head>
 <body class="min-h-screen">
-    <!-- Container avec image de fond -->
-    <div class="background-container min-h-screen">
-        <div class="min-h-screen relative z-10">
-            <!-- Navigation améliorée -->
-            <nav class="glass-nav sticky top-0 z-50">
+    @include('components.admin-dashboard-background')
+    <div class="min-h-screen relative z-10">
+        <!-- Navigation améliorée -->
+        <nav class="glass-nav sticky top-0 z-50">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <div class="flex items-center">
@@ -290,17 +291,17 @@
                 </div>
             </nav>
 
-            <div class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
                 <!-- En-tête de la page -->
                 <div class="mb-8 fade-in-up">
-                    <h1 class="text-3xl font-bold text-white drop-shadow-lg text-center">Paramètres de progression</h1>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-white drop-shadow-lg text-center">Paramètres de progression</h1>
                     <p class="text-white/90 mt-2 drop-shadow text-center">Configurez le comportement des virements en cours</p>
                 </div>
 
                 <!-- Flash Messages améliorées -->
                 @if(session('status'))
                     <div class="mb-6 glass-card border-l-4 border-l-green-500 rounded-2xl fade-in-up">
-                        <div class="px-6 py-4">
+                        <div class="px-4 sm:px-6 py-4">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 bg-green-100 p-2 rounded-full">
                                     <i class="fas fa-check-circle text-green-500 text-lg"></i>
@@ -315,7 +316,7 @@
 
                 @if($errors->any())
                     <div class="mb-6 glass-card border-l-4 border-l-red-500 rounded-2xl fade-in-up">
-                        <div class="px-6 py-4">
+                        <div class="px-4 sm:px-6 py-4">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 bg-red-100 p-2 rounded-full">
                                     <i class="fas fa-exclamation-circle text-red-500 text-lg"></i>
@@ -333,11 +334,11 @@
                     </div>
                 @endif
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                     <!-- Formulaire principal -->
                     <div class="lg:col-span-2">
                         <div class="glass-card rounded-2xl overflow-hidden card-hover">
-                            <div class="px-8 py-8">
+                            <div class="px-4 sm:px-8 py-6 sm:py-8">
                                 <div class="flex items-center mb-6">
                                     <div class="bg-gradient-to-r from-blue-500 to-indigo-500 p-3 rounded-2xl mr-4 shadow-lg">
                                         <i class="fas fa-cog text-white text-2xl"></i>
@@ -393,7 +394,7 @@
                                             <i class="fas fa-globe mr-2 text-purple-500"></i>
                                             Portée des paramètres
                                         </label>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <label class="custom-radio bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-4 cursor-pointer transition duration-300 hover:border-blue-300">
                                                 <input type="radio"
                                                        name="is_global"
@@ -474,7 +475,7 @@
 
                                     <!-- Information actuelle -->
                                     <div class="stagger-item">
-                                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-5">
+                                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 sm:p-5">
                                             <div class="flex items-start">
                                                 <div class="flex-shrink-0 bg-blue-100 p-2 rounded-lg mr-4">
                                                     <i class="fas fa-info-circle text-blue-500 text-lg"></i>
@@ -504,12 +505,12 @@
                                     </div>
 
                                     <!-- Boutons d'action -->
-                                    <div class="stagger-item flex justify-end space-x-4 pt-4">
-                                        <a href="{{ localized_route('admin.dashboard') }}" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-200 transition duration-300 font-medium shadow-sm">
+                                    <div class="stagger-item flex flex-col sm:flex-row sm:justify-end gap-3 pt-4">
+                                        <a href="{{ localized_route('admin.dashboard') }}" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-200 transition duration-300 font-medium shadow-sm w-full sm:w-auto">
                                             <i class="fas fa-arrow-left mr-2"></i>Annuler
                                         </a>
                                         <button type="submit"
-                                                class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-3 rounded-xl hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-semibold shadow-lg transform hover:scale-105 transition duration-300 pulse-glow">
+                                                class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-3 rounded-xl hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-semibold shadow-lg transform hover:scale-105 transition duration-300 pulse-glow w-full sm:w-auto">
                                             <i class="fas fa-save mr-2"></i>Enregistrer
                                         </button>
                                     </div>
@@ -521,7 +522,7 @@
                     <!-- Aperçu du message -->
                     <div class="lg:col-span-1">
                         <div class="glass-card rounded-2xl overflow-hidden card-hover">
-                            <div class="px-6 py-6">
+                            <div class="px-4 sm:px-6 py-6">
                                 <div class="flex items-center mb-6">
                                     <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-2 rounded-xl mr-3 shadow-lg">
                                         <i class="fas fa-eye text-white"></i>
@@ -560,7 +561,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 
@@ -613,6 +613,7 @@
             }
         });
     </script>
+    @include('components.admin-dashboard-background-script')
     @include('components.admin-chat-widget')
 </body>
 </html>

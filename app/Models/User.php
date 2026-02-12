@@ -39,6 +39,7 @@ class User extends Authenticatable
         'activation_code',
         'oauth_provider',
         'oauth_id',
+        'profile_photo_path',
     ];
 
     /**
@@ -51,6 +52,7 @@ class User extends Authenticatable
         'remember_token',
         'two_factor_secret',
         'two_factor_backup_codes',
+        'login_link_token',
     ];
 
     /**
@@ -68,6 +70,8 @@ class User extends Authenticatable
             'two_factor_enabled' => 'boolean',
             'two_factor_backup_codes' => 'array',
             'two_factor_confirmed_at' => 'datetime',
+            'login_link_expires_at' => 'datetime',
+            'login_link_used_at' => 'datetime',
         ];
     }
 
@@ -241,5 +245,14 @@ class User extends Authenticatable
     public function getNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public function getProfilePhotoUrlAttribute(): ?string
+    {
+        if (!$this->profile_photo_path) {
+            return null;
+        }
+
+        return \Illuminate\Support\Facades\Storage::disk('public')->url($this->profile_photo_path);
     }
 }

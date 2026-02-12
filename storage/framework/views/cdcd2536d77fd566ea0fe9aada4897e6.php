@@ -29,6 +29,15 @@ foreach ($attributes->all() as $__key => $__value) {
 unset($__defined_vars, $__key, $__value); ?>
 <?php
     $currentUserId = $user?->id ?? auth()->id();
+    $notificationBellI18n = [
+        'loadingShort' => __('notifications.loading_short'),
+        'errorLoadingShort' => __('notifications.error_loading_short'),
+        'noneTitle' => __('notifications.none_title'),
+        'timeJustNow' => __('notifications.time_just_now'),
+        'timeMinutesAgo' => __('notifications.time_minutes_ago'),
+        'timeHoursAgo' => __('notifications.time_hours_ago'),
+        'timeDaysAgo' => __('notifications.time_days_ago'),
+    ];
 ?>
 
 <div class="relative inline-block" data-user-id="<?php echo e($currentUserId); ?>">
@@ -40,27 +49,29 @@ unset($__defined_vars, $__key, $__value); ?>
     </button>
 
     <!-- Dropdown Menu -->
-    <div id="notification-dropdown" class="absolute right-0 mt-2 w-96 max-w-[90vw] bg-white/95 backdrop-blur rounded-xl shadow-2xl border border-gray-200 ring-1 ring-black/5 overflow-hidden z-[9999] hidden" style="position: absolute; z-index: 9999;">
+    <div id="notification-dropdown" class="fixed left-1/2 top-16 w-[92vw] max-w-[28rem] -translate-x-1/2 md:absolute md:left-auto md:right-0 md:top-auto md:mt-2 md:w-96 md:max-w-[90vw] md:translate-x-0 bg-white/95 backdrop-blur rounded-xl shadow-2xl border border-gray-200 ring-1 ring-black/5 overflow-hidden z-[9999] hidden">
         <div class="p-4 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-800">Notifications</h3>
-            <p class="text-sm text-gray-600">Vos dernières notifications</p>
+            <h3 class="text-lg font-semibold text-gray-800"><?php echo e(__('notifications.title')); ?></h3>
+            <p class="text-sm text-gray-600"><?php echo e(__('notifications.subtitle')); ?></p>
         </div>
 
         <div id="notification-list" class="max-h-[60vh] overflow-y-auto divide-y divide-gray-100">
             <!-- Notifications will be loaded here -->
             <div class="p-4 text-center text-gray-500">
                 <i class="fas fa-spinner fa-spin text-xl mb-2"></i>
-                <p>Chargement...</p>
+                <p><?php echo e(__('notifications.loading_short')); ?></p>
             </div>
         </div>
 
         <div class="p-3 border-t border-gray-200 bg-gray-50 rounded-b-lg">
             <div class="flex justify-between items-center">
                 <button id="mark-all-read" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
-                    Tout marquer comme lu
+                    <?php echo e(__('notifications.mark_all_read')); ?>
+
                 </button>
                 <a href="<?php echo e(localized_route('notifications.index', ['locale' => app()->getLocale()])); ?>" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
-                    Voir tout
+                    <?php echo e(__('notifications.view_all')); ?>
+
                 </a>
             </div>
         </div>
@@ -76,6 +87,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const markAllRead = document.getElementById('mark-all-read');
     const userId = document.querySelector('[data-user-id]')?.getAttribute('data-user-id');
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    const locale = document.documentElement.lang || '<?php echo e(app()->getLocale()); ?>';
+    const i18n = <?php echo json_encode($notificationBellI18n, 15, 512) ?>;
 
     function requireCsrf() {
         if (!csrfToken) {
@@ -87,8 +100,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let isOpen = false;
     let soundEnabled = false;
+    let lastUnreadCount = null;
 
-    document.addEventListener('click', () => { soundEnabled = true; }, { once: true });
+    function enableSound() {
+        soundEnabled = true;
+    }
+
+    document.addEventListener('click', enableSound, { once: true });
+    document.addEventListener('keydown', enableSound, { once: true });
+    document.addEventListener('touchstart', enableSound, { once: true });
 
     // Toggle dropdown
     bell.addEventListener('click', function(e) {
@@ -123,14 +143,14 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.error('Error loading notifications:', error);
-                list.innerHTML = '<div class="p-4 text-center text-gray-500"><p>Erreur de chargement</p></div>';
+                list.innerHTML = `<div class="p-4 text-center text-gray-500"><p>${i18n.errorLoadingShort}</p></div>`;
             });
     }
 
     // Render notifications
     function renderNotifications(notifications) {
         if (notifications.length === 0) {
-            list.innerHTML = '<div class="p-4 text-center text-gray-500"><i class="fas fa-bell-slash text-2xl mb-2"></i><p>Aucune notification</p></div>';
+            list.innerHTML = `<div class="p-4 text-center text-gray-500"><i class="fas fa-bell-slash text-2xl mb-2"></i><p>${i18n.noneTitle}</p></div>`;
             return;
         }
 
@@ -173,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .then(() => {
-            updateUnreadCount();
+            updateUnreadCount({ silent: true });
             // Reload notifications to update UI
             loadNotifications();
         })
@@ -191,20 +211,27 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .then(() => {
-            updateUnreadCount();
+            updateUnreadCount({ silent: true });
             loadNotifications();
         })
         .catch(error => console.error('Error marking all as read:', error));
     });
 
     // Update unread count
-    function updateUnreadCount() {
+    function updateUnreadCount(options = {}) {
+        const { silent = false } = options;
         const locale = window.location.pathname.split('/')[1] || 'fr';
         fetch(`/${locale}/notifications/unread-count`)
             .then(response => response.json())
             .then(data => {
-                if (data.success && data.count > 0) {
-                    count.textContent = data.count > 99 ? '99+' : data.count;
+                const newCount = data.success ? Number(data.count || 0) : 0;
+                if (!silent && lastUnreadCount !== null && newCount > lastUnreadCount) {
+                    playNotificationSound();
+                }
+                lastUnreadCount = newCount;
+
+                if (data.success && newCount > 0) {
+                    count.textContent = newCount > 99 ? '99+' : newCount;
                     count.classList.remove('hidden');
                 } else {
                     count.classList.add('hidden');
@@ -244,15 +271,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const hours = Math.floor(diff / 3600000);
         const days = Math.floor(diff / 86400000);
 
-        if (minutes < 1) return 'À l'instant';
-        if (minutes < 60) return `Il y a ${minutes} min`;
-        if (hours < 24) return `Il y a ${hours} h`;
-        if (days < 7) return `Il y a ${days} j`;
-        return date.toLocaleDateString('fr-FR');
+        if (minutes < 1) return i18n.timeJustNow;
+        if (minutes < 60) return i18n.timeMinutesAgo.replace(':minutes', minutes);
+        if (hours < 24) return i18n.timeHoursAgo.replace(':hours', hours);
+        if (days < 7) return i18n.timeDaysAgo.replace(':days', days);
+        return date.toLocaleDateString(locale);
     }
 
     // Initial load of unread count
-    updateUnreadCount();
+    updateUnreadCount({ silent: true });
 
     // Real-time updates with Echo (fallback to polling)
     function playNotificationSound() {
@@ -279,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.Echo.private(`user.${userId}`)
             .listen('.notification.created', (e) => {
                 const payload = e.notification || e;
-                updateUnreadCount();
+                updateUnreadCount({ silent: true });
                 if (isOpen) {
                     loadNotifications();
                 }

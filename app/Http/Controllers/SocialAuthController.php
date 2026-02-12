@@ -115,6 +115,10 @@ class SocialAuthController extends Controller
             return redirect('/' . $locale . '/pending-approval');
         }
 
+        if ($user->isAdmin()) {
+            return redirect('/' . $locale . '/admin/dashboard');
+        }
+
         return redirect('/' . $locale . '/dashboard');
     }
 

@@ -1,4 +1,20 @@
 {{-- Admin Chat Widget Component - Version Corrigée --}}
+@php
+    $adminChatFixedI18n = [
+        'loadingConversations' => __('admin_chat.loading_conversations'),
+        'loadingError' => __('admin_chat.loading_error'),
+        'noConversations' => __('admin_chat.no_conversations'),
+        'messagesWillAppear' => __('admin_chat.messages_will_appear'),
+        'noMessages' => __('admin_chat.no_messages'),
+        'loadingMessagesError' => __('admin_chat.loading_messages_error'),
+        'errorPrefix' => __('admin_chat.error_prefix'),
+        'unknownError' => __('admin_chat.unknown_error'),
+        'formatError' => __('admin_chat.format_error'),
+        'connectionError' => __('admin_chat.connection_error'),
+        'retry' => __('admin_chat.retry'),
+        'sendError' => __('admin_chat.send_error'),
+    ];
+@endphp
 <div id="admin-chat-widget" class="fixed bottom-4 right-4 z-50">
     {{-- Unread badge --}}
     <span id="admin-unread-badge" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">0</span>
@@ -23,8 +39,8 @@
         {{-- Chat header --}}
         <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 flex justify-between items-center">
             <div>
-                <h3 class="font-bold">Messages Clients</h3>
-                <p class="text-xs opacity-90">Gérer les conversations</p>
+                <h3 class="font-bold">{{ __('admin_chat.title') }}</h3>
+                <p class="text-xs opacity-90">{{ __('admin_chat.subtitle') }}</p>
             </div>
             <button onclick="toggleAdminChat()" class="text-white hover:text-gray-200">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,7 +54,7 @@
             {{-- Conversations list --}}
             <div id="conversations-list" class="h-96 overflow-y-auto bg-gray-50">
                 <div class="text-center text-gray-500 text-sm py-4">
-                    <i class="fas fa-spinner fa-spin"></i> Chargement des conversations...
+                    <i class="fas fa-spinner fa-spin"></i> {{ __('admin_chat.loading_conversations') }}
                 </div>
             </div>
 
@@ -65,7 +81,7 @@
                         <input 
                             type="text" 
                             id="admin-chat-input"
-                            placeholder="Répondre au client..." 
+                            placeholder="{{ __('admin_chat.reply_placeholder') }}" 
                             class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                             onkeypress="if(event.key === 'Enter') sendAdminMessage()"
                         >
@@ -88,6 +104,8 @@
 let adminChatInterval = null;
 let currentChatUserId = null;
 let adminLastMessageId = 0;
+const adminChatLocale = document.documentElement.lang || '{{ app()->getLocale() }}';
+const adminChatI18n = @json($adminChatFixedI18n);
 
 function toggleAdminChat() {
     const chatWindow = document.getElementById('admin-chat-window');
@@ -154,8 +172,8 @@ function loadConversations() {
                     container.innerHTML = `
                         <div class="text-center text-yellow-600 py-8">
                             <i class="fas fa-inbox text-4xl mb-3"></i>
-                            <p>Aucune conversation</p>
-                            <p class="text-xs mt-2">Les messages des clients apparaîtront ici</p>
+                            <p>${adminChatI18n.noConversations}</p>
+                            <p class="text-xs mt-2">${adminChatI18n.messagesWillAppear}</p>
                         </div>
                     `;
                 }
@@ -164,8 +182,8 @@ function loadConversations() {
                 container.innerHTML = `
                     <div class="text-center text-red-500 py-8">
                         <i class="fas fa-exclamation-triangle text-4xl mb-3"></i>
-                        <p>Erreur de chargement</p>
-                        <p class="text-sm">${data.message || 'Erreur inconnue'}</p>
+                        <p>${adminChatI18n.loadingError}</p>
+                        <p class="text-sm">${data.message || adminChatI18n.unknownError}</p>
                     </div>
                 `;
             }
@@ -174,7 +192,7 @@ function loadConversations() {
             container.innerHTML = `
                 <div class="text-center text-red-500 py-8">
                     <i class="fas fa-exclamation-triangle text-4xl mb-3"></i>
-                    <p>Erreur de format</p>
+                    <p>${adminChatI18n.formatError}</p>
                     <p class="text-sm">${e.message}</p>
                 </div>
             `;
@@ -185,10 +203,10 @@ function loadConversations() {
         container.innerHTML = `
             <div class="text-center text-red-500 py-8">
                 <i class="fas fa-exclamation-triangle text-4xl mb-3"></i>
-                <p>Erreur de connexion</p>
+                <p>${adminChatI18n.connectionError}</p>
                 <p class="text-sm">${error.message}</p>
                 <button onclick="loadConversations()" class="mt-4 bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
-                    Réessayer
+                    ${adminChatI18n.retry}
                 </button>
             </div>
         `;
@@ -203,8 +221,8 @@ function displayConversations(conversations) {
         container.innerHTML = `
             <div class="text-center text-gray-500 py-8">
                 <i class="fas fa-inbox text-4xl mb-3"></i>
-                <p>Aucune conversation</p>
-                <p class="text-xs mt-2 text-gray-400">Les messages des clients apparaîtront ici</p>
+                <p>${adminChatI18n.noConversations}</p>
+                <p class="text-xs mt-2 text-gray-400">${adminChatI18n.messagesWillAppear}</p>
             </div>
         `;
         return;
@@ -231,8 +249,8 @@ function displayConversations(conversations) {
             openChat(user.id, user.first_name + ' ' + user.last_name, user.email);
         };
         
-        const time = lastMsg && lastMsg.created_at ? new Date(lastMsg.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '';
-        const preview = lastMsg && lastMsg.message ? (lastMsg.message.length > 50 ? lastMsg.message.substring(0, 50) + '...' : lastMsg.message) : 'Aucun message';
+        const time = lastMsg && lastMsg.created_at ? new Date(lastMsg.created_at).toLocaleTimeString(adminChatLocale, { hour: '2-digit', minute: '2-digit' }) : '';
+        const preview = lastMsg && lastMsg.message ? (lastMsg.message.length > 50 ? lastMsg.message.substring(0, 50) + '...' : lastMsg.message) : adminChatI18n.noMessages;
         
         convDiv.innerHTML = `
             <div class="flex items-start justify-between">
@@ -324,7 +342,7 @@ function displayChatMessages(messages) {
         container.innerHTML = `
             <div class="text-center text-gray-400 py-8">
                 <i class="fas fa-comments text-4xl mb-3"></i>
-                <p>Aucun message</p>
+                <p>${adminChatI18n.noMessages}</p>
             </div>
         `;
         return;
@@ -339,7 +357,7 @@ function displayChatMessages(messages) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `flex items-start mb-4 ${isAdmin ? 'justify-end' : ''}`;
         
-        const time = new Date(msg.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        const time = new Date(msg.created_at).toLocaleTimeString(adminChatLocale, { hour: '2-digit', minute: '2-digit' });
         
         let attachmentHtml = '';
         if (msg.attachment_path) {
@@ -511,12 +529,12 @@ function sendAdminMessage() {
             loadChatWithUser(currentChatUserId);
         } else {
             console.error('[Admin Chat] Failed to send message:', data);
-            alert('Erreur lors de l\'envoi du message');
+            alert(adminChatI18n.sendError);
         }
     })
     .catch(error => {
         console.error('[Admin Chat] Error sending message:', error);
-        alert('Erreur de connexion');
+        alert(adminChatI18n.connectionError);
     })
     .finally(() => {
         input.disabled = false;
@@ -565,6 +583,6 @@ console.log('[Admin Chat] Widget initialized');
     <button type="button" class="absolute top-4 right-4 text-white text-2xl" onclick="closeAdminChatImage()">×</button>
     <a id="admin-chat-image-download" class="absolute top-4 left-4 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" download>Tlcharger</a>
     <button type="button" class="absolute top-4 left-32 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" onclick="resetAdminChatImage()">Rinitialiser</button>
-    <img id="admin-chat-image-full" src="" alt="Aperçu image" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
+    <img id="admin-chat-image-full" src="" alt="{{ __('chat.image_preview_alt') }}" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
 </div>
 

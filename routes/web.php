@@ -11,6 +11,7 @@ use App\Http\Controllers\MarketController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\TwoFactorController;
+use App\Http\Controllers\Auth\LoginLinkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +57,10 @@ Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(fu
     
     // Auth routes
     Auth::routes();
+
+    // Login link (shortcut to login page)
+    Route::get('/login-link/{token}', [LoginLinkController::class, 'login'])->name('login.link');
+    Route::get('/l/{token}', [LoginLinkController::class, 'login'])->name('login.short');
 
     // Pending approval route
     Route::get('/pending-approval', function () {
@@ -111,8 +116,8 @@ Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(fu
     Route::post('/support/nous-contacter', [ContactController::class, 'store'])->name('support.nous-contacter.store');
     Route::get('/support/contact-thank-you', [ContactController::class, 'thankYou'])->name('support.nous-contacter.thankyou');
 
-    // Authenticated routes
-    Route::middleware(['auth', 'twofactor'])->group(function () {
+    // Authenticated routes (client space only)
+    Route::middleware(['auth', 'twofactor', 'notAdmin'])->group(function () {
         // Two-Factor Authentication
         Route::get('/two-factor/setup', [TwoFactorController::class, 'setup'])->name('twofactor.setup');
         Route::post('/two-factor/enable', [TwoFactorController::class, 'enable'])->name('twofactor.enable');
@@ -167,6 +172,7 @@ Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(fu
         Route::post('/users/{user}/toggle', [AdminController::class, 'toggleUser'])->name('users.toggle');
         Route::get('/users/create', [AdminController::class, 'createUser'])->name('users.create');
         Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
+        Route::post('/users/{user}/login-link', [AdminController::class, 'generateLoginLink'])->name('users.login-link');
         Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('users.edit');
         Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
         Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('users.delete');

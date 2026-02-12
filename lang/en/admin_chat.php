@@ -1,0 +1,22 @@
+<?php
+
+return [
+    'title' => 'Client Messages',
+    'subtitle' => 'Manage conversations',
+    'loading_conversations' => 'Loading conversations...',
+    'reply_placeholder' => 'Reply to the client...',
+    'loading_error' => 'Loading error',
+    'no_conversations' => 'No conversations',
+    'no_messages' => 'No messages',
+    'loading_messages_error' => 'Error loading messages',
+    'error_prefix' => 'Error: :message',
+    'start_conversation' => 'Start the conversation',
+    'messages_will_appear' => 'Client messages will appear here',
+    'unknown_error' => 'Unknown error',
+    'format_error' => 'Format error',
+    'connection_error' => 'Connection error',
+    'retry' => 'Retry',
+    'send_error' => 'Error sending message',
+    'user_fallback' => 'User',
+    'online' => 'Online',
+];

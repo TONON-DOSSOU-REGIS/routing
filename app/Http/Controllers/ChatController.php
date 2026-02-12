@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ChatMessage;
 use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -80,6 +81,19 @@ class ChatController extends Controller
         $message = ChatMessage::create($messageData);
 
         Log::info('Chat message created:', $message->toArray());
+
+        $sender = Auth::user();
+        if ($sender && !$sender->isAdmin()) {
+            try {
+                NotificationService::notifyAdminUserMessage($sender, $message);
+            } catch (\Exception $e) {
+                Log::error('Failed to notify admins of user message', [
+                    'message_id' => $message->id,
+                    'sender_id' => $sender->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
 
         return response()->json([
             'success' => true,

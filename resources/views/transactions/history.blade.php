@@ -132,6 +132,12 @@
             backdrop-filter: blur(2px);
         }
 
+        @media (max-width: 640px) {
+            .background-container {
+                background-attachment: scroll;
+            }
+        }
+
         /* Style pour les badges */
         .badge {
             font-size: 0.75rem;
@@ -248,19 +254,19 @@
                 </div>
             </nav>
 
-            <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
                 <!-- En-tête de la page -->
                 <div class="mb-8 fade-in-up">
-                    <h1 class="text-3xl font-bold text-white drop-shadow-lg text-center">{{ __('transactions.history_title') }}</h1>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-white drop-shadow-lg text-center">{{ __('transactions.history_title') }}</h1>
                     <p class="text-white/90 mt-2 drop-shadow text-center">{{ __('transactions.history_subtitle') }}</p>
                 </div>
 
                 <!-- Carte principale -->
                 <div class="glass-card rounded-2xl overflow-hidden card-hover">
-                    <div class="px-8 py-8">
+                    <div class="px-4 sm:px-8 py-6 sm:py-8">
                         <!-- En-tête avec statistiques -->
                         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
-                            <div class="flex items-center">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
                                 <div class="bg-gradient-to-r from-purple-500 to-indigo-500 p-3 rounded-2xl mr-4 shadow-lg">
                                     <i class="fas fa-history text-white text-2xl"></i>
                                 </div>
@@ -271,14 +277,14 @@
                             </div>
                             
                             @if(auth()->user()->isAdmin())
-                                <div class="flex flex-col sm:flex-row gap-3">
+                                <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                                     <a href="{{ localized_route('admin.export.pdf') }}" 
-                                       class="action-btn bg-gradient-to-r from-red-500 to-pink-600 text-white px-6 py-3 rounded-xl hover:from-red-600 hover:to-pink-700 font-semibold shadow-lg transition duration-300 flex items-center gap-2">
+                                       class="action-btn bg-gradient-to-r from-red-500 to-pink-600 text-white px-6 py-3 rounded-xl hover:from-red-600 hover:to-pink-700 font-semibold shadow-lg transition duration-300 flex items-center justify-center gap-2 w-full sm:w-auto">
                                         <i class="fas fa-file-pdf"></i>
                                         Export PDF
                                     </a>
                                     <a href="{{ localized_route('admin.export.excel') }}" 
-                                       class="action-btn bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 font-semibold shadow-lg transition duration-300 flex items-center gap-2">
+                                       class="action-btn bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 font-semibold shadow-lg transition duration-300 flex items-center justify-center gap-2 w-full sm:w-auto">
                                         <i class="fas fa-file-excel"></i>
                                         Export Excel
                                     </a>
@@ -288,7 +294,7 @@
 
                         <!-- Filtres améliorés -->
                         <div class="mb-8 stagger-item">
-                            <form method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                            <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                                 <div>
                                     <label for="type" class="block text-sm font-semibold text-gray-800 mb-2 flex items-center">
                                         <i class="fas fa-filter mr-2 text-blue-500"></i>
@@ -347,52 +353,52 @@
                         <!-- Tableau des transactions amélioré -->
                         <div class="overflow-hidden rounded-2xl stagger-item">
                             <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-gray-200">
+                                <table class="min-w-[900px] w-full divide-y divide-gray-200 text-sm">
                                     <thead class="bg-gradient-to-r from-gray-50 to-blue-50">
                                         <tr>
-                                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                                 <div class="flex items-center gap-2">
                                                     <i class="fas fa-hashtag text-blue-500"></i>
                                                     Transaction
                                                 </div>
                                             </th>
-                                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                                 <div class="flex items-center gap-2">
                                                     <i class="fas fa-exchange-alt text-purple-500"></i>
                                                     Type
                                                 </div>
                                             </th>
-                                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                                 <div class="flex items-center gap-2">
                                                     <i class="fas fa-euro-sign text-green-500"></i>
                                                     Montant
                                                 </div>
                                             </th>
-                                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                                 <div class="flex items-center gap-2">
                                                     <i class="fas fa-user text-indigo-500"></i>
                                                     Bénéficiaire
                                                 </div>
                                             </th>
-                                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                                 <div class="flex items-center gap-2">
                                                     <i class="fas fa-circle text-yellow-500"></i>
                                                     Statut
                                                 </div>
                                             </th>
-                                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                                 <div class="flex items-center gap-2">
                                                     <i class="fas fa-chart-line text-red-500"></i>
                                                     Progression
                                                 </div>
                                             </th>
-                                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                                 <div class="flex items-center gap-2">
                                                     <i class="fas fa-calendar text-gray-500"></i>
                                                     Date
                                                 </div>
                                             </th>
-                                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                                 <div class="flex items-center gap-2">
                                                     <i class="fas fa-cog text-gray-500"></i>
                                                     Actions
@@ -403,12 +409,12 @@
                                     <tbody class="bg-white divide-y divide-gray-200">
                                         @forelse($transactions as $transaction)
                                             <tr class="table-row-hover">
-                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     <div class="text-sm font-semibold text-gray-900">
                                                         #{{ $transaction->id }}
                                                     </div>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     <div class="flex items-center gap-3">
                                                         <div class="transaction-icon 
                                                             @if($transaction->type == 'transfer') bg-blue-100 text-blue-600
@@ -421,12 +427,12 @@
                                                         </span>
                                                     </div>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     <div class="text-sm font-bold @if($transaction->type == 'deposit') text-green-600 @elseif($transaction->type == 'withdrawal') text-red-600 @else text-gray-900 @endif">
                                                         {{ \App\Helpers\CurrencyHelper::format($transaction->amount, $transaction->user->default_currency ?? 'EUR') }}
                                                     </div>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     <div class="text-sm text-gray-900">
                                                         {{ $transaction->recipient_name ?? 'N/A' }}
                                                     </div>
@@ -436,7 +442,7 @@
                                                         </div>
                                                     @endif
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     <span class="badge 
                                                         @if($transaction->status == 'success') 
                                                             bg-gradient-to-r from-green-100 to-green-200 text-green-800
@@ -451,7 +457,7 @@
                                                         {{ ucfirst(str_replace('_', ' ', $transaction->status)) }}
                                                     </span>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     <div class="w-full bg-gray-200 rounded-full h-2">
                                                         <div class="progress-fill 
                                                             @if($transaction->progress >= 100) bg-green-500
@@ -465,7 +471,7 @@
                                                         {{ $transaction->progress }}%
                                                     </div>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     <div class="text-sm text-gray-900 font-medium">
                                                         {{ $transaction->created_at->format('d/m/Y') }}
                                                     </div>
@@ -473,7 +479,7 @@
                                                         {{ $transaction->created_at->format('H:i') }}
                                                     </div>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     <div class="flex items-center gap-2">
                                                         @if($transaction->status == 'success' && in_array($transaction->type, ['transfer', 'deposit']))
                                                             <a href="{{ localized_route('transactions.receipt', $transaction) }}" 
@@ -494,7 +500,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="8" class="px-6 py-12 text-center">
+                                                <td colspan="8" class="px-4 sm:px-6 py-10 sm:py-12 text-center">
                                                     <div class="flex flex-col items-center justify-center">
                                                         <div class="bg-gray-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4">
                                                             <i class="fas fa-exchange-alt text-gray-400 text-2xl"></i>
@@ -516,11 +522,11 @@
 
                         <!-- Pagination -->
                         @if($transactions->hasPages())
-                            <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div class="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                                 <div class="text-sm text-gray-700">
                                     Affichage de {{ $transactions->firstItem() }} à {{ $transactions->lastItem() }} sur {{ $transactions->total() }} transactions
                                 </div>
-                                <div class="flex space-x-2">
+                                <div class="flex flex-wrap gap-2">
                                     {{ $transactions->links('vendor.pagination.tailwind') }}
                                 </div>
                             </div>

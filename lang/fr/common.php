@@ -55,6 +55,7 @@ return [
     'amount' => 'Montant',
     'date' => 'Date',
     'time' => 'Heure',
+    'days' => 'jours',
     'description' => 'Description',
     'details' => 'Détails',
     'actions' => 'Actions',

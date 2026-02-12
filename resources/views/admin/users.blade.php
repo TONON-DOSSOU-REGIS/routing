@@ -188,14 +188,15 @@
         .pagination-btn:hover {
             transform: translateY(-1px);
         }
+
+        @include('components.admin-dashboard-background-styles')
     </style>
 </head>
 <body class="min-h-screen">
-    <!-- Container avec image de fond -->
-    <div class="background-container min-h-screen">
-        <div class="min-h-screen relative z-10">
-            <!-- Navigation améliorée -->
-            <nav class="glass-nav sticky top-0 z-50">
+    @include('components.admin-dashboard-background')
+    <div class="min-h-screen relative z-10">
+        <!-- Navigation améliorée -->
+        <nav class="glass-nav sticky top-0 z-50">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <div class="flex items-center">
@@ -280,17 +281,17 @@
                 </div>
             </nav>
 
-            <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
                 <!-- En-tête de la page -->
                 <div class="mb-8 fade-in-up">
-                    <h1 class="text-3xl font-bold text-white drop-shadow-lg text-center">Gestion des utilisateurs</h1>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-white drop-shadow-lg text-center">Gestion des utilisateurs</h1>
                     <p class="text-white/90 mt-2 drop-shadow text-center">Gérez les comptes clients et administrateurs</p>
                 </div>
 
                 <!-- Flash Messages améliorées -->
                 @if(session('status'))
                     <div class="mb-6 glass-card border-l-4 border-l-green-500 rounded-2xl fade-in-up">
-                        <div class="px-6 py-4">
+                        <div class="px-4 sm:px-6 py-3 sm:py-4">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 bg-green-100 p-2 rounded-full">
                                     <i class="fas fa-check-circle text-green-500 text-lg"></i>
@@ -303,9 +304,63 @@
                     </div>
                 @endif
 
+                @if($errors->any())
+                    <div class="mb-6 glass-card border-l-4 border-l-red-500 rounded-2xl fade-in-up">
+                        <div class="px-4 sm:px-6 py-3 sm:py-4">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 bg-red-100 p-2 rounded-full">
+                                    <i class="fas fa-exclamation-circle text-red-500 text-lg"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-semibold text-gray-800 mb-1">Action impossible</p>
+                                    <ul class="text-sm text-gray-700 list-disc pl-5 space-y-1">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                @if(session('login_link'))
+                    <div class="mb-6 glass-card border-l-4 border-l-blue-500 rounded-2xl fade-in-up">
+                        <div class="px-4 sm:px-6 py-3 sm:py-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                <div>
+                                    <p class="text-sm font-semibold text-gray-800">Lien de connexion généré</p>
+                                    <p class="text-xs text-gray-600">
+                                        Client: {{ session('login_link_user') }}
+                                        @if(session('login_link_expires_at'))
+                                            · Valide jusqu'au {{ session('login_link_expires_at') }}
+                                        @endif
+                                        · Durée: {{ config('auth.login_link_ttl_days', 90) }} jours
+                                    </p>
+                                </div>
+                                <a href="{{ session('login_link') }}" target="_blank" rel="noopener"
+                                   class="inline-flex items-center justify-center bg-blue-50 text-blue-700 px-3 py-2 rounded-lg hover:bg-blue-100 transition text-sm font-medium shadow-sm">
+                                    <i class="fas fa-arrow-up-right-from-square mr-2"></i>
+                                    Ouvrir
+                                </a>
+                            </div>
+                            <div class="mt-3 flex flex-col sm:flex-row gap-2">
+                                <input id="login-link-input" type="text" readonly
+                                       value="{{ session('login_link') }}"
+                                       class="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 text-sm">
+                                <button type="button" data-copy-target="login-link-input"
+                                        class="inline-flex items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-indigo-700 transition text-sm font-semibold shadow-sm">
+                                    <i class="fas fa-copy mr-2"></i>
+                                    Copier
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Carte principale -->
                 <div class="glass-card rounded-2xl overflow-hidden card-hover">
-                    <div class="px-8 py-8">
+                    <div class="px-4 sm:px-8 py-6 sm:py-8">
                         <!-- En-tête avec statistiques -->
                         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
                             <div>
@@ -323,7 +378,7 @@
                                     <div class="text-2xl font-bold text-blue-700">{{ $users->total() }}</div>
                                 </div>
                                 <a href="{{ localized_route('admin.users.create') }}" 
-                                   class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-indigo-700 font-semibold shadow-lg transform hover:scale-105 transition duration-300 flex items-center gap-2">
+                                   class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-indigo-700 font-semibold shadow-lg transform hover:scale-105 transition duration-300 flex items-center gap-2 w-full sm:w-auto">
                                     <i class="fas fa-plus"></i>
                                     Ajouter un utilisateur
                                 </a>
@@ -332,8 +387,8 @@
 
                         <!-- Recherche et Filtres -->
                         <div class="mb-8 stagger-item">
-                            <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                                <div class="md:col-span-2">
+                            <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                <div class="sm:col-span-2">
                                     <label for="search" class="block text-sm font-semibold text-gray-800 mb-2 flex items-center">
                                         <i class="fas fa-search mr-2 text-blue-500"></i>
                                         Rechercher
@@ -375,7 +430,7 @@
                                     </select>
                                 </div>
 
-                                <div class="flex items-end">
+                                <div class="flex items-end sm:col-span-2 lg:col-span-1">
                                     <button type="submit" 
                                             class="w-full bg-gradient-to-r from-gray-600 to-gray-700 text-white px-6 py-3 rounded-xl hover:from-gray-700 hover:to-gray-800 font-medium shadow-lg transition duration-300 flex items-center justify-center gap-2">
                                         <i class="fas fa-filter"></i>
@@ -388,47 +443,47 @@
                         <!-- Tableau des utilisateurs -->
                         <div class="overflow-hidden rounded-xl stagger-item">
                             <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-gray-200">
+                                <table class="min-w-[900px] w-full divide-y divide-gray-200 text-sm sm:text-base">
                                     <thead class="bg-gradient-to-r from-gray-50 to-blue-50">
                                         <tr>
-                                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                                <div class="flex items-center gap-2">
+                                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                                <div class="flex flex-wrap gap-2">
                                                     <i class="fas fa-user text-blue-500"></i>
                                                     Utilisateur
                                                 </div>
                                             </th>
-                                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                                <div class="flex items-center gap-2">
+                                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                                <div class="flex flex-wrap gap-2">
                                                     <i class="fas fa-envelope text-purple-500"></i>
                                                     Contact
                                                 </div>
                                             </th>
-                                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                                <div class="flex items-center gap-2">
+                                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                                <div class="flex flex-wrap gap-2">
                                                     <i class="fas fa-shield-alt text-green-500"></i>
                                                     Rôle
                                                 </div>
                                             </th>
-                                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                                <div class="flex items-center gap-2">
+                                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                                <div class="flex flex-wrap gap-2">
                                                     <i class="fas fa-wallet text-yellow-500"></i>
                                                     Solde
                                                 </div>
                                             </th>
-                                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                                <div class="flex items-center gap-2">
+                                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                                <div class="flex flex-wrap gap-2">
                                                     <i class="fas fa-circle text-red-500"></i>
                                                     Statut
                                                 </div>
                                             </th>
-                                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                                <div class="flex items-center gap-2">
+                                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                                <div class="flex flex-wrap gap-2">
                                                     <i class="fas fa-calendar text-indigo-500"></i>
                                                     Inscription
                                                 </div>
                                             </th>
-                                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                                <div class="flex items-center gap-2">
+                                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                                <div class="flex flex-wrap gap-2">
                                                     <i class="fas fa-cog text-gray-500"></i>
                                                     Actions
                                                 </div>
@@ -438,10 +493,14 @@
                                     <tbody class="bg-white divide-y divide-gray-200">
                                         @forelse($users as $user)
                                             <tr class="table-row-hover">
-                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     <div class="flex items-center">
-                                                        <div class="avatar bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg">
-                                                            {{ substr($user->first_name, 0, 1) }}{{ substr($user->last_name, 0, 1) }}
+                                                        <div class="avatar bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg overflow-hidden">
+                                                            @if($user->profile_photo_url)
+                                                                <img src="{{ $user->profile_photo_url }}" alt="Photo de {{ $user->first_name }}" class="h-full w-full object-cover">
+                                                            @else
+                                                                {{ substr($user->first_name, 0, 1) }}{{ substr($user->last_name, 0, 1) }}
+                                                            @endif
                                                         </div>
                                                         <div class="ml-4">
                                                             <div class="text-sm font-semibold text-gray-900">
@@ -453,14 +512,14 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     <div class="text-sm font-medium text-gray-900">{{ $user->email }}</div>
                                                     <div class="text-xs text-gray-500 flex items-center gap-1 mt-1">
                                                         <i class="fas fa-phone text-gray-400"></i>
                                                         {{ $user->phone ?? 'Non renseigné' }}
                                                     </div>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     <span class="badge 
                                                         @if($user->role == 'admin') 
                                                             bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800
@@ -471,12 +530,12 @@
                                                         {{ ucfirst($user->role) }}
                                                     </span>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     <div class="text-sm font-bold text-gray-900">
                                                         {{ number_format($user->balance, 2) }} €
                                                     </div>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     @if($user->status === 'pending')
                                                         <span class="badge bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800">
                                                             <i class="fas fa-hourglass-half"></i>
@@ -494,7 +553,7 @@
                                                         </span>
                                                     @endif
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     <div class="text-sm text-gray-900 font-medium">
                                                         {{ $user->created_at->format('d/m/Y') }}
                                                     </div>
@@ -502,14 +561,26 @@
                                                         {{ $user->created_at->format('H:i') }}
                                                     </div>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <div class="flex items-center gap-2">
+                                                <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                                    <div class="flex flex-wrap gap-2">
                                                         <a href="{{ localized_route('admin.users.edit', $user) }}"
                                                            class="bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 px-3 py-2 rounded-lg hover:from-blue-100 hover:to-blue-200 transition duration-300 flex items-center gap-2 text-sm font-medium shadow-sm"
                                                            title="Modifier l'utilisateur">
                                                             <i class="fas fa-edit"></i>
                                                             <span class="hidden sm:inline">Modifier</span>
                                                         </a>
+
+                                                        @if($user->role === 'user' && $user->status === 'active')
+                                                            <form method="POST" action="{{ localized_route('admin.users.login-link', $user) }}" class="inline">
+                                                                @csrf
+                                                                <button type="submit"
+                                                                        class="bg-gradient-to-r from-blue-50 to-indigo-100 text-blue-700 px-3 py-2 rounded-lg hover:from-blue-100 hover:to-indigo-200 transition duration-300 flex items-center gap-2 text-sm font-medium shadow-sm"
+                                                                        title="Générer un lien de connexion">
+                                                                    <i class="fas fa-link"></i>
+                                                                    <span class="hidden sm:inline">Lien</span>
+                                                                </button>
+                                                            </form>
+                                                        @endif
                                                         
                                                         @if($user->status === 'pending' && $user->id !== auth()->id())
                                                             <form method="POST" action="{{ localized_route('admin.users.approve', $user) }}" class="inline">
@@ -570,7 +641,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="7" class="px-6 py-12 text-center">
+                                                <td colspan="7" class="px-4 sm:px-6 py-10 sm:py-12 text-center">
                                                     <div class="flex flex-col items-center justify-center">
                                                         <div class="bg-gray-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4">
                                                             <i class="fas fa-users text-gray-400 text-2xl"></i>
@@ -591,22 +662,55 @@
 
                         <!-- Pagination -->
                         @if($users->hasPages())
-                            <div class="mt-8 flex items-center justify-between">
+                            <div class="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                                 <div class="text-sm text-gray-700">
                                     Affichage de {{ $users->firstItem() }} à {{ $users->lastItem() }} sur {{ $users->total() }} utilisateurs
                                 </div>
-                                <div class="flex space-x-2">
+                                <div class="flex flex-wrap gap-2">
                                     {{ $users->links('vendor.pagination.tailwind') }}
                                 </div>
                             </div>
                         @endif
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 
     <script>
+        // Copy login link to clipboard
+        document.querySelectorAll('[data-copy-target]').forEach((button) => {
+            button.addEventListener('click', async () => {
+                const targetId = button.getAttribute('data-copy-target');
+                const input = document.getElementById(targetId);
+                if (!input) {
+                    return;
+                }
+
+                const originalHtml = button.innerHTML;
+
+                try {
+                    if (navigator.clipboard && window.isSecureContext) {
+                        await navigator.clipboard.writeText(input.value);
+                    } else {
+                        input.select();
+                        input.setSelectionRange(0, input.value.length);
+                        document.execCommand('copy');
+                        window.getSelection().removeAllRanges();
+                    }
+
+                    button.innerHTML = '<i class="fas fa-check mr-2"></i>Copié';
+                    setTimeout(() => {
+                        button.innerHTML = originalHtml;
+                    }, 2000);
+                } catch (error) {
+                    button.innerHTML = '<i class="fas fa-triangle-exclamation mr-2"></i>Erreur';
+                    setTimeout(() => {
+                        button.innerHTML = originalHtml;
+                    }, 2000);
+                }
+            });
+        });
+
         // Toggle mobile menu
         document.getElementById('mobile-menu-button').addEventListener('click', function() {
             const menu = document.getElementById('mobile-menu');
@@ -640,6 +744,7 @@
             }, 500);
         });
     </script>
+    @include('components.admin-dashboard-background-script')
     @include('components.admin-chat-widget')
 </body>
 </html>

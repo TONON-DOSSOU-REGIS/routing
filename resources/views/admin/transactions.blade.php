@@ -39,9 +39,13 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
+
+        @include('components.admin-dashboard-background-styles')
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen">
+    @include('components.admin-dashboard-background')
+    <div class="min-h-screen relative z-10">
     <!-- Navigation -->
     <nav class="glass-nav sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -111,11 +115,11 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Header -->
         <div class="mb-8 fade-in-up">
-            <h1 class="text-4xl font-bold text-gray-900 mb-2">
+            <h1 class="text-2xl sm:text-4xl font-bold text-white mb-2">
                 <i class="fas fa-exchange-alt text-blue-600 mr-3"></i>
                 Gestion des Virements
             </h1>
-            <p class="text-gray-600">Gérez tous les virements et effectuez des remboursements</p>
+            <p class="text-white">Gérez tous les virements et effectuez des remboursements</p>
         </div>
 
         <!-- Success/Error Messages -->
@@ -135,12 +139,12 @@
         @endif
 
         <!-- Filters -->
-        <div class="bg-white rounded-2xl shadow-lg p-6 mb-8 fade-in-up card-hover">
+        <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-8 fade-in-up card-hover">
             <h2 class="text-xl font-bold text-gray-900 mb-4">
                 <i class="fas fa-filter text-blue-600 mr-2"></i>Filtres
             </h2>
             
-            <form method="GET" action="{{ localized_route('admin.transactions') }}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <form method="GET" action="{{ localized_route('admin.transactions') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Search -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Recherche</label>
@@ -200,11 +204,11 @@
                 </div>
 
                 <!-- Buttons -->
-                <div class="flex items-end space-x-2 md:col-span-2">
-                    <button type="submit" class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition">
+                <div class="flex flex-col sm:flex-row sm:items-end gap-2 md:col-span-2">
+                    <button type="submit" class="w-full sm:flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition">
                         <i class="fas fa-search mr-2"></i>Filtrer
                     </button>
-                    <a href="{{ localized_route('admin.transactions') }}" class="flex-1 bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition text-center">
+                    <a href="{{ localized_route('admin.transactions') }}" class="w-full sm:flex-1 bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition text-center">
                         <i class="fas fa-redo mr-2"></i>Réinitialiser
                     </a>
                 </div>
@@ -214,28 +218,28 @@
         <!-- Transactions Table -->
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden fade-in-up">
             <div class="overflow-x-auto">
-                <table class="w-full">
+                <table class="min-w-[900px] w-full text-sm sm:text-base">
                     <thead class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
                         <tr>
-                            <th class="px-6 py-4 text-left text-sm font-semibold">ID</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold">Utilisateur</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold">Type</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold">Montant</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold">Bénéficiaire</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold">Statut</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold">Date</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold">Actions</th>
+                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm font-semibold">ID</th>
+                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm font-semibold">Utilisateur</th>
+                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm font-semibold">Type</th>
+                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm font-semibold">Montant</th>
+                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm font-semibold">Bénéficiaire</th>
+                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm font-semibold">Statut</th>
+                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm font-semibold">Date</th>
+                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm font-semibold">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
                         @forelse($transactions as $transaction)
                             <tr class="hover:bg-gray-50 transition">
-                                <td class="px-6 py-4 text-sm font-medium text-gray-900">#{{ $transaction->id }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-900">
+                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-sm font-medium text-gray-900">#{{ $transaction->id }}</td>
+                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-sm text-gray-900">
                                     <div class="font-medium">{{ $transaction->user->first_name }} {{ $transaction->user->last_name }}</div>
                                     <div class="text-gray-500 text-xs">{{ $transaction->user->email }}</div>
                                 </td>
-                                <td class="px-6 py-4 text-sm">
+                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-sm">
                                     @if($transaction->type === 'transfer')
                                         <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">
                                             <i class="fas fa-exchange-alt mr-1"></i>Virement
@@ -250,10 +254,10 @@
                                         </span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 text-sm font-bold text-gray-900">
+                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-sm font-bold text-gray-900">
                                     {{ \App\Helpers\CurrencyHelper::format($transaction->amount, $transaction->user->default_currency ?? 'EUR') }}
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-900">
+                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-sm text-gray-900">
                                     @if($transaction->recipient_name)
                                         <div class="font-medium">{{ $transaction->recipient_name }}</div>
                                         <div class="text-gray-500 text-xs">{{ $transaction->bank_name ?? 'N/A' }}</div>
@@ -261,7 +265,7 @@
                                         <span class="text-gray-400">-</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 text-sm">
+                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-sm">
                                     @if($transaction->status === 'success')
                                         <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
                                             <i class="fas fa-check-circle mr-1"></i>Réussi
@@ -280,10 +284,10 @@
                                         </span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-500">
+                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-sm text-gray-500">
                                     {{ $transaction->created_at->format('d/m/Y H:i') }}
                                 </td>
-                                <td class="px-6 py-4 text-sm">
+                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-sm">
                                     @if($transaction->status === 'success' && $transaction->type === 'transfer')
                                         <button onclick="openRefundModal({{ $transaction->id }}, '{{ $transaction->user->first_name }} {{ $transaction->user->last_name }}', {{ $transaction->amount }}, '{{ $transaction->user->default_currency ?? 'EUR' }}')" 
                                                 class="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-green-700 transition text-xs font-semibold">
@@ -306,7 +310,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="px-6 py-12 text-center text-gray-500">
+                                <td colspan="8" class="px-4 sm:px-6 py-10 sm:py-12 text-center text-gray-500">
                                     <i class="fas fa-inbox text-4xl mb-4 text-gray-300"></i>
                                     <p class="text-lg font-medium">Aucune transaction trouvée</p>
                                     <p class="text-sm">Essayez de modifier vos filtres</p>
@@ -319,7 +323,7 @@
 
             <!-- Pagination -->
             @if($transactions->hasPages())
-                <div class="px-6 py-4 border-t border-gray-200">
+                <div class="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200">
                     {{ $transactions->links() }}
                 </div>
             @endif
@@ -328,7 +332,7 @@
 
     <!-- Refund Modal -->
     <div id="refundModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-8">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-5 sm:p-8">
             <h3 class="text-2xl font-bold text-gray-900 mb-4">
                 <i class="fas fa-undo text-green-600 mr-2"></i>Confirmer le remboursement
             </h3>
@@ -347,13 +351,13 @@
                               placeholder="Ex: Erreur de transaction, demande du client..."></textarea>
                 </div>
 
-                <div class="flex space-x-3">
+                <div class="flex flex-col sm:flex-row gap-3">
                     <button type="button" onclick="closeRefundModal()" 
-                            class="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition font-semibold">
+                            class="flex-1 w-full bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition font-semibold">
                         Annuler
                     </button>
                     <button type="submit" 
-                            class="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg hover:from-green-600 hover:to-green-700 transition font-semibold">
+                            class="flex-1 w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg hover:from-green-600 hover:to-green-700 transition font-semibold">
                         <i class="fas fa-check mr-2"></i>Confirmer
                     </button>
                 </div>
@@ -383,7 +387,8 @@
             };
 
             const symbol = currencySymbols[currency] || currency;
-            const formattedAmount = new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2 }).format(amount);
+            const locale = document.documentElement.lang || '{{ app()->getLocale() }}';
+            const formattedAmount = new Intl.NumberFormat(locale, { minimumFractionDigits: 2 }).format(amount);
 
             // Currencies that go before the amount
             const prefixCurrencies = ['USD', 'GBP', 'CAD', 'AUD', 'HKD', 'SGD', 'MXN', 'NZD', 'ARS', 'CLP', 'COP', 'EGP'];
@@ -394,7 +399,6 @@
 
             document.getElementById('modalUserName').textContent = userName;
             document.getElementById('modalAmount').textContent = displayAmount;
-            const locale = '{{ app()->getLocale() }}';
             document.getElementById('refundForm').action = `/${locale}/admin/transactions/${transactionId}/refund`;
             document.getElementById('refundModal').classList.remove('hidden');
         }
@@ -410,6 +414,8 @@
             }
         });
     </script>
+    @include('components.admin-dashboard-background-script')
+    </div>
 </body>
 </html>
 

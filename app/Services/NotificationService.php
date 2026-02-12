@@ -311,6 +311,33 @@ class NotificationService
             );
         }
     }
+    /**
+     * Notification pour virement initie (vers tous les admins)
+     */
+    public static function notifyAdminTransferStarted(User $user, $transaction): void
+    {
+        $amount = \App\Helpers\CurrencyHelper::format($transaction->amount, $user->default_currency ?? 'EUR');
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            self::create(
+                $admin,
+                'transaction',
+                'Virement initie',
+                "Nouvelle demande: {$user->first_name} {$user->last_name} ({$user->email}) a initie un virement de {$amount} vers {$transaction->recipient_name}.",
+                [
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                    'transaction_id' => $transaction->id,
+                    'amount' => $transaction->amount,
+                    'recipient_name' => $transaction->recipient_name,
+                    'recipient_iban' => $transaction->recipient_iban,
+                    'action' => 'transfer_started'
+                ]
+            );
+        }
+    }
+
 
     /**
      * Notification pour virement échoué (vers tous les admins)
@@ -346,6 +373,36 @@ class NotificationService
             );
         }
     }
+    /**
+     * Notification pour message utilisateur (vers tous les admins)
+     */
+    public static function notifyAdminUserMessage(User $user, $message): void
+    {
+        $preview = '';
+        if (!empty($message->message)) {
+            $preview = substr($message->message, 0, 80) . (strlen($message->message) > 80 ? '...' : '');
+        } elseif (!empty($message->attachment_name)) {
+            $preview = "Piece jointe: {$message->attachment_name}";
+        }
+
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            self::create(
+                $admin,
+                'message',
+                'Nouveau message utilisateur',
+                "Message de {$user->first_name} {$user->last_name} ({$user->email}) : {$preview}",
+                [
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                    'message_id' => $message->id,
+                    'action' => 'user_message'
+                ]
+            );
+        }
+    }
+
 
     /**
      * Notification pour dépôt admin (vers tous les admins)

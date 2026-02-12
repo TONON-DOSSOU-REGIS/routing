@@ -55,6 +55,7 @@ return [
     'amount' => 'Betrag',
     'date' => 'Datum',
     'time' => 'Zeit',
+    'days' => 'Tage',
     'description' => 'Warenbezeichnung',
     'details' => 'Details',
     'actions' => 'Maßnahmen',

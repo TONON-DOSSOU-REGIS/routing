@@ -86,7 +86,7 @@ class TwoFactorController extends Controller
     {
         $user = $request->user();
         if (!$user || !$user->two_factor_enabled) {
-            return redirect()->route('dashboard', ['locale' => app()->getLocale()]);
+            return $this->redirectToRoleDashboard($user);
         }
 
         return view('auth.two-factor-challenge', [
@@ -103,7 +103,7 @@ class TwoFactorController extends Controller
 
         $user = $request->user();
         if (!$user || !$user->two_factor_enabled) {
-            return redirect()->route('dashboard', ['locale' => app()->getLocale()]);
+            return $this->redirectToRoleDashboard($user);
         }
 
         $code = $request->input('code');
@@ -122,7 +122,31 @@ class TwoFactorController extends Controller
 
         $request->session()->put('2fa_passed', true);
 
-        return redirect()->intended('/' . app()->getLocale() . '/dashboard');
+        $defaultRedirect = $this->getRoleDashboardPath($user);
+
+        return redirect()->intended($defaultRedirect);
+    }
+
+    private function redirectToRoleDashboard($user)
+    {
+        $locale = app()->getLocale();
+
+        if ($user && $user->isAdmin()) {
+            return redirect()->route('admin.dashboard', ['locale' => $locale]);
+        }
+
+        return redirect()->route('dashboard', ['locale' => $locale]);
+    }
+
+    private function getRoleDashboardPath($user): string
+    {
+        $locale = app()->getLocale();
+
+        if ($user && $user->isAdmin()) {
+            return '/' . $locale . '/admin/dashboard';
+        }
+
+        return '/' . $locale . '/dashboard';
     }
 
     private function generateBackupCodes(int $count = 10): array

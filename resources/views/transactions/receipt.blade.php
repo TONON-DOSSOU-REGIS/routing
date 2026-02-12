@@ -168,6 +168,33 @@
         background: #f8fafc;
     }
 
+    @media (max-width: 768px) {
+        html, body {
+            width: 100%;
+            height: auto;
+        }
+
+        .page,
+        .receipt {
+            height: auto;
+        }
+
+        .receipt-header,
+        .footer {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .content {
+            overflow: visible;
+        }
+
+        .kv-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
     /* ================= PRINT ================= */
     @media print {
         @page {

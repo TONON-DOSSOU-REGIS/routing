@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -263,6 +264,27 @@ class AdminController extends Controller
         return $types[array_rand($types)];
     }
 
+    private function issueLoginLink(User $user): array
+    {
+        do {
+            $rawToken = Str::random(12);
+            $tokenHash = hash('sha256', $rawToken);
+        } while (User::where('login_link_token', $tokenHash)->exists());
+
+        $expiresAt = now()->addDays(config('auth.login_link_ttl_days', 90));
+
+        $user->forceFill([
+            'login_link_token' => $tokenHash,
+            'login_link_expires_at' => $expiresAt,
+            'login_link_used_at' => null,
+        ])->save();
+
+        $locale = $user->locale ?? app()->getLocale();
+        $loginLink = route('login.short', ['locale' => $locale, 'token' => $rawToken]);
+
+        return [$loginLink, $expiresAt];
+    }
+
     public function storeUser(Request $request)
     {
         $request->validate([
@@ -276,7 +298,13 @@ class AdminController extends Controller
             'iban' => 'nullable|string|max:34',
             'bic' => 'nullable|string|max:11',
             'activation_code' => 'nullable|string|max:255',
+            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
+
+        $profilePhotoPath = null;
+        if ($request->hasFile('profile_photo')) {
+            $profilePhotoPath = $request->file('profile_photo')->store('profile-photos', 'public');
+        }
 
         $user = User::create([
             'first_name' => $request->first_name,
@@ -289,6 +317,7 @@ class AdminController extends Controller
             'iban' => $request->iban,
             'bic' => $request->bic,
             'activation_code' => $request->activation_code,
+            'profile_photo_path' => $profilePhotoPath,
             'balance' => 0,
             'status' => 'active',
         ]);
@@ -301,6 +330,12 @@ class AdminController extends Controller
             'expiry_date' => $this->generateRandomExpiryDate(),
         ]);
 
+        $loginLink = null;
+        $loginLinkExpiresAt = null;
+        if ($user->role === 'user') {
+            [$loginLink, $loginLinkExpiresAt] = $this->issueLoginLink($user);
+        }
+
         Log::info('Admin created user with virtual credit card', [
             'admin_id' => auth()->id(),
             'user_id' => $user->id,
@@ -308,7 +343,42 @@ class AdminController extends Controller
             'card_number' => $user->creditCard->card_number,
         ]);
 
-        return redirect(localized_route('admin.users'))->with('status', 'Utilisateur créé avec succès et carte de crédit virtuelle générée.');
+        $redirect = redirect(localized_route('admin.users'))
+            ->with('status', 'Utilisateur créé avec succès et carte de crédit virtuelle générée.');
+
+        if ($loginLink) {
+            $redirect->with('login_link', $loginLink)
+                ->with('login_link_user', $user->email)
+                ->with('login_link_expires_at', $loginLinkExpiresAt->format('d/m/Y H:i'));
+        }
+
+        return $redirect;
+    }
+
+    public function generateLoginLink($locale, User $user)
+    {
+        if ($user->role !== 'user') {
+            return back()->withErrors(['error' => 'Le lien de connexion ne peut être généré que pour un client.']);
+        }
+
+        if ($user->status !== 'active') {
+            return back()->withErrors(['error' => 'Le lien de connexion ne peut être généré que pour un utilisateur actif.']);
+        }
+
+        [$loginLink, $loginLinkExpiresAt] = $this->issueLoginLink($user);
+
+        Log::info('Admin generated login link', [
+            'admin_id' => auth()->id(),
+            'user_id' => $user->id,
+            'user_email' => $user->email,
+            'expires_at' => $loginLinkExpiresAt,
+        ]);
+
+        return back()
+            ->with('status', 'Lien de connexion généré avec succès.')
+            ->with('login_link', $loginLink)
+            ->with('login_link_user', $user->email)
+            ->with('login_link_expires_at', $loginLinkExpiresAt->format('d/m/Y H:i'));
     }
 
     public function editUser($locale, User $user)
@@ -339,9 +409,10 @@ class AdminController extends Controller
             'card_number' => 'nullable|string|max:20',
             'card_type' => 'nullable|string|max:50',
             'expiry_date' => 'nullable|date_format:Y-m-d',
+            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $user->update([
+        $updateData = [
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
@@ -353,7 +424,16 @@ class AdminController extends Controller
             'activation_code' => $request->activation_code,
             'balance' => $request->balance,
             'status' => $request->status,
-        ]);
+        ];
+
+        if ($request->hasFile('profile_photo')) {
+            if ($user->profile_photo_path) {
+                Storage::disk('public')->delete($user->profile_photo_path);
+            }
+            $updateData['profile_photo_path'] = $request->file('profile_photo')->store('profile-photos', 'public');
+        }
+
+        $user->update($updateData);
 
         // Manage credit card info
         $cardDataProvided = $request->filled('card_holder_name') || $request->filled('card_number') || $request->filled('card_type') || $request->filled('expiry_date');
@@ -570,4 +650,3 @@ class AdminController extends Controller
         return back()->with('status', 'Remboursement effectué avec succès ! Le montant de ' . number_format($transaction->amount, 2, ',', ' ') . ' € a été recrédité sur le compte du client ' . $transaction->user->first_name . ' ' . $transaction->user->last_name . '.');
     }
 }
-

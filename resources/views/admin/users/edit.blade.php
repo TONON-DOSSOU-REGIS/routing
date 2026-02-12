@@ -136,10 +136,13 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
+
+        @include('components.admin-dashboard-background-styles')
     </style>
 </head>
 <body class="font-sans geometric-pattern">
-    <div class="min-h-screen flex flex-col">
+    @include('components.admin-dashboard-background')
+    <div class="min-h-screen flex flex-col relative z-10">
         <!-- Navigation avec effet glass -->
         <nav class="glass-effect shadow-sm sticky top-0 z-10">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -252,7 +255,7 @@
                 </div>
             </div>
 
-            <form method="POST" action="{{ localized_route('admin.users.update', $user) }}" class="space-y-6">
+            <form method="POST" action="{{ localized_route('admin.users.update', $user) }}" class="space-y-6" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -338,6 +341,29 @@
                                             <option value="user" {{ old('role', $user->role) == 'user' ? 'selected' : '' }}>Client</option>
                                             <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Administrateur</option>
                                         </select>
+                                    </div>
+
+                                    <div class="md:col-span-2">
+                                        <label for="profile_photo" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Photo du client
+                                        </label>
+                                        <div class="flex items-center gap-4">
+                                            <div class="h-14 w-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold overflow-hidden">
+                                                @if($user->profile_photo_url)
+                                                    <img src="{{ $user->profile_photo_url }}" alt="Photo de {{ $user->first_name }}" class="h-full w-full object-cover">
+                                                @else
+                                                    {{ strtoupper(substr($user->first_name, 0, 1)) }}{{ strtoupper(substr($user->last_name, 0, 1)) }}
+                                                @endif
+                                            </div>
+                                            <div class="flex-1">
+                                                <input type="file"
+                                                       name="profile_photo"
+                                                       id="profile_photo"
+                                                       accept="image/png,image/jpeg,image/webp"
+                                                       class="form-input block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors bg-white/80">
+                                                <p class="text-xs text-gray-500 mt-1">Formats acceptés: JPG, PNG, WebP (2 Mo max).</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -699,6 +725,7 @@ value="{{ old('expiry_date', optional(optional($user->creditCard)->expiry_date)-
             }
         });
     </script>
+    @include('components.admin-dashboard-background-script')
 </body>
 </html>
 

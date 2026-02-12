@@ -1,52 +1,70 @@
 @extends('layouts.app')
 
-@section('title', 'Notifications - SG BANK')
+@section('title', __('notifications.page_title'))
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-red-700">
+@php
+    $notificationIndexI18n = [
+        'errorLoading' => __('notifications.error_loading'),
+        'errorConnection' => __('notifications.error_connection'),
+        'noneTitle' => __('notifications.none_title'),
+        'noneMessage' => __('notifications.none_message'),
+        'badgeUnread' => __('notifications.badge_unread'),
+        'paginationInfo' => __('notifications.pagination_info'),
+        'receivedAt' => __('notifications.received_at'),
+        'confirmMarkAllRead' => __('notifications.confirm_mark_all_read'),
+        'confirmDeleteRead' => __('notifications.confirm_delete_read'),
+        'timeJustNow' => __('notifications.time_just_now'),
+        'timeMinutesAgo' => __('notifications.time_minutes_ago'),
+        'timeHoursAgo' => __('notifications.time_hours_ago'),
+        'timeDaysAgo' => __('notifications.time_days_ago'),
+    ];
+@endphp
+@include('components.background-slider')
+<div class="min-h-screen bg-slate-900/60 relative z-[1]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Header -->
         <div class="mb-8">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 class="text-3xl font-bold text-white">Notifications</h1>
-                    <p class="mt-2 text-red-100">Gérez vos notifications et restez informé</p>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-white">{{ __('notifications.title') }}</h1>
+                    <p class="mt-2 text-red-100">{{ __('notifications.subtitle') }}</p>
                 </div>
-                <div class="flex space-x-4">
-                    <button id="mark-all-read-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                        <i class="fas fa-check-double mr-2"></i>Tout marquer comme lu
+                <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                    <button id="mark-all-read-btn" class="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors w-full sm:w-auto">
+                        <i class="fas fa-check-double mr-2"></i>{{ __('notifications.mark_all_read') }}
                     </button>
-                    <button id="delete-read-btn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                        <i class="fas fa-trash mr-2"></i>Supprimer les lues
+                    <button id="delete-read-btn" class="inline-flex items-center justify-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors w-full sm:w-auto">
+                        <i class="fas fa-trash mr-2"></i>{{ __('notifications.delete_read') }}
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Filters -->
-        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-            <div class="flex flex-wrap gap-4">
+    <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6 mb-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
-                    <select id="type-filter" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Tous les types</option>
-                        <option value="transaction">Transaction</option>
-                        <option value="account">Compte</option>
-                        <option value="alert">Alerte</option>
-                        <option value="system">Système</option>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('notifications.filter_type') }}</label>
+                    <select id="type-filter" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">{{ __('notifications.all_types') }}</option>
+                        <option value="transaction">{{ __('notifications.type_transaction') }}</option>
+                        <option value="account">{{ __('notifications.type_account') }}</option>
+                        <option value="alert">{{ __('notifications.type_alert') }}</option>
+                        <option value="system">{{ __('notifications.type_system') }}</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
-                    <select id="status-filter" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Tous</option>
-                        <option value="unread">Non lues</option>
-                        <option value="read">Lues</option>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('notifications.filter_status') }}</label>
+                    <select id="status-filter" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">{{ __('notifications.status_all') }}</option>
+                        <option value="unread">{{ __('notifications.status_unread') }}</option>
+                        <option value="read">{{ __('notifications.status_read') }}</option>
                     </select>
                 </div>
-                <div class="flex items-end">
-                    <button id="apply-filters" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                        <i class="fas fa-filter mr-2"></i>Filtrer
+                <div class="flex items-end sm:col-span-2 lg:col-span-1">
+                    <button id="apply-filters" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-colors w-full">
+                        <i class="fas fa-filter mr-2"></i>{{ __('notifications.filter_apply') }}
                     </button>
                 </div>
             </div>
@@ -59,16 +77,16 @@
                 <div class="p-8 text-center">
                     <div class="inline-flex items-center">
                         <i class="fas fa-spinner fa-spin text-blue-600 text-xl mr-3"></i>
-                        <span class="text-gray-600">Chargement des notifications...</span>
+                        <span class="text-gray-600">{{ __('notifications.loading') }}</span>
                     </div>
                 </div>
             </div>
 
             <!-- Pagination -->
-            <div id="pagination-container" class="px-6 py-4 bg-gray-50 border-t border-gray-200 hidden">
-                <div class="flex items-center justify-between">
+            <div id="pagination-container" class="px-4 sm:px-6 py-4 bg-gray-50 border-t border-gray-200 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div id="pagination-info" class="text-sm text-gray-700"></div>
-                    <div id="pagination-buttons" class="flex space-x-2"></div>
+                    <div id="pagination-buttons" class="flex flex-wrap gap-2"></div>
                 </div>
             </div>
         </div>
@@ -79,7 +97,7 @@
 <div id="notification-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
     <div class="flex items-center justify-center min-h-screen p-4">
         <div class="bg-white rounded-lg max-w-2xl w-full max-h-96 overflow-y-auto">
-            <div class="p-6">
+            <div class="p-4 sm:p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h3 id="modal-title" class="text-xl font-bold text-gray-900"></h3>
                     <button id="close-modal" class="text-gray-400 hover:text-gray-600">
@@ -97,6 +115,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     let currentPage = 1;
     let currentFilters = {};
+
+    const i18n = @json($notificationIndexI18n);
 
     const container = document.getElementById('notifications-container');
     const paginationContainer = document.getElementById('pagination-container');
@@ -134,12 +154,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     renderNotifications(data.notifications);
                     renderPagination(data.pagination);
                 } else {
-                    container.innerHTML = '<div class="p-8 text-center text-gray-500">Erreur lors du chargement des notifications</div>';
+                    container.innerHTML = `<div class="p-8 text-center text-gray-500">${i18n.errorLoading}</div>`;
                 }
             })
             .catch(error => {
                 console.error('Error loading notifications:', error);
-                container.innerHTML = '<div class="p-8 text-center text-gray-500">Erreur de connexion</div>';
+                container.innerHTML = `<div class="p-8 text-center text-gray-500">${i18n.errorConnection}</div>`;
             });
     }
 
@@ -149,29 +169,29 @@ document.addEventListener('DOMContentLoaded', function() {
             container.innerHTML = `
                 <div class="p-8 text-center">
                     <i class="fas fa-bell-slash text-4xl text-gray-300 mb-4"></i>
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">Aucune notification</h3>
-                    <p class="text-gray-500">Vous n'avez pas encore de notifications.</p>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">${i18n.noneTitle}</h3>
+                    <p class="text-gray-500">${i18n.noneMessage}</p>
                 </div>
             `;
             return;
         }
 
         container.innerHTML = notifications.map(notification => `
-            <div class="border-b border-gray-200 p-6 hover:bg-gray-50 cursor-pointer notification-item ${!notification.is_read ? 'bg-blue-50' : ''}"
+            <div class="border-b border-gray-200 p-4 sm:p-6 hover:bg-gray-50 cursor-pointer notification-item ${!notification.is_read ? 'bg-blue-50' : ''}"
                  data-id="${notification.id}">
-                <div class="flex items-start space-x-4">
+                <div class="flex flex-col sm:flex-row sm:items-start sm:space-x-4 space-y-3 sm:space-y-0">
                     <div class="flex-shrink-0">
                         <div class="w-10 h-10 ${getIconColor(notification.type)} rounded-full flex items-center justify-center">
                             <i class="${getIcon(notification.type)} text-white"></i>
                         </div>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <div class="flex items-center justify-between">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                             <h4 class="text-sm font-medium text-gray-900 truncate">
                                 ${notification.title}
                             </h4>
-                            <div class="flex items-center space-x-2">
-                                ${!notification.is_read ? '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Non lu</span>' : ''}
+                            <div class="flex flex-wrap items-center gap-2">
+                                ${!notification.is_read ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">${i18n.badgeUnread}</span>` : ''}
                                 <span class="text-sm text-gray-500">
                                     ${formatDate(notification.created_at)}
                                 </span>
@@ -202,7 +222,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         paginationContainer.classList.remove('hidden');
-        paginationInfo.textContent = `Page ${pagination.current_page} sur ${pagination.last_page} (${pagination.total} notifications)`;
+        paginationInfo.textContent = i18n.paginationInfo
+            .replace(':current', pagination.current_page)
+            .replace(':last', pagination.last_page)
+            .replace(':total', pagination.total);
 
         let buttons = '';
 
@@ -242,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const notification = data.notification;
                     modalTitle.textContent = notification.title;
                     modalContent.textContent = notification.message;
-                    modalDate.textContent = `Reçu le ${new Date(notification.created_at).toLocaleString('fr-FR')}`;
+                    modalDate.textContent = i18n.receivedAt.replace(':date', new Date(notification.created_at).toLocaleString(document.documentElement.lang || 'fr'));
 
                     modal.classList.remove('hidden');
 
@@ -276,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('mark-all-read-btn').addEventListener('click', function() {
-        if (confirm('Marquer toutes les notifications comme lues ?')) {
+        if (confirm(i18n.confirmMarkAllRead)) {
             if (!requireCsrf()) return;
             fetch(`/${locale}/notifications/mark-all-read`, {
                 method: 'POST',
@@ -290,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('delete-read-btn').addEventListener('click', function() {
-        if (confirm('Supprimer toutes les notifications lues ?')) {
+        if (confirm(i18n.confirmDeleteRead)) {
             if (!requireCsrf()) return;
             fetch(`/${locale}/notifications/delete-all-read`, {
                 method: 'DELETE',
@@ -344,11 +367,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const hours = Math.floor(diff / 3600000);
         const days = Math.floor(diff / 86400000);
 
-        if (minutes < 1) return 'À l\'instant';
-        if (minutes < 60) return `Il y a ${minutes} min`;
-        if (hours < 24) return `Il y a ${hours} h`;
-        if (days < 7) return `Il y a ${days} j`;
-        return date.toLocaleDateString('fr-FR');
+        if (minutes < 1) return i18n.timeJustNow;
+        if (minutes < 60) return i18n.timeMinutesAgo.replace(':minutes', minutes);
+        if (hours < 24) return i18n.timeHoursAgo.replace(':hours', hours);
+        if (days < 7) return i18n.timeDaysAgo.replace(':days', days);
+        return date.toLocaleDateString(document.documentElement.lang || locale);
     }
 
     // Initial load

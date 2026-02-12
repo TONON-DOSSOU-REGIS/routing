@@ -21,6 +21,12 @@ class RedirectIfAuthenticated
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 $locale = app()->getLocale();
+                $user = Auth::guard($guard)->user();
+
+                if ($user && method_exists($user, 'isAdmin') && $user->isAdmin()) {
+                    return redirect('/' . $locale . '/admin/dashboard');
+                }
+
                 return redirect('/' . $locale . '/dashboard');
             }
         }

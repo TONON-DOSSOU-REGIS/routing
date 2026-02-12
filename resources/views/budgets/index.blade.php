@@ -1,17 +1,17 @@
 @extends('layouts.admin')
 
-@section('title', 'Gestion des Budgets')
+@section('title', __('budgets.page_title'))
 
 @section('content')
 <div class="container mx-auto px-6 py-8">
     <!-- Header Section -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Gestion des Budgets</h1>
-            <p class="text-gray-600 mt-1">Suivez et gérez les budgets de vos utilisateurs</p>
+            <h1 class="text-3xl font-bold text-gray-900">{{ __('budgets.page_heading') }}</h1>
+            <p class="text-gray-600 mt-1">{{ __('budgets.page_subtitle') }}</p>
         </div>
         <a href="{{ localized_route('budgets.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-300 shadow-lg">
-            <i class="fas fa-plus mr-2"></i> Nouveau Budget
+            <i class="fas fa-plus mr-2"></i> {{ __('budgets.new_budget') }}
         </a>
     </div>
 
@@ -21,21 +21,21 @@
             <table class="w-full">
                 <thead class="bg-gray-50 border-b border-gray-200">
                     <tr>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Utilisateur</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Catégorie</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Montant</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Dépensé</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Restant</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Mois</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Statut</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('budgets.table_user') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('budgets.table_category') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('budgets.table_amount') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('budgets.table_spent') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('budgets.table_remaining') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('budgets.table_month') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('budgets.table_status') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('budgets.table_actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     @forelse($budgets as $budget)
                     <tr class="hover:bg-gray-50 transition-colors duration-200">
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {{ $budget->user->name ?? 'Utilisateur inconnu' }}
+                            {{ $budget->user->name ?? __('budgets.unknown_user') }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                             {{ $budget->category }}
@@ -58,27 +58,27 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($budget->is_over_budget)
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                    <i class="fas fa-times-circle mr-1"></i> Dépassé
+                                    <i class="fas fa-times-circle mr-1"></i> {{ __('budgets.status_over_budget') }}
                                 </span>
                             @elseif($budget->should_alert)
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                    <i class="fas fa-exclamation-triangle mr-1"></i> Alerte
+                                    <i class="fas fa-exclamation-triangle mr-1"></i> {{ __('budgets.status_alert') }}
                                 </span>
                             @else
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                    <i class="fas fa-check-circle mr-1"></i> OK
+                                    <i class="fas fa-check-circle mr-1"></i> {{ __('budgets.status_ok') }}
                                 </span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex items-center space-x-2">
-                                <a href="{{ localized_route('budgets.edit', $budget) }}" class="inline-flex items-center px-3 py-2 border border-yellow-300 rounded-lg text-yellow-700 bg-yellow-50 hover:bg-yellow-100 transition-colors duration-200" title="Modifier">
+                                <a href="{{ localized_route('budgets.edit', $budget) }}" class="inline-flex items-center px-3 py-2 border border-yellow-300 rounded-lg text-yellow-700 bg-yellow-50 hover:bg-yellow-100 transition-colors duration-200" title="{{ __('budgets.action_edit') }}">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form action="{{ localized_route('budgets.destroy', $budget) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="inline-flex items-center px-3 py-2 border border-red-300 rounded-lg text-red-700 bg-red-50 hover:bg-red-100 transition-colors duration-200" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce budget ?')">
+                                    <button type="submit" class="inline-flex items-center px-3 py-2 border border-red-300 rounded-lg text-red-700 bg-red-50 hover:bg-red-100 transition-colors duration-200" title="{{ __('budgets.action_delete') }}" onclick="return confirm('{{ __('budgets.delete_confirm') }}')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -92,10 +92,10 @@
                                 <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                                     <i class="fas fa-wallet text-4xl text-gray-400"></i>
                                 </div>
-                                <h3 class="text-lg font-medium text-gray-900 mb-2">Aucun budget trouvé</h3>
-                                <p class="text-gray-500 mb-6 max-w-sm">Commencez par créer votre premier budget pour suivre vos dépenses.</p>
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">{{ __('budgets.empty_title') }}</h3>
+                                <p class="text-gray-500 mb-6 max-w-sm">{{ __('budgets.empty_message') }}</p>
                                 <a href="{{ localized_route('budgets.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-300 shadow-lg">
-                                    <i class="fas fa-plus mr-2"></i> Créer un budget
+                                    <i class="fas fa-plus mr-2"></i> {{ __('budgets.empty_action') }}
                                 </a>
                             </div>
                         </td>

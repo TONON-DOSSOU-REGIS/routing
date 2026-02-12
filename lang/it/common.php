@@ -55,6 +55,7 @@ return [
     'amount' => 'Importo',
     'date' => 'Data',
     'time' => 'Tempo',
+    'days' => 'giorni',
     'description' => 'Designazione',
     'details' => 'Dettagli',
     'actions' => 'Azioni',

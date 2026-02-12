@@ -36,6 +36,19 @@ class TransactionController extends Controller
             'progress' => 1,
         ]);
 
+        // Notify admins that a user initiated a transfer
+        if (!$user->isAdmin()) {
+            try {
+                NotificationService::notifyAdminTransferStarted($user, $transaction);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Failed to notify admins of transfer start', [
+                    'transaction_id' => $transaction->id,
+                    'user_id' => $user->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
         return response()->json(['tx_id' => $transaction->id]);
     }
 

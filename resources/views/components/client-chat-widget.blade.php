@@ -1,4 +1,22 @@
 {{-- Client Chat Widget - Pour la communication avec l'admin --}}
+@php
+    $clientChatI18n = [
+        'loadingError' => __('chat.loading_error'),
+        'startConversation' => __('chat.start_conversation'),
+        'noMessages' => __('chat.no_messages'),
+        'errorPrefix' => __('chat.error_prefix'),
+        'unknownError' => __('chat.unknown_error'),
+        'securityCsrfMissing' => __('chat.security_csrf_missing'),
+        'securitySessionExpired' => __('chat.security_session_expired'),
+        'validationError' => __('chat.validation_error'),
+        'sendErrorDetail' => __('chat.send_error_detail'),
+        'sendErrorConnection' => __('chat.send_error_connection'),
+        'attachFile' => __('chat.attach_file'),
+        'fileLabel' => __('chat.file_label'),
+        'youLabel' => __('chat.you_label'),
+        'supportShort' => __('chat.support_short'),
+    ];
+@endphp
 <div id="client-chat-widget" class="fixed bottom-4 right-4 z-50">
     {{-- Unread badge --}}
     <span id="client-unread-badge" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">0</span>
@@ -23,8 +41,8 @@
         {{-- Chat header --}}
         <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 flex justify-between items-center">
             <div>
-                <h3 class="font-bold">Support Client</h3>
-                <p class="text-xs opacity-90">Discutez avec notre équipe</p>
+                <h3 class="font-bold">{{ __('chat.client_support_title') }}</h3>
+                <p class="text-xs opacity-90">{{ __('chat.client_support_subtitle') }}</p>
             </div>
             <button onclick="toggleClientChat()" class="text-white hover:text-gray-200">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,7 +54,7 @@
         {{-- Messages container --}}
         <div id="client-chat-messages" class="p-4 h-96 overflow-y-auto bg-gray-50">
             <div class="text-center text-gray-500 text-sm py-4">
-                <i class="fas fa-spinner fa-spin"></i> Chargement des messages...
+                <i class="fas fa-spinner fa-spin"></i> {{ __('chat.loading_messages') }}
             </div>
         </div>
         
@@ -46,7 +64,7 @@
                 <input 
                     type="text" 
                     id="client-chat-input"
-                    placeholder="Écrivez votre message..." 
+                    placeholder="{{ __('chat.client_message_placeholder') }}" 
                     class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     onkeypress="if(event.key === 'Enter') sendClientMessage()"
                 >
@@ -73,7 +91,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
                     </svg>
-                    <span id="client-file-label">Joindre un fichier</span>
+                    <span id="client-file-label">{{ __('chat.attach_file') }}</span>
                 </label>
                 <button 
                     id="client-remove-file"
@@ -90,6 +108,9 @@
 </div>
 
 <script>
+const chatLocale = document.documentElement.lang || '{{ app()->getLocale() }}';
+const chatI18n = @json($clientChatI18n);
+
 // Client Chat Widget - Isolated namespace
 (function() {
     let clientChatInterval = null;
@@ -148,7 +169,7 @@
                     container.innerHTML = `
                         <div class="text-center text-red-500 py-8">
                             <i class="fas fa-exclamation-triangle text-4xl mb-3"></i>
-                            <p>Erreur: ${data.message || 'Erreur inconnue'}</p>
+                            <p>${chatI18n.errorPrefix.replace(':message', data.message || chatI18n.unknownError)}</p>
                         </div>
                     `;
                 }
@@ -161,7 +182,7 @@
                 container.innerHTML = `
                     <div class="text-center text-red-500 py-8">
                         <i class="fas fa-exclamation-triangle text-4xl mb-3"></i>
-                        <p>Erreur de chargement</p>
+                        <p>${chatI18n.loadingError}</p>
                         <p class="text-xs mt-2">${error.message}</p>
                     </div>
                 `;
@@ -184,8 +205,8 @@
             container.innerHTML = `
                 <div class="text-center text-gray-500 py-8">
                     <i class="fas fa-comments text-4xl mb-3 text-gray-300"></i>
-                    <p class="text-sm">Aucun message</p>
-                    <p class="text-xs mt-2">Commencez une conversation avec notre équipe</p>
+                    <p class="text-sm">${chatI18n.noMessages}</p>
+                    <p class="text-xs mt-2">${chatI18n.startConversation}</p>
                 </div>
             `;
             return;
@@ -206,12 +227,12 @@
             const messageDiv = document.createElement('div');
             messageDiv.className = `flex items-start mb-4 ${isCurrentUser ? 'justify-end' : ''}`;
             
-            const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '';
+            const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString(chatLocale, { hour: '2-digit', minute: '2-digit' }) : '';
             const messageText = msg.message || '';
             
             let attachmentHtml = '';
             if (msg.attachment_path) {
-                const fileName = msg.attachment_name || 'Fichier';
+                const fileName = msg.attachment_name || chatI18n.fileLabel;
                 const fileUrl = `/storage/${msg.attachment_path}`;
                 const isImage = msg.attachment_type && msg.attachment_type.startsWith('image/');
                 if (isImage) {
@@ -349,7 +370,7 @@
         
         if (!csrfToken) {
             console.error('[ClientChat] CSRF token not found in page');
-            alert('Erreur de sécurité: Token CSRF manquant. Veuillez rafraîchir la page.');
+            alert(chatI18n.securityCsrfMissing);
             input.disabled = false;
             return;
         }
@@ -381,16 +402,16 @@
             } else {
                 // Handle specific error cases
                 if (response.status === 419) {
-                    alert('Erreur de sécurité: Votre session a expiré. Veuillez rafraîchir la page.');
+                    alert(chatI18n.securitySessionExpired);
                 } else if (response.status === 422) {
-                    alert('Erreur de validation: ' + (data.message || 'Données invalides'));
+                    alert(chatI18n.validationError.replace(':message', data.message || chatI18n.unknownError));
                 } else {
-                    alert('Erreur lors de l\'envoi du message: ' + (data.message || 'Erreur inconnue'));
+                    alert(chatI18n.sendErrorDetail.replace(':message', data.message || chatI18n.unknownError));
                 }
             }
         } catch (error) {
             console.error('[ClientChat] Error sending message:', error);
-            alert('Erreur lors de l\'envoi du message. Veuillez vérifier votre connexion.');
+            alert(chatI18n.sendErrorConnection);
         } finally {
             input.disabled = false;
             input.focus();
@@ -407,7 +428,7 @@
             label.textContent = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
             removeBtn.classList.remove('hidden');
         } else {
-            label.textContent = 'Joindre un fichier';
+            label.textContent = chatI18n.attachFile;
             removeBtn.classList.add('hidden');
         }
     };
@@ -418,7 +439,7 @@
         const removeBtn = document.getElementById('client-remove-file');
         
         fileInput.value = '';
-        label.textContent = 'Joindre un fichier';
+        label.textContent = chatI18n.attachFile;
         removeBtn.classList.add('hidden');
     };
 
@@ -466,8 +487,8 @@
 
 <div id="client-chat-image-modal" class="hidden fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4">
     <button type="button" class="absolute top-4 right-4 text-white text-2xl" onclick="closeClientChatImage()">×</button>
-    <a id="client-chat-image-download" class="absolute top-4 left-4 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" download>Tlcharger</a>
-    <button type="button" class="absolute top-4 left-32 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" onclick="resetClientChatImage()">Rinitialiser</button>
-    <img id="client-chat-image-full" src="" alt="Aperçu image" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
+    <a id="client-chat-image-download" class="absolute top-4 left-4 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" download>{{ __('chat.download') }}</a>
+    <button type="button" class="absolute top-4 left-32 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" onclick="resetClientChatImage()">{{ __('chat.reset_image') }}</button>
+    <img id="client-chat-image-full" src="" alt="{{ __('chat.image_preview_alt') }}" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
 </div>
 

@@ -30,6 +30,35 @@
     .input-field:focus { box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); }
 
     .error-text { font-size: 0.825rem; }
+
+    .hero-title {
+      background: linear-gradient(90deg, #fbbf24 0%, #f97316 50%, #fb923c 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 10px 30px rgba(59, 130, 246, 0.35);
+    }
+
+    .hero-description {
+      color: #e2e8f0;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    .feature-item {
+      padding: 0.6rem 0.85rem;
+      border-radius: 0.75rem;
+      background: rgba(15, 23, 42, 0.35);
+      border: 1px solid rgba(251, 146, 60, 0.35);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.35);
+      backdrop-filter: blur(6px);
+    }
+
+    .feature-item i { color: #fdba74; }
+    .feature-item:nth-child(2) { border-color: rgba(245, 158, 11, 0.35); }
+    .feature-item:nth-child(2) i { color: #fbbf24; }
+    .feature-item:nth-child(3) { border-color: rgba(251, 191, 36, 0.35); }
+    .feature-item:nth-child(3) i { color: #f59e0b; }
   </style>
 </head>
 
@@ -70,16 +99,16 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
         <!-- Left panel -->
         <div class="text-white fade-in-up">
-          <h1 class="text-3xl sm:text-4xl font-extrabold">
+          <h1 class="text-3xl sm:text-4xl font-extrabold hero-title">
             {{ __('auth.login_hero_title') }}
           </h1>
-          <p class="mt-3 text-slate-200">
+          <p class="mt-3 hero-description">
             {{ __('auth.login_hero_description') }}
           </p>
-          <ul class="mt-6 space-y-3 text-slate-200">
-            <li class="flex items-center"><i class="fa-solid fa-shield-halved text-blue-300 mr-3"></i> {{ __('auth.login_feature_security') }}</li>
-            <li class="flex items-center"><i class="fa-solid fa-bell text-blue-300 mr-3"></i> {{ __('auth.login_feature_notifications') }}</li>
-            <li class="flex items-center"><i class="fa-solid fa-chart-line text-blue-300 mr-3"></i> {{ __('auth.login_feature_analytics') }}</li>
+          <ul class="mt-6 space-y-3">
+            <li class="feature-item flex items-center"><i class="fa-solid fa-shield-halved mr-3"></i> {{ __('auth.login_feature_security') }}</li>
+            <li class="feature-item flex items-center"><i class="fa-solid fa-bell mr-3"></i> {{ __('auth.login_feature_notifications') }}</li>
+            <li class="feature-item flex items-center"><i class="fa-solid fa-chart-line mr-3"></i> {{ __('auth.login_feature_analytics') }}</li>
           </ul>
         </div>
 
@@ -88,6 +117,12 @@
           @if (session('success'))
             <div class="mb-4 p-3 rounded bg-green-500/20 text-green-200 border border-green-400/40">
               <i class="fa-solid fa-circle-check mr-2"></i> {{ session('success') }}
+            </div>
+          @endif
+
+          @if (session('login_link_notice'))
+            <div class="mb-4 p-3 rounded bg-blue-500/20 text-blue-100 border border-blue-400/40">
+              <i class="fa-solid fa-link mr-2"></i> {{ session('login_link_notice') }}
             </div>
           @endif
 
@@ -109,7 +144,7 @@
 
             <div>
               <label for="email" class="block mb-1 text-sm text-slate-200">{{ __('auth.email') }}</label>
-              <input id="email" name="email" type="email" required autocomplete="email" value="{{ old('email') }}"
+              <input id="email" name="email" type="email" required autocomplete="email" value="{{ old('email', session('prefill_email')) }}"
                      class="input-field w-full px-4 py-3 rounded-lg bg-white/90 text-slate-900 placeholder-slate-500 focus:outline-none"
                      placeholder="{{ __('auth.email_placeholder') }}">
               @error('email')

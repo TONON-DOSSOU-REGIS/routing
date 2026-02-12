@@ -113,24 +113,37 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Welcome + quick stats -->
       <section class="mb-8 fade-in-up">
-        <div class="bg-gradient-to-r from-white via-blue-50/30 to-indigo-50/30 rounded-2xl shadow-lg border border-white/60 px-6 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between backdrop-blur-sm">
-          <div>
+        <div class="bg-gradient-to-r from-white via-blue-50/30 to-indigo-50/30 rounded-2xl shadow-lg border border-white/60 px-4 sm:px-6 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between backdrop-blur-sm">
+          <div class="flex items-center gap-4 flex-wrap sm:flex-nowrap">
             @php
               $currentUser = $user ?? auth()->user();
               $displayName = $currentUser && $currentUser->first_name && $currentUser->last_name
                 ? $currentUser->first_name . ' ' . $currentUser->last_name
                 : ($currentUser && $currentUser->first_name ? $currentUser->first_name : __('common.user'));
+              $initials = $currentUser
+                ? strtoupper(substr($currentUser->first_name ?? '', 0, 1) . substr($currentUser->last_name ?? '', 0, 1))
+                : '';
+              $profilePhotoUrl = $currentUser ? $currentUser->profile_photo_url : null;
             @endphp
-            <h1 class="text-2xl sm:text-3xl font-bold text-slate-800">
-              {!! __('dashboard.welcome_greeting', ['name' => $displayName]) !!}
-            </h1>
-            <p class="mt-1 text-slate-500">{{ __('dashboard.welcome_subtitle') }}</p>
+            <div class="h-12 w-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold overflow-hidden shadow">
+              @if($profilePhotoUrl)
+                <img src="{{ $profilePhotoUrl }}" alt="Photo de {{ $displayName }}" class="h-full w-full object-cover">
+              @else
+                {{ $initials !== '' ? $initials : 'U' }}
+              @endif
+            </div>
+            <div class="min-w-0">
+              <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 break-words">
+                {!! __('dashboard.welcome_greeting', ['name' => $displayName]) !!}
+              </h1>
+              <p class="mt-1 text-slate-500">{{ __('dashboard.welcome_subtitle') }}</p>
+            </div>
           </div>
-          <div class="flex items-center gap-2 mt-4 sm:mt-0">
-            <a href="{{ localized_route('transfer.create', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 card-hover">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 mt-4 sm:mt-0 w-full sm:w-auto">
+            <a href="{{ localized_route('transfer.create', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 card-hover w-full sm:w-auto">
               <i class="fa-solid fa-paper-plane mr-2"></i> {{ __('dashboard.new_transfer') }}
             </a>
-            <a href="{{ localized_route('transactions.history', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 card-hover">
+            <a href="{{ localized_route('transactions.history', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 card-hover w-full sm:w-auto">
               <i class="fa-solid fa-clock-rotate-left mr-2"></i> {{ __('dashboard.history') }}
             </a>
           </div>
@@ -237,7 +250,7 @@
             @else
               <div class="divide-y divide-slate-100">
                 @foreach($items as $tx)
-                  <div class="py-3 flex items-center justify-between">
+                  <div class="py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <div class="flex items-center gap-3">
                       <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
                         @if(($tx->type ?? '') === 'credit')
@@ -256,7 +269,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="text-right">
+                    <div class="text-left sm:text-right">
                       <div class="font-semibold {{ ($tx->type ?? '') === 'credit' ? 'text-emerald-600' : 'text-rose-600' }}">
                         @if(isset($tx->amount) && isset($user))
                           {{ \App\Helpers\CurrencyHelper::format($tx->amount, $user->default_currency ?? 'EUR') }}
@@ -324,9 +337,9 @@
 
   <!-- Footer -->
   <footer class="mt-10 py-8 bg-white border-t relative z-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-sm text-slate-500 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-sm text-slate-500 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
       <p>&copy; {{ date('Y') }} SG BANK. {{ __('dashboard.all_rights_reserved') }}</p>
-      <div class="space-x-4">
+      <div class="flex flex-wrap gap-3">
         <a href="#" class="hover:text-slate-700">{{ __('dashboard.privacy') }}</a>
         <a href="#" class="hover:text-slate-700">{{ __('dashboard.terms') }}</a>
         <a href="#" class="hover:text-slate-700">{{ __('dashboard.support') }}</a>

@@ -200,7 +200,7 @@
     }
     
     .mobile-menu.open {
-      max-height: 500px;
+      max-height: 90vh;
       transform: translateY(0);
       opacity: 1;
       transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
@@ -225,6 +225,24 @@
     
     .mobile-menu.open .mobile-menu-item:nth-child(2) {
       transition-delay: 0.2s;
+    }
+
+    .mobile-menu-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      text-align: left;
+    }
+
+    .mobile-submenu {
+      margin-left: 0.25rem;
+      padding-left: 0.75rem;
+      border-left: 2px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .mobile-submenu a {
+      text-align: left;
     }
     
     /* Animation pour les compteurs */
@@ -323,25 +341,32 @@
       <!-- Menu Mobile -->
       <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-800 border-t border-blue-700">
         <div class="px-4 py-6 space-y-4">
-          <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center"><?php echo e(__('home.nav_home')); ?></a>
+          <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>" class="mobile-menu-item mobile-menu-link text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400">
+            <span><?php echo e(__('home.nav_home')); ?></span>
+          </a>
           <div class="mobile-menu-item relative group">
-            <button class="w-full text-left text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 inline-flex items-center justify-between">
-              <?php echo e(__('home.nav_services')); ?>
-
-              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <button class="w-full mobile-menu-link text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 inline-flex items-center justify-between" type="button">
+              <span><?php echo e(__('home.nav_services')); ?></span>
+              <svg class="w-4 h-4 ml-2 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
               </svg>
             </button>
-            <div class="mobile-submenu hidden flex-col bg-blue-900 border border-blue-700 rounded-md mt-2 p-2 space-y-1">
+            <div class="mobile-submenu hidden flex flex-col bg-blue-900/80 border border-blue-700 rounded-md mt-2 p-2 space-y-1">
               <a href="<?php echo e(localized_route('services.comptes-professionnels', ['locale' => app()->getLocale()])); ?>" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md"><?php echo e(__('home.services_business_accounts')); ?></a>
               <a href="<?php echo e(localized_route('services.virements-internationaux', ['locale' => app()->getLocale()])); ?>" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md"><?php echo e(__('home.services_international_transfers')); ?></a>
               <a href="<?php echo e(localized_route('services.gestion-tresorerie', ['locale' => app()->getLocale()])); ?>" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md"><?php echo e(__('home.services_treasury_management')); ?></a>
               <a href="<?php echo e(localized_route('services.cartes-paiement', ['locale' => app()->getLocale()])); ?>" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md"><?php echo e(__('home.services_payment_cards')); ?></a>
             </div>
           </div>
-          <a href="#testimonial-slider" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center"><?php echo e(__('home.nav_testimonials')); ?></a>
-          <a href="#faq-list" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center"><?php echo e(__('home.nav_faq')); ?></a>
-          <a href="<?php echo e(localized_route('support.nous-contacter', ['locale' => app()->getLocale()])); ?>" class="mobile-menu-item block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center"><?php echo e(__('home.nav_contact')); ?></a>
+          <a href="#testimonial-slider" class="mobile-menu-item mobile-menu-link text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400">
+            <span><?php echo e(__('home.nav_testimonials')); ?></span>
+          </a>
+          <a href="#faq-list" class="mobile-menu-item mobile-menu-link text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400">
+            <span><?php echo e(__('home.nav_faq')); ?></span>
+          </a>
+          <a href="<?php echo e(localized_route('support.nous-contacter', ['locale' => app()->getLocale()])); ?>" class="mobile-menu-item mobile-menu-link text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400">
+            <span><?php echo e(__('home.nav_contact')); ?></span>
+          </a>
           <a href="<?php echo e(localized_route('login', ['locale' => app()->getLocale()])); ?>" class="mobile-menu-item btn-auth block font-semibold py-3 px-4 rounded-lg text-center"><?php echo e(__('home.nav_login')); ?></a>
           <a href="<?php echo e(localized_route('register', ['locale' => app()->getLocale()])); ?>" class="mobile-menu-item btn-auth block font-semibold py-3 px-4 rounded-lg text-center"><?php echo e(__('home.nav_register')); ?></a>
           <div class="mobile-menu-item">
@@ -1406,17 +1431,27 @@ document.addEventListener("DOMContentLoaded", () => {
             const icon = mobileMenuButton.querySelector('i');
             icon.classList.remove('fa-times');
             icon.classList.add('fa-bars');
+            if (servicesSubmenu && !servicesSubmenu.classList.contains('hidden')) {
+              servicesSubmenu.classList.add('hidden');
+              if (servicesChevron) {
+                servicesChevron.classList.remove('rotate-180');
+              }
+            }
           }
         });
 
         // Toggle submenu for <?php echo e(__('home.footer_services')); ?> in mobile menu
         const servicesButton = mobileMenu.querySelector('.mobile-menu-item.relative.group > button');
         const servicesSubmenu = mobileMenu.querySelector('.mobile-submenu');
+        const servicesChevron = servicesButton ? servicesButton.querySelector('svg') : null;
 
         if (servicesButton && servicesSubmenu) {
           servicesButton.addEventListener('click', function(event) {
             event.preventDefault();
             servicesSubmenu.classList.toggle('hidden');
+            if (servicesChevron) {
+              servicesChevron.classList.toggle('rotate-180');
+            }
           });
         }
       }

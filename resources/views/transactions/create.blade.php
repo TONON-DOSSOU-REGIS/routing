@@ -153,6 +153,108 @@
             transform: scale(1) !important;
         }
 
+        /* Professional modal overlay */
+        .flash-overlay {
+            position: fixed !important;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 9999 !important;
+        }
+
+        .flash-overlay.is-visible {
+            display: flex;
+            animation: fadeIn 0.25s ease forwards;
+        }
+
+        .flash-card {
+            --accent: #ef4444;
+            --accent-strong: #dc2626;
+            --accent-soft: rgba(239, 68, 68, 0.12);
+            width: 100%;
+            max-width: 420px;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            box-shadow: 0 24px 70px rgba(15, 23, 42, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flash-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+        }
+
+        .flash-card--success {
+            --accent: #10b981;
+            --accent-strong: #059669;
+            --accent-soft: rgba(16, 185, 129, 0.16);
+        }
+
+        .flash-icon-container {
+            background: var(--accent-soft);
+            width: 72px;
+            height: 72px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+            box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.25);
+        }
+
+        .flash-icon {
+            color: var(--accent);
+            font-size: 1.75rem;
+        }
+
+        .flash-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.75rem;
+        }
+
+        .flash-message {
+            color: #475569;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .flash-button {
+            width: 100%;
+            border-radius: 0.9rem;
+            padding: 0.85rem 1rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            box-shadow: 0 16px 30px rgba(15, 23, 42, 0.18);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .flash-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 18px 35px rgba(15, 23, 42, 0.24);
+        }
+
+        .flash-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2), 0 18px 35px rgba(15, 23, 42, 0.24);
+        }
+
         /* Style pour l'arrière-plan */
         .background-container {
             background-image: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
@@ -171,6 +273,16 @@
             bottom: 0;
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.9) 0%, rgba(139, 92, 246, 0.85) 50%, rgba(14, 165, 233, 0.9) 100%);
             backdrop-filter: blur(2px);
+        }
+
+        @media (max-width: 640px) {
+            .background-container {
+                background-attachment: scroll;
+            }
+
+            .flash-card {
+                padding: 1.5rem;
+            }
         }
 
         /* Style pour la barre de progression */
@@ -283,42 +395,42 @@
                 </div>
             </nav>
 
-            <div class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
                 <!-- En-tête de la page -->
                 <div class="mb-8 fade-in-up">
-                    <h1 class="text-3xl font-bold text-white drop-shadow-lg text-center">{{ __('transactions.transfer_title') }}</h1>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-white drop-shadow-lg text-center">{{ __('transactions.transfer_title') }}</h1>
                     <p class="text-white/90 mt-2 drop-shadow text-center">{{ __('transactions.transfer_subtitle') }}</p>
                 </div>
 
                 <!-- Indicateur d'étapes -->
-                <div class="glass-card rounded-2xl p-6 mb-8 fade-in-up">
-                    <div class="flex items-center justify-between max-w-md mx-auto">
+                <div class="glass-card rounded-2xl p-4 sm:p-6 mb-8 fade-in-up">
+                    <div class="flex flex-col items-center sm:flex-row sm:items-center sm:justify-between gap-4 max-w-md sm:mx-auto">
                         <div class="flex flex-col items-center">
                             <div class="step-indicator step-active">
                                 <i class="fas fa-edit"></i>
                             </div>
-                            <span class="text-sm font-medium text-gray-700 mt-2">{{ __('transactions.step_information') }}</span>
+                            <span class="text-xs sm:text-sm font-medium text-gray-700 mt-2 text-center">{{ __('transactions.step_information') }}</span>
                         </div>
-                        <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+                        <div class="hidden sm:block flex-1 h-1 bg-gray-200 mx-4"></div>
                         <div class="flex flex-col items-center">
                             <div class="step-indicator step-inactive">
                                 <i class="fas fa-cog"></i>
                             </div>
-                            <span class="text-sm font-medium text-gray-500 mt-2">{{ __('transactions.step_processing') }}</span>
+                            <span class="text-xs sm:text-sm font-medium text-gray-500 mt-2 text-center">{{ __('transactions.step_processing') }}</span>
                         </div>
-                        <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+                        <div class="hidden sm:block flex-1 h-1 bg-gray-200 mx-4"></div>
                         <div class="flex flex-col items-center">
                             <div class="step-indicator step-inactive">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <span class="text-sm font-medium text-gray-500 mt-2">{{ __('transactions.step_confirmation') }}</span>
+                            <span class="text-xs sm:text-sm font-medium text-gray-500 mt-2 text-center">{{ __('transactions.step_confirmation') }}</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Formulaire principal -->
                 <div class="glass-card rounded-2xl overflow-hidden card-hover">
-                    <div class="px-8 py-8">
+                    <div class="px-4 sm:px-8 py-6 sm:py-8">
                         <div class="flex items-center mb-6">
                             <div class="bg-gradient-to-r from-blue-500 to-indigo-500 p-3 rounded-2xl mr-4 shadow-lg">
                                 <i class="fas fa-paper-plane text-white text-2xl"></i>
@@ -474,15 +586,15 @@
                             </div>
 
                             <!-- Boutons d'action -->
-                            <div class="stagger-item flex justify-end space-x-4 pt-6">
+                            <div class="stagger-item flex flex-col sm:flex-row sm:justify-end gap-3 pt-6">
                                 <a href="{{ localized_route('dashboard') }}"
-                                   class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-200 transition duration-300 font-medium shadow-sm flex items-center gap-2">
+                                   class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-200 transition duration-300 font-medium shadow-sm flex items-center justify-center gap-2 w-full sm:w-auto">
                                     <i class="fas fa-arrow-left"></i>
                                     {{ __('transactions.cancel') }}
                                 </a>
                                 <button type="button" 
                                         id="startBtn" 
-                                        class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-3 rounded-xl hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-semibold shadow-lg transform hover:scale-105 transition duration-300 pulse-glow flex items-center gap-2">
+                                        class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-3 rounded-xl hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-semibold shadow-lg transform hover:scale-105 transition duration-300 pulse-glow flex items-center justify-center gap-2 w-full sm:w-auto">
                                     <i class="fas fa-paper-plane"></i>
                                     {{ __('transactions.start_transfer') }}
                                 </button>
@@ -491,7 +603,7 @@
 
                         <!-- Section de progression -->
                         <div class="mt-8 hidden" id="progressSection">
-                            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6">
+                            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-4 sm:p-6">
                                 <div class="flex items-center mb-4">
                                     <div class="bg-blue-100 p-2 rounded-lg mr-3">
                                         <i class="fas fa-cog text-blue-500 text-lg"></i>
@@ -524,14 +636,14 @@
     </div>
 
     <!-- Overlay d'interruption -->
-    <div id="flashOverlay" class="fixed inset-0 hidden grid place-items-center bg-black bg-opacity-70 z-[9999] p-4">
-        <div id="flashCard" class="glass-card max-w-md w-full mx-auto p-8 rounded-2xl shadow-2xl text-center animate-pulse border border-red-200">
-            <div id="flashIconContainer" class="bg-red-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <i id="flashIcon" class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
+    <div id="flashOverlay" class="flash-overlay" aria-hidden="true">
+        <div id="flashCard" class="flash-card flash-card--error" role="dialog" aria-modal="true" aria-labelledby="flashTitle" aria-describedby="flashMessage">
+            <div id="flashIconContainer" class="flash-icon-container">
+                <i id="flashIcon" class="flash-icon fas fa-exclamation-triangle"></i>
             </div>
-            <h3 id="flashTitle" class="text-xl font-bold text-gray-900 mb-3">{{ __('transactions.operation_interrupted') }}</h3>
-            <p id="flashMessage" class="text-gray-700 mb-6 leading-relaxed"></p>
-            <button id="closeFlash" class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-indigo-700 font-medium shadow-lg w-full">
+            <h3 id="flashTitle" class="flash-title">{{ __('transactions.operation_interrupted') }}</h3>
+            <p id="flashMessage" class="flash-message"></p>
+            <button id="closeFlash" class="flash-button">
                 <i class="fas fa-check mr-2"></i>{{ __('transactions.understood') }}
             </button>
         </div>
@@ -567,6 +679,66 @@
 
         let txId = null;
         let ticking = false;
+        let audioContext = null;
+        let soundUnlocked = false;
+
+        function getAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            return audioContext;
+        }
+
+        function unlockAudio() {
+            try {
+                const ctx = getAudioContext();
+                if (ctx.state === 'suspended') {
+                    ctx.resume();
+                }
+            } catch (e) {
+                // Ignore audio unlock errors
+            }
+        }
+
+        function playTone(frequency, startTime, duration, volume) {
+            const ctx = getAudioContext();
+            const oscillator = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(frequency, startTime);
+
+            gainNode.gain.setValueAtTime(0, startTime);
+            gainNode.gain.linearRampToValueAtTime(volume, startTime + 0.02);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(ctx.destination);
+
+            oscillator.start(startTime);
+            oscillator.stop(startTime + duration + 0.02);
+        }
+
+        function playModalSound(type) {
+            if (!soundUnlocked) return;
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                if (type === 'success') {
+                    playTone(660, now, 0.2, 0.07);
+                    playTone(880, now + 0.05, 0.25, 0.06);
+                } else {
+                    playTone(360, now, 0.25, 0.08);
+                }
+            } catch (e) {
+                // Ignore audio playback errors
+            }
+        }
+
+        document.addEventListener('click', () => {
+            soundUnlocked = true;
+            unlockAudio();
+        }, { once: true });
 
         function setProgress(p) {
             progressBar.style.width = p + '%';
@@ -575,6 +747,8 @@
 
         startBtn.addEventListener('click', async () => {
             if (ticking) return;
+            soundUnlocked = true;
+            unlockAudio();
             const form = document.getElementById('transferForm');
             const payload = new FormData(form);
 
@@ -663,12 +837,13 @@
             // Remove previous icon classes and animation classes
             flashIcon.classList.remove('icon-visible');
             flashIcon.classList.add('icon-fade-transition');
+            flashCard.classList.remove('flash-card--success', 'flash-card--error');
 
             if (type === 'success') {
                 // Change to validated icon and green styling
-                flashIcon.className = 'fas fa-check-circle text-green-500 text-2xl icon-fade-transition';
-                flashIconContainer.className = 'bg-green-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4';
-                flashCard.className = 'glass-card max-w-md w-full mx-auto p-8 rounded-2xl shadow-2xl text-center border border-green-200';
+                flashIcon.className = 'flash-icon fas fa-check-circle icon-fade-transition';
+                flashIconContainer.className = 'flash-icon-container';
+                flashCard.classList.add('flash-card--success');
                 flashTitle.textContent = '{{ __('transactions.operation_success') }}';
 
                 // Animate icon appearance
@@ -677,9 +852,9 @@
                 }, 50);
             } else {
                 // Change to alert icon and red styling
-                flashIcon.className = 'fas fa-exclamation-triangle text-red-500 text-2xl icon-fade-transition';
-                flashIconContainer.className = 'bg-red-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4';
-                flashCard.className = 'glass-card max-w-md w-full mx-auto p-8 rounded-2xl shadow-2xl text-center border border-red-200';
+                flashIcon.className = 'flash-icon fas fa-exclamation-triangle icon-fade-transition';
+                flashIconContainer.className = 'flash-icon-container';
+                flashCard.classList.add('flash-card--error');
                 flashTitle.textContent = '{{ __('transactions.operation_interrupted') }}';
 
                 // Animate icon appearance
@@ -688,20 +863,27 @@
                 }, 50);
             }
 
-            // Show overlay with fade-in animation
-            overlay.classList.remove('hidden');
-            overlay.classList.remove('grid');
-            overlay.classList.remove('flex');
-            overlay.classList.add('grid');
-            overlay.style.animation = 'fadeIn 0.3s ease forwards';
+            // Show overlay as a centered modal
+            overlay.classList.add('is-visible');
+            overlay.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('overflow-hidden');
+            playModalSound(type);
 
             console.log("Current icon class:", flashIcon.className); // Debug log
         }
 
         closeFlash.addEventListener('click', () => {
-            overlay.classList.add('hidden');
-            overlay.classList.remove('grid');
-            overlay.classList.remove('flex');
+            overlay.classList.remove('is-visible');
+            overlay.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('overflow-hidden');
+        });
+
+        overlay.addEventListener('click', (event) => {
+            if (event.target === overlay) {
+                overlay.classList.remove('is-visible');
+                overlay.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('overflow-hidden');
+            }
         });
 
         // Validation en temps réel

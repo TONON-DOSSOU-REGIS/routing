@@ -1,4 +1,12 @@
 {{-- Chat Widget Component --}}
+@php
+    $chatWidgetI18n = [
+        'greeting' => __('chat.greeting'),
+        'supportLabel' => __('chat.support_label'),
+        'supportShort' => __('chat.support_short'),
+        'youLabel' => __('chat.you_label'),
+    ];
+@endphp
 <div id="chat-widget" class="fixed bottom-4 right-4 z-50">
     {{-- Unread badge --}}
     <span id="unread-badge" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">0</span>
@@ -23,8 +31,8 @@
         {{-- Chat header --}}
         <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 flex justify-between items-center">
             <div>
-                <h3 class="font-bold">Support SG BANK</h3>
-                <p class="text-xs opacity-90">Nous sommes là pour vous aider</p>
+                <h3 class="font-bold">{{ __('chat.support_title') }}</h3>
+                <p class="text-xs opacity-90">{{ __('chat.support_subtitle') }}</p>
             </div>
             <button onclick="toggleChat()" class="text-white hover:text-gray-200">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,7 +44,7 @@
         {{-- Chat messages --}}
         <div id="chat-messages" class="p-4 h-80 overflow-y-auto bg-gray-50">
             <div class="text-center text-gray-500 text-sm py-4">
-                <i class="fas fa-spinner fa-spin"></i> Chargement des messages...
+                <i class="fas fa-spinner fa-spin"></i> {{ __('chat.loading_messages') }}
             </div>
         </div>
 
@@ -46,7 +54,7 @@
                 <input 
                     type="text" 
                     id="chat-input"
-                    placeholder="Tapez votre message..." 
+                    placeholder="{{ __('chat.message_placeholder') }}" 
                     class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     onkeypress="if(event.key === 'Enter') sendChatMessage()"
                 >
@@ -64,6 +72,9 @@
 </div>
 
 <script>
+const chatLocale = document.documentElement.lang || '{{ app()->getLocale() }}';
+const chatI18n = @json($chatWidgetI18n);
+
 let chatInterval = null;
 let lastMessageId = 0;
 
@@ -112,8 +123,8 @@ function displayMessages(messages) {
         container.innerHTML = `
             <div class="flex items-start mb-4">
                 <div class="bg-blue-100 rounded-lg p-3 max-w-xs">
-                    <p class="text-sm text-gray-800">Bonjour! Comment puis-je vous aider aujourd'hui?</p>
-                    <span class="text-xs text-gray-500 mt-1 block">Support SG BANK</span>
+                    <p class="text-sm text-gray-800">${chatI18n.greeting}</p>
+                    <span class="text-xs text-gray-500 mt-1 block">${chatI18n.supportLabel}</span>
                 </div>
             </div>
         `;
@@ -127,13 +138,13 @@ function displayMessages(messages) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `flex items-start mb-4 ${isCurrentUser ? 'justify-end' : ''}`;
         
-        const time = new Date(msg.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        const time = new Date(msg.created_at).toLocaleTimeString(chatLocale, { hour: '2-digit', minute: '2-digit' });
         
         messageDiv.innerHTML = `
             <div class="${isCurrentUser ? 'bg-blue-600 text-white' : 'bg-blue-100 text-gray-800'} rounded-lg p-3 max-w-xs">
                 <p class="text-sm">${escapeHtml(msg.message)}</p>
                 <span class="text-xs ${isCurrentUser ? 'opacity-75' : 'text-gray-500'} mt-1 block">
-                    ${isCurrentUser ? 'Vous' : (msg.sender ? msg.sender.first_name : 'Support')} • ${time}
+                    ${isCurrentUser ? chatI18n.youLabel : (msg.sender ? msg.sender.first_name : chatI18n.supportShort)} • ${time}
                 </span>
             </div>
         `;

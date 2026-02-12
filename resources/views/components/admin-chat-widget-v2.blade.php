@@ -1,4 +1,16 @@
 {{-- Admin Chat Widget V2 - Clean Version --}}
+@php
+    $adminChatV2I18n = [
+        'loadingError' => __('admin_chat.loading_error'),
+        'noConversations' => __('admin_chat.no_conversations'),
+        'noMessages' => __('admin_chat.no_messages'),
+        'loadingMessagesError' => __('admin_chat.loading_messages_error'),
+        'connectionError' => __('admin_chat.connection_error'),
+        'startConversation' => __('admin_chat.start_conversation'),
+        'userFallback' => __('admin_chat.user_fallback'),
+        'online' => __('admin_chat.online'),
+    ];
+@endphp
 <div id="admin-chat-widget-v2" class="fixed bottom-4 right-4 z-50">
     {{-- Unread badge --}}
     <span id="admin-unread-badge-v2" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">0</span>
@@ -23,8 +35,8 @@
         {{-- Chat header --}}
         <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 flex justify-between items-center">
             <div>
-                <h3 class="font-bold">Messages Clients</h3>
-                <p class="text-xs opacity-90">Gérer les conversations</p>
+                <h3 class="font-bold">{{ __('admin_chat.title') }}</h3>
+                <p class="text-xs opacity-90">{{ __('admin_chat.subtitle') }}</p>
             </div>
             <button onclick="toggleAdminChatV2()" class="text-white hover:text-gray-200">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,7 +50,7 @@
             {{-- Conversations list --}}
             <div id="conversations-list-v2" class="h-96 overflow-y-auto bg-gray-50">
                 <div class="text-center text-gray-500 text-sm py-4">
-                    <i class="fas fa-spinner fa-spin"></i> Chargement des conversations...
+                    <i class="fas fa-spinner fa-spin"></i> {{ __('admin_chat.loading_conversations') }}
                 </div>
             </div>
 
@@ -96,7 +108,7 @@
                             <input
                                 type="text"
                                 id="admin-chat-input-v2"
-                                placeholder="Répondre au client..."
+                                placeholder="{{ __('admin_chat.reply_placeholder') }}"
                                 class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                                 onkeypress="if(event.key === 'Enter') { event.preventDefault(); sendAdminMessageV2(); }"
                             >
@@ -126,6 +138,8 @@
     let currentChatUserIdV2 = null;
     let selectedAdminFileV2 = null;
     const currentAdminId = {{ auth()->id() }};
+    const adminChatLocale = document.documentElement.lang || '{{ app()->getLocale() }}';
+    const adminChatI18n = @json($adminChatV2I18n);
 
     window.toggleAdminChatV2 = function() {
         const chatWindow = document.getElementById('admin-chat-window-v2');
@@ -165,7 +179,7 @@
             container.innerHTML = `
                 <div class="text-center text-red-500 py-8">
                     <i class="fas fa-exclamation-triangle text-4xl mb-3"></i>
-                    <p>Erreur de chargement</p>
+                    <p>${adminChatI18n.loadingError}</p>
                 </div>
             `;
         });
@@ -178,7 +192,7 @@
             container.innerHTML = `
                 <div class="text-center text-gray-500 py-8">
                     <i class="fas fa-inbox text-4xl mb-3"></i>
-                    <p>Aucune conversation</p>
+                    <p>${adminChatI18n.noConversations}</p>
                 </div>
             `;
             return;
@@ -204,11 +218,13 @@
             convDiv.className = 'p-4 border-b hover:bg-gray-100 cursor-pointer transition-colors';
             convDiv.onclick = () => openChatV2(userId, firstName + ' ' + lastName, email);
             
-            const time = lastMsg && lastMsg.created_at ? new Date(lastMsg.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '';
-            const messageText = lastMsg && lastMsg.message ? lastMsg.message : 'Aucun message';
+            const time = lastMsg && lastMsg.created_at ? new Date(lastMsg.created_at).toLocaleTimeString(adminChatLocale, { hour: '2-digit', minute: '2-digit' }) : '';
+            const messageText = lastMsg && lastMsg.message ? lastMsg.message : adminChatI18n.noMessages;
             const preview = messageText.length > 50 ? messageText.substring(0, 50) + '...' : messageText;
             
-            const onlineIndicator = user.is_online ? '<div class="w-2 h-2 bg-green-500 rounded-full ml-2" title="En ligne"></div>' : '';
+            const onlineIndicator = user.is_online
+                ? `<div class="w-2 h-2 bg-green-500 rounded-full ml-2" title="${adminChatI18n.online}"></div>`
+                : '';
 
             convDiv.innerHTML = `
                 <div class="flex items-start justify-between">
@@ -239,7 +255,7 @@
         const nameElement = document.getElementById('current-user-name-v2');
         const emailElement = document.getElementById('current-user-email-v2');
         
-        if (nameElement) nameElement.textContent = userName || 'Utilisateur';
+        if (nameElement) nameElement.textContent = userName || adminChatI18n.userFallback;
         if (emailElement) emailElement.textContent = userEmail || '';
         
         const conversationsList = document.getElementById('conversations-list-v2');
@@ -304,7 +320,7 @@
                     container.innerHTML = `
                         <div class="text-center text-red-500 py-8">
                             <i class="fas fa-exclamation-triangle text-4xl mb-3"></i>
-                            <p>Erreur de chargement des messages</p>
+                            <p>${adminChatI18n.loadingMessagesError}</p>
                         </div>
                     `;
                 }
@@ -317,7 +333,7 @@
                 container.innerHTML = `
                     <div class="text-center text-red-500 py-8">
                         <i class="fas fa-exclamation-triangle text-4xl mb-3"></i>
-                        <p>Erreur de connexion</p>
+                        <p>${adminChatI18n.connectionError}</p>
                         <p class="text-xs mt-2">${error.message}</p>
                     </div>
                 `;
@@ -340,8 +356,8 @@
             container.innerHTML = `
                 <div class="text-center text-gray-500 py-8">
                     <i class="fas fa-comments text-4xl mb-3"></i>
-                    <p>Aucun message</p>
-                    <p class="text-xs mt-2">Commencez la conversation</p>
+                    <p>${adminChatI18n.noMessages}</p>
+                    <p class="text-xs mt-2">${adminChatI18n.startConversation}</p>
                 </div>
             `;
             return;
@@ -362,7 +378,7 @@
             const messageDiv = document.createElement('div');
             messageDiv.className = `flex items-start mb-4 ${isAdmin ? 'justify-end' : ''}`;
             
-            const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '';
+            const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString(adminChatLocale, { hour: '2-digit', minute: '2-digit' }) : '';
             const messageText = msg.message || '';
             
             // Handle attachments if present
@@ -629,7 +645,7 @@
     <button type="button" class="absolute top-4 right-4 text-white text-2xl" onclick="closeAdminChatImageV2()">×</button>
     <a id="admin-chat-image-download-v2" class="absolute top-4 left-4 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" download>Tlcharger</a>
     <button type="button" class="absolute top-4 left-32 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" onclick="resetAdminChatImageV2()">Rinitialiser</button>
-    <img id="admin-chat-image-full-v2" src="" alt="Aperçu image" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
+    <img id="admin-chat-image-full-v2" src="" alt="{{ __('chat.image_preview_alt') }}" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
 </div>
 
 

@@ -279,19 +279,19 @@
             </div>
         </nav>
 
-        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
             <!-- En-tête du tableau de bord -->
             <div class="mb-8 fade-in-up">
-                <h1 class="text-3xl font-bold text-white text-center">Tableau de bord administrateur</h1>
+                <h1 class="text-2xl sm:text-3xl font-bold text-white text-center">Tableau de bord administrateur</h1>
                 <p class="text-white/80 mt-2 text-center">Vue d'ensemble des performances et activités du système</p>
             </div>
 
             <!-- Stats Cards améliorées -->
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
                 <div class="gradient-card-1 text-white overflow-hidden shadow-2xl rounded-2xl card-hover stagger-item relative">
                     <div class="absolute top-0 right-0 -mt-4 -mr-4 bg-white/20 w-20 h-20 rounded-full"></div>
                     <div class="absolute bottom-0 left-0 -mb-4 -ml-4 bg-white/10 w-16 h-16 rounded-full"></div>
-                    <div class="p-6 relative z-10">
+                    <div class="p-4 sm:p-6 relative z-10">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm font-medium text-white/80">Total Clients</p>
@@ -311,7 +311,7 @@
                 <div class="gradient-card-2 text-white overflow-hidden shadow-2xl rounded-2xl card-hover stagger-item relative">
                     <div class="absolute top-0 right-0 -mt-4 -mr-4 bg-white/20 w-20 h-20 rounded-full"></div>
                     <div class="absolute bottom-0 left-0 -mb-4 -ml-4 bg-white/10 w-16 h-16 rounded-full"></div>
-                    <div class="p-6 relative z-10">
+                    <div class="p-4 sm:p-6 relative z-10">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm font-medium text-white/80">Transactions</p>
@@ -331,7 +331,7 @@
                 <div class="gradient-card-3 text-white overflow-hidden shadow-2xl rounded-2xl card-hover stagger-item relative">
                     <div class="absolute top-0 right-0 -mt-4 -mr-4 bg-white/20 w-20 h-20 rounded-full"></div>
                     <div class="absolute bottom-0 left-0 -mb-4 -ml-4 bg-white/10 w-16 h-16 rounded-full"></div>
-                    <div class="p-6 relative z-10">
+                    <div class="p-4 sm:p-6 relative z-10">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm font-medium text-white/80">Dépôts (€)</p>
@@ -351,7 +351,7 @@
                 <div class="gradient-card-4 text-white overflow-hidden shadow-2xl rounded-2xl card-hover stagger-item relative">
                     <div class="absolute top-0 right-0 -mt-4 -mr-4 bg-white/20 w-20 h-20 rounded-full"></div>
                     <div class="absolute bottom-0 left-0 -mb-4 -ml-4 bg-white/10 w-16 h-16 rounded-full"></div>
-                    <div class="p-6 relative z-10">
+                    <div class="p-4 sm:p-6 relative z-10">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm font-medium text-white/80">Retraits (€)</p>
@@ -371,7 +371,7 @@
                 <div class="gradient-card-5 text-white overflow-hidden shadow-2xl rounded-2xl card-hover stagger-item relative">
                     <div class="absolute top-0 right-0 -mt-4 -mr-4 bg-white/20 w-20 h-20 rounded-full"></div>
                     <div class="absolute bottom-0 left-0 -mb-4 -ml-4 bg-white/10 w-16 h-16 rounded-full"></div>
-                    <div class="p-6 relative z-10">
+                    <div class="p-4 sm:p-6 relative z-10">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm font-medium text-white/80">Virements (€)</p>
@@ -391,8 +391,8 @@
 
             <!-- Quick Actions améliorées -->
             <div class="bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl mb-8 overflow-hidden fade-in-up border border-white/50">
-                <div class="px-8 py-8">
-                    <div class="flex items-center justify-between mb-8">
+                <div class="px-4 sm:px-8 py-6 sm:py-8">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
                         <h3 class="text-2xl font-bold text-gray-900 flex items-center">
                             <i class="fas fa-bolt text-yellow-500 mr-3"></i> Actions rapides
                         </h3>
@@ -400,22 +400,22 @@
                             <i class="fas fa-clock mr-1"></i> Temps réel
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <a href="{{ localized_route('admin.settings') }}" class="action-btn bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-6 rounded-xl hover:from-blue-600 hover:to-blue-700 text-center shadow-lg transform hover:scale-105">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <a href="{{ localized_route('admin.settings') }}" class="action-btn bg-gradient-to-r from-blue-500 to-blue-600 text-white px-5 py-5 sm:px-6 sm:py-6 rounded-xl hover:from-blue-600 hover:to-blue-700 text-center shadow-lg transform hover:scale-105">
                             <div class="bg-white/20 p-3 rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-4">
                                 <i class="fas fa-cog text-2xl"></i>
                             </div>
                             <div class="font-bold text-lg">Paramètres système</div>
                             <p class="text-sm opacity-90 mt-2">Configurer les préférences</p>
                         </a>
-                        <a href="{{ localized_route('admin.users') }}" class="action-btn bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-6 rounded-xl hover:from-green-600 hover:to-green-700 text-center shadow-lg transform hover:scale-105">
+                        <a href="{{ localized_route('admin.users') }}" class="action-btn bg-gradient-to-r from-green-500 to-green-600 text-white px-5 py-5 sm:px-6 sm:py-6 rounded-xl hover:from-green-600 hover:to-green-700 text-center shadow-lg transform hover:scale-105">
                             <div class="bg-white/20 p-3 rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-4">
                                 <i class="fas fa-users text-2xl"></i>
                             </div>
                             <div class="font-bold text-lg">Gestion des utilisateurs</div>
                             <p class="text-sm opacity-90 mt-2">Voir et gérer les clients</p>
                         </a>
-                        <a href="{{ localized_route('admin.deposit') }}" class="action-btn bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-6 rounded-xl hover:from-purple-600 hover:to-purple-700 text-center shadow-lg transform hover:scale-105">
+                        <a href="{{ localized_route('admin.deposit') }}" class="action-btn bg-gradient-to-r from-purple-500 to-purple-600 text-white px-5 py-5 sm:px-6 sm:py-6 rounded-xl hover:from-purple-600 hover:to-purple-700 text-center shadow-lg transform hover:scale-105">
                             <div class="bg-white/20 p-3 rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-4">
                                 <i class="fas fa-plus-circle text-2xl"></i>
                             </div>
@@ -428,20 +428,20 @@
 
             <!-- Market Tracker Widget -->
             <div class="bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl overflow-hidden fade-in-up border border-white/50 mb-8">
-                <div class="px-8 py-8">
+                <div class="px-4 sm:px-8 py-6 sm:py-8">
                     @include('components.market-tracker-fixed')
                 </div>
             </div>
 
             <!-- Graphiques et Activité récente -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
                 <!-- Graphique des transactions -->
                 <div class="bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl overflow-hidden fade-in-up border border-white/50">
-                    <div class="px-8 py-8">
+                    <div class="px-4 sm:px-8 py-6 sm:py-8">
                         <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
                             <i class="fas fa-chart-line text-blue-500 mr-3"></i> Activité des transactions
                         </h3>
-                        <div class="h-80">
+                        <div class="h-64 sm:h-80">
                             <canvas id="transactionChart"></canvas>
                         </div>
                     </div>
@@ -449,53 +449,53 @@
 
                 <!-- Activité récente améliorée -->
                 <div class="bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl overflow-hidden fade-in-up border border-white/50">
-                    <div class="px-8 py-8">
+                    <div class="px-4 sm:px-8 py-6 sm:py-8">
                         <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
                             <i class="fas fa-history text-purple-500 mr-3"></i> Activité récente
                         </h3>
-                        <div class="space-y-4 max-h-80 overflow-y-auto pr-2">
-                            <div class="flex items-center p-4 bg-blue-50/50 rounded-xl border border-blue-100">
-                                <div class="bg-blue-100 p-3 rounded-full mr-4">
+                        <div class="space-y-4 max-h-64 sm:max-h-80 overflow-y-auto pr-2">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 bg-blue-50/50 rounded-xl border border-blue-100">
+                                <div class="bg-blue-100 p-3 rounded-full sm:mr-4">
                                     <i class="fas fa-user-plus text-blue-500"></i>
                                 </div>
                                 <div class="flex-1">
                                     <p class="font-semibold text-gray-900">Nouvel utilisateur inscrit</p>
                                     <p class="text-sm text-gray-600">Jean Dupont - il y a 2 heures</p>
                                 </div>
-                                <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">Nouveau</span>
+                                <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full self-start sm:self-auto">Nouveau</span>
                             </div>
                             
-                            <div class="flex items-center p-4 bg-green-50/50 rounded-xl border border-green-100">
-                                <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 bg-green-50/50 rounded-xl border border-green-100">
+                                <div class="bg-green-100 p-3 rounded-full sm:mr-4">
                                     <i class="fas fa-plus text-green-500"></i>
                                 </div>
                                 <div class="flex-1">
                                     <p class="font-semibold text-gray-900">Dépôt effectué</p>
                                     <p class="text-sm text-gray-600">Marie Martin - 1 500€ - il y a 4 heures</p>
                                 </div>
-                                <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Succès</span>
+                                <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full self-start sm:self-auto">Succès</span>
                             </div>
                             
-                            <div class="flex items-center p-4 bg-purple-50/50 rounded-xl border border-purple-100">
-                                <div class="bg-purple-100 p-3 rounded-full mr-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 bg-purple-50/50 rounded-xl border border-purple-100">
+                                <div class="bg-purple-100 p-3 rounded-full sm:mr-4">
                                     <i class="fas fa-exchange-alt text-purple-500"></i>
                                 </div>
                                 <div class="flex-1">
                                     <p class="font-semibold text-gray-900">Virement international</p>
                                     <p class="text-sm text-gray-600">Pierre Bernard - 3 200€ - il y a 6 heures</p>
                                 </div>
-                                <span class="bg-purple-500 text-white text-xs px-2 py-1 rounded-full">International</span>
+                                <span class="bg-purple-500 text-white text-xs px-2 py-1 rounded-full self-start sm:self-auto">International</span>
                             </div>
                             
-                            <div class="flex items-center p-4 bg-yellow-50/50 rounded-xl border border-yellow-100">
-                                <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 bg-yellow-50/50 rounded-xl border border-yellow-100">
+                                <div class="bg-yellow-100 p-3 rounded-full sm:mr-4">
                                     <i class="fas fa-cog text-yellow-500"></i>
                                 </div>
                                 <div class="flex-1">
                                     <p class="font-semibold text-gray-900">Paramètres mis à jour</p>
                                     <p class="text-sm text-gray-600">Taux d'intérêt modifiés - il y a 1 jour</p>
                                 </div>
-                                <span class="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">Système</span>
+                                <span class="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full self-start sm:self-auto">Système</span>
                             </div>
                         </div>
                     </div>

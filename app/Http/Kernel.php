@@ -84,6 +84,7 @@ class Kernel extends HttpKernel
         'verified' => EnsureEmailIsVerified::class,
         'admin' => \App\Http\Middleware\IsAdmin::class,
         'isAdmin' => \App\Http\Middleware\IsAdmin::class,
+        'notAdmin' => \App\Http\Middleware\EnsureNotAdmin::class,
         'checkUserStatus' => \App\Http\Middleware\CheckUserStatus::class,
         'twofactor' => \App\Http\Middleware\EnsureTwoFactorVerified::class,
     ];
@@ -100,6 +101,7 @@ class Kernel extends HttpKernel
         'verified' => EnsureEmailIsVerified::class,
         'admin' => \App\Http\Middleware\IsAdmin::class,
         'isAdmin' => \App\Http\Middleware\IsAdmin::class,
+        'notAdmin' => \App\Http\Middleware\EnsureNotAdmin::class,
         'checkUserStatus' => \App\Http\Middleware\CheckUserStatus::class,
         'twofactor' => \App\Http\Middleware\EnsureTwoFactorVerified::class,
     ];
