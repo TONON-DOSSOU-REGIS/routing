@@ -19,4 +19,6 @@ return [
     'send_error' => 'Error sending message',
     'user_fallback' => 'User',
     'online' => 'Online',
+    'connected' => 'Connected',
+    'disconnected' => 'Disconnected',
 ];

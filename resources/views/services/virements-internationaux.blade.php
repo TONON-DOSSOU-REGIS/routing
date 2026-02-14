@@ -54,8 +54,9 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="relative pt-32 pb-20 bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-900 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="support-hero relative pt-32 pb-20 text-white" data-support-hero data-hero-tone="emerald">
+        @include('components.support-hero-slider')
+        <div class="support-hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-4xl mx-auto fade-in-up">
                 <h1 class="text-4xl sm:text-5xl font-bold mb-6">
                     Virements Internationaux

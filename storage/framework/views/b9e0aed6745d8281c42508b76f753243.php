@@ -8,6 +8,9 @@
         'errorPrefix' => __('admin_chat.error_prefix'),
         'startConversation' => __('admin_chat.start_conversation'),
         'userFallback' => __('admin_chat.user_fallback'),
+        'online' => __('admin_chat.online'),
+        'connected' => __('admin_chat.connected'),
+        'disconnected' => __('admin_chat.disconnected'),
     ];
 ?>
 <div id="admin-chat-widget" class="fixed bottom-4 right-4 z-50">
@@ -66,6 +69,7 @@
                     <div>
                         <div id="current-user-name" class="font-semibold text-gray-800"></div>
                         <div id="current-user-email" class="text-xs text-gray-500"></div>
+                        <div id="current-user-status" class="text-[11px] font-medium"></div>
                     </div>
                 </div>
                 
@@ -116,6 +120,58 @@ let currentChatUserId = null;
 let adminLastMessageId = 0;
 const adminChatLocale = document.documentElement.lang || '<?php echo e(app()->getLocale()); ?>';
 const adminChatI18n = <?php echo json_encode($adminChatI18n, 15, 512) ?>;
+const adminPresenceLabels = {
+    online: adminChatI18n.online,
+    connected: adminChatI18n.connected,
+    disconnected: adminChatI18n.disconnected,
+};
+
+function normalizePresenceStatus(status) {
+    return ['online', 'connected', 'disconnected'].includes(status) ? status : 'disconnected';
+}
+
+function resolvePresenceStatus(user) {
+    if (user && user.presence_status) {
+        return normalizePresenceStatus(user.presence_status);
+    }
+    if (user && user.is_online) {
+        return 'online';
+    }
+    if (user && user.is_connected) {
+        return 'connected';
+    }
+    return 'disconnected';
+}
+
+function presenceDotClass(status) {
+    switch (status) {
+        case 'online':
+            return 'bg-green-500';
+        case 'connected':
+            return 'bg-amber-500';
+        default:
+            return 'bg-gray-400';
+    }
+}
+
+function presenceTextClass(status) {
+    switch (status) {
+        case 'online':
+            return 'text-green-600';
+        case 'connected':
+            return 'text-amber-600';
+        default:
+            return 'text-gray-500';
+    }
+}
+
+function setCurrentUserPresence(status) {
+    const statusElement = document.getElementById('current-user-status');
+    if (!statusElement) return;
+    const safeStatus = normalizePresenceStatus(status);
+    statusElement.textContent = adminPresenceLabels[safeStatus];
+    statusElement.className = `text-[11px] font-medium ${presenceTextClass(safeStatus)}`;
+}
 
 function toggleAdminChat() {
     const chatWindow = document.getElementById('admin-chat-window');
@@ -205,6 +261,7 @@ function displayConversations(conversations) {
         const lastName = user.last_name || '';
         const email = user.email || '';
         const userId = user.id;
+        const presenceStatus = resolvePresenceStatus(user);
         
         if (!userId) {
             console.warn('User ID missing in conversation:', conv);
@@ -213,7 +270,7 @@ function displayConversations(conversations) {
         
         const convDiv = document.createElement('div');
         convDiv.className = 'p-4 border-b hover:bg-gray-100 cursor-pointer transition-colors';
-        convDiv.onclick = () => openChat(userId, firstName + ' ' + lastName, email);
+        convDiv.onclick = () => openChat(userId, firstName + ' ' + lastName, email, presenceStatus);
         
         const time = lastMsg && lastMsg.created_at ? new Date(lastMsg.created_at).toLocaleTimeString(adminChatLocale, { hour: '2-digit', minute: '2-digit' }) : '';
         const messageText = lastMsg && lastMsg.message ? lastMsg.message : adminChatI18n.noMessages;
@@ -223,10 +280,14 @@ function displayConversations(conversations) {
             <div class="flex items-start justify-between">
                 <div class="flex-1">
                     <div class="flex items-center justify-between mb-1">
-                        <div class="font-semibold text-gray-800">${escapeHtml(firstName + ' ' + lastName)}</div>
+                        <div class="flex items-center">
+                            <div class="font-semibold text-gray-800">${escapeHtml(firstName + ' ' + lastName)}</div>
+                            <div class="w-2 h-2 rounded-full ml-2 ${presenceDotClass(presenceStatus)}" title="${escapeHtml(adminPresenceLabels[presenceStatus])}"></div>
+                        </div>
                         ${unreadCount > 0 ? `<span class="bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">${unreadCount}</span>` : ''}
                     </div>
                     <div class="text-xs text-gray-500 mb-1">${escapeHtml(email)}</div>
+                    <div class="text-[11px] font-medium ${presenceTextClass(presenceStatus)} mb-1">${escapeHtml(adminPresenceLabels[presenceStatus])}</div>
                     <div class="text-sm text-gray-600 truncate">${escapeHtml(preview)}</div>
                 </div>
                 ${time ? `<div class="text-xs text-gray-400 ml-2">${time}</div>` : ''}
@@ -237,7 +298,7 @@ function displayConversations(conversations) {
     });
 }
 
-function openChat(userId, userName, userEmail) {
+function openChat(userId, userName, userEmail, presenceStatus = 'disconnected') {
     console.log('Opening chat with user:', userId, userName, userEmail);
     
     if (!userId) {
@@ -253,6 +314,7 @@ function openChat(userId, userName, userEmail) {
     
     if (nameElement) nameElement.textContent = userName || adminChatI18n.userFallback;
     if (emailElement) emailElement.textContent = userEmail || '';
+    setCurrentUserPresence(presenceStatus);
     
     // Switch views
     const conversationsList = document.getElementById('conversations-list');
@@ -307,8 +369,25 @@ function loadChatWithUser(userId) {
     })
     .then(data => {
         console.log('Chat data received:', data);
-        if (data.success && data.messages) {
-            displayChatMessages(data.messages);
+        if (data.success) {
+            if (data.user_presence) {
+                setCurrentUserPresence(resolvePresenceStatus(data.user_presence));
+            }
+
+            if (data.messages) {
+                displayChatMessages(data.messages);
+            } else {
+                console.error('Invalid chat data structure:', data);
+                const container = document.getElementById('chat-messages-container');
+                if (container) {
+                    container.innerHTML = `
+                        <div class="text-center text-red-500 py-8">
+                            <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
+                            <p>${adminChatI18n.loadingMessagesError}</p>
+                        </div>
+                    `;
+                }
+            }
         } else {
             console.error('Invalid chat data structure:', data);
             const container = document.getElementById('chat-messages-container');

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class NotificationController extends Controller
 {
     /**
-     * Get unread notifications count
+     * Get unread notifications count.
      */
     public function getUnreadCount()
     {
@@ -16,47 +16,58 @@ class NotificationController extends Controller
 
         return response()->json([
             'success' => true,
-            'count' => $count
+            'count' => $count,
         ]);
     }
 
     /**
-     * Mark a notification as read
+     * Mark a notification as read.
      */
     public function markAsRead($locale, Notification $notification)
     {
-        // Ensure user owns the notification
         if ($notification->user_id !== auth()->id()) {
-            return response()->json(['success' => false, 'message' => 'Notification non trouvée.'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => __('notification_content.api.not_found'),
+            ], 404);
         }
 
         $notification->update(['is_read' => true]);
 
-        return response()->json(['success' => true, 'message' => 'Notification marquée comme lue.']);
+        return response()->json([
+            'success' => true,
+            'message' => __('notification_content.api.marked_read'),
+        ]);
     }
 
     /**
-     * Mark all notifications as read
+     * Mark all notifications as read.
      */
     public function markAllAsRead(Request $request)
     {
         auth()->user()->notifications()->where('is_read', false)->update(['is_read' => true]);
 
-        return response()->json(['success' => true, 'message' => 'Toutes les notifications ont été marquées comme lues.']);
+        return response()->json([
+            'success' => true,
+            'message' => __('notification_content.api.all_marked_read'),
+        ]);
     }
 
     /**
-     * Delete all read notifications
+     * Delete all read notifications.
      */
     public function deleteAllRead(Request $request)
     {
         auth()->user()->notifications()->where('is_read', true)->delete();
 
-        return response()->json(['success' => true, 'message' => 'Toutes les notifications lues ont été supprimées.']);
+        return response()->json([
+            'success' => true,
+            'message' => __('notification_content.api.all_read_deleted'),
+        ]);
     }
 
     /**
-     * Display the notifications index page
+     * Display the notifications index page.
      */
     public function index(Request $request)
     {
@@ -64,13 +75,12 @@ class NotificationController extends Controller
     }
 
     /**
-     * Get notifications data for AJAX requests
+     * Get notifications data for AJAX requests.
      */
     public function getData(Request $request)
     {
         $query = auth()->user()->notifications()->orderBy('created_at', 'desc');
 
-        // Apply filters
         if ($request->filled('type')) {
             $query->where('type', $request->type);
         }
@@ -92,29 +102,31 @@ class NotificationController extends Controller
                 'current_page' => $notifications->currentPage(),
                 'last_page' => $notifications->lastPage(),
                 'per_page' => $notifications->perPage(),
-                'total' => $notifications->total()
-            ]
+                'total' => $notifications->total(),
+            ],
         ]);
     }
 
     /**
-     * Get a single notification details
+     * Get a single notification details.
      */
     public function show($locale, Notification $notification)
     {
-        // Ensure user owns the notification
         if ($notification->user_id !== auth()->id()) {
-            return response()->json(['success' => false, 'message' => 'Notification non trouvée.'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => __('notification_content.api.not_found'),
+            ], 404);
         }
 
         return response()->json([
             'success' => true,
-            'notification' => $notification
+            'notification' => $notification,
         ]);
     }
 
     /**
-     * Get recent notifications for dropdown
+     * Get recent notifications for dropdown.
      */
     public function getRecent(Request $request)
     {
@@ -125,7 +137,7 @@ class NotificationController extends Controller
 
         return response()->json([
             'success' => true,
-            'notifications' => $notifications
+            'notifications' => $notifications,
         ]);
     }
 }

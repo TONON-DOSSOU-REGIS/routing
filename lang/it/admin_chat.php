@@ -19,4 +19,6 @@ return [
     'send_error' => 'Errore durante l\'invio del messaggio',
     'user_fallback' => 'Utente',
     'online' => 'Online',
+    'connected' => 'Connesso',
+    'disconnected' => 'Disconnesso',
 ];

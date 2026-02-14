@@ -6,10 +6,44 @@ use App\Http\Controllers\Controller;
 use App\Services\NotificationService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class LoginController extends Controller
 {
     use AuthenticatesUsers;
+
+    /**
+     * Remove polluted intended URLs (AJAX/API endpoints) to avoid bad post-login redirects.
+     */
+    private function clearInvalidIntendedUrl(Request $request): void
+    {
+        $intended = (string) $request->session()->get('url.intended', '');
+        if ($intended === '') {
+            return;
+        }
+
+        $path = parse_url($intended, PHP_URL_PATH) ?: '';
+        if ($path === '') {
+            return;
+        }
+
+        $invalidSegments = [
+            '/notification/',
+            '/notifications/unread-count',
+            '/notifications/recent',
+            '/notifications/data',
+            '/chat/unread-count',
+            '/chat/messages',
+            '/api/',
+        ];
+
+        foreach ($invalidSegments as $segment) {
+            if (str_contains($path, $segment)) {
+                $request->session()->forget('url.intended');
+                return;
+            }
+        }
+    }
 
     /**
      * Get the post-login redirect path with locale.
@@ -36,6 +70,8 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
+        $this->clearInvalidIntendedUrl($request);
+
         if ($user->status !== 'active') {
             $this->guard()->logout();
             $request->session()->invalidate();
@@ -62,6 +98,9 @@ class LoginController extends Controller
         }
 
         NotificationService::notifyAdminUserLogin($user, $request->ip(), $request->userAgent());
+
+        // Always land on role dashboard right after login.
+        return redirect($this->redirectPath());
     }
 
     /**
@@ -75,6 +114,11 @@ class LoginController extends Controller
         $user = auth()->user();
         if ($user) {
             NotificationService::notifyAdminUserLogout($user, $request->ip());
+            try {
+                Cache::forget("chat:user:presence:{$user->id}");
+            } catch (\Throwable $e) {
+                report($e);
+            }
         }
 
         $this->guard()->logout();

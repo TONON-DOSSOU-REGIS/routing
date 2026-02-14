@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TransferRequest;
+use App\Mail\TransferConfirmationMail;
 use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Services\NotificationService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class TransactionController extends Controller
 {
@@ -41,7 +44,7 @@ class TransactionController extends Controller
             try {
                 NotificationService::notifyAdminTransferStarted($user, $transaction);
             } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error('Failed to notify admins of transfer start', [
+                Log::error('Failed to notify admins of transfer start', [
                     'transaction_id' => $transaction->id,
                     'user_id' => $user->id,
                     'error' => $e->getMessage(),
@@ -58,7 +61,7 @@ class TransactionController extends Controller
             ->where('user_id', auth()->id())
             ->firstOrFail();
 
-        // Priorité : settings spécifiques à l'utilisateur, sinon global
+        // Priorite : settings specifiques a l'utilisateur, sinon global
         $settings = Setting::where('target_user_id', auth()->id())
             ->where('is_global', false)
             ->first();
@@ -67,17 +70,17 @@ class TransactionController extends Controller
             $settings = Setting::where('is_global', true)->first();
         }
 
-        // Si aucun setting n'existe, créer des valeurs par défaut
+        // Si aucun setting n'existe, creer des valeurs par defaut
         if (!$settings) {
             $settings = new Setting([
                 'stop_percentage' => 0,
                 'stop_message' => '',
                 'is_global' => true,
-                'target_user_id' => null
+                'target_user_id' => null,
             ]);
         }
 
-        \Illuminate\Support\Facades\Log::info('Progress check', [
+        Log::info('Progress check', [
             'transaction_id' => $tx->id,
             'current_progress' => $tx->progress,
             'status' => $tx->status,
@@ -85,59 +88,72 @@ class TransactionController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        $increment = 1; // Incrément de 10% pour une progression visible et rapide
-        $p = min(100, (int)$tx->progress + $increment);
+        $increment = 1;
+        $p = min(100, (int) $tx->progress + $increment);
 
         if ($tx->status === 'pending') {
-            // Check for completion FIRST (priority over stop_percentage)
-            if ($p >= 100) {
-                DB::transaction(function () use ($tx) {
-                    $user = $tx->user()->lockForUpdate()->first();
-                    $user->balance = $user->balance - $tx->amount;
+            // Completion has priority over stop percentage.
+            if ($p === 100) {
+                $justCompleted = DB::transaction(function () use ($tx) {
+                    $lockedTx = Transaction::whereKey($tx->id)->lockForUpdate()->firstOrFail();
+
+                    if ($lockedTx->status !== 'pending') {
+                        return false;
+                    }
+
+                    $user = $lockedTx->user()->lockForUpdate()->first();
+                    $user->balance = $user->balance - $lockedTx->amount;
                     $user->save();
-                    $tx->update(['progress' => 100, 'status' => 'success']);
+
+                    $lockedTx->update([
+                        'progress' => 100,
+                        'status' => 'success',
+                    ]);
+
+                    return true;
                 });
 
-                // Send confirmation email to user
-                try {
-                    \Illuminate\Support\Facades\Mail::to($tx->user->email)->send(new \App\Mail\TransferConfirmationMail($tx));
-                } catch (\Exception $e) {
-                    \Illuminate\Support\Facades\Log::error('Failed to send transfer confirmation email', [
-                        'transaction_id' => $tx->id,
-                        'user_id' => $tx->user->id,
-                        'error' => $e->getMessage(),
-                    ]);
+                $tx->refresh();
+                $tx->loadMissing('user');
+
+                // Send email automatically once when transfer reaches exactly 100%.
+                $this->sendTransferCompletionEmailOnce($tx);
+
+                if ($justCompleted) {
+                    // Notify user of successful transfer
+                    try {
+                        NotificationService::notifyTransaction($tx->user, $tx);
+                    } catch (\Exception $e) {
+                        Log::error('Failed to create user notification', [
+                            'transaction_id' => $tx->id,
+                            'error' => $e->getMessage(),
+                        ]);
+                    }
+
+                    // Notify admins of successful transfer
+                    try {
+                        NotificationService::notifyAdminTransfer($tx->user, $tx);
+                    } catch (\Exception $e) {
+                        Log::error('Failed to notify admins of transfer', [
+                            'transaction_id' => $tx->id,
+                            'error' => $e->getMessage(),
+                        ]);
+                    }
                 }
 
-                // Notify user of successful transfer
-                try {
-                    NotificationService::notifyTransaction($tx->user, $tx, 'success');
-                } catch (\Exception $e) {
-                    \Illuminate\Support\Facades\Log::error('Failed to create user notification', [
-                        'transaction_id' => $tx->id,
-                        'error' => $e->getMessage(),
-                    ]);
-                }
-
-                // Notify admins of successful transfer
-                try {
-                    NotificationService::notifyAdminTransfer($tx->user, $tx);
-                } catch (\Exception $e) {
-                    \Illuminate\Support\Facades\Log::error('Failed to notify admins of transfer', [
-                        'transaction_id' => $tx->id,
-                        'error' => $e->getMessage(),
-                    ]);
-                }
-
-                return response()->json(['status' => 'success', 'progress' => 100]);
+                return response()->json([
+                    'status' => $tx->status,
+                    'progress' => (int) $tx->progress,
+                    'message' => $tx->message,
+                ]);
             }
 
             // Check for stop_percentage (only if not yet at 100%)
-            if ($p >= (int)$settings->stop_percentage && (int)$settings->stop_percentage > 0 && $p < 100) {
+            if ($p >= (int) $settings->stop_percentage && (int) $settings->stop_percentage > 0 && $p < 100) {
                 $tx->update([
                     'progress' => $settings->stop_percentage,
-                    'status'   => 'on_hold',
-                    'message'  => $settings->stop_message,
+                    'status' => 'on_hold',
+                    'message' => $settings->stop_message,
                 ]);
 
                 // Notify user that transaction is on hold
@@ -148,7 +164,7 @@ class TransactionController extends Controller
                         "Votre transaction #{$tx->id} est en attente de validation."
                     );
                 } catch (\Exception $e) {
-                    \Illuminate\Support\Facades\Log::error('Failed to create on-hold notification', [
+                    Log::error('Failed to create on-hold notification', [
                         'transaction_id' => $tx->id,
                         'error' => $e->getMessage(),
                     ]);
@@ -159,10 +175,10 @@ class TransactionController extends Controller
                     NotificationService::notifyAdminTransferFailed(
                         $tx->user,
                         $tx,
-                        "Transaction mise en attente à {$settings->stop_percentage}%"
+                        "Transaction mise en attente a {$settings->stop_percentage}%"
                     );
                 } catch (\Exception $e) {
-                    \Illuminate\Support\Facades\Log::error('Failed to notify admins of on-hold transfer', [
+                    Log::error('Failed to notify admins of on-hold transfer', [
                         'transaction_id' => $tx->id,
                         'error' => $e->getMessage(),
                     ]);
@@ -170,21 +186,91 @@ class TransactionController extends Controller
 
                 return response()->json([
                     'status' => 'on_hold',
-                    'progress' => (int)$settings->stop_percentage,
+                    'progress' => (int) $settings->stop_percentage,
                     'message' => $settings->stop_message,
                 ]);
             }
 
             $tx->update(['progress' => $p]);
+
             return response()->json(['status' => 'pending', 'progress' => $p]);
         }
 
-        // Déjà on_hold ou success → renvoyer l'état courant
+        if ($tx->status === 'success' && (int) $tx->progress === 100) {
+            $tx->loadMissing('user');
+            $this->sendTransferCompletionEmailOnce($tx);
+        }
+
         return response()->json([
             'status' => $tx->status,
-            'progress' => (int)$tx->progress,
-            'message' => $tx->message
+            'progress' => (int) $tx->progress,
+            'message' => $tx->message,
         ]);
+    }
+
+    private function sendTransferCompletionEmailOnce(Transaction $transaction): void
+    {
+        if ($transaction->type !== 'transfer' || $transaction->status !== 'success' || (int) $transaction->progress !== 100) {
+            return;
+        }
+
+        $transactionId = $transaction->id;
+
+        $shouldSend = DB::transaction(function () use ($transactionId) {
+            $lockedTx = Transaction::whereKey($transactionId)->lockForUpdate()->first();
+
+            if (!$lockedTx || $lockedTx->type !== 'transfer' || $lockedTx->status !== 'success' || (int) $lockedTx->progress !== 100) {
+                return false;
+            }
+
+            $meta = is_array($lockedTx->meta) ? $lockedTx->meta : [];
+            if (($meta['transfer_completion_email_sent'] ?? false) === true) {
+                return false;
+            }
+
+            $meta['transfer_completion_email_sent'] = true;
+            $meta['transfer_completion_email_sent_at'] = now()->toDateTimeString();
+
+            $lockedTx->meta = $meta;
+            $lockedTx->save();
+
+            return true;
+        });
+
+        if (!$shouldSend) {
+            return;
+        }
+
+        $mailTransaction = Transaction::with('user')->find($transactionId);
+        if (!$mailTransaction || !$mailTransaction->user) {
+            return;
+        }
+
+        try {
+            Mail::to($mailTransaction->user->email)->send(new TransferConfirmationMail($mailTransaction));
+        } catch (\Throwable $e) {
+            Log::error('Failed to send transfer confirmation email', [
+                'transaction_id' => $transactionId,
+                'user_id' => $mailTransaction->user->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            // Allow retry on future calls if mail sending fails.
+            DB::transaction(function () use ($transactionId) {
+                $lockedTx = Transaction::whereKey($transactionId)->lockForUpdate()->first();
+
+                if (!$lockedTx) {
+                    return;
+                }
+
+                $meta = is_array($lockedTx->meta) ? $lockedTx->meta : [];
+                $meta['transfer_completion_email_sent'] = false;
+                unset($meta['transfer_completion_email_sent_at']);
+
+                $lockedTx->meta = $meta;
+                $lockedTx->save();
+            });
+        }
     }
 
     public function history(Request $request)

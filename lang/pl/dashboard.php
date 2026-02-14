@@ -37,7 +37,7 @@ return [
     'transaction_type' => 'transakcja',
     'transaction_id_prefix' => '#',
     'date_format' => 'd / m / Y H: i',
-    'card_mask_prefix' => '- Nie.',
+    'card_mask_prefix' => '**** **** **** ',
     'analytics_title' => 'Analiza i statystyki',
     'analytics_subtitle' => 'Zobacz swoje dane finansowe',
     'total_deposits' => 'Depozyty ogółem',

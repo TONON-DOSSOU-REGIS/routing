@@ -9,6 +9,8 @@
         'startConversation' => __('admin_chat.start_conversation'),
         'userFallback' => __('admin_chat.user_fallback'),
         'online' => __('admin_chat.online'),
+        'connected' => __('admin_chat.connected'),
+        'disconnected' => __('admin_chat.disconnected'),
     ];
 @endphp
 <div id="admin-chat-widget-v2" class="fixed bottom-4 right-4 z-50">
@@ -65,6 +67,7 @@
                     <div>
                         <div id="current-user-name-v2" class="font-semibold text-gray-800"></div>
                         <div id="current-user-email-v2" class="text-xs text-gray-500"></div>
+                        <div id="current-user-status-v2" class="text-[11px] font-medium"></div>
                     </div>
                 </div>
                 
@@ -140,6 +143,65 @@
     const currentAdminId = {{ auth()->id() }};
     const adminChatLocale = document.documentElement.lang || '{{ app()->getLocale() }}';
     const adminChatI18n = @json($adminChatV2I18n);
+    const presenceLabelsV2 = {
+        online: adminChatI18n.online,
+        connected: adminChatI18n.connected,
+        disconnected: adminChatI18n.disconnected,
+    };
+
+    function normalizePresenceStatusV2(status) {
+        return ['online', 'connected', 'disconnected'].includes(status) ? status : 'disconnected';
+    }
+
+    function getPresenceStatusV2(user) {
+        if (user && user.presence_status) {
+            return normalizePresenceStatusV2(user.presence_status);
+        }
+        if (user && user.is_online) {
+            return 'online';
+        }
+        if (user && user.is_connected) {
+            return 'connected';
+        }
+        return 'disconnected';
+    }
+
+    function getPresenceDotClassV2(status) {
+        switch (status) {
+            case 'online':
+                return 'bg-green-500';
+            case 'connected':
+                return 'bg-amber-500';
+            default:
+                return 'bg-gray-400';
+        }
+    }
+
+    function getPresenceTextClassV2(status) {
+        switch (status) {
+            case 'online':
+                return 'text-green-600';
+            case 'connected':
+                return 'text-amber-600';
+            default:
+                return 'text-gray-500';
+        }
+    }
+
+    function renderPresenceBadgeV2(status) {
+        const safeStatus = normalizePresenceStatusV2(status);
+        const label = presenceLabelsV2[safeStatus];
+        const textClass = getPresenceTextClassV2(safeStatus);
+        return `<span class="inline-flex items-center text-[11px] font-medium ${textClass}">${escapeHtmlV2(label)}</span>`;
+    }
+
+    function setCurrentUserPresenceV2(status) {
+        const statusElement = document.getElementById('current-user-status-v2');
+        if (!statusElement) return;
+        const safeStatus = normalizePresenceStatusV2(status);
+        statusElement.textContent = presenceLabelsV2[safeStatus];
+        statusElement.className = `text-[11px] font-medium ${getPresenceTextClassV2(safeStatus)}`;
+    }
 
     window.toggleAdminChatV2 = function() {
         const chatWindow = document.getElementById('admin-chat-window-v2');
@@ -211,20 +273,19 @@
             const lastName = user.last_name || '';
             const email = user.email || '';
             const userId = user.id;
+            const presenceStatus = getPresenceStatusV2(user);
             
             if (!userId) return;
             
             const convDiv = document.createElement('div');
             convDiv.className = 'p-4 border-b hover:bg-gray-100 cursor-pointer transition-colors';
-            convDiv.onclick = () => openChatV2(userId, firstName + ' ' + lastName, email);
+            convDiv.onclick = () => openChatV2(userId, firstName + ' ' + lastName, email, presenceStatus);
             
             const time = lastMsg && lastMsg.created_at ? new Date(lastMsg.created_at).toLocaleTimeString(adminChatLocale, { hour: '2-digit', minute: '2-digit' }) : '';
             const messageText = lastMsg && lastMsg.message ? lastMsg.message : adminChatI18n.noMessages;
             const preview = messageText.length > 50 ? messageText.substring(0, 50) + '...' : messageText;
-            
-            const onlineIndicator = user.is_online
-                ? `<div class="w-2 h-2 bg-green-500 rounded-full ml-2" title="${adminChatI18n.online}"></div>`
-                : '';
+            const presenceDot = `<div class="w-2 h-2 rounded-full ml-2 ${getPresenceDotClassV2(presenceStatus)}" title="${escapeHtmlV2(presenceLabelsV2[presenceStatus])}"></div>`;
+            const presenceBadge = renderPresenceBadgeV2(presenceStatus);
 
             convDiv.innerHTML = `
                 <div class="flex items-start justify-between">
@@ -232,11 +293,12 @@
                         <div class="flex items-center justify-between mb-1">
                             <div class="flex items-center">
                                 <div class="font-semibold text-gray-800">${escapeHtmlV2(firstName + ' ' + lastName)}</div>
-                                ${onlineIndicator}
+                                ${presenceDot}
                             </div>
                             ${unreadCount > 0 ? `<span class="bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">${unreadCount}</span>` : ''}
                         </div>
                         <div class="text-xs text-gray-500 mb-1">${escapeHtmlV2(email)}</div>
+                        <div class="mb-1">${presenceBadge}</div>
                         <div class="text-sm text-gray-600 truncate">${escapeHtmlV2(preview)}</div>
                     </div>
                     ${time ? `<div class="text-xs text-gray-400 ml-2">${time}</div>` : ''}
@@ -247,7 +309,7 @@
         });
     }
 
-    function openChatV2(userId, userName, userEmail) {
+    function openChatV2(userId, userName, userEmail, presenceStatus = 'disconnected') {
         if (!userId) return;
         
         currentChatUserIdV2 = userId;
@@ -257,6 +319,7 @@
         
         if (nameElement) nameElement.textContent = userName || adminChatI18n.userFallback;
         if (emailElement) emailElement.textContent = userEmail || '';
+        setCurrentUserPresenceV2(presenceStatus);
         
         const conversationsList = document.getElementById('conversations-list-v2');
         const individualChat = document.getElementById('individual-chat-v2');
@@ -306,6 +369,10 @@
             console.log('[ChatV2] Response data:', data);
             
             if (data.success) {
+                if (data.user_presence) {
+                    setCurrentUserPresenceV2(getPresenceStatusV2(data.user_presence));
+                }
+
                 if (data.messages && Array.isArray(data.messages)) {
                     console.log('[ChatV2] Messages count:', data.messages.length);
                     displayChatMessagesV2(data.messages);

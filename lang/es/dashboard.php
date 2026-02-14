@@ -37,7 +37,7 @@ return [
     'transaction_type' => 'transacción',
     'transaction_id_prefix' => '#',
     'date_format' => 'd/m/Y H:i',
-    'card_mask_prefix' => '♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪♪',
+    'card_mask_prefix' => '**** **** **** ',
     'analytics_title' => 'Análisis de estadísticas',
     'analytics_subtitle' => 'Vea sus datos financieros',
     'total_deposits' => 'Total de depósitos',

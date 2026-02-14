@@ -11,6 +11,11 @@ $languages = [
 ];
 $currentLanguage = $languages[$currentLocale] ?? $languages['fr'];
 $uniqueId = 'lang-selector-' . uniqid();
+$localePattern = implode('|', array_keys($languages));
+$currentPath = request()->getPathInfo();
+$pathWithoutLocale = preg_replace('#^/(' . $localePattern . ')(/|$)#', '/', $currentPath);
+$pathWithoutLocale = $pathWithoutLocale ?: '/';
+$queryString = request()->getQueryString();
 @endphp
 
 <div class="language-selector" id="{{ $uniqueId }}">
@@ -25,17 +30,20 @@ $uniqueId = 'lang-selector-' . uniqid();
         <ul class="language-menu">
             @foreach($languages as $code => $language)
                 <li>
-                    <form action="{{ route('language.switch', ['locale' => $code]) }}" method="POST" style="margin: 0;">
-                        @csrf
-                        <button type="submit" class="language-item {{ $code === $currentLocale ? 'active' : '' }}">
+                    @php
+                        $targetPath = '/' . $code . $pathWithoutLocale;
+                        $targetPath = preg_replace('#/+#', '/', $targetPath);
+                        $targetPath = $targetPath === '/' . $code . '/' ? '/' . $code : rtrim($targetPath, '/');
+                        $targetUrl = $targetPath . ($queryString ? '?' . $queryString : '');
+                    @endphp
+                    <a href="{{ url($targetUrl) }}" class="language-item {{ $code === $currentLocale ? 'active' : '' }}">
                             <span class="flag flag-{{ $language['flag'] }}" aria-hidden="true"></span>
                             <span class="lang-name">{{ $language['name'] }}</span>
                             <span class="lang-pill">{{ $language['code'] ?? strtoupper($code) }}</span>
                             @if($code === $currentLocale)
-                                <span class="check-mark">✓</span>
+                                <span class="check-mark">&#10003;</span>
                             @endif
-                        </button>
-                    </form>
+                    </a>
                 </li>
             @endforeach
         </ul>
@@ -137,10 +145,6 @@ $uniqueId = 'lang-selector-' . uniqid();
     padding: 0;
 }
 
-.language-selector .language-menu form {
-    width: 100%;
-}
-
 .language-selector .language-item {
     display: grid;
     grid-template-columns: auto 1fr auto auto;
@@ -156,6 +160,7 @@ $uniqueId = 'lang-selector-' . uniqid();
     cursor: pointer;
     font-family: inherit;
     font-size: 0.95rem;
+    text-decoration: none;
 }
 
 .language-selector .language-item:hover {

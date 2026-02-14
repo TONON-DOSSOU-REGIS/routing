@@ -54,8 +54,9 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="relative pt-32 pb-20 bg-gradient-to-br from-orange-900 via-orange-800 to-orange-900 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="support-hero relative pt-32 pb-20 text-white" data-support-hero data-hero-tone="orange">
+        @include('components.support-hero-slider')
+        <div class="support-hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-4xl mx-auto fade-in-up">
                 <h1 class="text-4xl sm:text-5xl font-bold mb-6">
                     Cartes de paiement SG BANK

@@ -9,6 +9,39 @@ use Illuminate\Support\Str;
 
 class TwoFactorController extends Controller
 {
+    /**
+     * Remove polluted intended URLs (AJAX/API endpoints) before post-2FA redirect.
+     */
+    private function clearInvalidIntendedUrl(Request $request): void
+    {
+        $intended = (string) $request->session()->get('url.intended', '');
+        if ($intended === '') {
+            return;
+        }
+
+        $path = parse_url($intended, PHP_URL_PATH) ?: '';
+        if ($path === '') {
+            return;
+        }
+
+        $invalidSegments = [
+            '/notification/',
+            '/notifications/unread-count',
+            '/notifications/recent',
+            '/notifications/data',
+            '/chat/unread-count',
+            '/chat/messages',
+            '/api/',
+        ];
+
+        foreach ($invalidSegments as $segment) {
+            if (str_contains($path, $segment)) {
+                $request->session()->forget('url.intended');
+                return;
+            }
+        }
+    }
+
     public function setup(Request $request)
     {
         $user = $request->user();
@@ -121,10 +154,11 @@ class TwoFactorController extends Controller
         }
 
         $request->session()->put('2fa_passed', true);
+        $this->clearInvalidIntendedUrl($request);
 
         $defaultRedirect = $this->getRoleDashboardPath($user);
 
-        return redirect()->intended($defaultRedirect);
+        return redirect($defaultRedirect);
     }
 
     private function redirectToRoleDashboard($user)

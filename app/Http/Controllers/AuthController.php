@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
@@ -12,6 +13,36 @@ use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
+    private function clearInvalidIntendedUrl(Request $request): void
+    {
+        $intended = (string) $request->session()->get('url.intended', '');
+        if ($intended === '') {
+            return;
+        }
+
+        $path = parse_url($intended, PHP_URL_PATH) ?: '';
+        if ($path === '') {
+            return;
+        }
+
+        $invalidSegments = [
+            '/notification/',
+            '/notifications/unread-count',
+            '/notifications/recent',
+            '/notifications/data',
+            '/chat/unread-count',
+            '/chat/messages',
+            '/api/',
+        ];
+
+        foreach ($invalidSegments as $segment) {
+            if (str_contains($path, $segment)) {
+                $request->session()->forget('url.intended');
+                return;
+            }
+        }
+    }
+
     public function showLogin()
     {
         return view('auth.login');
@@ -26,6 +57,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            $this->clearInvalidIntendedUrl($request);
 
             $user = Auth::user();
 
@@ -93,12 +125,7 @@ class AuthController extends Controller
                 return redirect()->route('admin.dashboard', ['locale' => $locale]);
             }
 
-            $intended = session()->get('url.intended');
-            if ($intended && str_contains($intended, '/notifications/')) {
-                session()->forget('url.intended');
-            }
-
-            return redirect()->intended('/' . $locale . '/dashboard');
+            return redirect('/' . $locale . '/dashboard');
         }
 
         return back()->withErrors([
@@ -187,6 +214,14 @@ class AuthController extends Controller
                 \App\Services\NotificationService::notifyAdminUserLogout($user, $request->ip());
             } catch (\Exception $e) {
                 \Log::error('Failed to send logout notification to admins: ' . $e->getMessage());
+            }
+        }
+
+        if ($user) {
+            try {
+                Cache::forget("chat:user:presence:{$user->id}");
+            } catch (\Throwable $e) {
+                \Log::warning('Failed to clear chat presence key during logout: ' . $e->getMessage());
             }
         }
 

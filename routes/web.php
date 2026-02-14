@@ -9,7 +9,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\MarketController;
 use App\Http\Controllers\ChatController;
-use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\Auth\LoginLinkController;
 
@@ -19,9 +18,10 @@ use App\Http\Controllers\Auth\LoginLinkController;
 |--------------------------------------------------------------------------
 */
 
-// Language switcher route (POST + GET fallback)
-Route::post('/language/{locale}', [LanguageController::class, 'switch'])->name('language.switch');
-Route::get('/language/{locale}', [LanguageController::class, 'switch'])->name('language.switch.get');
+// Legacy language switcher URL kept for backward compatibility
+Route::match(['GET', 'POST'], '/language/{locale}', function (string $locale) {
+    return redirect('/' . $locale);
+})->where(['locale' => 'en|fr|de|nl|es|pl|it']);
 
 // Routes sans préfixe de langue (redirection vers la langue par défaut)
 Route::get('/', function () {
@@ -144,17 +144,18 @@ Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(fu
         Route::get('/transactions/{transaction}/receipt', [TransactionController::class, 'receiptPdf'])->name('transactions.receipt');
         Route::get('/transactions/{transaction}/receipt-html', [TransactionController::class, 'receiptHtml'])->name('transactions.receipt.html');
 
-        // Notifications
+    });
+
+    // Notifications (client + admin)
+    Route::middleware(['auth', 'twofactor'])->group(function () {
         Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
         Route::get('/notifications/data', [NotificationController::class, 'getData'])->name('notifications.data');
         Route::get('/notifications/recent', [NotificationController::class, 'getRecent'])->name('notifications.recent');
         Route::get('/notifications/unread-count', [NotificationController::class, 'getUnreadCount'])->name('notifications.unread-count');
         Route::get('/notifications/{notification}', [NotificationController::class, 'show'])->name('notifications.show');
         Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
-        Route::post('/notifications/mark-all-read', action: [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+        Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
         Route::delete('/notifications/delete-all-read', [NotificationController::class, 'deleteAllRead'])->name('notifications.deleteAllRead');
-
-
     });
 
     // Admin routes

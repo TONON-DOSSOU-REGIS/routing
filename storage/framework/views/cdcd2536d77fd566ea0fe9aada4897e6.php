@@ -28,7 +28,9 @@ foreach ($attributes->all() as $__key => $__value) {
 
 unset($__defined_vars, $__key, $__value); ?>
 <?php
-    $currentUserId = $user?->id ?? auth()->id();
+    $resolvedUser = $user ?? auth()->user();
+    $currentUserId = $resolvedUser?->id ?? auth()->id();
+    $isAdminBell = $resolvedUser?->isAdmin() ?? false;
     $notificationBellI18n = [
         'loadingShort' => __('notifications.loading_short'),
         'errorLoadingShort' => __('notifications.error_loading_short'),
@@ -40,7 +42,7 @@ unset($__defined_vars, $__key, $__value); ?>
     ];
 ?>
 
-<div class="relative inline-block" data-user-id="<?php echo e($currentUserId); ?>">
+<div class="relative inline-block" data-user-id="<?php echo e($currentUserId); ?>" data-is-admin="<?php echo e($isAdminBell ? '1' : '0'); ?>">
     <button id="notification-bell" class="relative p-2 text-gray-600 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full transition-colors duration-200">
         <i class="fas fa-bell text-xl"></i>
         <span id="notification-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center hidden">
@@ -85,10 +87,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const count = document.getElementById('notification-count');
     const list = document.getElementById('notification-list');
     const markAllRead = document.getElementById('mark-all-read');
-    const userId = document.querySelector('[data-user-id]')?.getAttribute('data-user-id');
+    const root = bell?.closest('[data-user-id]');
+    const userId = root?.getAttribute('data-user-id');
+    const isAdmin = root?.getAttribute('data-is-admin') === '1';
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     const locale = document.documentElement.lang || '<?php echo e(app()->getLocale()); ?>';
     const i18n = <?php echo json_encode($notificationBellI18n, 15, 512) ?>;
+
+    if (!bell || !dropdown || !count || !list || !markAllRead || !userId) {
+        return;
+    }
 
     function requireCsrf() {
         if (!csrfToken) {
@@ -99,14 +107,37 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     let isOpen = false;
-    let soundEnabled = false;
+    let soundEnabled = localStorage.getItem('notification_sound_enabled') === '1';
     let lastUnreadCount = null;
+    let audioContext = null;
+    let unreadTimer = null;
+    const unreadPollingIntervalMs = isAdmin ? 3000 : 10000;
+
+    function ensureAudioContext() {
+        const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextCtor) {
+            return null;
+        }
+
+        if (!audioContext) {
+            audioContext = new AudioContextCtor();
+        }
+
+        if (audioContext.state === 'suspended') {
+            audioContext.resume().catch(() => {});
+        }
+
+        return audioContext;
+    }
 
     function enableSound() {
         soundEnabled = true;
+        localStorage.setItem('notification_sound_enabled', '1');
+        ensureAudioContext();
     }
 
     document.addEventListener('click', enableSound, { once: true });
+    document.addEventListener('pointerdown', enableSound, { once: true });
     document.addEventListener('keydown', enableSound, { once: true });
     document.addEventListener('touchstart', enableSound, { once: true });
 
@@ -134,7 +165,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load notifications
     function loadNotifications() {
         const locale = window.location.pathname.split('/')[1] || 'fr';
-        fetch(`/${locale}/notifications/recent`)
+        fetch(`/${locale}/notifications/recent`, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -221,7 +257,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateUnreadCount(options = {}) {
         const { silent = false } = options;
         const locale = window.location.pathname.split('/')[1] || 'fr';
-        fetch(`/${locale}/notifications/unread-count`)
+        fetch(`/${locale}/notifications/unread-count`, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 const newCount = data.success ? Number(data.count || 0) : 0;
@@ -287,63 +328,74 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         try {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
+            const ctx = ensureAudioContext();
+            if (!ctx) {
+                return;
+            }
+
+            const oscillator = ctx.createOscillator();
+            const gainNode = ctx.createGain();
             oscillator.type = 'triangle';
             oscillator.frequency.value = 740;
             gainNode.gain.value = 0.06;
             oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
+            gainNode.connect(ctx.destination);
             oscillator.start();
-            oscillator.stop(audioContext.currentTime + 0.18);
+            oscillator.stop(ctx.currentTime + 0.18);
         } catch (e) {
             // Ignore audio errors
         }
     }
 
     if (window.Echo && userId) {
-        window.Echo.private(`user.${userId}`)
-            .listen('.notification.created', (e) => {
-                const payload = e.notification || e;
-                updateUnreadCount({ silent: true });
+        try {
+            window.Echo.private(`user.${userId}`)
+                .listen('.notification.created', (e) => {
+                    const payload = e.notification || e;
+                    updateUnreadCount({ silent: true });
+                    if (isOpen) {
+                        loadNotifications();
+                    }
+                    playNotificationSound();
+                    window.dispatchEvent(new CustomEvent('notification.created', { detail: payload }));
+                });
+        } catch (error) {
+            console.warn('Echo channel subscription failed, fallback polling remains active.', error);
+        }
+    }
+
+    function startUnreadPolling() {
+        if (unreadTimer) return;
+        unreadTimer = setInterval(() => {
+            if (document.visibilityState === 'visible') {
+                updateUnreadCount();
                 if (isOpen) {
                     loadNotifications();
                 }
-                playNotificationSound();
-                window.dispatchEvent(new CustomEvent('notification.created', { detail: payload }));
-            });
-    } else {
-        // Auto-refresh with a lighter polling cadence and pause when hidden
-        let unreadTimer = null;
-
-        function startUnreadPolling() {
-            if (unreadTimer) return;
-            unreadTimer = setInterval(() => {
-                if (document.visibilityState === 'visible') {
-                    updateUnreadCount();
-                }
-            }, 30000);
-        }
-
-        function stopUnreadPolling() {
-            if (unreadTimer) {
-                clearInterval(unreadTimer);
-                unreadTimer = null;
             }
-        }
-
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible') {
-                updateUnreadCount();
-                startUnreadPolling();
-            } else {
-                stopUnreadPolling();
-            }
-        });
-
-        startUnreadPolling();
+        }, unreadPollingIntervalMs);
     }
+
+    function stopUnreadPolling() {
+        if (unreadTimer) {
+            clearInterval(unreadTimer);
+            unreadTimer = null;
+        }
+    }
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+            updateUnreadCount({ silent: true });
+            if (isOpen) {
+                loadNotifications();
+            }
+            startUnreadPolling();
+        } else {
+            stopUnreadPolling();
+        }
+    });
+
+    startUnreadPolling();
 });
 </script>
 

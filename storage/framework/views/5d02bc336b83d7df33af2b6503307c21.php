@@ -11,6 +11,11 @@ $languages = [
 ];
 $currentLanguage = $languages[$currentLocale] ?? $languages['fr'];
 $uniqueId = 'lang-selector-' . uniqid();
+$localePattern = implode('|', array_keys($languages));
+$currentPath = request()->getPathInfo();
+$pathWithoutLocale = preg_replace('#^/(' . $localePattern . ')(/|$)#', '/', $currentPath);
+$pathWithoutLocale = $pathWithoutLocale ?: '/';
+$queryString = request()->getQueryString();
 ?>
 
 <div class="language-selector" id="<?php echo e($uniqueId); ?>">
@@ -25,17 +30,20 @@ $uniqueId = 'lang-selector-' . uniqid();
         <ul class="language-menu">
             <?php $__currentLoopData = $languages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $code => $language): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <li>
-                    <form action="<?php echo e(route('language.switch', ['locale' => $code])); ?>" method="POST" style="margin: 0;">
-                        <?php echo csrf_field(); ?>
-                        <button type="submit" class="language-item <?php echo e($code === $currentLocale ? 'active' : ''); ?>">
+                    <?php
+                        $targetPath = '/' . $code . $pathWithoutLocale;
+                        $targetPath = preg_replace('#/+#', '/', $targetPath);
+                        $targetPath = $targetPath === '/' . $code . '/' ? '/' . $code : rtrim($targetPath, '/');
+                        $targetUrl = $targetPath . ($queryString ? '?' . $queryString : '');
+                    ?>
+                    <a href="<?php echo e(url($targetUrl)); ?>" class="language-item <?php echo e($code === $currentLocale ? 'active' : ''); ?>">
                             <span class="flag flag-<?php echo e($language['flag']); ?>" aria-hidden="true"></span>
                             <span class="lang-name"><?php echo e($language['name']); ?></span>
                             <span class="lang-pill"><?php echo e($language['code'] ?? strtoupper($code)); ?></span>
                             <?php if($code === $currentLocale): ?>
-                                <span class="check-mark">✓</span>
+                                <span class="check-mark">&#10003;</span>
                             <?php endif; ?>
-                        </button>
-                    </form>
+                    </a>
                 </li>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </ul>
@@ -137,10 +145,6 @@ $uniqueId = 'lang-selector-' . uniqid();
     padding: 0;
 }
 
-.language-selector .language-menu form {
-    width: 100%;
-}
-
 .language-selector .language-item {
     display: grid;
     grid-template-columns: auto 1fr auto auto;
@@ -156,6 +160,7 @@ $uniqueId = 'lang-selector-' . uniqid();
     cursor: pointer;
     font-family: inherit;
     font-size: 0.95rem;
+    text-decoration: none;
 }
 
 .language-selector .language-item:hover {

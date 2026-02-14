@@ -37,7 +37,7 @@ return [
     'transaction_type' => 'transazione',
     'transaction_id_prefix' => '#',
     'date_format' => 'D/m/Y H:i',
-    'card_mask_prefix' => 'E\' una cosa che non va.',
+    'card_mask_prefix' => '**** **** **** ',
     'analytics_title' => 'Analisi e statistica',
     'analytics_subtitle' => 'Visualizza i dati finanziari',
     'total_deposits' => 'Totale depositi',

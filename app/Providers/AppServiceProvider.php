@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Transaction;
+use App\Observers\TransactionObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Middleware\Authenticate;
 
@@ -25,5 +27,6 @@ class AppServiceProvider extends ServiceProvider
             return route('login', ['locale' => $locale]);
         });
 
+        Transaction::observe(TransactionObserver::class);
     }
 }

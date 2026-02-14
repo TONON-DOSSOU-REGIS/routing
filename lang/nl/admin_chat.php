@@ -19,4 +19,6 @@ return [
     'send_error' => 'Fout bij het verzenden van het bericht',
     'user_fallback' => 'Gebruiker',
     'online' => 'Online',
+    'connected' => 'Verbonden',
+    'disconnected' => 'Niet verbonden',
 ];
