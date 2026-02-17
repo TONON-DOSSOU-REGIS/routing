@@ -190,7 +190,11 @@ class AdminController extends Controller
             ]);
         }
 
-        return back()->with('status', 'Dépôt effectué avec succès. La devise par défaut de l\'utilisateur a été mise à jour.');
+        $message = 'Dépôt effectué avec succès. La devise par défaut de l\'utilisateur a été mise à jour.';
+
+        return redirect(localized_route('admin.deposit'))
+            ->with('status', $message)
+            ->with('success', $message);
     }
 
     public function exportPdf()

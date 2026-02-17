@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog - SG BANK</title>
+    <title>Blog - Valtrix Bank</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+  <link rel="manifest" href="/favicon_io11/site.webmanifest">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .nav-gradient { background: linear-gradient(90deg, #1e3a8a 0%, #1e40af 100%); }
@@ -29,7 +32,7 @@
                     <div class="bg-white p-2 rounded-lg">
                         <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                     </div>
-                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">SG BANK</span></a>
+                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">Valtrix Bank</span></a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
@@ -59,7 +62,7 @@
         <div class="support-hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-4xl mx-auto fade-in-up">
                 <h1 class="text-4xl sm:text-5xl font-bold mb-6">
-                    Blog SG BANK
+                    Blog Valtrix Bank
                 </h1>
                 <p class="text-xl mb-8 text-indigo-100 leading-relaxed">
                     Découvrez nos insights sur la fintech, les tendances bancaires et les conseils
@@ -265,7 +268,7 @@
     <footer class="bg-gray-900 text-gray-400 py-12">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center">
-                <p>&copy; 2025 <span class="text-blue-400 font-semibold">SG BANK</span>. Tous droits réservés.</p>
+                <p>&copy; 2025 <span class="text-blue-400 font-semibold">Valtrix Bank</span>. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
@@ -280,6 +283,7 @@
 
 </body>
 </html>
+
 
 
 

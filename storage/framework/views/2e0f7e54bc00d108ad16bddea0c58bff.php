@@ -7,6 +7,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+  <link rel="manifest" href="/favicon_io11/site.webmanifest">
 
   <style>
     /* Police et fondations visuelles */
@@ -282,7 +286,7 @@
             <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>"><img src='<?php echo e(asset("images/Logosite.png")); ?>' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
             
           </div>
-          <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>" class="text-2xl font-bold text-white"><span class="sr-only">SG BANK</span></a>
+          <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>" class="text-2xl font-bold text-white"><span class="sr-only">Valtrix Bank</span></a>
         </div>
         
         <!-- Menu Desktop -->
@@ -590,7 +594,7 @@
             </li>
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              Contrôle manuel possible par l’administrateur
+              Contrôle manuel possible par l'administrateur
             </li>
           </ul>
         </div>
@@ -1270,7 +1274,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div>
           <div class="flex items-center mb-6">
             <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>" class="inline-flex items-center justify-center bg-white/95 p-2 rounded-xl shadow-md ring-1 ring-white/60">
-              <img src='<?php echo e(asset("images/Logosite.png")); ?>' class="w-11 h-11 object-contain" alt="logo SG BANK" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
+              <img src='<?php echo e(asset("images/Logosite.png")); ?>' class="w-11 h-11 object-contain" alt="logo Valtrix Bank" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
             </a>
           </div>
           <p class="text-gray-400 mb-4">
@@ -1318,7 +1322,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="section-divider my-8"></div>
       
       <div class="text-center">
-        <p>&copy; 2025 <span class="text-blue-400 font-semibold">SG BANK</span>. <?php echo e(__('home.footer_copyright')); ?></p>
+        <p>&copy; 2025 <span class="text-blue-400 font-semibold">Valtrix Bank</span>. <?php echo e(__('home.footer_copyright')); ?></p>
         <p class="text-sm text-gray-500 mt-2">
           <?php echo e(__('home.footer_disclaimer')); ?>
 

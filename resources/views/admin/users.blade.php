@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des utilisateurs - SG BANK Admin</title>
+    <title>Gestion des utilisateurs - Valtrix Bank Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+  <link rel="manifest" href="/favicon_io11/site.webmanifest">
     <style>
         /* Animations élégantes */
         @keyframes fadeInUp {
@@ -205,7 +208,7 @@
                                     <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                                 </div>
                                 <div>
-                                    <a href="{{ localized_route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"><span class="sr-only">SG BANK Admin</span></a>
+                                    <a href="{{ localized_route('admin.dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"><span class="sr-only">Valtrix Bank Admin</span></a>
                                     <div class="text-xs text-gray-500 -mt-1">Gestion des utilisateurs</div>
                                 </div>
                             </div>
@@ -748,6 +751,7 @@
     @include('components.admin-chat-widget')
 </body>
 </html>
+
 
 
 

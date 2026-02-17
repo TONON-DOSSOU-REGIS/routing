@@ -1,4 +1,4 @@
-﻿@props(['user' => null])
+@props(['user' => null])
 @php
     $resolvedUser = $user ?? auth()->user();
     $currentUserId = $resolvedUser?->id ?? auth()->id();

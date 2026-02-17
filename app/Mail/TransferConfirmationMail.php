@@ -29,7 +29,7 @@ class TransferConfirmationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Confirmation de virement - SG BANK',
+            subject: 'Confirmation de virement - Valtrix Bank',
         );
     }
 
@@ -56,4 +56,5 @@ class TransferConfirmationMail extends Mailable
         return [];
     }
 }
+
 

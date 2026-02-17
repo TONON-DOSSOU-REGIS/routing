@@ -7,7 +7,10 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+  <link rel="manifest" href="/favicon_io11/site.webmanifest">
   <style>
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(30px); }
@@ -43,7 +46,7 @@
       <div class="flex justify-between h-16">
         <div class="flex items-center space-x-2">
           <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
-          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-xl font-semibold text-slate-800 hover:text-blue-700 transition"><span class="sr-only">SG BANK</span></a>
+          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-xl font-semibold text-slate-800 hover:text-blue-700 transition"><span class="sr-only">Valtrix Bank</span></a>
         </div>
         <div class="flex items-center space-x-4">
           @include('components.language-selector')
@@ -119,7 +122,7 @@
   <!-- Footer -->
   <footer class="mt-auto text-center text-slate-200 py-6 bg-black/40 backdrop-blur-sm">
     <div class="max-w-7xl mx-auto px-4">
-      <p>&copy; {{ date('Y') }} <span class="text-blue-300 font-semibold">SG BANK</span>. {{ __('auth.footer_copyright') }}</p>
+      <p>&copy; {{ date('Y') }} <span class="text-blue-300 font-semibold">Valtrix Bank</span>. {{ __('auth.footer_copyright') }}</p>
       <div class="mt-2 flex justify-center space-x-4 text-sm">
         <a href="#" class="hover:text-blue-300 transition">{{ __('auth.footer_privacy') }}</a>
         <a href="#" class="hover:text-blue-300 transition">{{ __('auth.footer_terms') }}</a>
@@ -129,6 +132,7 @@
   </footer>
 </body>
 </html>
+
 
 
 

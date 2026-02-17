@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ str_replace("_", "-", app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartes de paiement - SG BANK</title>
+    <title>{{ __("services.cards_page_title") }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io11/site.webmanifest">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .nav-gradient { background: linear-gradient(90deg, #1e3a8a 0%, #1e40af 100%); }
@@ -29,12 +32,12 @@
                     <div class="bg-white p-2 rounded-lg">
                         <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                     </div>
-                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">SG BANK</span></a>
+                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">Valtrix Bank</span></a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
-                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">Connexion</a>
-                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">Créer un compte</a>
+                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">{{ __("services.nav_login") }}</a>
+                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">{{ __("services.nav_register") }}</a>
                 </div>
 
                 <div class="md:hidden flex items-center">
@@ -46,8 +49,8 @@
 
             <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-800 border-t border-blue-700">
                 <div class="px-4 py-6 space-y-4">
-                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Connexion</a>
-                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Créer un compte</a>
+                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">{{ __("services.nav_login") }}</a>
+                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">{{ __("services.nav_register") }}</a>
                 </div>
             </div>
         </div>
@@ -59,18 +62,18 @@
         <div class="support-hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-4xl mx-auto fade-in-up">
                 <h1 class="text-4xl sm:text-5xl font-bold mb-6">
-                    Cartes de paiement SG BANK
+                    {{ __("services.cards_hero_title") }}
                 </h1>
                 <p class="text-xl mb-8 text-orange-100 leading-relaxed">
-                    Des cartes professionnelles et virtuelles pour vos dépenses quotidiennes,
-                    avec contrôle des budgets et sécurité renforcée.
+                    {{ __("services.cards_hero_desc") }}
+                    
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-8 py-4 rounded-lg font-semibold text-center">
-                        Commander une carte
+                        {{ __("services.cards_hero_cta_primary") }}
                     </a>
                     <a href="#features" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-orange-900 transition text-center">
-                        Découvrir les avantages
+                        {{ __("services.cards_hero_cta_secondary") }}
                     </a>
                 </div>
             </div>
@@ -81,9 +84,9 @@
     <section id="features" class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-4xl font-bold mb-6 text-premium">Solutions de paiement adaptées à vos besoins</h2>
+                <h2 class="text-4xl font-bold mb-6 text-premium">{{ __("services.cards_features_title") }}</h2>
                 <p class="text-xl text-gray-600 leading-relaxed">
-                    Cartes physiques et virtuelles pour une gestion optimale de vos dépenses professionnelles.
+                    {{ __("services.cards_features_desc") }}
                 </p>
             </div>
 
@@ -92,9 +95,9 @@
                     <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-credit-card text-orange-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Carte professionnelle</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.cards_f1_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Carte physique premium avec design personnalisable et fonctionnalités avancées.
+                        {{ __("services.cards_f1_desc") }}
                     </p>
                 </div>
 
@@ -102,9 +105,9 @@
                     <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-mobile-alt text-blue-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Cartes virtuelles</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.cards_f2_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Générez des cartes temporaires pour vos achats en ligne avec limites personnalisées.
+                        {{ __("services.cards_f2_desc") }}
                     </p>
                 </div>
 
@@ -112,9 +115,9 @@
                     <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-users text-green-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Cartes équipe</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.cards_f3_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Distribuez des cartes à vos collaborateurs avec des budgets et contrôles individualisés.
+                        {{ __("services.cards_f3_desc") }}
                     </p>
                 </div>
 
@@ -122,9 +125,9 @@
                     <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-shield-alt text-purple-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Sécurité avancée</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.cards_f4_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Blocage instantané en cas de suspicion, alertes en temps réel et contrôle parental.
+                        {{ __("services.cards_f4_desc") }}
                     </p>
                 </div>
 
@@ -132,9 +135,9 @@
                     <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-chart-pie text-red-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Contrôle budgétaire</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.cards_f5_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Définissez des limites de dépenses par carte, catégorie ou période avec alertes.
+                        {{ __("services.cards_f5_desc") }}
                     </p>
                 </div>
 
@@ -142,9 +145,9 @@
                     <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-receipt text-indigo-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Suivi des dépenses</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.cards_f6_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Rapports détaillés et justificatifs automatiques pour toutes vos transactions.
+                        {{ __("services.cards_f6_desc") }}
                     </p>
                 </div>
             </div>
@@ -155,9 +158,9 @@
     <section class="py-24 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-4xl font-bold mb-6 text-premium">Choisissez votre carte idéale</h2>
+                <h2 class="text-4xl font-bold mb-6 text-premium">{{ __("services.cards_choose_title") }}</h2>
                 <p class="text-xl text-gray-600 leading-relaxed">
-                    Différentes formules adaptées à vos besoins professionnels.
+                    {{ __("services.cards_choose_desc") }}
                 </p>
             </div>
 
@@ -165,31 +168,31 @@
                 <!-- Basic Card -->
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition">
                     <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-6 text-white text-center">
-                        <h3 class="text-2xl font-bold mb-2">Carte Essentielle</h3>
-                        <div class="text-3xl font-bold">Gratuite</div>
-                        <div class="text-sm opacity-90">par mois</div>
+                        <h3 class="text-2xl font-bold mb-2">{{ __("services.cards_plan_basic_title") }}</h3>
+                        <div class="text-3xl font-bold">{{ __("services.cards_plan_free") }}</div>
+                        <div class="text-sm opacity-90">{{ __("services.cards_plan_per_month") }}</div>
                     </div>
                     <div class="p-6">
                         <ul class="space-y-3 mb-6">
                             <li class="flex items-center">
                                 <i class="fas fa-check text-green-500 mr-3"></i>
-                                <span>Carte virtuelle incluse</span>
+                                <span>{{ __("services.cards_b1") }}</span>
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-check text-green-500 mr-3"></i>
-                                <span>Suivi des transactions</span>
+                                <span>{{ __("services.cards_b2") }}</span>
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-check text-green-500 mr-3"></i>
-                                <span>Support par e-mail</span>
+                                <span>{{ __("services.cards_b3") }}</span>
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-times text-gray-400 mr-3"></i>
-                                <span class="text-gray-400">Carte physique</span>
+                                <span class="text-gray-400">{{ __("services.cards_b4") }}</span>
                             </li>
                         </ul>
                         <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium w-full py-3 rounded-lg font-semibold text-center block">
-                            Choisir cette carte
+                            {{ __("services.cards_choose_btn") }}
                         </a>
                     </div>
                 </div>
@@ -197,34 +200,34 @@
                 <!-- Pro Card -->
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition relative">
                     <div class="absolute top-0 right-0 bg-yellow-400 text-yellow-900 px-3 py-1 text-sm font-bold rounded-bl-lg">
-                        POPULAIRE
+                        {{ __("services.cards_plan_popular") }}
                     </div>
                     <div class="bg-gradient-to-r from-purple-500 to-purple-600 p-6 text-white text-center">
-                        <h3 class="text-2xl font-bold mb-2">Carte Professionnelle</h3>
-                        <div class="text-3xl font-bold">€9,90</div>
-                        <div class="text-sm opacity-90">par mois</div>
+                        <h3 class="text-2xl font-bold mb-2">{{ __("services.cards_plan_pro_title") }}</h3>
+                        <div class="text-3xl font-bold">&euro;9,90</div>
+                        <div class="text-sm opacity-90">{{ __("services.cards_plan_per_month") }}</div>
                     </div>
                     <div class="p-6">
                         <ul class="space-y-3 mb-6">
                             <li class="flex items-center">
                                 <i class="fas fa-check text-green-500 mr-3"></i>
-                                <span>Carte physique premium</span>
+                                <span>{{ __("services.cards_p1") }}</span>
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-check text-green-500 mr-3"></i>
-                                <span>Cartes virtuelles illimitées</span>
+                                <span>{{ __("services.cards_p2") }}</span>
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-check text-green-500 mr-3"></i>
-                                <span>Contrôle budgétaire avancé</span>
+                                <span>{{ __("services.cards_p3") }}</span>
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-check text-green-500 mr-3"></i>
-                                <span>Support prioritaire</span>
+                                <span>{{ __("services.cards_p4") }}</span>
                             </li>
                         </ul>
                         <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium w-full py-3 rounded-lg font-semibold text-center block">
-                            Choisir cette carte
+                            {{ __("services.cards_choose_btn") }}
                         </a>
                     </div>
                 </div>
@@ -232,31 +235,31 @@
                 <!-- Enterprise Card -->
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition">
                     <div class="bg-gradient-to-r from-green-500 to-green-600 p-6 text-white text-center">
-                        <h3 class="text-2xl font-bold mb-2">Carte Entreprise</h3>
-                        <div class="text-3xl font-bold">€19,90</div>
-                        <div class="text-sm opacity-90">par mois</div>
+                        <h3 class="text-2xl font-bold mb-2">{{ __("services.cards_plan_enterprise_title") }}</h3>
+                        <div class="text-3xl font-bold">&euro;19,90</div>
+                        <div class="text-sm opacity-90">{{ __("services.cards_plan_per_month") }}</div>
                     </div>
                     <div class="p-6">
                         <ul class="space-y-3 mb-6">
                             <li class="flex items-center">
                                 <i class="fas fa-check text-green-500 mr-3"></i>
-                                <span>Cartes équipe illimitées</span>
+                                <span>{{ __("services.cards_e1") }}</span>
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-check text-green-500 mr-3"></i>
-                                <span>API de paiement intégrée</span>
+                                <span>{{ __("services.cards_e2") }}</span>
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-check text-green-500 mr-3"></i>
-                                <span>Reporting avancé</span>
+                                <span>{{ __("services.cards_e3") }}</span>
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-check text-green-500 mr-3"></i>
-                                <span>Manager dédié</span>
+                                <span>{{ __("services.cards_e4") }}</span>
                             </li>
                         </ul>
                         <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium w-full py-3 rounded-lg font-semibold text-center block">
-                            Choisir cette carte
+                            {{ __("services.cards_choose_btn") }}
                         </a>
                     </div>
                 </div>
@@ -267,12 +270,12 @@
     <!-- CTA -->
     <section class="py-24 bg-gradient-to-r from-orange-900 to-orange-800 text-white">
         <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold mb-6">Prêt à simplifier vos paiements professionnels ?</h2>
+            <h2 class="text-4xl font-bold mb-6">{{ __("services.cards_cta_title") }}</h2>
             <p class="text-xl mb-8 text-orange-100 leading-relaxed">
-                Rejoignez les entreprises qui font confiance à SG BANK pour leurs solutions de paiement modernes.
+                {{ __("services.cards_cta_desc") }}
             </p>
             <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-12 py-5 rounded-lg text-2xl font-bold inline-block">
-                Commander ma carte
+                {{ __("services.cards_cta_btn") }}
             </a>
         </div>
     </section>
@@ -281,7 +284,7 @@
     <footer class="bg-gray-900 text-gray-400 py-12">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center">
-                <p>&copy; 2025 <span class="text-blue-400 font-semibold">SG BANK</span>. Tous droits réservés.</p>
+                <p>&copy; 2025 <span class="text-blue-400 font-semibold">Valtrix Bank</span>. {{ __("services.footer_rights") }}</p>
             </div>
         </div>
     </footer>
@@ -296,6 +299,8 @@
 
 </body>
 </html>
+
+
 
 
 

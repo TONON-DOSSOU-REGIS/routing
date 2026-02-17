@@ -6,7 +6,10 @@
     <title><?php echo e(__('transactions.page_title')); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io11/site.webmanifest">
     <style>
         /* Animations élégantes */
         @keyframes fadeInUp {
@@ -347,7 +350,7 @@
                                     <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>"><img src='<?php echo e(asset("images/Logosite.png")); ?>' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                                 </div>
                                 <div>
-                                    <a href="<?php echo e(localized_route('dashboard')); ?>" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"><span class="sr-only">SG BANK</span></a>
+                                    <a href="<?php echo e(localized_route('dashboard')); ?>" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"><span class="sr-only">Valtrix Bank</span></a>
                                     <div class="text-xs text-gray-500 -mt-1"><?php echo e(__('transactions.new_transfer')); ?></div>
                                 </div>
                             </div>
@@ -970,6 +973,7 @@ unset($__errorArgs, $__bag); ?>
     </script>
 </body>
 </html>
+
 
 
 

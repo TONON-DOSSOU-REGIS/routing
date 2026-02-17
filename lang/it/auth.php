@@ -177,6 +177,7 @@ return [
     '2fa_disabled' => 'Autenticazione a due fattori disabilitata.',
     '2fa_password_invalid' => 'Password non corretta.',
     '2fa_missing_secret' => 'Chiave mancante. Riavvia la configurazione.',
+    'register_error_title' => 'Errori di registrazione',
 ];
 
 

@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ str_replace("_", "-", app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comptes professionnels - SG BANK</title>
+    <title>{{ __("services.business_page_title") }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io11/site.webmanifest">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .nav-gradient { background: linear-gradient(90deg, #1e3a8a 0%, #1e40af 100%); }
@@ -29,12 +32,12 @@
                     <div class="bg-white p-2 rounded-lg">
                         <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                     </div>
-                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">SG BANK</span></a>
+                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">Valtrix Bank</span></a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
-                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">Connexion</a>
-                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">Créer un compte</a>
+                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">{{ __("services.nav_login") }}</a>
+                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">{{ __("services.nav_register") }}</a>
                 </div>
 
                 <div class="md:hidden flex items-center">
@@ -46,8 +49,8 @@
 
             <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-800 border-t border-blue-700">
                 <div class="px-4 py-6 space-y-4">
-                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Connexion</a>
-                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Créer un compte</a>
+                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">{{ __("services.nav_login") }}</a>
+                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">{{ __("services.nav_register") }}</a>
                 </div>
             </div>
         </div>
@@ -59,18 +62,18 @@
         <div class="support-hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-4xl mx-auto fade-in-up">
                 <h1 class="text-4xl sm:text-5xl font-bold mb-6">
-                    Comptes professionnels SG BANK
+                    {{ __("services.business_hero_title") }}
                 </h1>
                 <p class="text-xl mb-8 text-blue-100 leading-relaxed">
-                    Des solutions bancaires adaptées aux besoins des entreprises et professionnels.
-                    Sécurité, rapidité et contrôle total de vos opérations financières.
+                    {{ __("services.business_hero_desc") }}
+                    
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-8 py-4 rounded-lg font-semibold text-center">
-                        Ouvrir un compte professionnel
+                        {{ __("services.business_hero_cta_primary") }}
                     </a>
                     <a href="#features" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-900 transition text-center">
-                        Découvrir les avantages
+                        {{ __("services.business_hero_cta_secondary") }}
                     </a>
                 </div>
             </div>
@@ -81,9 +84,9 @@
     <section id="features" class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-4xl font-bold mb-6 text-premium">Pourquoi choisir un compte professionnel SG BANK ?</h2>
+                <h2 class="text-4xl font-bold mb-6 text-premium">{{ __("services.business_features_title") }}</h2>
                 <p class="text-xl text-gray-600 leading-relaxed">
-                    Des fonctionnalités avancées conçues spécifiquement pour les besoins des entreprises modernes.
+                    {{ __("services.business_features_desc") }}
                 </p>
             </div>
 
@@ -92,9 +95,9 @@
                     <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-shield-alt text-premium text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Sécurité renforcée</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.business_f1_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Protection avancée avec authentification multi-facteurs et surveillance 24/7 de vos comptes.
+                        {{ __("services.business_f1_desc") }}
                     </p>
                 </div>
 
@@ -102,9 +105,9 @@
                     <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-bolt text-green-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Virements instantanés</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.business_f2_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Effectuez des virements SEPA instantanés et suivez leur progression en temps réel.
+                        {{ __("services.business_f2_desc") }}
                     </p>
                 </div>
 
@@ -112,9 +115,9 @@
                     <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-chart-line text-purple-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Tableau de bord avancé</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.business_f3_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Analysez vos flux financiers avec des rapports détaillés et des graphiques intuitifs.
+                        {{ __("services.business_f3_desc") }}
                     </p>
                 </div>
 
@@ -122,9 +125,9 @@
                     <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-users text-orange-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Gestion multi-utilisateurs</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.business_f4_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Créez des accès différenciés pour vos collaborateurs avec des droits personnalisés.
+                        {{ __("services.business_f4_desc") }}
                     </p>
                 </div>
 
@@ -132,9 +135,9 @@
                     <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-file-invoice-dollar text-red-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Facturation automatique</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.business_f5_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Générez des factures professionnelles et recevez des justificatifs PDF certifiés.
+                        {{ __("services.business_f5_desc") }}
                     </p>
                 </div>
 
@@ -142,9 +145,9 @@
                     <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-headset text-indigo-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Support prioritaire</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.business_f6_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Assistance téléphonique dédiée et chat en ligne pour vos opérations urgentes.
+                        {{ __("services.business_f6_desc") }}
                     </p>
                 </div>
             </div>
@@ -154,12 +157,12 @@
     <!-- CTA -->
     <section class="py-24 bg-gradient-to-r from-blue-900 to-blue-800 text-white">
         <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold mb-6">Prêt à digitaliser votre trésorerie ?</h2>
+            <h2 class="text-4xl font-bold mb-6">{{ __("services.business_cta_title") }}</h2>
             <p class="text-xl mb-8 text-blue-100 leading-relaxed">
-                Rejoignez les milliers d'entreprises qui font confiance à SG BANK pour leur gestion bancaire quotidienne.
+                {{ __("services.business_cta_desc") }}
             </p>
             <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-12 py-5 rounded-lg text-2xl font-bold inline-block">
-                Créer mon compte professionnel
+                {{ __("services.business_cta_btn") }}
             </a>
         </div>
     </section>
@@ -168,7 +171,7 @@
     <footer class="bg-gray-900 text-gray-400 py-12">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center">
-                <p>&copy; 2025 <span class="text-blue-400 font-semibold">SG BANK</span>. Tous droits réservés.</p>
+                <p>&copy; 2025 <span class="text-blue-400 font-semibold">Valtrix Bank</span>. {{ __("services.footer_rights") }}</p>
             </div>
         </div>
     </footer>
@@ -183,6 +186,8 @@
 
 </body>
 </html>
+
+
 
 
 

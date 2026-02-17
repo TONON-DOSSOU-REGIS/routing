@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Administration - SG BANK')
+@section('title', 'Administration - Valtrix Bank')
 
 @push('head')
     <script src="https://cdn.tailwindcss.com"></script>
@@ -33,7 +33,7 @@
             animation: fadeInUp 0.5s ease-out forwards;
         }
 
-        /* Navigation simplifiée */
+        /* Navigation simplifiÃ©e */
         .glass-nav {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -48,7 +48,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* Boutons d'action simplifiés */
+        /* Boutons d'action simplifiÃ©s */
         .action-btn {
             transition: all 0.3s ease;
             border: 1px solid rgba(0, 0, 0, 0.1);
@@ -59,7 +59,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        /* Effets de texte simplifiés */
+        /* Effets de texte simplifiÃ©s */
         .text-gradient-gold {
             color: #d4af37;
             font-weight: 600;
@@ -84,7 +84,7 @@
             animation: pulse-vip 3s ease-in-out infinite;
         }
 
-        /* Bordures dorées simples */
+        /* Bordures dorÃ©es simples */
         .border-gold {
             border: 2px solid #d4af37;
             border-radius: 8px;
@@ -119,7 +119,7 @@
             padding: 0.5rem 0.75rem;
         }
 
-        /* Styles pour l'état vide */
+        /* Styles pour l'Ã©tat vide */
         .empty-state {
             text-align: center;
         }
@@ -140,10 +140,10 @@
                     <div class="flex items-center">
                         <div class="flex items-center space-x-4">
                             <div class="gradient-vip-gold p-3 rounded-2xl pulse-vip border-gold">
-                                <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center justify-center bg-white/95 p-2 rounded-xl shadow-md ring-1 ring-white/60"><img src='{{ asset("images/Logosite.png") }}' class="w-11 h-11 object-contain" alt="logo SG BANK" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
+                                <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center justify-center bg-white/95 p-2 rounded-xl shadow-md ring-1 ring-white/60"><img src='{{ asset("images/Logosite.png") }}' class="w-11 h-11 object-contain" alt="logo Valtrix Bank" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                             </div>
                             <div>
-                                <a href="{{ localized_route('admin.dashboard') }}" class="text-2xl font-bold font-cinzel text-gradient-gold hover:scale-105 transition-transform duration-300" aria-label="SB BANK"><span class="sr-only">SB BANK</span></a>
+                                <a href="{{ localized_route('admin.dashboard') }}" class="text-2xl font-bold font-cinzel text-gradient-gold hover:scale-105 transition-transform duration-300" aria-label="Valtrix Bank"><span class="sr-only">Valtrix Bank</span></a>
                                 <div class="text-xs text-gradient-platinum font-medium -mt-1">Administration VIP</div>
                             </div>
                         </div>
@@ -164,7 +164,7 @@
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
                         <a href="{{ localized_route('admin.deposit') }}" class="relative text-gray-700 hover:text-gray-900 transition-all duration-300 font-medium group font-inter text-lg">
-                            <i class="fas fa-plus-circle mr-2 text-indigo-600"></i> Dépôt
+                            <i class="fas fa-plus-circle mr-2 text-indigo-600"></i> DÃ©pÃ´t
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
                         <a href="{{ localized_route('budgets.index') }}" class="relative text-gray-700 hover:text-gray-900 transition-all duration-300 font-medium group font-inter text-lg">
@@ -172,7 +172,7 @@
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-pink-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
                         <a href="{{ localized_route('admin.settings') }}" class="relative text-gray-700 hover:text-gray-900 transition-all duration-300 font-medium group font-inter text-lg">
-                            <i class="fas fa-cog mr-2 text-gray-600"></i> Paramètres
+                            <i class="fas fa-cog mr-2 text-gray-600"></i> ParamÃ¨tres
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gray-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
                         <div class="h-8 w-px bg-gray-300"></div>
@@ -184,7 +184,7 @@
                         <form method="POST" action="{{ localized_route('logout', ['locale' => app()->getLocale()]) }}" class="relative">
                             @csrf
                             <button type="submit" class="relative text-gray-700 hover:text-red-600 transition-all duration-300 font-medium group font-inter text-lg">
-                                <i class="fas fa-sign-out-alt mr-2 text-red-500"></i> Déconnexion
+                                <i class="fas fa-sign-out-alt mr-2 text-red-500"></i> DÃ©connexion
                                 <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
                             </button>
                         </form>
@@ -213,10 +213,10 @@
                             <i class="fas fa-exchange-alt w-6 mr-4 text-center text-purple-600"></i> Virements
                         </a>
                         <a href="{{ localized_route('admin.deposit') }}" class="flex items-center px-4 py-4 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-xl transition-all duration-300 border border-gray-200">
-                            <i class="fas fa-plus-circle w-6 mr-4 text-center text-indigo-600"></i> Dépôt
+                            <i class="fas fa-plus-circle w-6 mr-4 text-center text-indigo-600"></i> DÃ©pÃ´t
                         </a>
                         <a href="{{ localized_route('admin.settings') }}" class="flex items-center px-4 py-4 text-base font-medium text-gray-700 hover:text-gray-600 hover:bg-gray-50 rounded-xl transition-all duration-300 border border-gray-200">
-                            <i class="fas fa-cog w-6 mr-4 text-center text-gray-600"></i> Paramètres
+                            <i class="fas fa-cog w-6 mr-4 text-center text-gray-600"></i> ParamÃ¨tres
                         </a>
                         <a href="{{ localized_route('dashboard', ['locale' => app()->getLocale()]) }}" class="flex items-center px-4 py-4 text-base font-medium text-gray-700 hover:text-emerald-600 hover:bg-gray-50 rounded-xl transition-all duration-300 border border-gray-200">
                             <i class="fas fa-arrow-left w-6 mr-4 text-center text-emerald-600"></i> Retour au site
@@ -224,7 +224,7 @@
                         <form method="POST" action="{{ localized_route('logout', ['locale' => app()->getLocale()]) }}" class="block">
                             @csrf
                             <button type="submit" class="flex items-center w-full px-4 py-4 text-base font-medium text-gray-700 hover:text-red-600 hover:bg-gray-50 rounded-xl transition-all duration-300 border border-gray-200">
-                                <i class="fas fa-sign-out-alt w-6 mr-4 text-center text-red-500"></i> Déconnexion
+                                <i class="fas fa-sign-out-alt w-6 mr-4 text-center text-red-500"></i> DÃ©connexion
                             </button>
                         </form>
                     </div>
@@ -234,7 +234,7 @@
 
         <!-- Contenu principal avec effets premium -->
         <div class="max-w-7xl mx-auto py-8 sm:px-6 lg:px-8 relative">
-            <!-- Effet de particules supplémentaires -->
+            <!-- Effet de particules supplÃ©mentaires -->
             <div class="absolute top-0 left-0 w-full h-full pointer-events-none">
                 <div class="absolute top-20 left-10 w-2 h-2 bg-yellow-100 rounded-full opacity-60 animate-ping"></div>
                 <div class="absolute top-40 right-20 w-1 h-1 bg-blue-400 rounded-full opacity-40 animate-pulse"></div>
@@ -267,6 +267,7 @@
     @include('components.admin-chat-widget-v2')
 </div>
 @endsection
+
 
 
 

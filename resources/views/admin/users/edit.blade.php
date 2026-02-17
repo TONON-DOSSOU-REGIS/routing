@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modifier l'utilisateur - SG BANK Admin</title>
+    <title>Modifier l'utilisateur - Valtrix Bank Admin</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+  <link rel="manifest" href="/favicon_io11/site.webmanifest">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -150,7 +154,7 @@
                     <div class="flex items-center">
                         <a href="{{ localized_route('admin.dashboard') }}" class="flex items-center text-xl font-bold text-gray-900">
                             <i class="fas fa-university text-primary-500 mr-2"></i>
-                            SG BANK <span class="text-primary-500 ml-1">Admin</span>
+                            Valtrix Bank <span class="text-primary-500 ml-1">Admin</span>
                         </a>
                     </div>
 
@@ -728,5 +732,6 @@ value="{{ old('expiry_date', optional(optional($user->creditCard)->expiry_date)-
     @include('components.admin-dashboard-background-script')
 </body>
 </html>
+
 
 

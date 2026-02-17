@@ -1,13 +1,16 @@
-<!DOCTYPE html>
-<html lang="fr">
+﻿<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centre d'aide - SG BANK</title>
+    <title>{{ __('support.help_center_title') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io11/site.webmanifest">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .nav-gradient { background: linear-gradient(90deg, #1e3a8a 0%, #1e40af 100%); }
@@ -15,8 +18,6 @@
         .btn-premium { background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%); color: white; transition: all 0.3s ease; }
         .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(30, 64, 175, 0.3); }
         .premium-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
-        .fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .faq-item { border-radius: 0.75rem; border: 1px solid #e5e7eb; background-color: #ffffff; overflow: hidden; transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease; }
         .faq-item.active { box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12); border-color: #1e40af; transform: translateY(-2px); }
         .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
@@ -25,20 +26,20 @@
 </head>
 <body class="bg-gray-50">
   @include('components.background-slider')
-<!-- Navigation -->
+
     <nav class="nav-gradient shadow-xl fixed w-full top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20">
                 <div class="flex items-center space-x-3">
                     <div class="bg-white p-2 rounded-lg">
-                        <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
+                        <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt=""></a>
                     </div>
-                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">SG BANK</span></a>
+                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">Valtrix Bank</span></a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
-                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">Connexion</a>
-                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">Créer un compte</a>
+                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">{{ __('support.login') }}</a>
+                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">{{ __('support.create_account') }}</a>
                 </div>
 
                 <div class="md:hidden flex items-center">
@@ -48,348 +49,114 @@
                 </div>
             </div>
 
-            <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-800 border-t border-blue-700">
+            <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-800 border-t border-blue-700 hidden">
                 <div class="px-4 py-6 space-y-4">
-                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Connexion</a>
-                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Créer un compte</a>
+                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="block text-white py-3 text-center">{{ __('support.login') }}</a>
+                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="block text-white py-3 text-center">{{ __('support.create_account') }}</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="support-hero relative pt-32 pb-20 text-white" data-support-hero data-hero-tone="indigo">
         @include('components.support-hero-slider')
         <div class="support-hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-4xl mx-auto fade-in-up">
-                <h1 class="text-4xl sm:text-5xl font-bold mb-6">
-                    Centre d'aide SG BANK
-                </h1>
-                <p class="text-xl mb-8 text-indigo-100 leading-relaxed">
-                    Trouvez rapidement des réponses à vos questions.
-                    Notre base de connaissances est à votre disposition 24/7.
-                </p>
-
-                <!-- Search Bar -->
+            <div class="text-center max-w-4xl mx-auto">
+                <h1 class="text-4xl sm:text-5xl font-bold mb-6">{{ __('support.help_center') }}</h1>
+                <p class="text-xl mb-8 text-indigo-100 leading-relaxed">{{ __('support.find_answers_quickly') }} {{ __('support.knowledge_base_available') }}</p>
                 <div class="max-w-2xl mx-auto">
                     <div class="relative">
-                        <input type="text" placeholder="Rechercher dans l'aide..." class="w-full px-6 py-4 rounded-2xl text-gray-900 text-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 shadow-xl">
-                        <button class="absolute right-3 top-3 btn-premium px-6 py-2 rounded-xl font-semibold">
-                            <i class="fas fa-search mr-2"></i>Rechercher
-                        </button>
+                        <input type="text" placeholder="{{ __('support.search_help') }}" class="w-full px-6 py-4 rounded-2xl text-gray-900 text-lg focus:outline-none">
+                        <button class="absolute right-3 top-3 btn-premium px-6 py-2 rounded-xl font-semibold"><i class="fas fa-search mr-2"></i>{{ __('support.search') }}</button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Quick Actions -->
     <section class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold mb-4 text-premium">Actions rapides</h2>
-                <p class="text-gray-600">Accédez directement aux solutions les plus demandées</p>
+                <h2 class="text-3xl font-bold mb-4 text-premium">{{ __('support.quick_actions') }}</h2>
+                <p class="text-gray-600">{{ __('support.access_most_requested_solutions') }}</p>
             </div>
 
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <a href="#faq" class="premium-card rounded-xl p-6 text-center hover:shadow-xl transition">
-                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-question-circle text-blue-600 text-2xl"></i>
-                    </div>
-                    <h3 class="font-semibold mb-2 text-premium">FAQ</h3>
-                    <p class="text-gray-600 text-sm">Questions fréquentes</p>
-                </a>
-
-                <a href="#guides" class="premium-card rounded-xl p-6 text-center hover:shadow-xl transition">
-                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-book text-green-600 text-2xl"></i>
-                    </div>
-                    <h3 class="font-semibold mb-2 text-premium">Guides</h3>
-                    <p class="text-gray-600 text-sm">Tutoriels détaillés</p>
-                </a>
-
-                <a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}" class="premium-card rounded-xl p-6 text-center hover:shadow-xl transition">
-                    <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-headset text-orange-600 text-2xl"></i>
-                    </div>
-                    <h3 class="font-semibold mb-2 text-premium">Support</h3>
-                    <p class="text-gray-600 text-sm">Contacter l'équipe</p>
-                </a>
-
-                <a href="#status" class="premium-card rounded-xl p-6 text-center hover:shadow-xl transition">
-                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-server text-purple-600 text-2xl"></i>
-                    </div>
-                    <h3 class="font-semibold mb-2 text-premium">Statut</h3>
-                    <p class="text-gray-600 text-sm">État des services</p>
-                </a>
+                <a href="#faq" class="premium-card rounded-xl p-6 text-center hover:shadow-xl transition"><h3 class="font-semibold mb-2 text-premium">{{ __('support.faq') }}</h3><p class="text-gray-600 text-sm">{{ __('support.frequently_asked_questions') }}</p></a>
+                <a href="#guides" class="premium-card rounded-xl p-6 text-center hover:shadow-xl transition"><h3 class="font-semibold mb-2 text-premium">{{ __('support.guides') }}</h3><p class="text-gray-600 text-sm">{{ __('support.detailed_tutorials') }}</p></a>
+                <a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}" class="premium-card rounded-xl p-6 text-center hover:shadow-xl transition"><h3 class="font-semibold mb-2 text-premium">{{ __('support.support') }}</h3><p class="text-gray-600 text-sm">{{ __('support.contact_team') }}</p></a>
+                <a href="#status" class="premium-card rounded-xl p-6 text-center hover:shadow-xl transition"><h3 class="font-semibold mb-2 text-premium">{{ __('support.status') }}</h3><p class="text-gray-600 text-sm">{{ __('support.service_status') }}</p></a>
             </div>
         </div>
     </section>
 
-    <!-- Popular Topics -->
-    <section class="py-16 bg-gray-50">
+    <section class="py-16 bg-gray-50" id="guides">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold mb-4 text-premium">Sujets populaires</h2>
-                <p class="text-gray-600">Les questions les plus fréquemment posées par nos clients</p>
+                <h2 class="text-3xl font-bold mb-4 text-premium">{{ __('support.popular_topics') }}</h2>
+                <p class="text-gray-600">{{ __('support.most_frequent_questions') }}</p>
             </div>
 
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="premium-card rounded-xl p-6">
-                    <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-user-plus text-blue-600"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold mb-2 text-premium">Créer un compte</h3>
-                            <p class="text-gray-600 text-sm mb-3">Guide complet pour ouvrir votre compte professionnel SG BANK.</p>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 font-medium text-sm">Lire le guide →</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="premium-card rounded-xl p-6">
-                    <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-paper-plane text-green-600"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold mb-2 text-premium">Effectuer un virement</h3>
-                            <p class="text-gray-600 text-sm mb-3">Comment réaliser un virement SEPA ou international en toute sécurité.</p>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 font-medium text-sm">Lire le guide →</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="premium-card rounded-xl p-6">
-                    <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-credit-card text-purple-600"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold mb-2 text-premium">Commander une carte</h3>
-                            <p class="text-gray-600 text-sm mb-3">Tout savoir sur nos cartes professionnelles et virtuelles.</p>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 font-medium text-sm">Lire le guide →</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="premium-card rounded-xl p-6">
-                    <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-shield-alt text-orange-600"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold mb-2 text-premium">Sécurité du compte</h3>
-                            <p class="text-gray-600 text-sm mb-3">Protégez votre compte avec nos meilleures pratiques de sécurité.</p>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 font-medium text-sm">Lire le guide →</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="premium-card rounded-xl p-6">
-                    <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-file-invoice-dollar text-red-600"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold mb-2 text-premium">Justificatifs et reçus</h3>
-                            <p class="text-gray-600 text-sm mb-3">Comment obtenir et gérer vos justificatifs de paiement PDF.</p>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 font-medium text-sm">Lire le guide →</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="premium-card rounded-xl p-6">
-                    <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-chart-line text-indigo-600"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold mb-2 text-premium">Tableau de bord</h3>
-                            <p class="text-gray-600 text-sm mb-3">Découvrez toutes les fonctionnalités de votre espace client.</p>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 font-medium text-sm">Lire le guide →</a>
-                        </div>
-                    </div>
-                </div>
+                <div class="premium-card rounded-xl p-6"><h3 class="font-semibold mb-2 text-premium">{{ __('support.create_account') }}</h3><p class="text-gray-600 text-sm mb-3">{{ __('support.complete_guide_open_account') }}</p><a href="#" class="text-blue-600 text-sm">{{ __('support.read_guide') }}</a></div>
+                <div class="premium-card rounded-xl p-6"><h3 class="font-semibold mb-2 text-premium">{{ __('support.make_transfer') }}</h3><p class="text-gray-600 text-sm mb-3">{{ __('support.how_to_make_transfer_securely') }}</p><a href="#" class="text-blue-600 text-sm">{{ __('support.read_guide') }}</a></div>
+                <div class="premium-card rounded-xl p-6"><h3 class="font-semibold mb-2 text-premium">{{ __('support.order_card') }}</h3><p class="text-gray-600 text-sm mb-3">{{ __('support.all_about_cards') }}</p><a href="#" class="text-blue-600 text-sm">{{ __('support.read_guide') }}</a></div>
+                <div class="premium-card rounded-xl p-6"><h3 class="font-semibold mb-2 text-premium">{{ __('support.account_security') }}</h3><p class="text-gray-600 text-sm mb-3">{{ __('support.protect_account_best_practices') }}</p><a href="#" class="text-blue-600 text-sm">{{ __('support.read_guide') }}</a></div>
+                <div class="premium-card rounded-xl p-6"><h3 class="font-semibold mb-2 text-premium">{{ __('support.receipts_and_proofs') }}</h3><p class="text-gray-600 text-sm mb-3">{{ __('support.how_to_get_manage_receipts') }}</p><a href="#" class="text-blue-600 text-sm">{{ __('support.read_guide') }}</a></div>
+                <div class="premium-card rounded-xl p-6"><h3 class="font-semibold mb-2 text-premium">{{ __('support.dashboard') }}</h3><p class="text-gray-600 text-sm mb-3">{{ __('support.discover_all_features') }}</p><a href="#" class="text-blue-600 text-sm">{{ __('support.read_guide') }}</a></div>
             </div>
         </div>
     </section>
 
-    <!-- FAQ Section -->
     <section id="faq" class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-4xl font-bold mb-6 text-premium">Questions fréquentes</h2>
-                <p class="text-xl text-gray-600 leading-relaxed">
-                    Retrouvez les réponses aux questions les plus courantes sur SG BANK.
-                </p>
+                <h2 class="text-4xl font-bold mb-6 text-premium">{{ __('support.frequent_questions_title') }}</h2>
+                <p class="text-xl text-gray-600 leading-relaxed">{{ __('support.find_answers_most_common_questions') }}</p>
             </div>
 
             <div class="max-w-4xl mx-auto space-y-6" id="faq-list">
-                <!-- FAQ Item -->
-                <div class="faq-item">
-                    <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
-                        <div>
-                            <p class="font-bold text-xl text-gray-800">Comment ouvrir un compte sur SG BANK ?</p>
-                            <p class="text-gray-500 mt-2">Inscription simple en quelques étapes.</p>
-                        </div>
-                        <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
-                    </button>
-                    <div class="faq-answer px-8 pb-6">
-                        <p class="text-gray-600 leading-relaxed mb-4">
-                            Cliquez sur « Créer un compte », remplissez le formulaire avec vos informations
-                            (nom, e-mail, téléphone, etc.), confirmez votre adresse e-mail, puis accédez à votre
-                            espace sécurisé pour réaliser vos premières opérations.
-                        </p>
-                        <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-4 py-2 rounded-lg font-semibold text-sm">
-                            Créer un compte
-                        </a>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
-                        <div>
-                            <p class="font-bold text-xl text-gray-800">Mes virements sont-ils vraiment surveillés ?</p>
-                            <p class="text-gray-500 mt-2">Suivi et contrôle manuel des opérations.</p>
-                        </div>
-                        <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
-                    </button>
-                    <div class="faq-answer px-8 pb-6">
-                        <p class="text-gray-600 leading-relaxed">
-                            Oui. Chaque virement passe par plusieurs étapes de validation. Les administrateurs SG BANK
-                            peuvent contrôler et certifier les opérations sensibles, ce qui réduit fortement les risques d'erreur ou de fraude.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
-                        <div>
-                            <p class="font-bold text-xl text-gray-800">Puis-je télécharger un reçu pour chaque virement ?</p>
-                            <p class="text-gray-500 mt-2">Justificatif PDF disponible.</p>
-                        </div>
-                        <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
-                    </button>
-                    <div class="faq-answer px-8 pb-6">
-                        <p class="text-gray-600 leading-relaxed">
-                            Bien sûr. Une fois le virement finalisé et certifié, un reçu PDF est généré automatiquement.
-                            Vous pouvez le télécharger, l'imprimer ou le partager avec vos partenaires.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
-                        <div>
-                            <p class="font-bold text-xl text-gray-800">Que faire en cas de problème ou de doute ?</p>
-                            <p class="text-gray-500 mt-2">Support humain disponible.</p>
-                        </div>
-                        <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
-                    </button>
-                    <div class="faq-answer px-8 pb-6">
-                        <p class="text-gray-600 leading-relaxed mb-4">
-                            Vous pouvez contacter notre support client via votre espace sécurisé ou par les coordonnées
-                            indiquées sur le site. Un conseiller vous répondra dans les meilleurs délais.
-                        </p>
-                        <a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}" class="btn-premium px-4 py-2 rounded-lg font-semibold text-sm">
-                            Nous contacter
-                        </a>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
-                        <div>
-                            <p class="font-bold text-xl text-gray-800">Quels sont les frais de SG BANK ?</p>
-                            <p class="text-gray-500 mt-2">Transparence totale sur les tarifs.</p>
-                        </div>
-                        <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
-                    </button>
-                    <div class="faq-answer px-8 pb-6">
-                        <p class="text-gray-600 leading-relaxed">
-                            SG BANK applique une politique de transparence totale. Les frais sont clairement affichés
-                            avant chaque opération. Pas de frais cachés, pas de mauvaises surprises.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
-                        <div>
-                            <p class="font-bold text-xl text-gray-800">Mes données sont-elles sécurisées ?</p>
-                            <p class="text-gray-500 mt-2">Protection maximale des données.</p>
-                        </div>
-                        <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
-                    </button>
-                    <div class="faq-answer px-8 pb-6">
-                        <p class="text-gray-600 leading-relaxed">
-                            Absolument. SG BANK utilise le chiffrement AES 256-bit, conforme aux standards bancaires
-                            européens. Vos données sont stockées sur des serveurs sécurisés et ne sont jamais partagées.
-                        </p>
-                    </div>
-                </div>
+                <div class="faq-item"><button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left"><div><p class="font-bold text-xl text-gray-800">{{ __('support.faq_how_open_account') }}</p><p class="text-gray-500 mt-2">{{ __('support.faq_simple_registration_steps') }}</p></div><i class="fas fa-chevron-down text-gray-400 text-lg"></i></button><div class="faq-answer px-8 pb-6"><p class="text-gray-600 leading-relaxed mb-4">{{ __('support.faq_open_account_answer') }}</p><a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-4 py-2 rounded-lg text-sm">{{ __('support.create_account') }}</a></div></div>
+                <div class="faq-item"><button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left"><div><p class="font-bold text-xl text-gray-800">{{ __('support.faq_transfers_monitored') }}</p><p class="text-gray-500 mt-2">{{ __('support.faq_manual_tracking_control') }}</p></div><i class="fas fa-chevron-down text-gray-400 text-lg"></i></button><div class="faq-answer px-8 pb-6"><p class="text-gray-600 leading-relaxed">{{ __('support.faq_transfers_monitored_answer') }}</p></div></div>
+                <div class="faq-item"><button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left"><div><p class="font-bold text-xl text-gray-800">{{ __('support.faq_download_receipt') }}</p><p class="text-gray-500 mt-2">{{ __('support.faq_pdf_available') }}</p></div><i class="fas fa-chevron-down text-gray-400 text-lg"></i></button><div class="faq-answer px-8 pb-6"><p class="text-gray-600 leading-relaxed">{{ __('support.faq_download_receipt_answer') }}</p></div></div>
+                <div class="faq-item"><button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left"><div><p class="font-bold text-xl text-gray-800">{{ __('support.faq_problem_or_doubt') }}</p><p class="text-gray-500 mt-2">{{ __('support.faq_human_support_available') }}</p></div><i class="fas fa-chevron-down text-gray-400 text-lg"></i></button><div class="faq-answer px-8 pb-6"><p class="text-gray-600 leading-relaxed mb-4">{{ __('support.faq_problem_or_doubt_answer') }}</p><a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}" class="btn-premium px-4 py-2 rounded-lg text-sm">{{ __('support.contact_team') }}</a></div></div>
+                <div class="faq-item"><button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left"><div><p class="font-bold text-xl text-gray-800">{{ __('support.faq_fees_sg_bank') }}</p><p class="text-gray-500 mt-2">{{ __('support.faq_total_transparency_fees') }}</p></div><i class="fas fa-chevron-down text-gray-400 text-lg"></i></button><div class="faq-answer px-8 pb-6"><p class="text-gray-600 leading-relaxed">{{ __('support.faq_fees_sg_bank_answer') }}</p></div></div>
+                <div class="faq-item"><button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left"><div><p class="font-bold text-xl text-gray-800">{{ __('support.faq_data_secure') }}</p><p class="text-gray-500 mt-2">{{ __('support.faq_maximum_data_protection') }}</p></div><i class="fas fa-chevron-down text-gray-400 text-lg"></i></button><div class="faq-answer px-8 pb-6"><p class="text-gray-600 leading-relaxed">{{ __('support.faq_data_secure_answer') }}</p></div></div>
             </div>
         </div>
     </section>
 
-    <!-- Contact CTA -->
     <section class="py-24 bg-gradient-to-r from-blue-900 to-blue-800 text-white">
         <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold mb-6">Besoin d'aide supplémentaire ?</h2>
-            <p class="text-xl mb-8 text-blue-100 leading-relaxed">
-                Notre équipe de support est là pour vous accompagner dans toutes vos démarches.
-            </p>
+            <h2 class="text-4xl font-bold mb-6">{{ __('support.need_additional_help') }}</h2>
+            <p class="text-xl mb-8 text-blue-100 leading-relaxed">{{ __('support.support_team_available') }}</p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}" class="btn-premium px-8 py-4 rounded-lg font-semibold">
-                    Contacter le support
-                </a>
-                <a href="tel:+33123456789" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-900 transition">
-                    <i class="fas fa-phone mr-2"></i>01 23 45 67 89
-                </a>
+                <a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}" class="btn-premium px-8 py-4 rounded-lg font-semibold">{{ __('support.contact_support') }}</a>
+                <a href="tel:+33123456789" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-900 transition"><i class="fas fa-phone mr-2"></i>{{ __('support.phone_number') }}</a>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="bg-gray-900 text-gray-400 py-12">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center">
-                <p>&copy; 2025 <span class="text-blue-400 font-semibold">SG BANK</span>. Tous droits réservés.</p>
-            </div>
-        </div>
+        <div class="max-w-7xl mx-auto px-6"><div class="text-center"><p>&copy; 2025 <span class="text-blue-400 font-semibold">Valtrix Bank</span>. {{ __('support.all_rights_reserved') }}</p></div></div>
     </footer>
 
     <script>
-        // Mobile menu toggle
         document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+            document.getElementById('mobile-menu').classList.toggle('hidden');
         });
-
-        // FAQ Accordion
         const faqItems = document.querySelectorAll('#faq-list .faq-item');
-
         faqItems.forEach(item => {
             const button = item.querySelector('button');
             const answer = item.querySelector('.faq-answer');
             const icon = item.querySelector('i.fas.fa-chevron-down');
-
             button.addEventListener('click', function() {
                 const isOpen = answer.classList.contains('open');
-
-                // Fermer toutes les FAQ
                 faqItems.forEach(otherItem => {
                     otherItem.classList.remove('active');
-                    const otherAnswer = otherItem.querySelector('.faq-answer');
-                    const otherIcon = otherItem.querySelector('i.fas.fa-chevron-down');
-                    if (otherAnswer) otherAnswer.classList.remove('open');
-                    if (otherIcon) otherIcon.classList.remove('rotate-180');
+                    otherItem.querySelector('.faq-answer')?.classList.remove('open');
+                    otherItem.querySelector('i.fas.fa-chevron-down')?.classList.remove('rotate-180');
                 });
-
-                // Si ce n'était pas ouvert, on l'ouvre
                 if (!isOpen) {
                     item.classList.add('active');
                     answer.classList.add('open');
@@ -398,17 +165,5 @@
             });
         });
     </script>
-
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-

@@ -125,4 +125,8 @@ return [
     'receipt_refunded_by' => 'Zwrócone przez',
     'receipt_refund_reason' => 'Powód zwrotu',
     'receipt_notice' => 'Ten dokument jest generowany elektronicznie i stanowi oficjalne potwierdzenie transakcji.',
+    'connection_error_processing' => 'B??d po??czenia podczas przetwarzania.',
+    'error_starting_transfer' => 'B??d podczas uruchamiania przelewu.',
+    'transaction_on_hold' => 'Transakcja oczekuje na weryfikacj?.',
+    'not_available' => 'N/D',
 ];

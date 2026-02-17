@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compte validé - SG BANK</title>
+    <title>Compte validé - Valtrix Bank</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+  <link rel="manifest" href="/favicon_io11/site.webmanifest">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -85,7 +89,7 @@
 <body>
     <div class="header">
         <h1>✅ Compte Validé !</h1>
-        <p>Bienvenue sur SG BANK</p>
+        <p>Bienvenue sur Valtrix Bank</p>
     </div>
     
     <div class="content">
@@ -95,7 +99,7 @@
         
         <p>Bonjour <strong>{{ $user->first_name }} {{ $user->last_name }}</strong>,</p>
         
-        <p>Excellente nouvelle ! Votre compte SG BANK a été validé par notre équipe d'administration.</p>
+        <p>Excellente nouvelle ! Votre compte Valtrix Bank a été validé par notre équipe d'administration.</p>
         
         <div class="info-box">
             <h3 style="margin-top: 0; color: #10b981;">🎊 Votre compte est maintenant actif</h3>
@@ -143,10 +147,11 @@
     
     <div class="footer">
         <p>Merci de votre confiance !</p>
-        <p>© {{ date('Y') }} SG BANK. Tous droits réservés.</p>
+        <p>© {{ date('Y') }} Valtrix Bank. Tous droits réservés.</p>
     </div>
 </body>
 </html>
+
 
 
 

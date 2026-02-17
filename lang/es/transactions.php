@@ -125,4 +125,8 @@ return [
     'receipt_refunded_by' => 'Reembolsado por',
     'receipt_refund_reason' => 'Motivo del reembolso',
     'receipt_notice' => 'Este documento se genera electrónicamente y constituye una prueba oficial de la transacción.',
+    'connection_error_processing' => 'Error de conexi?n durante el procesamiento.',
+    'error_starting_transfer' => 'Error al iniciar la transferencia.',
+    'transaction_on_hold' => 'Transacci?n pendiente de validaci?n.',
+    'not_available' => 'N/D',
 ];

@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmation de contact - SG BANK</title>
+    <title>Confirmation de contact - Valtrix Bank</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io11/site.webmanifest">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -274,7 +278,7 @@
     <div class="email-container">
         <!-- En-tête -->
         <div class="header">
-            <div class="logo">SG BANK</div>
+            <div class="logo">Valtrix Bank</div>
             <div class="logo-subtitle">Votre partenaire financier de confiance</div>
         </div>
         
@@ -345,7 +349,7 @@
             
             <p style="color: #64748b; margin-top: 30px;">
                 Cordialement,<br>
-                <strong>L'équipe SG BANK</strong>
+                <strong>L'équipe Valtrix Bank</strong>
             </p>
         </div>
         
@@ -378,12 +382,13 @@
             </div>
             
             <p class="copyright">
-                © 2023 SG BANK. Tous droits réservés.<br>
+                © 2023 Valtrix Bank. Tous droits réservés.<br>
                 Cet email a été envoyé à {{ $contact->email }}
             </p>
         </div>
     </div>
 </body>
 </html>
+
 
 

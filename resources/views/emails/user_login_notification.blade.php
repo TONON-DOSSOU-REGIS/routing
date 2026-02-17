@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notification de Connexion - SG BANK</title>
+    <title>Notification de Connexion - Valtrix Bank</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+  <link rel="manifest" href="/favicon_io11/site.webmanifest">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -108,7 +112,7 @@
         <!-- Header -->
         <div class="header">
             <h1>🔔 Notification de Connexion</h1>
-            <p>SG BANK - Système de Surveillance</p>
+            <p>Valtrix Bank - Système de Surveillance</p>
         </div>
 
         <!-- Content -->
@@ -168,7 +172,7 @@
             <!-- Security Notice -->
             <div class="security-notice">
                 <strong>🔒 Avis de Sécurité:</strong><br>
-                Cette connexion a été détectée automatiquement par le système SG BANK.
+                Cette connexion a été détectée automatiquement par le système Valtrix Bank.
                 Si cette activité vous semble suspecte, veuillez contacter immédiatement le client
                 et prendre les mesures de sécurité appropriées.
             </div>
@@ -186,13 +190,14 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p><strong>SG BANK - Système Bancaire Sécurisé</strong></p>
+            <p><strong>Valtrix Bank - Système Bancaire Sécurisé</strong></p>
             <p>Cette notification a été générée automatiquement le {{ now()->format('d/m/Y à H:i:s') }}</p>
             <p>Ne répondez pas à cet email - il s'agit d'une notification automatique</p>
         </div>
     </div>
 </body>
 </html>
+
 
 
 

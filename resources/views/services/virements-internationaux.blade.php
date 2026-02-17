@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ str_replace("_", "-", app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virements Internationaux - SG BANK</title>
+    <title>{{ __("services.intl_page_title") }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io11/site.webmanifest">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .nav-gradient { background: linear-gradient(90deg, #1e3a8a 0%, #1e40af 100%); }
@@ -29,12 +32,12 @@
                     <div class="bg-white p-2 rounded-lg">
                         <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                     </div>
-                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">SG BANK</span></a>
+                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">Valtrix Bank</span></a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
-                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">Connexion</a>
-                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">Créer un compte</a>
+                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">{{ __("services.nav_login") }}</a>
+                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">{{ __("services.nav_register") }}</a>
                 </div>
 
                 <div class="md:hidden flex items-center">
@@ -46,8 +49,8 @@
 
             <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-800 border-t border-blue-700">
                 <div class="px-4 py-6 space-y-4">
-                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Connexion</a>
-                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Créer un compte</a>
+                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">{{ __("services.nav_login") }}</a>
+                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">{{ __("services.nav_register") }}</a>
                 </div>
             </div>
         </div>
@@ -59,18 +62,18 @@
         <div class="support-hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-4xl mx-auto fade-in-up">
                 <h1 class="text-4xl sm:text-5xl font-bold mb-6">
-                    Virements Internationaux
+                    {{ __("services.intl_hero_title") }}
                 </h1>
                 <p class="text-xl mb-8 text-emerald-100 leading-relaxed">
-                    Envoyez de l'argent partout dans le monde avec des frais transparents,
-                    des taux de change compétitifs et une exécution ultra-rapide.
+                    {{ __("services.intl_hero_desc") }}
+                    
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-8 py-4 rounded-lg font-semibold">
-                        Commencer un virement
+                        {{ __("services.intl_hero_cta_primary") }}
                     </a>
                     <a href="#fees" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-emerald-900 transition">
-                        Voir les frais
+                        {{ __("services.intl_hero_cta_secondary") }}
                     </a>
                 </div>
             </div>
@@ -81,9 +84,9 @@
     <section class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-4xl font-bold mb-6 text-premium">Pourquoi choisir SG BANK pour vos virements ?</h2>
+                <h2 class="text-4xl font-bold mb-6 text-premium">{{ __("services.intl_features_title") }}</h2>
                 <p class="text-xl text-gray-600 leading-relaxed">
-                    Des virements internationaux simples, rapides et sécurisés pour votre entreprise.
+                    {{ __("services.intl_features_desc") }}
                 </p>
             </div>
 
@@ -92,9 +95,9 @@
                     <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-globe text-emerald-600 text-3xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-4 text-premium">180+ pays</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-premium">{{ __("services.intl_f1_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Couverture mondiale avec accès aux principales devises et marchés financiers.
+                        {{ __("services.intl_f1_desc") }}
                     </p>
                 </div>
 
@@ -102,9 +105,9 @@
                     <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-bolt text-blue-600 text-3xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-4 text-premium">Exécution rapide</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-premium">{{ __("services.intl_f2_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Virements SEPA instantanés et virements SWIFT en 1-3 jours ouvrés.
+                        {{ __("services.intl_f2_desc") }}
                     </p>
                 </div>
 
@@ -112,9 +115,9 @@
                     <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-euro-sign text-green-600 text-3xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-4 text-premium">Taux compétitifs</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-premium">{{ __("services.intl_f3_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Spreads réduits et frais transparents, meilleurs que les banques traditionnelles.
+                        {{ __("services.intl_f3_desc") }}
                     </p>
                 </div>
 
@@ -122,9 +125,9 @@
                     <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-shield-alt text-purple-600 text-3xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-4 text-premium">Sécurité maximale</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-premium">{{ __("services.intl_f4_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Chiffrement bancaire et conformité aux réglementations internationales.
+                        {{ __("services.intl_f4_desc") }}
                     </p>
                 </div>
             </div>
@@ -135,9 +138,9 @@
     <section class="py-24 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-4xl font-bold mb-6 text-premium">Comment ça marche ?</h2>
+                <h2 class="text-4xl font-bold mb-6 text-premium">{{ __("services.intl_how_title") }}</h2>
                 <p class="text-xl text-gray-600 leading-relaxed">
-                    Effectuez vos virements internationaux en quelques clics seulement.
+                    {{ __("services.intl_how_desc") }}
                 </p>
             </div>
 
@@ -146,9 +149,9 @@
                     <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
                         1
                     </div>
-                    <h3 class="text-xl font-semibold mb-4 text-premium">Renseignez les détails</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-premium">{{ __("services.intl_step1_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Indiquez le bénéficiaire, le montant, la devise et la date d'exécution souhaitée.
+                        {{ __("services.intl_step1_desc") }}
                     </p>
                 </div>
 
@@ -156,9 +159,9 @@
                     <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
                         2
                     </div>
-                    <h3 class="text-xl font-semibold mb-4 text-premium">Validez et signez</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-premium">{{ __("services.intl_step2_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Confirmez le virement avec authentification forte et signature électronique.
+                        {{ __("services.intl_step2_desc") }}
                     </p>
                 </div>
 
@@ -166,9 +169,9 @@
                     <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
                         3
                     </div>
-                    <h3 class="text-xl font-semibold mb-4 text-premium">Suivez l'exécution</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-premium">{{ __("services.intl_step3_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Recevez des notifications en temps réel et un justificatif PDF à la fin.
+                        {{ __("services.intl_step3_desc") }}
                     </p>
                 </div>
             </div>
@@ -179,9 +182,9 @@
     <section id="fees" class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-4xl font-bold mb-6 text-premium">Frais transparents</h2>
+                <h2 class="text-4xl font-bold mb-6 text-premium">{{ __("services.intl_fees_title") }}</h2>
                 <p class="text-xl text-gray-600 leading-relaxed">
-                    Des tarifs clairs et compétitifs pour tous vos virements internationaux.
+                    {{ __("services.intl_fees_desc") }}
                 </p>
             </div>
 
@@ -193,23 +196,23 @@
                             <i class="fas fa-euro-sign text-blue-600"></i>
                         </div>
                         <div>
-                            <h3 class="text-2xl font-bold text-premium">Virements SEPA</h3>
-                            <p class="text-gray-600">Zone Euro - Instantané</p>
+                            <h3 class="text-2xl font-bold text-premium">{{ __("services.intl_sepa_title") }}</h3>
+                            <p class="text-gray-600">{{ __("services.intl_sepa_subtitle") }}</p>
                         </div>
                     </div>
 
                     <div class="space-y-4">
                         <div class="flex justify-between items-center py-3 border-b border-gray-100">
-                            <span class="font-medium">Frais fixes</span>
-                            <span class="font-bold text-premium">0,50 €</span>
+                            <span class="font-medium">{{ __("services.intl_fee_fixed") }}</span>
+                            <span class="font-bold text-premium">0,50 &euro;</span>
                         </div>
                         <div class="flex justify-between items-center py-3 border-b border-gray-100">
-                            <span class="font-medium">Délai d'exécution</span>
-                            <span class="font-bold text-green-600">Instantané</span>
+                            <span class="font-medium">{{ __("services.intl_exec_delay") }}</span>
+                            <span class="font-bold text-green-600">{{ __("services.intl_instant") }}</span>
                         </div>
                         <div class="flex justify-between items-center py-3">
-                            <span class="font-medium">Plafond gratuit</span>
-                            <span class="font-bold text-premium">500 €/mois</span>
+                            <span class="font-medium">{{ __("services.intl_free_limit") }}</span>
+                            <span class="font-bold text-premium">500 &euro;/{{ __("services.cards_plan_per_month") }}</span>
                         </div>
                     </div>
                 </div>
@@ -221,33 +224,33 @@
                             <i class="fas fa-globe text-green-600"></i>
                         </div>
                         <div>
-                            <h3 class="text-2xl font-bold text-premium">Virements SWIFT</h3>
-                            <p class="text-gray-600">International - 1-3 jours</p>
+                            <h3 class="text-2xl font-bold text-premium">{{ __("services.intl_swift_title") }}</h3>
+                            <p class="text-gray-600">{{ __("services.intl_swift_subtitle") }}</p>
                         </div>
                     </div>
 
                     <div class="space-y-4">
                         <div class="flex justify-between items-center py-3 border-b border-gray-100">
-                            <span class="font-medium">Frais fixes</span>
-                            <span class="font-bold text-premium">15 €</span>
+                            <span class="font-medium">{{ __("services.intl_fee_fixed") }}</span>
+                            <span class="font-bold text-premium">15 &euro;</span>
                         </div>
                         <div class="flex justify-between items-center py-3 border-b border-gray-100">
-                            <span class="font-medium">Commission variable</span>
+                            <span class="font-medium">{{ __("services.intl_variable_fee") }}</span>
                             <span class="font-bold text-premium">0,15%</span>
                         </div>
                         <div class="flex justify-between items-center py-3">
-                            <span class="font-medium">Délai moyen</span>
-                            <span class="font-bold text-blue-600">1-3 jours</span>
+                            <span class="font-medium">{{ __("services.intl_avg_delay") }}</span>
+                            <span class="font-bold text-blue-600">{{ __("services.intl_days_1_3") }}</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="text-center mt-12">
-                <p class="text-gray-600 mb-6">Calcul automatique des frais selon le montant et la destination</p>
+                <p class="text-gray-600 mb-6">{{ __("services.intl_fee_calc_note") }}</p>
                 <div class="inline-flex items-center bg-green-100 text-green-800 px-4 py-2 rounded-full">
                     <i class="fas fa-check mr-2"></i>
-                    <span class="font-semibold">Aucun frais caché</span>
+                    <span class="font-semibold">{{ __("services.intl_no_hidden_fee") }}</span>
                 </div>
             </div>
         </div>
@@ -257,54 +260,54 @@
     <section class="py-24 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-4xl font-bold mb-6 text-premium">Pays et devises supportés</h2>
+                <h2 class="text-4xl font-bold mb-6 text-premium">{{ __("services.intl_countries_title") }}</h2>
                 <p class="text-xl text-gray-600 leading-relaxed">
-                    Envoyez de l'argent vers plus de 180 pays avec conversion automatique.
+                    {{ __("services.intl_countries_desc") }}
                 </p>
             </div>
 
             <div class="grid md:grid-cols-3 lg:grid-cols-6 gap-6">
                 <div class="premium-card rounded-xl p-6 text-center hover:shadow-lg transition">
-                    <div class="text-3xl mb-3">🇺🇸</div>
-                    <h4 class="font-semibold text-premium">États-Unis</h4>
+                    <div class="text-3xl mb-3">US</div>
+                    <h4 class="font-semibold text-premium">{{ __("services.intl_country_us") }}</h4>
                     <p class="text-sm text-gray-600">USD</p>
                 </div>
 
                 <div class="premium-card rounded-xl p-6 text-center hover:shadow-lg transition">
-                    <div class="text-3xl mb-3">🇬🇧</div>
-                    <h4 class="font-semibold text-premium">Royaume-Uni</h4>
+                    <div class="text-3xl mb-3">UK</div>
+                    <h4 class="font-semibold text-premium">{{ __("services.intl_country_uk") }}</h4>
                     <p class="text-sm text-gray-600">GBP</p>
                 </div>
 
                 <div class="premium-card rounded-xl p-6 text-center hover:shadow-lg transition">
-                    <div class="text-3xl mb-3">🇨🇭</div>
-                    <h4 class="font-semibold text-premium">Suisse</h4>
+                    <div class="text-3xl mb-3">CH</div>
+                    <h4 class="font-semibold text-premium">{{ __("services.intl_country_ch") }}</h4>
                     <p class="text-sm text-gray-600">CHF</p>
                 </div>
 
                 <div class="premium-card rounded-xl p-6 text-center hover:shadow-lg transition">
-                    <div class="text-3xl mb-3">🇯🇵</div>
-                    <h4 class="font-semibold text-premium">Japon</h4>
+                    <div class="text-3xl mb-3">JP</div>
+                    <h4 class="font-semibold text-premium">{{ __("services.intl_country_jp") }}</h4>
                     <p class="text-sm text-gray-600">JPY</p>
                 </div>
 
                 <div class="premium-card rounded-xl p-6 text-center hover:shadow-lg transition">
-                    <div class="text-3xl mb-3">🇨🇦</div>
-                    <h4 class="font-semibold text-premium">Canada</h4>
+                    <div class="text-3xl mb-3">CA</div>
+                    <h4 class="font-semibold text-premium">{{ __("services.intl_country_ca") }}</h4>
                     <p class="text-sm text-gray-600">CAD</p>
                 </div>
 
                 <div class="premium-card rounded-xl p-6 text-center hover:shadow-lg transition">
-                    <div class="text-3xl mb-3">🇦🇺</div>
-                    <h4 class="font-semibold text-premium">Australie</h4>
+                    <div class="text-3xl mb-3">AU</div>
+                    <h4 class="font-semibold text-premium">{{ __("services.intl_country_au") }}</h4>
                     <p class="text-sm text-gray-600">AUD</p>
                 </div>
             </div>
 
             <div class="text-center mt-12">
-                <p class="text-gray-600 mb-6">Et bien d'autres pays encore...</p>
+                <p class="text-gray-600 mb-6">{{ __("services.intl_more_countries") }}</p>
                 <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-8 py-4 rounded-lg font-semibold">
-                    Voir tous les pays supportés
+                    {{ __("services.intl_all_supported") }}
                 </a>
             </div>
         </div>
@@ -313,13 +316,13 @@
     <!-- CTA -->
     <section class="py-24 bg-gradient-to-r from-emerald-900 to-emerald-800 text-white">
         <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold mb-6">Prêt à effectuer votre premier virement international ?</h2>
+            <h2 class="text-4xl font-bold mb-6">{{ __("services.intl_cta_title") }}</h2>
             <p class="text-xl mb-8 text-emerald-100 leading-relaxed">
-                Rejoignez des milliers d'entreprises qui font confiance à SG BANK pour leurs paiements internationaux.
-                Inscription gratuite en 2 minutes.
+                {{ __("services.intl_cta_desc") }}
+                
             </p>
             <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-12 py-5 rounded-lg text-2xl font-bold inline-block">
-                Créer mon compte
+                {{ __("services.intl_cta_btn") }}
             </a>
         </div>
     </section>
@@ -328,7 +331,7 @@
     <footer class="bg-gray-900 text-gray-400 py-12">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center">
-                <p>&copy; 2025 <span class="text-blue-400 font-semibold">SG BANK</span>. Tous droits réservés.</p>
+                <p>&copy; 2025 <span class="text-blue-400 font-semibold">Valtrix Bank</span>. {{ __("services.footer_rights") }}</p>
             </div>
         </div>
     </footer>
@@ -343,6 +346,8 @@
 
 </body>
 </html>
+
+
 
 
 

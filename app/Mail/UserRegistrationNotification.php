@@ -33,7 +33,7 @@ class UserRegistrationNotification extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Nouvelle inscription en attente de validation - SG BANK',
+            subject: 'Nouvelle inscription en attente de validation - Valtrix Bank',
         );
     }
 
@@ -57,4 +57,5 @@ class UserRegistrationNotification extends Mailable
         return [];
     }
 }
+
 

@@ -95,6 +95,7 @@ return [
     'reset_filters' => 'Réinitialiser les filtres',
     'showing_results' => 'Affichage de :first à :last sur :total transactions',
     'generating' => 'Génération...',
+    'not_available' => 'N/A',
     'progress_label' => 'Progression',
     'operation_sucess' => 'Opération réussie',
     'status_refunded' => 'Remboursé',
@@ -125,4 +126,7 @@ return [
     'receipt_refunded_by' => 'Remboursé par',
     'receipt_refund_reason' => 'Motif du remboursement',
     'receipt_notice' => 'Ce document est généré électroniquement et constitue une preuve officielle de transaction.',
+    'connection_error_processing' => 'Erreur de connexion pendant le traitement.',
+    'error_starting_transfer' => 'Erreur lors du d?marrage du virement.',
+    'transaction_on_hold' => 'Transaction en attente de validation.',
 ];

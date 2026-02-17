@@ -31,9 +31,10 @@ class ContactConfirmationMail extends Mailable
         // Explicitly assign contact to variable for compact to work
         $contact = $this->contact;
 
-        return $this->subject('Confirmation de réception - SG BANK')
+        return $this->subject('Confirmation de réception - Valtrix Bank')
                     ->view('emails.contact_confirmation')
                     ->with(compact('contact'));
     }
 }
+
 

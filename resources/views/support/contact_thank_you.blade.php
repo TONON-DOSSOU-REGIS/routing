@@ -1,114 +1,64 @@
-<!DOCTYPE html>
-<html lang="fr">
+﻿<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merci pour votre message</title>
-
-    <!-- Tailwind -->
+    <title>{{ __('support.thank_you_title') }}</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io11/site.webmanifest">
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Font -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        /* Background image */
-        .hero-bg {
-            background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216');
-            background-size: cover;
-            background-position: center;
-        }
-
-        /* Overlay */
-        .hero-overlay {
-            background: linear-gradient(
-                rgba(17, 24, 39, 0.75),
-                rgba(17, 24, 39, 0.85)
-            );
-        }
-
-        .bg-premium {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-
-        .bg-premium-dark {
-            background: linear-gradient(135deg, #5a6fd8, #6a4190);
-        }
+        body { font-family: 'Poppins', sans-serif; }
+        .hero-bg { background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216'); background-size: cover; background-position: center; }
+        .hero-overlay { background: linear-gradient(rgba(17, 24, 39, 0.75), rgba(17, 24, 39, 0.85)); }
+        .bg-premium { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .bg-premium-dark { background: linear-gradient(135deg, #5a6fd8, #6a4190); }
     </style>
 </head>
-
 <body class="min-h-screen">
   @include('components.background-slider')
-<!-- SECTION PRINCIPALE -->
-    <section class="hero-bg min-h-screen flex items-center justify-center relative">
 
-        <!-- Overlay -->
+    <section class="hero-bg min-h-screen flex items-center justify-center relative">
         <div class="absolute inset-0 hero-overlay"></div>
 
-        <!-- CARD -->
-        <div id="thankyou-card"
-             class="relative z-10 max-w-xl w-full mx-4 bg-white rounded-2xl shadow-2xl p-10
-                    opacity-0 translate-y-6 transition-all duration-700">
-
-            <!-- Icon -->
+        <div id="thankyou-card" class="relative z-10 max-w-xl w-full mx-4 bg-white rounded-2xl shadow-2xl p-10 opacity-0 translate-y-6 transition-all duration-700">
             <div class="flex justify-center mb-8">
                 <div class="bg-green-100 text-green-600 p-5 rounded-full shadow-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none"
-                         viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M9 12l2 2 4-4m6 2c0 5.523-4.477 10-10 10S1 17.523 1 12 5.477 2 11 2s10 4.477 10 10z"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2c0 5.523-4.477 10-10 10S1 17.523 1 12 5.477 2 11 2s10 4.477 10 10z"/>
                     </svg>
                 </div>
             </div>
 
-            <!-- Title -->
-            <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">
-                Merci pour votre message !
-            </h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">{{ __('support.thank_you_message') }}</h1>
 
-            <!-- Text -->
-            <p class="text-gray-600 text-center mb-8 leading-relaxed">
-                Votre demande a bien été reçue. Notre équipe vous contactera
-                dans les plus brefs délais.
-            </p>
+            <p class="text-gray-600 text-center mb-8 leading-relaxed">{{ __('support.request_received') }}</p>
 
-            <!-- Info -->
             <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg mb-8">
                 <div class="flex">
                     <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
-                    <p class="text-blue-800 text-sm">
-                        Une réponse vous sera envoyée par email sous 24 à 48 heures.
-                    </p>
+                    <p class="text-blue-800 text-sm">{{ __('support.response_time') }}</p>
                 </div>
             </div>
 
-            <!-- Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}"
-                   class="bg-premium hover:bg-premium-dark text-white px-6 py-3 rounded-xl
-                          font-semibold shadow transition transform hover:-translate-y-1">
+                <a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}" class="bg-premium hover:bg-premium-dark text-white px-6 py-3 rounded-xl font-semibold shadow transition transform hover:-translate-y-1">
                     <i class="fas fa-arrow-left mr-2"></i>
-                    Retour au formulaire
+                    {{ __('support.back_to_form') }}
                 </a>
 
-                <a href="/"
-                   class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-xl
-                          font-semibold shadow transition transform hover:-translate-y-1">
+                <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-xl font-semibold shadow transition transform hover:-translate-y-1">
                     <i class="fas fa-home mr-2"></i>
-                    Accueil
+                    {{ __('support.home') }}
                 </a>
             </div>
 
-            <!-- Social -->
             <div class="mt-10 pt-6 border-t text-center">
-                <p class="text-gray-500 mb-4">Suivez-nous</p>
+                <p class="text-gray-500 mb-4">{{ __('support.follow_us') }}</p>
                 <div class="flex justify-center gap-6 text-lg">
                     <a href="#" class="text-gray-400 hover:text-blue-600"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" class="text-gray-400 hover:text-pink-500"><i class="fab fa-instagram"></i></a>
@@ -116,24 +66,17 @@
                     <a href="#" class="text-gray-400 hover:text-blue-700"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
-
         </div>
     </section>
 
-    <!-- Animation -->
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const card = document.getElementById("thankyou-card");
+        document.addEventListener('DOMContentLoaded', () => {
+            const card = document.getElementById('thankyou-card');
             setTimeout(() => {
-                card.classList.remove("opacity-0", "translate-y-6");
+                card.classList.remove('opacity-0', 'translate-y-6');
             }, 150);
         });
     </script>
 
 </body>
 </html>
-
-
-
-
-

@@ -17,12 +17,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create admin user if not exists
-        if (!User::where('email', 'admin@sgbank.com')->exists()) {
+        $adminEmail = (string) config('mail.admin_address', 'admin@valtrixbank.com');
+
+        // Keep a single canonical admin account/email.
+        $admin = User::where('email', $adminEmail)->first();
+        if (!$admin) {
+            $admin = User::where('role', 'admin')->first();
+        }
+
+        if ($admin) {
+            $admin->update([
+                'email' => $adminEmail,
+                'last_name' => 'Valtrix Bank',
+                'role' => 'admin',
+                'status' => 'active',
+            ]);
+        } else {
             User::create([
                 'first_name' => 'Admin',
-                'last_name' => 'SG BANK',
-                'email' => 'admin@sgbank.com',
+                'last_name' => 'Valtrix Bank',
+                'email' => $adminEmail,
                 'phone' => '+22912345678',
                 'address' => '123 Admin Street',
                 'role' => 'admin',
@@ -42,4 +56,5 @@ class DatabaseSeeder extends Seeder
         ]);
     }
 }
+
 

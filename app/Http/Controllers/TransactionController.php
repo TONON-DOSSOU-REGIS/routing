@@ -305,7 +305,8 @@ class TransactionController extends Controller
         }
 
         $pdf = Pdf::loadView('transactions.receipt', compact('transaction'))
-            ->setOption('defaultFont', 'dejavu sans');
+            ->setOption('defaultFont', 'dejavu sans')
+            ->setOption('isRemoteEnabled', true);
         return $pdf->download('receipt_' . $transaction->id . '.pdf');
     }
 

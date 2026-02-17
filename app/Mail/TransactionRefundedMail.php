@@ -31,7 +31,7 @@ class TransactionRefundedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Remboursement de votre virement - SG BANK',
+            subject: 'Remboursement de votre virement - Valtrix Bank',
         );
     }
 
@@ -55,4 +55,5 @@ class TransactionRefundedMail extends Mailable
         return [];
     }
 }
+
 

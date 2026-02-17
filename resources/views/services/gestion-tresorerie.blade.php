@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ str_replace("_", "-", app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion de trésorerie - SG BANK</title>
+    <title>{{ __("services.treasury_page_title") }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io11/site.webmanifest">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .nav-gradient { background: linear-gradient(90deg, #1e3a8a 0%, #1e40af 100%); }
@@ -29,12 +32,12 @@
                     <div class="bg-white p-2 rounded-lg">
                         <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                     </div>
-                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">SG BANK</span></a>
+                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">Valtrix Bank</span></a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
-                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">Connexion</a>
-                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">Créer un compte</a>
+                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">{{ __("services.nav_login") }}</a>
+                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">{{ __("services.nav_register") }}</a>
                 </div>
 
                 <div class="md:hidden flex items-center">
@@ -46,8 +49,8 @@
 
             <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-800 border-t border-blue-700">
                 <div class="px-4 py-6 space-y-4">
-                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Connexion</a>
-                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Créer un compte</a>
+                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">{{ __("services.nav_login") }}</a>
+                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">{{ __("services.nav_register") }}</a>
                 </div>
             </div>
         </div>
@@ -59,18 +62,18 @@
         <div class="support-hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-4xl mx-auto fade-in-up">
                 <h1 class="text-4xl sm:text-5xl font-bold mb-6">
-                    Gestion de trésorerie SG BANK
+                    {{ __("services.treasury_hero_title") }}
                 </h1>
                 <p class="text-xl mb-8 text-purple-100 leading-relaxed">
-                    Optimisez votre trésorerie d'entreprise avec des outils avancés de prévision,
-                    suivi des encaissements et pilotage financier en temps réel.
+                    {{ __("services.treasury_hero_desc") }}
+                    
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-8 py-4 rounded-lg font-semibold text-center">
-                        Accéder aux outils de trésorerie
+                        {{ __("services.treasury_hero_cta_primary") }}
                     </a>
                     <a href="#features" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-purple-900 transition text-center">
-                        Découvrir les fonctionnalités
+                        {{ __("services.treasury_hero_cta_secondary") }}
                     </a>
                 </div>
             </div>
@@ -81,9 +84,9 @@
     <section id="features" class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-4xl font-bold mb-6 text-premium">Outils complets pour une gestion optimale</h2>
+                <h2 class="text-4xl font-bold mb-6 text-premium">{{ __("services.treasury_features_title") }}</h2>
                 <p class="text-xl text-gray-600 leading-relaxed">
-                    Des solutions intégrées pour anticiper vos besoins de trésorerie et optimiser vos flux financiers.
+                    {{ __("services.treasury_features_desc") }}
                 </p>
             </div>
 
@@ -92,9 +95,9 @@
                     <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-chart-line text-purple-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Prévisions de trésorerie</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.treasury_f1_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Analysez vos flux entrants et sortants pour anticiper vos besoins de trésorerie sur 12 mois.
+                        {{ __("services.treasury_f1_desc") }}
                     </p>
                 </div>
 
@@ -102,9 +105,9 @@
                     <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-calendar-alt text-blue-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Planification budgétaire</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.treasury_f2_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Créez et suivez vos budgets mensuels avec alertes automatiques en cas de dépassement.
+                        {{ __("services.treasury_f2_desc") }}
                     </p>
                 </div>
 
@@ -112,9 +115,9 @@
                     <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-sync text-green-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Connexions bancaires</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.treasury_f3_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Synchronisation automatique avec vos comptes bancaires pour un suivi en temps réel.
+                        {{ __("services.treasury_f3_desc") }}
                     </p>
                 </div>
 
@@ -122,9 +125,9 @@
                     <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-bell text-orange-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Alertes intelligentes</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.treasury_f4_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Notifications personnalisées pour les échéances, soldes critiques et opportunités d'optimisation.
+                        {{ __("services.treasury_f4_desc") }}
                     </p>
                 </div>
 
@@ -132,9 +135,9 @@
                     <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-file-invoice-dollar text-red-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Gestion des factures</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.treasury_f5_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Suivi automatisé des factures clients et fournisseurs avec relances intégrées.
+                        {{ __("services.treasury_f5_desc") }}
                     </p>
                 </div>
 
@@ -142,9 +145,9 @@
                     <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-coins text-indigo-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-premium">Optimisation des excédents</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-premium">{{ __("services.treasury_f6_title") }}</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Suggestions automatiques pour placer vos excédents de trésorerie de manière optimale.
+                        {{ __("services.treasury_f6_desc") }}
                     </p>
                 </div>
             </div>
@@ -155,39 +158,39 @@
     <section class="py-24 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-4xl font-bold mb-6 text-premium">Tableau de bord intuitif</h2>
+                <h2 class="text-4xl font-bold mb-6 text-premium">{{ __("services.treasury_dashboard_title") }}</h2>
                 <p class="text-xl text-gray-600 leading-relaxed">
-                    Visualisez votre trésorerie en un coup d'œil avec des graphiques clairs et des indicateurs pertinents.
+                    {{ __("services.treasury_dashboard_desc") }}
                 </p>
             </div>
 
             <div class="premium-card rounded-3xl p-8 max-w-6xl mx-auto">
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl p-6 text-center">
-                        <div class="text-2xl font-bold mb-2">€125,430</div>
-                        <div class="text-sm opacity-90">Solde actuel</div>
+                        <div class="text-2xl font-bold mb-2">&euro;125,430</div>
+                        <div class="text-sm opacity-90">{{ __("services.treasury_kpi_balance") }}</div>
                     </div>
                     <div class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl p-6 text-center">
-                        <div class="text-2xl font-bold mb-2">€28,650</div>
-                        <div class="text-sm opacity-90">Encaissements (30j)</div>
+                        <div class="text-2xl font-bold mb-2">&euro;28,650</div>
+                        <div class="text-sm opacity-90">{{ __("services.treasury_kpi_in") }}</div>
                     </div>
                     <div class="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl p-6 text-center">
-                        <div class="text-2xl font-bold mb-2">€15,230</div>
-                        <div class="text-sm opacity-90">Décaissements (30j)</div>
+                        <div class="text-2xl font-bold mb-2">&euro;15,230</div>
+                        <div class="text-sm opacity-90">{{ __("services.treasury_kpi_out") }}</div>
                     </div>
                     <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-xl p-6 text-center">
                         <div class="text-2xl font-bold mb-2">+13.5%</div>
-                        <div class="text-sm opacity-90">Croissance</div>
+                        <div class="text-sm opacity-90">{{ __("services.treasury_kpi_growth") }}</div>
                     </div>
                 </div>
 
                 <div class="bg-gray-50 rounded-xl p-6">
-                    <h3 class="font-bold text-lg mb-4 text-premium">Prévision de trésorerie - 6 mois</h3>
+                    <h3 class="font-bold text-lg mb-4 text-premium">{{ __("services.treasury_chart_title") }}</h3>
                     <div class="h-64 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg flex items-center justify-center">
                         <div class="text-center text-gray-500">
                             <i class="fas fa-chart-area text-4xl mb-4"></i>
-                            <p>Graphique de prévision de trésorerie</p>
-                            <p class="text-sm">Visualisation interactive disponible dans votre espace client</p>
+                            <p>{{ __("services.treasury_chart_placeholder_title") }}</p>
+                            <p class="text-sm">{{ __("services.treasury_chart_placeholder_subtitle") }}</p>
                         </div>
                     </div>
                 </div>
@@ -198,12 +201,12 @@
     <!-- CTA -->
     <section class="py-24 bg-gradient-to-r from-purple-900 to-purple-800 text-white">
         <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold mb-6">Prêt à optimiser votre trésorerie ?</h2>
+            <h2 class="text-4xl font-bold mb-6">{{ __("services.treasury_cta_title") }}</h2>
             <p class="text-xl mb-8 text-purple-100 leading-relaxed">
-                Rejoignez les entreprises qui font confiance à SG BANK pour piloter leur trésorerie efficacement.
+                {{ __("services.treasury_cta_desc") }}
             </p>
             <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-12 py-5 rounded-lg text-2xl font-bold inline-block">
-                Commencer l'optimisation
+                {{ __("services.treasury_cta_btn") }}
             </a>
         </div>
     </section>
@@ -212,7 +215,7 @@
     <footer class="bg-gray-900 text-gray-400 py-12">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center">
-                <p>&copy; 2025 <span class="text-blue-400 font-semibold">SG BANK</span>. Tous droits réservés.</p>
+                <p>&copy; 2025 <span class="text-blue-400 font-semibold">Valtrix Bank</span>. {{ __("services.footer_rights") }}</p>
             </div>
         </div>
     </footer>
@@ -227,6 +230,8 @@
 
 </body>
 </html>
+
+
 
 
 

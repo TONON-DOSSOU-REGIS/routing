@@ -125,4 +125,8 @@ return [
     'receipt_refunded_by' => 'Refunded by',
     'receipt_refund_reason' => 'Refund reason',
     'receipt_notice' => 'This document is generated electronically and serves as official proof of transaction.',
+    'connection_error_processing' => 'Connection error during processing.',
+    'error_starting_transfer' => 'Error starting transfer.',
+    'transaction_on_hold' => 'Transaction pending validation.',
+    'not_available' => 'N/A',
 ];

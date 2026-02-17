@@ -125,4 +125,8 @@ return [
     'receipt_refunded_by' => 'Terugbetaald door',
     'receipt_refund_reason' => 'Reden van terugbetaling',
     'receipt_notice' => 'Dit document is elektronisch gegenereerd en vormt een officieel bewijs van de transactie.',
+    'connection_error_processing' => 'Verbindingsfout tijdens verwerking.',
+    'error_starting_transfer' => 'Fout bij het starten van de overschrijving.',
+    'transaction_on_hold' => 'Transactie wacht op validatie.',
+    'not_available' => 'N/B',
 ];

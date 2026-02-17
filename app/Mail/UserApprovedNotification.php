@@ -29,7 +29,7 @@ class UserApprovedNotification extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Votre compte SG BANK a été validé !',
+            subject: 'Votre compte Valtrix Bank a été validé !',
         );
     }
 
@@ -53,4 +53,5 @@ class UserApprovedNotification extends Mailable
         return [];
     }
 }
+
 

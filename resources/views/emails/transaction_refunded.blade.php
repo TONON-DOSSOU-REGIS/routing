@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Remboursement de virement - SG BANK</title>
+    <title>Remboursement de virement - Valtrix Bank</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+  <link rel="manifest" href="/favicon_io11/site.webmanifest">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -103,7 +107,7 @@
         
         <p>Bonjour <strong>{{ $transaction->user->first_name }} {{ $transaction->user->last_name }}</strong>,</p>
         
-        <p>Nous vous informons que votre virement a été remboursé sur votre compte SG BANK.</p>
+        <p>Nous vous informons que votre virement a été remboursé sur votre compte Valtrix Bank.</p>
         
         <div class="info-box">
             <h3 style="margin-top: 0; color: #10b981;">📋 Détails du remboursement</h3>
@@ -162,10 +166,11 @@
     
     <div class="footer">
         <p>Merci de votre confiance !</p>
-        <p>© {{ date('Y') }} SG BANK. Tous droits réservés.</p>
+        <p>© {{ date('Y') }} Valtrix Bank. Tous droits réservés.</p>
     </div>
 </body>
 </html>
+
 
 
 

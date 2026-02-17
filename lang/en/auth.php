@@ -177,6 +177,7 @@ return [
     '2fa_disabled' => 'Two-factor authentication disabled.',
     '2fa_password_invalid' => 'Incorrect password.',
     '2fa_missing_secret' => 'Missing secret. Please restart setup.',
+    'register_error_title' => 'Registration errors',
 ];
 
 

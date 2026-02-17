@@ -177,6 +177,7 @@ return [
     '2fa_disabled' => 'Zwei-Faktor-Authentifizierung deaktiviert.',
     '2fa_password_invalid' => 'Falsches Passwort.',
     '2fa_missing_secret' => 'Fehlender Schl?ssel. Bitte neu einrichten.',
+    'register_error_title' => 'Registrierungsfehler',
 ];
 
 

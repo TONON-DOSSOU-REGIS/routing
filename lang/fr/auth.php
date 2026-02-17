@@ -144,9 +144,9 @@ return [
     'pending_approval_feature_notification' => 'Notification dès validation',
     'pending_approval_feature_security' => 'Sécurité renforcée',
     'pending_approval_title' => 'Validation en attente',
-    'pending_approval_message' => 'Votre demande est bien reçue. Vous serez informé dès l’approbation.',
+    'pending_approval_message' => 'Votre demande est bien reçue. Vous serez informé dès l\'approbation.',
     'pending_approval_info' => 'Si vous avez des questions, contactez notre support.',
-    'back_to_home' => 'Retour à l’accueil',
+    'back_to_home' => 'Retour à l\'accueil',
     'back_to_login' => 'Retour à la connexion',
     '2fa_setup_title' => 'Configuration 2FA - SG BANK',
     '2fa_setup_heading' => 'Double authentification',
@@ -177,6 +177,7 @@ return [
     '2fa_disabled' => 'Double authentification d?sactiv?e.',
     '2fa_password_invalid' => 'Mot de passe incorrect.',
     '2fa_missing_secret' => 'Cl? manquante. Reprenez la configuration.',
+    'register_error_title' => 'Erreurs d\'inscription',
 ];
 
 

@@ -177,6 +177,7 @@ return [
     '2fa_disabled' => '2FA wy??czone.',
     '2fa_password_invalid' => 'Nieprawid?owe has?o.',
     '2fa_missing_secret' => 'Brak klucza. Uruchom konfiguracj? ponownie.',
+    'register_error_title' => 'B??dy rejestracji',
 ];
 
 

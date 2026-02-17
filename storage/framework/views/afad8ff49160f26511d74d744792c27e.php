@@ -9,7 +9,10 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
-
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+  <link rel="manifest" href="/favicon_io11/site.webmanifest">
   <style>
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: translateY(0);} }
     .fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
@@ -361,7 +364,7 @@
   <!-- Footer -->
   <footer class="mt-10 py-8 bg-white border-t relative z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-sm text-slate-500 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-      <p>&copy; <?php echo e(date('Y')); ?> SG BANK. <?php echo e(__('dashboard.all_rights_reserved')); ?></p>
+      <p>&copy; <?php echo e(date('Y')); ?> Valtrix Bank. <?php echo e(__('dashboard.all_rights_reserved')); ?></p>
       <div class="flex flex-wrap gap-3">
         <a href="#" class="hover:text-slate-700"><?php echo e(__('dashboard.privacy')); ?></a>
         <a href="#" class="hover:text-slate-700"><?php echo e(__('dashboard.terms')); ?></a>
@@ -387,6 +390,7 @@
   </script>
 </body>
 </html>
+
 
 
 

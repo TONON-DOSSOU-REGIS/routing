@@ -4,214 +4,275 @@
     <meta charset="UTF-8">
     <title>{{ __('transactions.receipt_page_title') }}</title>
 
-    <style>
-    * {
-        box-sizing: border-box;
-    }
+  <style>
 
-    html, body {
-        margin: 0;
-        padding: 0;
-        width: 210mm;
-        height: 297mm;
-        font-family: "DejaVu Sans", Arial, Helvetica, sans-serif;
-        background: #ffffff;
-        color: #0f172a;
-        font-size: 11px;
-    }
+/* ================= GLOBAL ================= */
 
-    .page {
-        width: 100%;
-        height: 100%;
-        padding: 0;
-    }
+*{
+    box-sizing:border-box;
+}
 
-    .receipt {
-        width: 100%;
-        height: 100%;
-        max-height: 277mm;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-    }
+@page{
+    size:A4 portrait;
+    margin:10mm;
+}
 
-    /* ================= HEADER ================= */
-    .receipt-header {
-        background: #0f172a;
-        color: #ffffff;
-        padding: 14px 18px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+html,body{
+    width:210mm;
+    height:277mm;
+    margin:0;
+    padding:0;
+    font-family:"DejaVu Sans",Arial,Helvetica,sans-serif;
+    background:#ffffff;
+    color:#0f172a;
+    font-size:10px;
+}
 
-    .brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
+/* ================= PAGE ================= */
 
-    .logo {
-        width: 42px;
-        height: 42px;
-        background: #ffffff;
-        padding: 5px;
-        border-radius: 6px;
-    }
+.page{
+    width:100%;
+    height:277mm;
+}
 
-    .brand-name {
-        font-size: 18px;
-        font-weight: bold;
-    }
+.receipt{
+    width:100%;
+    height:277mm;
+    border:1px solid #e2e8f0;
+    border-radius:6px;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+}
 
-    .brand-tag {
-        font-size: 11px;
-        opacity: 0.85;
-    }
+/* ================= HEADER ================= */
 
-    .receipt-meta {
-        text-align: right;
-        font-size: 11px;
-    }
+.receipt-header{
+    background:#0f172a;
+    color:#ffffff;
+    padding:10px 14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    page-break-inside:avoid;
+}
 
-    .receipt-meta strong {
-        font-size: 17px;
-        display: block;
-    }
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
 
-    /* ================= CONTENT ================= */
-    .content {
-        flex: 1;
-        padding: 14px 18px;
-        overflow: hidden;
-    }
+.logo{
+    width:38px;
+    height:38px;
+    background:#ffffff;
+    padding:4px;
+    border-radius:5px;
+}
 
-    .status-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
-    }
+.brand-name{
+    font-size:15px;
+    font-weight:bold;
+}
 
-    .status {
-        padding: 6px 14px;
-        font-size: 11px;
-        border-radius: 20px;
-        font-weight: bold;
-        letter-spacing: 0.5px;
-    }
+.brand-tag{
+    font-size:9px;
+    opacity:.85;
+}
 
-    .success { background: #dcfce7; color: #166534; }
-    .pending { background: #fef9c3; color: #854d0e; }
-    .hold { background: #fee2e2; color: #991b1b; }
+.receipt-meta{
+    text-align:right;
+    font-size:9px;
+}
 
-    .amount {
-        font-size: 20px;
-        font-weight: bold;
-    }
+.receipt-meta strong{
+    font-size:15px;
+    display:block;
+}
 
-    .section {
-        margin-top: 12px;
-    }
+/* ================= CONTENT ================= */
 
-    .section-title {
-        font-size: 12px;
-        font-weight: bold;
-        margin-bottom: 6px;
-        text-transform: uppercase;
-    }
+.content{
+    flex:1;
+    padding:10px 14px;
+    padding-right:110px;
+    position:relative;
+    overflow:hidden;
+    page-break-inside:avoid;
+}
 
-    .kv-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 6px 14px;
-    }
+.status-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:8px;
+}
 
-    .kv-item {
-        font-size: 11px;
-        border-bottom: 1px dashed #e5e7eb;
-        padding-bottom: 4px;
-    }
+.status{
+    padding:5px 12px;
+    font-size:10px;
+    border-radius:20px;
+    font-weight:bold;
+    letter-spacing:.5px;
+}
 
-    .kv-label {
-        color: #64748b;
-        font-size: 9px;
-        text-transform: uppercase;
-    }
+.success{background:#dcfce7;color:#166534;}
+.pending{background:#fef9c3;color:#854d0e;}
+.hold{background:#fee2e2;color:#991b1b;}
 
-    .kv-value {
-        font-weight: 600;
-        margin-top: 3px;
-        font-size: 12px;
-    }
+.amount{
+    font-size:18px;
+    font-weight:bold;
+}
 
-    .notice {
-        margin-top: 12px;
-        font-size: 10.5px;
-        background: #fff7ed;
-        border: 1px solid #fed7aa;
-        padding: 8px;
-        border-radius: 6px;
-        line-height: 1.4;
-    }
+/* ================= SECTIONS ================= */
 
-    /* ================= FOOTER ================= */
-    .footer {
-        border-top: 1px solid #e2e8f0;
-        padding: 10px 18px;
-        font-size: 10.5px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: #f8fafc;
-    }
+.section{
+    margin-top:7px;
+    page-break-inside:avoid;
+}
 
-    @media (max-width: 768px) {
-        html, body {
-            width: 100%;
-            height: auto;
-        }
+.section-title{
+    font-size:10.5px;
+    font-weight:bold;
+    margin-bottom:4px;
+    text-transform:uppercase;
+}
 
-        .page,
-        .receipt {
-            height: auto;
-        }
+.kv-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:4px 10px;
+}
 
-        .receipt-header,
-        .footer {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 8px;
-        }
+.kv-item{
+    border-bottom:1px dashed #e5e7eb;
+    padding-bottom:2px;
+    max-height:34px;
+    overflow:hidden;
+    page-break-inside:avoid;
+}
 
-        .content {
-            overflow: visible;
-        }
+.kv-label{
+    color:#64748b;
+    font-size:7.5px;
+    text-transform:uppercase;
+}
 
-        .kv-grid {
-            grid-template-columns: 1fr;
-        }
-    }
+.kv-value{
+    font-weight:600;
+    font-size:9.8px;
+    margin-top:2px;
+    line-height:1.2;
+    word-break:break-word;
+    overflow-wrap:break-word;
+    max-height:24px;
+    overflow:hidden;
+}
 
-    /* ================= PRINT ================= */
-    @media print {
-        @page {
-            size: A4;
-            margin: 10mm;
-        }
+/* ================= NOTICE ================= */
 
-        body {
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-        }
+.notice{
+    margin-top:7px;
+    font-size:9px;
+    background:#fff7ed;
+    border:1px solid #fed7aa;
+    padding:6px;
+    border-radius:6px;
+    line-height:1.25;
+    max-height:55px;
+    overflow:hidden;
+    page-break-inside:avoid;
+}
 
-        .receipt {
-            page-break-inside: avoid;
-        }
-    }
+/* ================= QR ================= */
+
+.qr-side{
+    position:absolute;
+    top:10px;
+    right:14px;
+    width:84px;
+    text-align:center;
+}
+
+.qr-image{
+    width:84px;
+    height:84px;
+    border:1px solid #e2e8f0;
+    border-radius:6px;
+    background:#ffffff;
+}
+
+.qr-caption{
+    margin-top:4px;
+    font-size:7.5px;
+    color:#475569;
+    line-height:1.2;
+}
+
+/* ================= FOOTER ================= */
+
+.footer{
+    flex-shrink:0;
+    border-top:1px solid #dbe5f3;
+    padding:6px 14px 7px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:linear-gradient(180deg,#f8fafc 0%,#eef2ff 100%);
+    page-break-inside:avoid;
+}
+
+.footer::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:2px;
+    background:linear-gradient(90deg,#1d4ed8 0%,#3b82f6 35%,#0ea5e9 100%);
+}
+
+.footer-left{
+    display:flex;
+    flex-direction:column;
+    gap:1px;
+}
+
+.footer-brand{
+    font-size:9.5px;
+    font-weight:700;
+}
+
+.footer-meta{
+    font-size:8px;
+    color:#64748b;
+}
+
+.footer-center{
+    font-size:8px;
+    color:#475569;
+    text-align:center;
+}
+
+.footer-right{
+    text-align:right;
+}
+
+.footer-contact-label{
+    font-size:7px;
+    text-transform:uppercase;
+    color:#64748b;
+}
+
+.footer-contact-value{
+    font-size:8.5px;
+    font-weight:600;
+}
+
 </style>
+
 
 </head>
 
@@ -246,6 +307,16 @@
     $typeLabel = $typeKey ? __('transactions.' . $typeKey) : ucfirst($transaction->type);
     $hasBeneficiary = (bool) ($transaction->recipient_name || $transaction->recipient_iban || $transaction->recipient_bic || $transaction->bank_name);
     $hasAdditional = (bool) ($transaction->reason || $transaction->message || $transaction->refunded_at || $transaction->refund_reason || $transaction->refunded_by);
+    $qrPayload = implode('|', [
+        'bank=Valtrix Bank',
+        'receipt_id=' . $transaction->id,
+        'status=' . $transaction->status,
+        'amount=' . number_format((float) $transaction->amount, 2, '.', ''),
+        'currency=' . $currency,
+        'created_at=' . $transaction->created_at->format('Y-m-d H:i:s'),
+        'user_email=' . $transaction->user->email,
+    ]);
+    $qrUrl = 'https://quickchart.io/qr?size=180&text=' . urlencode($qrPayload);
 @endphp
 
 <div class="page">
@@ -256,7 +327,7 @@
             <div class="brand">
                 <img src="{{ $logoData }}" class="logo">
                 <div>
-                    <div class="brand-name">SG BANK</div>
+                    <div class="brand-name">Valtrix Bank</div>
                     <div class="brand-tag">{{ __('transactions.receipt_brand_tag') }}</div>
                 </div>
             </div>
@@ -269,6 +340,10 @@
 
         <!-- CONTENT -->
         <div class="content">
+            <div class="qr-side">
+                <img src="{{ $qrUrl }}" alt="Receipt QR Code" class="qr-image">
+                <div class="qr-caption">QR Verification<br>#{{ $transaction->id }}</div>
+            </div>
 
             <div class="status-row">
                 <div class="status {{ $statusClass }}">
@@ -403,11 +478,21 @@
 
 <!-- FOOTER -->
         <div class="footer">
-            <div>SG BANK © {{ date('Y') }}</div>
-            <div>support@sgbank.com</div>
+            <div class="footer-left">
+                <div class="footer-brand">Valtrix Bank</div>
+                <div class="footer-meta">&copy; {{ date('Y') }} - {{ __('transactions.receipt_title') }}</div>
+            </div>
+            <div class="footer-center">
+                Ref: #{{ $transaction->id }} | {{ $transaction->created_at->format('d/m/Y H:i') }}
+            </div>
+            <div class="footer-right">
+                <div class="footer-contact-label">Support</div>
+                <div class="footer-contact-value">support@valtrixbank.com</div>
+            </div>
         </div>
 
     </div>
 </div>
 </body>
 </html>
+

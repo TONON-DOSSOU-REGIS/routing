@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="<?php echo e(app()->getLocale()); ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo e(__('transactions.history_page_title')); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io11/site.webmanifest">
     <style>
         /* Animations élégantes */
         @keyframes fadeInUp {
@@ -198,7 +201,7 @@
                                     <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>"><img src='<?php echo e(asset("images/Logosite.png")); ?>' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                                 </div>
                                 <div>
-                                    <a href="<?php echo e(localized_route('dashboard', ['locale' => app()->getLocale()])); ?>" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"><span class="sr-only">SG BANK</span></a>
+                                    <a href="<?php echo e(localized_route('dashboard', ['locale' => app()->getLocale()])); ?>" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"><span class="sr-only">Valtrix Bank</span></a>
                                     <div class="text-xs text-gray-500 -mt-1"><?php echo e(__('transactions.history_title')); ?></div>
                                 </div>
                             </div>
@@ -207,17 +210,20 @@
                         <!-- Desktop Navigation -->
                         <div class="hidden md:flex items-center space-x-6">
                             <a href="<?php echo e(localized_route('dashboard', ['locale' => app()->getLocale()])); ?>" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
-                                <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                                <i class="fas fa-tachometer-alt mr-2"></i> <?php echo e(__('transactions.dashboard')); ?>
+
                                 <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                             </a>
                             <a href="<?php echo e(localized_route('transfer.create', ['locale' => app()->getLocale()])); ?>" class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-xl hover:from-blue-600 hover:to-indigo-700 font-medium shadow-lg transition duration-300 flex items-center gap-2">
                                 <i class="fas fa-paper-plane"></i>
-                                Nouveau virement
+                                <?php echo e(__('transactions.new_transfer')); ?>
+
                             </a>
                             <form method="POST" action="<?php echo e(localized_route('logout', ['locale' => app()->getLocale()])); ?>">
                                 <?php echo csrf_field(); ?>
                                 <button type="submit" class="relative text-gray-700 hover:text-red-600 transition duration-300 font-medium group">
-                                    <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
+                                    <i class="fas fa-sign-out-alt mr-2"></i> <?php echo e(__('transactions.logout')); ?>
+
                                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
                                 </button>
                             </form>
@@ -236,17 +242,20 @@
                         <div class="px-2 pt-2 pb-3 space-y-2 bg-white/95 backdrop-blur-lg border border-gray-200 rounded-lg shadow-xl mt-2">
                             <a href="<?php echo e(localized_route('dashboard', ['locale' => app()->getLocale()])); ?>" class="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
                                 <i class="fas fa-tachometer-alt w-5 mr-3 text-center"></i>
-                                Dashboard
+                                <?php echo e(__('transactions.dashboard')); ?>
+
                             </a>
                             <a href="<?php echo e(localized_route('transfer.create', ['locale' => app()->getLocale()])); ?>" class="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
                                 <i class="fas fa-paper-plane w-5 mr-3 text-center"></i>
-                                Nouveau virement
+                                <?php echo e(__('transactions.new_transfer')); ?>
+
                             </a>
                             <form method="POST" action="<?php echo e(localized_route('logout', ['locale' => app()->getLocale()])); ?>" class="inline">
                                 <?php echo csrf_field(); ?>
                                 <button type="submit" class="flex items-center w-full px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition duration-300">
                                     <i class="fas fa-sign-out-alt w-5 mr-3 text-center"></i>
-                                    Déconnexion
+                                    <?php echo e(__('transactions.logout')); ?>
+
                                 </button>
                             </form>
                         </div>
@@ -281,12 +290,14 @@
                                     <a href="<?php echo e(localized_route('admin.export.pdf')); ?>" 
                                        class="action-btn bg-gradient-to-r from-red-500 to-pink-600 text-white px-6 py-3 rounded-xl hover:from-red-600 hover:to-pink-700 font-semibold shadow-lg transition duration-300 flex items-center justify-center gap-2 w-full sm:w-auto">
                                         <i class="fas fa-file-pdf"></i>
-                                        Export PDF
+                                        <?php echo e(__('transactions.export_pdf')); ?>
+
                                     </a>
                                     <a href="<?php echo e(localized_route('admin.export.excel')); ?>" 
                                        class="action-btn bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 font-semibold shadow-lg transition duration-300 flex items-center justify-center gap-2 w-full sm:w-auto">
                                         <i class="fas fa-file-excel"></i>
-                                        Export Excel
+                                        <?php echo e(__('transactions.export_excel')); ?>
+
                                     </a>
                                 </div>
                             <?php endif; ?>
@@ -298,34 +309,37 @@
                                 <div>
                                     <label for="type" class="block text-sm font-semibold text-gray-800 mb-2 flex items-center">
                                         <i class="fas fa-filter mr-2 text-blue-500"></i>
-                                        Type
+                                        <?php echo e(__('transactions.filter_type')); ?>
+
                                     </label>
                                     <select name="type" id="type" class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 input-field">
-                                        <option value="">Tous les types</option>
-                                        <option value="transfer" <?php echo e(request('type') == 'transfer' ? 'selected' : ''); ?>>Virement</option>
-                                        <option value="deposit" <?php echo e(request('type') == 'deposit' ? 'selected' : ''); ?>>Dépôt</option>
-                                        <option value="withdrawal" <?php echo e(request('type') == 'withdrawal' ? 'selected' : ''); ?>>Retrait</option>
+                                        <option value=""><?php echo e(__('transactions.all_types')); ?></option>
+                                        <option value="transfer" <?php echo e(request('type') == 'transfer' ? 'selected' : ''); ?>><?php echo e(__('transactions.type_transfer')); ?></option>
+                                        <option value="deposit" <?php echo e(request('type') == 'deposit' ? 'selected' : ''); ?>><?php echo e(__('transactions.type_deposit')); ?></option>
+                                        <option value="withdrawal" <?php echo e(request('type') == 'withdrawal' ? 'selected' : ''); ?>><?php echo e(__('transactions.type_withdrawal')); ?></option>
                                     </select>
                                 </div>
 
                                 <div>
                                     <label for="status" class="block text-sm font-semibold text-gray-800 mb-2 flex items-center">
                                         <i class="fas fa-circle mr-2 text-green-500"></i>
-                                        Statut
+                                        <?php echo e(__('transactions.filter_status')); ?>
+
                                     </label>
                                     <select name="status" id="status" class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 input-field">
-                                        <option value="">Tous les statuts</option>
-                                        <option value="pending" <?php echo e(request('status') == 'pending' ? 'selected' : ''); ?>>En attente</option>
-                                        <option value="on_hold" <?php echo e(request('status') == 'on_hold' ? 'selected' : ''); ?>>Suspendu</option>
-                                        <option value="success" <?php echo e(request('status') == 'success' ? 'selected' : ''); ?>>Réussi</option>
-                                        <option value="failed" <?php echo e(request('status') == 'failed' ? 'selected' : ''); ?>>Échoué</option>
+                                        <option value=""><?php echo e(__('transactions.all_statuses')); ?></option>
+                                        <option value="pending" <?php echo e(request('status') == 'pending' ? 'selected' : ''); ?>><?php echo e(__('transactions.status_pending')); ?></option>
+                                        <option value="on_hold" <?php echo e(request('status') == 'on_hold' ? 'selected' : ''); ?>><?php echo e(__('transactions.status_on_hold')); ?></option>
+                                        <option value="success" <?php echo e(request('status') == 'success' ? 'selected' : ''); ?>><?php echo e(__('transactions.status_success')); ?></option>
+                                        <option value="failed" <?php echo e(request('status') == 'failed' ? 'selected' : ''); ?>><?php echo e(__('transactions.status_failed')); ?></option>
                                     </select>
                                 </div>
 
                                 <div>
                                     <label for="date_from" class="block text-sm font-semibold text-gray-800 mb-2 flex items-center">
                                         <i class="fas fa-calendar mr-2 text-purple-500"></i>
-                                        Date de début
+                                        <?php echo e(__('transactions.filter_date_from')); ?>
+
                                     </label>
                                     <input type="date" name="date_from" id="date_from" value="<?php echo e(request('date_from')); ?>" 
                                            class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 input-field">
@@ -334,7 +348,8 @@
                                 <div>
                                     <label for="date_to" class="block text-sm font-semibold text-gray-800 mb-2 flex items-center">
                                         <i class="fas fa-calendar mr-2 text-orange-500"></i>
-                                        Date de fin
+                                        <?php echo e(__('transactions.filter_date_to')); ?>
+
                                     </label>
                                     <input type="date" name="date_to" id="date_to" value="<?php echo e(request('date_to')); ?>" 
                                            class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 input-field">
@@ -344,7 +359,8 @@
                                     <button type="submit" 
                                             class="w-full bg-gradient-to-r from-gray-600 to-gray-700 text-white px-6 py-3 rounded-xl hover:from-gray-700 hover:to-gray-800 font-medium shadow-lg transition duration-300 flex items-center justify-center gap-2">
                                         <i class="fas fa-filter"></i>
-                                        Appliquer
+                                        <?php echo e(__('transactions.filter_apply')); ?>
+
                                     </button>
                                 </div>
                             </form>
@@ -359,55 +375,81 @@
                                             <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                                 <div class="flex items-center gap-2">
                                                     <i class="fas fa-hashtag text-blue-500"></i>
-                                                    Transaction
+                                                    <?php echo e(__('transactions.table_transaction')); ?>
+
                                                 </div>
                                             </th>
                                             <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                                 <div class="flex items-center gap-2">
                                                     <i class="fas fa-exchange-alt text-purple-500"></i>
-                                                    Type
+                                                    <?php echo e(__('transactions.table_type')); ?>
+
                                                 </div>
                                             </th>
                                             <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                                 <div class="flex items-center gap-2">
                                                     <i class="fas fa-euro-sign text-green-500"></i>
-                                                    Montant
+                                                    <?php echo e(__('transactions.table_amount')); ?>
+
                                                 </div>
                                             </th>
                                             <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                                 <div class="flex items-center gap-2">
                                                     <i class="fas fa-user text-indigo-500"></i>
-                                                    Bénéficiaire
+                                                    <?php echo e(__('transactions.table_beneficiary')); ?>
+
                                                 </div>
                                             </th>
                                             <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                                 <div class="flex items-center gap-2">
                                                     <i class="fas fa-circle text-yellow-500"></i>
-                                                    Statut
+                                                    <?php echo e(__('transactions.table_status')); ?>
+
                                                 </div>
                                             </th>
                                             <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                                 <div class="flex items-center gap-2">
                                                     <i class="fas fa-chart-line text-red-500"></i>
-                                                    Progression
+                                                    <?php echo e(__('transactions.table_progress')); ?>
+
                                                 </div>
                                             </th>
                                             <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                                 <div class="flex items-center gap-2">
                                                     <i class="fas fa-calendar text-gray-500"></i>
-                                                    Date
+                                                    <?php echo e(__('transactions.table_date')); ?>
+
                                                 </div>
                                             </th>
                                             <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                                 <div class="flex items-center gap-2">
                                                     <i class="fas fa-cog text-gray-500"></i>
-                                                    Actions
+                                                    <?php echo e(__('transactions.table_actions')); ?>
+
                                                 </div>
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
                                         <?php $__empty_1 = true; $__currentLoopData = $transactions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $transaction): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                            <?php
+                                                $typeKey = match ($transaction->type) {
+                                                    'transfer' => 'type_transfer',
+                                                    'deposit' => 'type_deposit',
+                                                    'withdrawal' => 'type_withdrawal',
+                                                    default => null,
+                                                };
+                                                $typeLabel = $typeKey ? __('transactions.' . $typeKey) : ucfirst($transaction->type);
+                                                $statusKey = match ($transaction->status) {
+                                                    'pending' => 'status_pending',
+                                                    'on_hold' => 'status_on_hold',
+                                                    'success' => 'status_success',
+                                                    'failed' => 'status_failed',
+                                                    'refunded' => 'status_refunded',
+                                                    default => null,
+                                                };
+                                                $statusLabel = $statusKey ? __('transactions.' . $statusKey) : ucfirst(str_replace('_', ' ', $transaction->status));
+                                            ?>
                                             <tr class="table-row-hover">
                                                 <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     <div class="text-sm font-semibold text-gray-900">
@@ -424,7 +466,7 @@
                                                             <i class="fas fa-<?php if($transaction->type == 'transfer'): ?> paper-plane <?php elseif($transaction->type == 'deposit'): ?> arrow-down <?php else: ?> arrow-up <?php endif; ?>"></i>
                                                         </div>
                                                         <span class="text-sm font-medium text-gray-900 capitalize">
-                                                            <?php echo e($transaction->type); ?>
+                                                            <?php echo e($typeLabel); ?>
 
                                                         </span>
                                                     </div>
@@ -437,10 +479,10 @@
                                                 </td>
                                                 <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     <div class="text-sm text-gray-900">
-                                                        <?php echo e($transaction->recipient_name ?? 'N/A'); ?>
+                                                        <?php echo e($transaction->recipient_name ?? __('transactions.not_available')); ?>
 
                                                     </div>
-                                                    <?php if($transaction->recipient_iban): ?>
+                                                        <?php if($transaction->recipient_iban): ?>
                                                         <div class="text-xs text-gray-500">
                                                             <?php echo e(substr($transaction->recipient_iban, 0, 4)); ?>...<?php echo e(substr($transaction->recipient_iban, -4)); ?>
 
@@ -459,7 +501,7 @@
                                                             bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 
                                                         <?php endif; ?>">
                                                         <i class="fas fa-<?php if($transaction->status == 'success'): ?> check-circle <?php elseif($transaction->status == 'on_hold'): ?> clock <?php elseif($transaction->status == 'pending'): ?> hourglass-half <?php else: ?> ban <?php endif; ?>"></i>
-                                                        <?php echo e(ucfirst(str_replace('_', ' ', $transaction->status))); ?>
+                                                        <?php echo e($statusLabel); ?>
 
                                                     </span>
                                                 </td>
@@ -492,9 +534,9 @@
                                                         <?php if($transaction->status == 'success' && in_array($transaction->type, ['transfer', 'deposit'])): ?>
                                                             <a href="<?php echo e(localized_route('transactions.receipt', $transaction)); ?>" 
                                                                class="bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 px-3 py-2 rounded-lg hover:from-blue-100 hover:to-blue-200 transition duration-300 flex items-center gap-2 text-sm font-medium shadow-sm"
-                                                               title="Télécharger le reçu">
+                                                               title="<?php echo e(__('transactions.action_download_receipt')); ?>">
                                                                 <i class="fas fa-download"></i>
-                                                                <span class="hidden sm:inline">Reçu</span>
+                                                                <span class="hidden sm:inline"><?php echo e(__('transactions.action_receipt')); ?></span>
                                                             </a>
                                                         <?php endif; ?>
                                                         <?php if($transaction->status == 'on_hold'): ?>
@@ -514,11 +556,12 @@
                                                         <div class="bg-gray-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4">
                                                             <i class="fas fa-exchange-alt text-gray-400 text-2xl"></i>
                                                         </div>
-                                                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Aucune transaction trouvée</h3>
-                                                        <p class="text-gray-600 mb-4">Aucune transaction ne correspond à vos critères de recherche.</p>
+                                                        <h3 class="text-lg font-semibold text-gray-900 mb-2"><?php echo e(__('transactions.no_transactions')); ?></h3>
+                                                        <p class="text-gray-600 mb-4"><?php echo e(__('transactions.no_transactions_message')); ?></p>
                                                         <a href="<?php echo e(localized_route('transactions.history', ['locale' => app()->getLocale()])); ?>" class="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2">
                                                             <i class="fas fa-redo"></i>
-                                                            Réinitialiser les filtres
+                                                            <?php echo e(__('transactions.reset_filters')); ?>
+
                                                         </a>
                                                     </div>
                                                 </td>
@@ -533,7 +576,8 @@
                         <?php if($transactions->hasPages()): ?>
                             <div class="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                                 <div class="text-sm text-gray-700">
-                                    Affichage de <?php echo e($transactions->firstItem()); ?> à <?php echo e($transactions->lastItem()); ?> sur <?php echo e($transactions->total()); ?> transactions
+                                    <?php echo e(__('transactions.showing_results', ['first' => $transactions->firstItem(), 'last' => $transactions->lastItem(), 'total' => $transactions->total()])); ?>
+
                                 </div>
                                 <div class="flex flex-wrap gap-2">
                                     <?php echo e($transactions->links('vendor.pagination.tailwind')); ?>
@@ -589,7 +633,7 @@
         document.querySelectorAll('a[href*="export"]').forEach(link => {
             link.addEventListener('click', function(e) {
                 const originalText = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Génération...';
+                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i><?php echo e(__('transactions.generating')); ?>';
                 this.disabled = true;
 
                 setTimeout(() => {
@@ -601,6 +645,7 @@
     </script>
 </body>
 </html>
+
 
 
 

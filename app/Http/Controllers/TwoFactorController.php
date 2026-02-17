@@ -54,7 +54,7 @@ class TwoFactorController extends Controller
             $user->save();
         }
 
-        $issuer = config('app.name', 'SG BANK');
+        $issuer = config('app.name', 'Valtrix Bank');
         $otpauth = Totp::getOtpAuthUrl($issuer, $user->email, $user->two_factor_secret);
 
         return view('auth.two-factor-setup', [
@@ -215,3 +215,4 @@ class TwoFactorController extends Controller
         return $matched;
     }
 }
+

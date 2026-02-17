@@ -177,6 +177,7 @@ return [
     '2fa_disabled' => 'Tweefactorauthenticatie uitgeschakeld.',
     '2fa_password_invalid' => 'Onjuist wachtwoord.',
     '2fa_missing_secret' => 'Sleutel ontbreekt. Start de setup opnieuw.',
+    'register_error_title' => 'Registratiefouten',
 ];
 
 

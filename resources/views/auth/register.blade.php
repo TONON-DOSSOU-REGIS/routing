@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{ __('auth.register_page_title') }}</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
+  <link rel="manifest" href="/favicon_io11/site.webmanifest">
   <script src="https://cdn.tailwindcss.com"></script>
   <link
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -84,7 +88,7 @@
         <div class="flex items-center space-x-2">
           <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
           {{-- <i class="fas fa-building-columns text-blue-600 text-2xl"></i> --}}
-          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-blue-600"><span class="sr-only">SG BANK</span></a>
+          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-blue-600"><span class="sr-only">Valtrix Bank</span></a>
         </div>
         <div class="hidden md:flex items-center space-x-4">
           @include('components.language-selector')
@@ -360,7 +364,7 @@
   <!-- Footer amélioré -->
   <footer class="relative z-10 text-center text-gray-300 py-6 bg-black bg-opacity-40 backdrop-blur-sm">
     <div class="max-w-7xl mx-auto px-4">
-      <p>&copy; 2025 <span class="text-blue-300 font-semibold">SG BANK</span>. {{ __('auth.footer_copyright') }}</p>
+      <p>&copy; 2025 <span class="text-blue-300 font-semibold">Valtrix Bank</span>. {{ __('auth.footer_copyright') }}</p>
       <div class="mt-2 flex justify-center space-x-4 text-sm">
         <a href="#" class="hover:text-blue-300 transition duration-300">{{ __('auth.footer_privacy') }}</a>
         <a href="#" class="hover:text-blue-300 transition duration-300">{{ __('auth.footer_terms') }}</a>
@@ -432,6 +436,7 @@
   </script>
 </body>
 </html>
+
 
 
 

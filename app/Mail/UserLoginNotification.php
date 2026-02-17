@@ -35,7 +35,7 @@ class UserLoginNotification extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Notification de Connexion - SG BANK',
+            subject: 'Notification de Connexion - Valtrix Bank',
         );
     }
 
@@ -65,4 +65,5 @@ class UserLoginNotification extends Mailable
         return [];
     }
 }
+
 

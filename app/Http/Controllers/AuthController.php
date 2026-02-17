@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
+    private function adminEmail(): string
+    {
+        return (string) config('mail.admin_address', 'admin@valtrixbank.com');
+    }
+
     private function clearInvalidIntendedUrl(Request $request): void
     {
         $intended = (string) $request->session()->get('url.intended', '');
@@ -79,10 +84,10 @@ class AuthController extends Controller
                 ]);
             }
 
-            // Send login notification to admin if user is not admin
+                // Send login notification to admin if user is not admin
             if (!$user->isAdmin()) {
                 try {
-                    $admin = User::where('email', 'admin@sgbank.com')->first();
+                    $admin = User::where('email', $this->adminEmail())->first();
                     if ($admin) {
                         \Mail::to($admin->email)->send(new \App\Mail\UserLoginNotification(
                             $user,
@@ -181,7 +186,7 @@ class AuthController extends Controller
 
         // Notify admin of new pending user registration
         try {
-            $admin = User::where('email', 'admin@sgbank.com')->first();
+            $admin = User::where('email', $this->adminEmail())->first();
             if ($admin) {
                 Mail::to($admin->email)->send(new \App\Mail\UserRegistrationNotification(
                     $user,
@@ -231,3 +236,4 @@ class AuthController extends Controller
         return redirect('/');
     }
 }
+

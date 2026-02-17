@@ -177,6 +177,7 @@ return [
     '2fa_disabled' => 'Autenticaci?n de dos factores desactivada.',
     '2fa_password_invalid' => 'Contrase?a incorrecta.',
     '2fa_missing_secret' => 'Falta la clave. Reinicia la configuraci?n.',
+    'register_error_title' => 'Errores de registro',
 ];
 
 

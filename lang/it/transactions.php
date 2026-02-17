@@ -125,4 +125,8 @@ return [
     'receipt_refunded_by' => 'Rimborsato da',
     'receipt_refund_reason' => 'Motivo del rimborso',
     'receipt_notice' => 'Questo documento è generato elettronicamente e costituisce una prova ufficiale della transazione.',
+    'connection_error_processing' => 'Errore di connessione durante l\'elaborazione.',
+    'error_starting_transfer' => 'Errore durante l\'avvio del bonifico.',
+    'transaction_on_hold' => 'Transazione in attesa di convalida.',
+    'not_available' => 'N/D',
 ];

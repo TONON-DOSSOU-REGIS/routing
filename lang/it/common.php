@@ -85,4 +85,5 @@ return [
     'usd' => 'Dollaro degli Stati Uniti (USD)',
     'gbp' => 'Sterlina (GBP)',
     'chf' => 'Franco svizzero (CHF)',
+    'user' => 'Utente',
 ];

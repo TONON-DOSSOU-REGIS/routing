@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Virements - SG BANK Admin</title>
+    <title>Gestion des Virements - Valtrix Bank Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
@@ -55,7 +55,7 @@
                         <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                             <img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
                         </div>
-                        <span class="sr-only">SG BANK Admin</span>
+                        <span class="sr-only">Valtrix Bank Admin</span>
                     </a>
                 </div>
 
@@ -418,6 +418,7 @@
     </div>
 </body>
 </html>
+
 
 
 
