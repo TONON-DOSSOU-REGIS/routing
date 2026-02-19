@@ -23,10 +23,10 @@
     </button>
 
     {{-- Chat window (hidden by default) --}}
-    <div 
-        id="chat-window" 
-        class="hidden absolute bottom-16 right-0 w-80 bg-white rounded-lg shadow-2xl overflow-hidden"
-        style="max-height: 500px;"
+    <div
+        id="chat-window"
+        class="hidden absolute bottom-16 right-0 w-[min(24rem,calc(100vw-1.5rem))] sm:w-80 bg-white rounded-lg shadow-2xl overflow-hidden flex flex-col"
+        style="max-height: min(70vh, 500px);"
     >
         {{-- Chat header --}}
         <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 flex justify-between items-center">
@@ -42,14 +42,14 @@
         </div>
 
         {{-- Chat messages --}}
-        <div id="chat-messages" class="p-4 h-80 overflow-y-auto bg-gray-50">
+        <div id="chat-messages" class="p-4 flex-1 min-h-[180px] overflow-y-auto bg-gray-50">
             <div class="text-center text-gray-500 text-sm py-4">
                 <i class="fas fa-spinner fa-spin"></i> {{ __('chat.loading_messages') }}
             </div>
         </div>
 
         {{-- Chat input --}}
-        <div class="p-4 bg-white border-t">
+        <div class="p-4 bg-white border-t shrink-0">
             <div class="flex gap-2">
                 <input 
                     type="text" 

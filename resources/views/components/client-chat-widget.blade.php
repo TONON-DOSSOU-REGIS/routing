@@ -33,10 +33,10 @@
     </button>
 
     {{-- Chat window --}}
-    <div 
-        id="client-chat-window" 
-        class="hidden absolute bottom-16 right-0 w-96 bg-white rounded-lg shadow-2xl overflow-hidden"
-        style="max-height: 600px;"
+    <div
+        id="client-chat-window"
+        class="hidden absolute bottom-16 right-0 w-[min(24rem,calc(100vw-1.5rem))] sm:w-96 bg-white rounded-lg shadow-2xl overflow-hidden flex flex-col"
+        style="max-height: min(70vh, 600px);"
     >
         {{-- Chat header --}}
         <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 flex justify-between items-center">
@@ -52,14 +52,14 @@
         </div>
 
         {{-- Messages container --}}
-        <div id="client-chat-messages" class="p-4 h-96 overflow-y-auto bg-gray-50">
+        <div id="client-chat-messages" class="p-4 flex-1 min-h-[180px] overflow-y-auto bg-gray-50">
             <div class="text-center text-gray-500 text-sm py-4">
                 <i class="fas fa-spinner fa-spin"></i> {{ __('chat.loading_messages') }}
             </div>
         </div>
         
         {{-- Input area --}}
-        <div class="p-4 bg-white border-t">
+        <div class="p-4 bg-white border-t shrink-0">
             <div class="flex gap-2 mb-2">
                 <input 
                     type="text" 

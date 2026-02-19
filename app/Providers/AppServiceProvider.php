@@ -14,6 +14,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Force a real, existing public path (important on shared hosting/public_html).
+        $publicPath = $this->resolvePublicPath();
+        $this->app->usePublicPath($publicPath);
+        $this->app['config']->set('dompdf.public_path', $publicPath);
     }
 
     /**
@@ -28,5 +32,33 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Transaction::observe(TransactionObserver::class);
+    }
+
+    /**
+     * Resolve a valid public path for both Laravel and DomPDF.
+     */
+    private function resolvePublicPath(): string
+    {
+        $candidates = array_filter([
+            env('APP_PUBLIC_PATH'),
+            public_path(),
+            base_path('public'),
+            base_path('public_html'),
+            $_SERVER['DOCUMENT_ROOT'] ?? null,
+        ]);
+
+        foreach ($candidates as $candidate) {
+            if (! is_string($candidate) || $candidate === '' || ! is_dir($candidate)) {
+                continue;
+            }
+
+            $resolved = realpath($candidate);
+            if ($resolved !== false) {
+                return $resolved;
+            }
+        }
+
+        // Last-resort fallback to keep app booting even if hosting is misconfigured.
+        return public_path();
     }
 }

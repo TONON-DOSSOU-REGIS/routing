@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notre histoire - Valtrix Bank</title>
+    <title>{{ __('about.our_story_title') }} - Valtrix Bank</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -55,8 +55,8 @@
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
-                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">Connexion</a>
-                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">Créer un compte</a>
+                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">{{ __('about.nav_login') }}</a>
+                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-premium px-6 py-3 rounded-lg font-semibold">{{ __('about.nav_register') }}</a>
                 </div>
 
                 <div class="md:hidden flex items-center">
@@ -68,8 +68,8 @@
 
             <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-800 border-t border-blue-700">
                 <div class="px-4 py-6 space-y-4">
-                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Connexion</a>
-                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">Créer un compte</a>
+                    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">{{ __('about.nav_login') }}</a>
+                    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="block text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 text-center">{{ __('about.nav_register') }}</a>
                 </div>
             </div>
         </div>
@@ -81,11 +81,10 @@
         <div class="support-hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-4xl mx-auto fade-in-up">
                 <h1 class="text-4xl sm:text-5xl font-bold mb-6">
-                    Notre histoire
+                    {{ __('about.our_story_hero_title') }}
                 </h1>
                 <p class="text-xl mb-8 text-blue-100 leading-relaxed">
-                    Depuis 2018, Valtrix Bank révolutionne la banque en ligne pour les professionnels
-                    avec une approche centrée sur la simplicité, la sécurité et l'innovation.
+                    {{ __('about.our_story_hero_description') }}
                 </p>
             </div>
         </div>
@@ -397,7 +396,7 @@
     <footer class="bg-gray-900 text-gray-400 py-12">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center">
-                <p>&copy; 2025 <span class="text-blue-400 font-semibold">Valtrix Bank</span>. Tous droits réservés.</p>
+                <p>&copy; 2025 <span class="text-blue-400 font-semibold">Valtrix Bank</span>. {{ __('about.footer_rights') }}</p>
             </div>
         </div>
     </footer>
@@ -412,7 +411,6 @@
 
 </body>
 </html>
-
 
 
 

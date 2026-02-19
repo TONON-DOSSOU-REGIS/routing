@@ -1,5 +1,5 @@
-{{-- Admin Chat Widget V2 - Clean Version --}}
-@php
+
+<?php
     $adminChatV2I18n = [
         'loadingError' => __('admin_chat.loading_error'),
         'noConversations' => __('admin_chat.no_conversations'),
@@ -12,12 +12,12 @@
         'connected' => __('admin_chat.connected'),
         'disconnected' => __('admin_chat.disconnected'),
     ];
-@endphp
+?>
 <div id="admin-chat-widget-v2" class="fixed bottom-4 right-4 z-50">
-    {{-- Unread badge --}}
+    
     <span id="admin-unread-badge-v2" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">0</span>
     
-    {{-- Chat button --}}
+    
     <button 
         id="admin-chat-toggle-v2" 
         class="bg-purple-600 hover:bg-purple-700 text-white rounded-full p-4 shadow-lg transition-all duration-300 flex items-center justify-center relative"
@@ -28,17 +28,17 @@
         </svg>
     </button>
 
-    {{-- Chat window --}}
+    
     <div
         id="admin-chat-window-v2"
         class="hidden absolute bottom-16 right-0 w-[min(24rem,calc(100vw-1.5rem))] sm:w-96 bg-white rounded-lg shadow-2xl overflow-hidden flex flex-col"
         style="height: min(70vh, 600px);"
     >
-        {{-- Chat header --}}
+        
         <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 flex justify-between items-center">
             <div>
-                <h3 class="font-bold">{{ __('admin_chat.title') }}</h3>
-                <p class="text-xs opacity-90">{{ __('admin_chat.subtitle') }}</p>
+                <h3 class="font-bold"><?php echo e(__('admin_chat.title')); ?></h3>
+                <p class="text-xs opacity-90"><?php echo e(__('admin_chat.subtitle')); ?></p>
             </div>
             <button onclick="toggleAdminChatV2()" class="text-white hover:text-gray-200">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,16 +47,17 @@
             </button>
         </div>
 
-        {{-- Conversations list or chat view --}}
+        
         <div id="admin-chat-view-v2" class="flex flex-col flex-1 min-h-0">
-            {{-- Conversations list --}}
+            
             <div id="conversations-list-v2" class="flex-1 overflow-y-auto bg-gray-50">
                 <div class="text-center text-gray-500 text-sm py-4">
-                    <i class="fas fa-spinner fa-spin"></i> {{ __('admin_chat.loading_conversations') }}
+                    <i class="fas fa-spinner fa-spin"></i> <?php echo e(__('admin_chat.loading_conversations')); ?>
+
                 </div>
             </div>
 
-            {{-- Individual chat view --}}
+            
             <div id="individual-chat-v2" class="hidden flex flex-1 flex-col min-h-0">
                 <div class="bg-gray-100 p-3 flex items-center border-b">
                     <button onclick="backToConversationsV2()" class="mr-3 text-gray-600 hover:text-gray-800">
@@ -75,7 +76,7 @@
                     <!-- Messages will be loaded here -->
                 </div>
                 
-                {{-- File preview area --}}
+                
                 <div id="admin-file-preview-v2" class="hidden px-4 py-2 bg-gray-100 border-t">
                     <div class="flex items-center justify-between bg-white p-2 rounded">
                         <div class="flex items-center space-x-2">
@@ -92,10 +93,10 @@
                 <div class="p-4 bg-white border-t shrink-0">
                     <form id="admin-chat-form-v2" enctype="multipart/form-data">
                         <div class="flex gap-2 items-end">
-                            {{-- File input (hidden) --}}
+                            
                             <input type="file" id="admin-file-input-v2" class="hidden" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip" onchange="handleAdminFileSelectV2(event)">
 
-                            {{-- Attach button --}}
+                            
                             <button
                                 type="button"
                                 onclick="document.getElementById('admin-file-input-v2').click()"
@@ -107,16 +108,16 @@
                                 </svg>
                             </button>
 
-                            {{-- Text input --}}
+                            
                             <input
                                 type="text"
                                 id="admin-chat-input-v2"
-                                placeholder="{{ __('admin_chat.reply_placeholder') }}"
+                                placeholder="<?php echo e(__('admin_chat.reply_placeholder')); ?>"
                                 class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                                 onkeypress="if(event.key === 'Enter') { event.preventDefault(); sendAdminMessageV2(); }"
                             >
 
-                            {{-- Send button --}}
+                            
                             <button
                                 type="button"
                                 onclick="sendAdminMessageV2()"
@@ -140,9 +141,9 @@
     let adminChatIntervalV2 = null;
     let currentChatUserIdV2 = null;
     let selectedAdminFileV2 = null;
-    const currentAdminId = {{ auth()->id() }};
-    const adminChatLocale = document.documentElement.lang || '{{ app()->getLocale() }}';
-    const adminChatI18n = @json($adminChatV2I18n);
+    const currentAdminId = <?php echo e(auth()->id()); ?>;
+    const adminChatLocale = document.documentElement.lang || '<?php echo e(app()->getLocale()); ?>';
+    const adminChatI18n = <?php echo json_encode($adminChatV2I18n, 15, 512) ?>;
     const presenceLabelsV2 = {
         online: adminChatI18n.online,
         connected: adminChatI18n.connected,
@@ -222,7 +223,7 @@
     };
 
     function loadConversationsV2() {
-        fetch('{{ route("chat.messages") }}', {
+        fetch('<?php echo e(route("chat.messages")); ?>', {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': 'application/json',
@@ -355,7 +356,7 @@
         
         console.log('[ChatV2] Loading chat with user:', userId);
         
-        fetch('{{ route("chat.messages") }}/' + userId, {
+        fetch('<?php echo e(route("chat.messages")); ?>/' + userId, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': 'application/json',
@@ -451,7 +452,7 @@
             // Handle attachments if present
             let attachmentHtml = '';
             if (msg.attachment_path) {
-                const attachmentUrl = msg.attachment_url || `{{ url('/storage') }}/${msg.attachment_path}`;
+                const attachmentUrl = msg.attachment_url || `<?php echo e(url('/storage')); ?>/${msg.attachment_path}`;
                 const attachmentName = msg.attachment_name || 'Fichier';
                 
                 if (msg.attachment_type && msg.attachment_type.startsWith('image/')) {
@@ -592,7 +593,7 @@
         // Prepare request data
         let requestData;
         let headers = {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
             'Accept': 'application/json',
         };
 
@@ -613,7 +614,7 @@
             });
         }
 
-        fetch('{{ route("chat.send") }}', {
+        fetch('<?php echo e(route("chat.send")); ?>', {
             method: 'POST',
             headers: headers,
             body: requestData
@@ -634,7 +635,7 @@
     };
 
     function updateAdminUnreadCountV2() {
-        fetch('{{ route("chat.unread-count") }}', {
+        fetch('<?php echo e(route("chat.unread-count")); ?>', {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': 'application/json',
@@ -712,8 +713,9 @@
     <button type="button" class="absolute top-4 right-4 text-white text-2xl" onclick="closeAdminChatImageV2()">×</button>
     <a id="admin-chat-image-download-v2" class="absolute top-4 left-4 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" download>Tlcharger</a>
     <button type="button" class="absolute top-4 left-32 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" onclick="resetAdminChatImageV2()">Rinitialiser</button>
-    <img id="admin-chat-image-full-v2" src="" alt="{{ __('chat.image_preview_alt') }}" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
+    <img id="admin-chat-image-full-v2" src="" alt="<?php echo e(__('chat.image_preview_alt')); ?>" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
 </div>
 
 
 
+<?php /**PATH C:\xampp\htdocs\cerveau\resources\views/components/admin-chat-widget-v2.blade.php ENDPATH**/ ?>

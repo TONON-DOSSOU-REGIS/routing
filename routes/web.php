@@ -167,6 +167,7 @@ Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(fu
         // Settings
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
         Route::post('/settings', [AdminController::class, 'saveSettings'])->name('settings.save');
+        Route::post('/password', [AdminController::class, 'updatePassword'])->name('password.update');
 
         // Users management
         Route::get('/users', [AdminController::class, 'users'])->name('users');

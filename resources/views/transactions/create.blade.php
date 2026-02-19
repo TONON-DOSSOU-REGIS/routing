@@ -144,6 +144,33 @@
             }
         }
 
+        @keyframes flashPromptIn {
+            0% {
+                opacity: 0;
+                transform: translateY(18px) scale(0.94);
+                filter: blur(2px);
+            }
+            65% {
+                opacity: 1;
+                transform: translateY(-3px) scale(1.01);
+                filter: blur(0);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        @keyframes flashPromptPulse {
+            0% {
+                box-shadow: 0 24px 70px rgba(15, 23, 42, 0.35), 0 0 0 0 rgba(59, 130, 246, 0.28);
+            }
+            100% {
+                box-shadow: 0 24px 70px rgba(15, 23, 42, 0.35), 0 0 0 20px rgba(59, 130, 246, 0);
+            }
+        }
+
         /* Icon smooth fade & scale */
         .icon-fade-transition {
             transition: opacity 0.5s ease, transform 0.5s ease;
@@ -190,6 +217,10 @@
             overflow: hidden;
         }
 
+        .flash-card--flashin {
+            animation: flashPromptIn 0.42s cubic-bezier(0.16, 1, 0.3, 1), flashPromptPulse 1s ease 0.12s 1;
+        }
+
         .flash-card::after {
             content: '';
             position: absolute;
@@ -204,6 +235,12 @@
             --accent: #10b981;
             --accent-strong: #059669;
             --accent-soft: rgba(16, 185, 129, 0.16);
+        }
+
+        .flash-card--progress {
+            --accent: #3b82f6;
+            --accent-strong: #1d4ed8;
+            --accent-soft: rgba(59, 130, 246, 0.16);
         }
 
         .flash-icon-container {
@@ -256,6 +293,41 @@
         .flash-button:focus {
             outline: none;
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2), 0 18px 35px rgba(15, 23, 42, 0.24);
+        }
+
+        .flash-progress-wrap {
+            text-align: left;
+            margin: 1.25rem 0 0.75rem;
+            padding: 1rem;
+            border-radius: 1rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(99, 102, 241, 0.08));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .flash-progress-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #334155;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.65rem;
+        }
+
+        .flash-progress-track {
+            width: 100%;
+            height: 0.7rem;
+            border-radius: 9999px;
+            background: rgba(148, 163, 184, 0.35);
+            overflow: hidden;
+        }
+
+        .flash-progress-fill {
+            width: 0%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #3b82f6, #6366f1);
+            transition: width 0.45s ease;
         }
 
         /* Style pour l'arrière-plan */
@@ -604,34 +676,6 @@
                             </div>
                         </form>
 
-                        <!-- Section de progression -->
-                        <div class="mt-8 hidden" id="progressSection">
-                            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-4 sm:p-6">
-                                <div class="flex items-center mb-4">
-                                    <div class="bg-blue-100 p-2 rounded-lg mr-3">
-                                        <i class="fas fa-cog text-blue-500 text-lg"></i>
-                                    </div>
-                                    <h3 class="text-lg font-semibold text-gray-900">{{ __('transactions.processing') }}</h3>
-                                </div>
-                                
-                                <div class="space-y-4">
-                                    <div>
-                                        <div class="flex justify-between text-sm text-gray-600 mb-2">
-                                            <span>{{ __('transactions.progress_label') }}</span>
-                                            <span id="progressText">0%</span>
-                                        </div>
-                                        <div class="w-full bg-gray-200 rounded-full h-3">
-                                            <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full transition-all duration-500 progress-bar" style="width: 0%"></div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="text-sm text-gray-500 flex items-center gap-2">
-                                        <i class="fas fa-info-circle text-blue-500"></i>
-                                        <span>{{ __('transactions.processing_message') }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -646,6 +690,15 @@
             </div>
             <h3 id="flashTitle" class="flash-title">{{ __('transactions.operation_interrupted') }}</h3>
             <p id="flashMessage" class="flash-message"></p>
+            <div id="flashProgressWrap" class="flash-progress-wrap hidden" aria-live="polite">
+                <div class="flash-progress-head">
+                    <span>{{ __('transactions.progress_label') }}</span>
+                    <span id="flashProgressText">0%</span>
+                </div>
+                <div class="flash-progress-track">
+                    <div id="flashProgressBar" class="flash-progress-fill progress-bar"></div>
+                </div>
+            </div>
             <button id="closeFlash" class="flash-button">
                 <i class="fas fa-check mr-2"></i>{{ __('transactions.understood') }}
             </button>
@@ -669,9 +722,6 @@
         });
 
         const startBtn = document.getElementById('startBtn');
-        const progressSection = document.getElementById('progressSection');
-        const progressBar = document.getElementById('progressBar');
-        const progressText = document.getElementById('progressText');
         const overlay = document.getElementById('flashOverlay');
         const flashMsg = document.getElementById('flashMessage');
         const closeFlash = document.getElementById('closeFlash');
@@ -679,9 +729,13 @@
         const flashIconContainer = document.getElementById('flashIconContainer');
         const flashCard = document.getElementById('flashCard');
         const flashTitle = document.getElementById('flashTitle');
+        const flashProgressWrap = document.getElementById('flashProgressWrap');
+        const flashProgressBar = document.getElementById('flashProgressBar');
+        const flashProgressText = document.getElementById('flashProgressText');
 
         let txId = null;
         let ticking = false;
+        let progressMode = false;
         let audioContext = null;
         let soundUnlocked = false;
 
@@ -744,8 +798,39 @@
         }, { once: true });
 
         function setProgress(p) {
-            progressBar.style.width = p + '%';
-            progressText.textContent = p + '%';
+            flashProgressBar.style.width = p + '%';
+            flashProgressText.textContent = p + '%';
+        }
+
+        function openOverlay() {
+            overlay.classList.add('is-visible');
+            overlay.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function triggerFlashCardAnimation() {
+            flashCard.classList.remove('flash-card--flashin');
+            void flashCard.offsetWidth;
+            flashCard.classList.add('flash-card--flashin');
+        }
+
+        function showProgressFlash() {
+            progressMode = true;
+            flashIcon.classList.remove('icon-visible');
+            flashIcon.className = 'flash-icon fas fa-spinner fa-spin icon-fade-transition';
+            flashIconContainer.className = 'flash-icon-container';
+            flashCard.classList.remove('flash-card--success', 'flash-card--error');
+            flashCard.classList.add('flash-card--progress');
+            flashTitle.textContent = '{{ __('transactions.processing') }}';
+            flashMsg.textContent = '{{ __('transactions.processing_message') }}';
+            flashProgressWrap.classList.remove('hidden');
+            closeFlash.classList.add('hidden');
+            openOverlay();
+            triggerFlashCardAnimation();
+
+            setTimeout(() => {
+                flashIcon.classList.add('icon-visible');
+            }, 50);
         }
 
         startBtn.addEventListener('click', async () => {
@@ -769,7 +854,8 @@
                 if (res.ok) {
                     txId = data.tx_id;
                     ticking = true;
-                    progressSection.classList.remove('hidden');
+                    setProgress(0);
+                    showProgressFlash();
                     startBtn.disabled = true;
                     startBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>{{ __('transactions.processing_in_progress') }}';
                     tick();
@@ -797,7 +883,6 @@
 
                 const data = await res.json();
 
-                console.log('Progress response:', data);
                 setProgress(data.progress);
 
                 if (data.status === 'on_hold') {
@@ -811,7 +896,7 @@
                     ticking = false;
                     resetStartButton();
                     // Animation de succès avant redirection
-                    progressBar.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                    setProgress(100);
                     showMessage('{{ __('transactions.transfer_success_message') }}', 'success');
                     // Let the success message show for 2 seconds before redirect
                     setTimeout(() => {
@@ -836,11 +921,14 @@
         }
 
         function showMessage(message, type = 'error') {
+            progressMode = false;
             flashMsg.textContent = message;
+            flashProgressWrap.classList.add('hidden');
+            closeFlash.classList.remove('hidden');
             // Remove previous icon classes and animation classes
             flashIcon.classList.remove('icon-visible');
             flashIcon.classList.add('icon-fade-transition');
-            flashCard.classList.remove('flash-card--success', 'flash-card--error');
+            flashCard.classList.remove('flash-card--success', 'flash-card--error', 'flash-card--progress');
 
             if (type === 'success') {
                 // Change to validated icon and green styling
@@ -867,21 +955,20 @@
             }
 
             // Show overlay as a centered modal
-            overlay.classList.add('is-visible');
-            overlay.setAttribute('aria-hidden', 'false');
-            document.body.classList.add('overflow-hidden');
+            openOverlay();
+            triggerFlashCardAnimation();
             playModalSound(type);
-
-            console.log("Current icon class:", flashIcon.className); // Debug log
         }
 
         closeFlash.addEventListener('click', () => {
+            if (progressMode) return;
             overlay.classList.remove('is-visible');
             overlay.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('overflow-hidden');
         });
 
         overlay.addEventListener('click', (event) => {
+            if (progressMode) return;
             if (event.target === overlay) {
                 overlay.classList.remove('is-visible');
                 overlay.setAttribute('aria-hidden', 'true');

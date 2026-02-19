@@ -523,7 +523,7 @@
                     </div>
 
                     <!-- Aperçu du message -->
-                    <div class="lg:col-span-1">
+                    <div class="lg:col-span-1 space-y-6">
                         <div class="glass-card rounded-2xl overflow-hidden card-hover">
                             <div class="px-4 sm:px-6 py-6">
                                 <div class="flex items-center mb-6">
@@ -532,7 +532,7 @@
                                     </div>
                                     <h3 class="text-lg font-bold text-gray-900">Aperçu du message</h3>
                                 </div>
-                                
+
                                 <div class="space-y-4">
                                     <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4">
                                         <div class="flex items-start">
@@ -547,7 +547,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200 rounded-xl p-4">
                                         <div class="text-center">
                                             <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-3">
@@ -560,6 +560,70 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card rounded-2xl overflow-hidden card-hover">
+                            <div class="px-4 sm:px-6 py-6">
+                                <div class="flex items-center mb-5">
+                                    <div class="bg-gradient-to-r from-purple-500 to-indigo-500 p-2 rounded-xl mr-3 shadow-lg">
+                                        <i class="fas fa-key text-white"></i>
+                                    </div>
+                                    <h3 class="text-lg font-bold text-gray-900">Mot de passe admin</h3>
+                                </div>
+
+                                <form method="POST" action="{{ localized_route('admin.password.update') }}" class="space-y-4">
+                                    @csrf
+
+                                    <div>
+                                        <label for="current_password" class="block text-sm font-semibold text-gray-800 mb-2">
+                                            Mot de passe actuel
+                                        </label>
+                                        <input
+                                            type="password"
+                                            id="current_password"
+                                            name="current_password"
+                                            class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm input-field"
+                                            autocomplete="current-password"
+                                            required
+                                        >
+                                    </div>
+
+                                    <div>
+                                        <label for="new_password" class="block text-sm font-semibold text-gray-800 mb-2">
+                                            Nouveau mot de passe
+                                        </label>
+                                        <input
+                                            type="password"
+                                            id="new_password"
+                                            name="new_password"
+                                            class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm input-field"
+                                            autocomplete="new-password"
+                                            required
+                                        >
+                                    </div>
+
+                                    <div>
+                                        <label for="new_password_confirmation" class="block text-sm font-semibold text-gray-800 mb-2">
+                                            Confirmer le nouveau mot de passe
+                                        </label>
+                                        <input
+                                            type="password"
+                                            id="new_password_confirmation"
+                                            name="new_password_confirmation"
+                                            class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm input-field"
+                                            autocomplete="new-password"
+                                            required
+                                        >
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        class="w-full action-btn bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-xl hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 font-semibold shadow-lg transition duration-300"
+                                    >
+                                        <i class="fas fa-shield-alt mr-2"></i>Mettre à jour le mot de passe
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

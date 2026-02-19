@@ -91,6 +91,39 @@ class AdminController extends Controller
         return back()->with('status', 'Paramètres mis à jour avec succès.');
     }
 
+    public function updatePassword($locale, Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:8|confirmed|different:current_password',
+        ], [
+            'current_password.required' => 'Le mot de passe actuel est obligatoire.',
+            'new_password.required' => 'Le nouveau mot de passe est obligatoire.',
+            'new_password.min' => 'Le nouveau mot de passe doit contenir au moins 8 caracteres.',
+            'new_password.confirmed' => 'La confirmation du nouveau mot de passe ne correspond pas.',
+            'new_password.different' => 'Le nouveau mot de passe doit etre different de l\'ancien.',
+        ]);
+
+        $admin = auth()->user();
+
+        if (!$admin || !Hash::check($request->current_password, $admin->password)) {
+            return back()->withErrors([
+                'current_password' => 'Le mot de passe actuel est incorrect.',
+            ]);
+        }
+
+        $admin->update([
+            'password' => Hash::make($request->new_password),
+        ]);
+
+        Log::info('Admin updated own password', [
+            'admin_id' => $admin->id,
+            'admin_email' => $admin->email,
+        ]);
+
+        return back()->with('status', 'Mot de passe modifie avec succes.');
+    }
+
     public function users(Request $request)
     {
         $query = User::query();

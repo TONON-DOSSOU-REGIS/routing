@@ -30,10 +30,10 @@
 
 
     {{-- Chat window (hidden by default) --}}
-    <div 
-        id="admin-chat-window" 
-        class="hidden absolute bottom-16 right-0 w-96 bg-white rounded-lg shadow-2xl overflow-hidden"
-        style="max-height: 600px;"
+    <div
+        id="admin-chat-window"
+        class="hidden absolute bottom-16 right-0 w-[min(24rem,calc(100vw-1.5rem))] sm:w-96 bg-white rounded-lg shadow-2xl overflow-hidden flex flex-col"
+        style="height: min(70vh, 600px);"
     >
         {{-- Chat header --}}
         <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 flex justify-between items-center">
@@ -49,16 +49,16 @@
         </div>
 
         {{-- Conversations list or chat view --}}
-        <div id="admin-chat-view">
+        <div id="admin-chat-view" class="flex flex-col flex-1 min-h-0">
             {{-- Conversations list --}}
-            <div id="conversations-list" class="h-96 overflow-y-auto bg-gray-50">
+            <div id="conversations-list" class="flex-1 overflow-y-auto bg-gray-50">
                 <div class="text-center text-gray-500 text-sm py-4">
                     <i class="fas fa-spinner fa-spin"></i> {{ __('admin_chat.loading_conversations') }}
                 </div>
             </div>
 
             {{-- Individual chat view (hidden by default) --}}
-            <div id="individual-chat" class="hidden">
+            <div id="individual-chat" class="hidden flex flex-1 flex-col min-h-0">
                 <div class="bg-gray-100 p-3 flex items-center border-b">
                     <button onclick="backToConversations()" class="mr-3 text-gray-600 hover:text-gray-800">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,11 +72,11 @@
                     </div>
                 </div>
                 
-                <div id="chat-messages-container" class="p-4 h-80 overflow-y-auto bg-white">
+                <div id="chat-messages-container" class="p-4 flex-1 min-h-[160px] overflow-y-auto bg-white">
                     <!-- Messages will be loaded here -->
                 </div>
                 
-                <div class="p-4 bg-white border-t">
+                <div class="p-4 bg-white border-t shrink-0">
                     <div class="flex gap-2 items-center">
                         <input
                             type="text"
