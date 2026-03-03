@@ -19,6 +19,11 @@ class ChatController extends Controller
         return "chat:user:presence:{$userId}";
     }
 
+    private function typingCacheKey(int $senderId, int $receiverId): string
+    {
+        return "chat:user:typing:{$senderId}:{$receiverId}";
+    }
+
     private function touchUserPresence(?int $userId = null): void
     {
         $resolvedUserId = (int) ($userId ?? Auth::id());
@@ -40,6 +45,28 @@ class ChatController extends Controller
                 'error' => $e->getMessage(),
             ]);
         }
+    }
+
+    private function isUserTypingTo(int $senderId, int $receiverId): bool
+    {
+        if ($senderId <= 0 || $receiverId <= 0) {
+            return false;
+        }
+
+        $typingThreshold = now()->subSeconds(8)->timestamp;
+
+        try {
+            $typingTimestamp = (int) Cache::get($this->typingCacheKey($senderId, $receiverId), 0);
+        } catch (\Throwable $e) {
+            Log::warning('Unable to read chat typing state from cache', [
+                'sender_id' => $senderId,
+                'receiver_id' => $receiverId,
+                'error' => $e->getMessage(),
+            ]);
+            return false;
+        }
+
+        return $typingTimestamp >= $typingThreshold;
     }
 
     /**
@@ -159,6 +186,18 @@ class ChatController extends Controller
         if (!$receiverId) {
             $admin = User::where('role', 'admin')->first();
             $receiverId = $admin ? $admin->id : null;
+        }
+
+        if ($receiverId) {
+            try {
+                Cache::forget($this->typingCacheKey((int) Auth::id(), (int) $receiverId));
+            } catch (\Throwable $e) {
+                Log::warning('Unable to clear typing cache on message send', [
+                    'sender_id' => (int) Auth::id(),
+                    'receiver_id' => (int) $receiverId,
+                    'error' => $e->getMessage(),
+                ]);
+            }
         }
 
         $messageData = [
@@ -320,9 +359,87 @@ class ChatController extends Controller
                 ['user_id' => (int) $userId],
                 $presence
             );
+            $responsePayload['user_typing'] = $this->isUserTypingTo((int) $userId, (int) $currentUserId);
         }
 
         return response()->json($responsePayload);
+    }
+
+    /**
+     * Return available users for admin chat selection (including users without messages).
+     */
+    public function getUsersForAdmin(Request $request)
+    {
+        $currentUser = Auth::user();
+        if (!$currentUser || !$currentUser->isAdmin()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Forbidden',
+            ], 403);
+        }
+
+        $this->touchUserPresence((int) $currentUser->id);
+
+        $search = trim((string) $request->query('q', ''));
+        $adminId = (int) $currentUser->id;
+
+        $query = User::query()
+            ->where('role', '!=', 'admin');
+
+        if ($search !== '') {
+            $like = '%' . $search . '%';
+            $query->where(function ($q) use ($like) {
+                $q->where('first_name', 'like', $like)
+                    ->orWhere('last_name', 'like', $like)
+                    ->orWhere('email', 'like', $like);
+            });
+        }
+
+        $users = $query
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->limit(200)
+            ->get(['id', 'first_name', 'last_name', 'email', 'role']);
+
+        $userIds = $users->pluck('id')->map(fn ($id) => (int) $id)->all();
+        $presenceByUserId = $this->getUsersPresence($userIds);
+
+        $unreadByUserId = empty($userIds)
+            ? collect()
+            : ChatMessage::query()
+                ->where('receiver_id', $adminId)
+                ->where('is_read', false)
+                ->whereIn('sender_id', $userIds)
+                ->selectRaw('sender_id, COUNT(*) as unread_count')
+                ->groupBy('sender_id')
+                ->pluck('unread_count', 'sender_id');
+
+        $result = $users->map(function (User $user) use ($presenceByUserId, $unreadByUserId) {
+            $presence = $presenceByUserId[(int) $user->id] ?? [
+                'is_online' => false,
+                'is_connected' => false,
+                'presence_status' => 'disconnected',
+                'last_activity_at' => null,
+            ];
+
+            return [
+                'id' => (int) $user->id,
+                'first_name' => (string) ($user->first_name ?? ''),
+                'last_name' => (string) ($user->last_name ?? ''),
+                'email' => (string) ($user->email ?? ''),
+                'role' => (string) ($user->role ?? 'user'),
+                'is_online' => (bool) $presence['is_online'],
+                'is_connected' => (bool) $presence['is_connected'],
+                'presence_status' => (string) $presence['presence_status'],
+                'last_activity_at' => $presence['last_activity_at'],
+                'unread_count' => (int) ($unreadByUserId[$user->id] ?? 0),
+            ];
+        })->values();
+
+        return response()->json([
+            'success' => true,
+            'users' => $result,
+        ]);
     }
 
     /**
@@ -457,5 +574,63 @@ class ChatController extends Controller
             'success' => true,
         ]);
     }
-}
 
+    /**
+     * Set current typing status for the authenticated user.
+     */
+    public function setTyping(Request $request)
+    {
+        $this->touchUserPresence(Auth::id());
+
+        $validated = $request->validate([
+            'receiver_id' => 'nullable|integer|exists:users,id',
+            'is_typing' => 'required|boolean',
+        ]);
+
+        $sender = Auth::user();
+        $senderId = (int) ($sender?->id ?? 0);
+        $receiverId = (int) ($validated['receiver_id'] ?? 0);
+
+        if ($senderId <= 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated',
+            ], 401);
+        }
+
+        if ($receiverId <= 0) {
+            if ($sender && !$sender->isAdmin()) {
+                $admin = User::where('role', 'admin')->first();
+                $receiverId = $admin ? (int) $admin->id : 0;
+            }
+        }
+
+        if ($receiverId <= 0 || $receiverId === $senderId) {
+            return response()->json([
+                'success' => true,
+            ]);
+        }
+
+        $isTyping = (bool) ($validated['is_typing'] ?? false);
+        $cacheKey = $this->typingCacheKey($senderId, $receiverId);
+
+        try {
+            if ($isTyping) {
+                Cache::put($cacheKey, now()->timestamp, now()->addSeconds(12));
+            } else {
+                Cache::forget($cacheKey);
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Unable to update chat typing state in cache', [
+                'sender_id' => $senderId,
+                'receiver_id' => $receiverId,
+                'is_typing' => $isTyping,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+}

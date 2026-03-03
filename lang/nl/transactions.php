@@ -36,7 +36,10 @@ return [
     'processing_in_progress' => 'Behandeling aan de gang',
     'transfer_progress' => 'Vorderingen bij de overdracht',
     'processing_message' => 'Je transfer wordt verwerkt. Wacht even...',
-    'operation_interrupted' => 'Operatie onderbroken',
+    
+    'client_info_title' => 'Klantinformatie',
+    'client_name_label' => 'Naam klant',
+    'client_iban_label' => 'IBAN klant',
     'operation_successful' => 'Succesvolle werking',
     'operation_success' => 'Succesvolle werking',
     'transfer_successful' => 'Succesvolle overdracht! Je wordt omgeleid...',
@@ -130,3 +133,4 @@ return [
     'transaction_on_hold' => 'Transactie wacht op validatie.',
     'not_available' => 'N/B',
 ];
+

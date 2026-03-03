@@ -143,7 +143,7 @@
             </div>
           </div>
           <div class="flex flex-col sm:flex-row sm:items-center gap-2 mt-4 sm:mt-0 w-full sm:w-auto">
-            <a href="{{ localized_route('transfer.create', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 card-hover w-full sm:w-auto">
+            <a href="{{ localized_route('transfer.create', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-orange-500 text-white hover:bg-orange-600 card-hover w-full sm:w-auto">
               <i class="fa-solid fa-paper-plane mr-2"></i> {{ __('dashboard.new_transfer') }}
             </a>
             <a href="{{ localized_route('transactions.history', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 card-hover w-full sm:w-auto">
@@ -296,7 +296,7 @@
           <div class="bg-white rounded-2xl shadow-sm p-6">
             <h3 class="text-lg font-semibold text-slate-800 mb-4">{{ __('dashboard.quick_actions') }}</h3>
             <div class="space-y-3">
-              <a href="{{ localized_route('transfer.create', ['locale' => app()->getLocale()]) }}" class="block action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 rounded-xl hover:from-blue-600 hover:to-indigo-700 transition card-hover">
+              <a href="{{ localized_route('transfer.create', ['locale' => app()->getLocale()]) }}" class="block action-btn bg-gradient-to-r from-orange-500 to-amber-500 text-white p-4 rounded-xl hover:from-orange-600 hover:to-amber-600 transition card-hover">
                 <div class="flex items-center">
                   <div class="bg-white/20 p-2 rounded-full w-10 h-10 flex items-center justify-center mr-3">
                     <i class="fas fa-paper-plane text-lg"></i>
@@ -367,7 +367,6 @@
   </script>
 </body>
 </html>
-
 
 
 

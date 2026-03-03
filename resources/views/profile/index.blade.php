@@ -728,7 +728,7 @@
                                 </div>
 
                                 <div class="space-y-3">
-                                    <a href="{{ localized_route('transfer.create', ['locale' => app()->getLocale()]) }}" class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 rounded-xl hover:from-blue-600 hover:to-indigo-700 text-center transition duration-300 transform hover:scale-105 shadow-lg block">
+                                    <a href="{{ localized_route('transfer.create', ['locale' => app()->getLocale()]) }}" class="action-btn bg-gradient-to-r from-orange-500 to-amber-500 text-white p-4 rounded-xl hover:from-orange-600 hover:to-amber-600 text-center transition duration-300 transform hover:scale-105 shadow-lg block">
                                         <div class="bg-white/20 p-2 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-2">
                                             <i class="fas fa-paper-plane text-lg"></i>
                                         </div>
@@ -770,7 +770,6 @@
     @include('components.chat-widget-with-files')
 </body>
 </html>
-
 
 
 

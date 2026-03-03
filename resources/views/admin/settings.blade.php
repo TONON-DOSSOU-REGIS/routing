@@ -129,6 +129,101 @@
             animation: pulse-glow 2s infinite;
         }
 
+        /* Emoji picker toolbar */
+        .emoji-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .emoji-picker-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(14, 116, 144, 0.25);
+            background: linear-gradient(135deg, rgba(236, 254, 255, 0.9), rgba(224, 242, 254, 0.9));
+            color: #0f766e;
+            font-weight: 700;
+            font-size: 0.75rem;
+            padding: 0.45rem 0.75rem;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .emoji-picker-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
+            border-color: rgba(14, 116, 144, 0.4);
+        }
+
+        .emoji-picker-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.2);
+        }
+
+        .emoji-hint {
+            margin-top: 0.5rem;
+            color: #64748b;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        /* Keep emoji picker above admin cards/widgets */
+        .emoji-picker__wrapper {
+            z-index: 25000 !important;
+        }
+
+        .emoji-picker {
+            z-index: 25001 !important;
+            width: min(420px, calc(100vw - 1rem)) !important;
+            max-width: calc(100vw - 1rem) !important;
+        }
+
+        @media (max-width: 1024px) {
+            .card-hover:hover {
+                transform: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .emoji-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+
+            .emoji-picker-btn {
+                width: 100%;
+                justify-content: center;
+                font-size: 0.82rem;
+                padding: 0.55rem 0.8rem;
+            }
+
+            .emoji-hint {
+                font-size: 0.72rem;
+                line-height: 1.35;
+                align-items: flex-start;
+            }
+
+            .emoji-picker {
+                width: calc(100vw - 0.75rem) !important;
+                max-width: calc(100vw - 0.75rem) !important;
+                font-size: 15px !important;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .emoji-picker {
+                width: calc(100vw - 0.5rem) !important;
+                max-width: calc(100vw - 0.5rem) !important;
+            }
+        }
+
         /* Style pour l'arrière-plan */
         .background-container {
             background-image: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
@@ -460,16 +555,26 @@
 
                                     <!-- Message de suspension -->
                                     <div class="stagger-item">
-                                        <label for="stop_message" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
+                                        <div class="emoji-toolbar">
+                                            <label for="stop_message" class="block text-sm font-semibold text-gray-800 flex items-center">
                                             <i class="fas fa-comment-alt mr-2 text-orange-500"></i>
                                             Message de suspension
-                                        </label>
+                                            </label>
+                                            <button type="button" id="emoji-picker-button" class="emoji-picker-btn">
+                                                <i class="fa-regular fa-face-smile"></i>
+                                                Emojis premium
+                                            </button>
+                                        </div>
                                         <textarea name="stop_message"
                                                   id="stop_message"
                                                   rows="3"
                                                   class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm input-field resize-none"
                                                   placeholder="Message affiché lors de la suspension..."
                                                   required>{{ old('stop_message', $settings->stop_message ?? 'Transaction suspendue pour vérification de sécurité.') }}</textarea>
+                                        <p class="emoji-hint">
+                                            <i class="fa-solid fa-wand-magic-sparkles text-cyan-600"></i>
+                                            Utilisez le bouton emoji pour enrichir le message envoye au client.
+                                        </p>
                                         <p class="mt-2 text-sm text-gray-500 flex items-center">
                                             <i class="fas fa-info-circle mr-1 text-blue-500"></i>
                                             Ce message sera affiché à l'utilisateur lorsque le virement sera suspendu
@@ -647,10 +752,103 @@
             }
         });
 
+        const stopMessageInput = document.getElementById('stop_message');
+        const previewMessage = document.getElementById('preview-message');
+        const emojiPickerButton = document.getElementById('emoji-picker-button');
+        const stopMessageSelection = {
+            start: null,
+            end: null,
+        };
+        let emojiPickerInstance = null;
+        let emojiPickerCtor = null;
+        let emojiPickerLoadPromise = null;
+        let emojiPickerViewportBucket = null;
+
+        function loadEmojiPickerCtor() {
+            if (emojiPickerCtor) {
+                return Promise.resolve(emojiPickerCtor);
+            }
+
+            if (!emojiPickerLoadPromise) {
+                emojiPickerLoadPromise = import('https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.4/dist/index.min.js')
+                    .then(function(moduleRef) {
+                        const ctor = moduleRef.EmojiButton
+                            || (moduleRef.default && moduleRef.default.EmojiButton)
+                            || moduleRef.default
+                            || null;
+
+                        if (!ctor) {
+                            throw new Error('EmojiButton constructor introuvable');
+                        }
+
+                        emojiPickerCtor = ctor;
+                        return emojiPickerCtor;
+                    });
+            }
+
+            return emojiPickerLoadPromise;
+        }
+
+        function rememberStopMessageSelection() {
+            if (!stopMessageInput) return;
+            const start = typeof stopMessageInput.selectionStart === 'number'
+                ? stopMessageInput.selectionStart
+                : stopMessageInput.value.length;
+            const end = typeof stopMessageInput.selectionEnd === 'number'
+                ? stopMessageInput.selectionEnd
+                : start;
+
+            stopMessageSelection.start = start;
+            stopMessageSelection.end = end;
+        }
+
+        function restoreStopMessageSelection() {
+            if (!stopMessageInput) return;
+            stopMessageInput.focus();
+
+            if (typeof stopMessageSelection.start === 'number' && typeof stopMessageSelection.end === 'number') {
+                stopMessageInput.setSelectionRange(stopMessageSelection.start, stopMessageSelection.end);
+            }
+        }
+
+        function getViewportBucket() {
+            return window.matchMedia('(max-width: 640px)').matches ? 'small' : 'default';
+        }
+
+        function getEmojiPickerOptions() {
+            const isSmallScreen = getViewportBucket() === 'small';
+
+            return {
+                position: isSmallScreen ? 'auto' : 'bottom-start',
+                theme: 'light',
+                autoHide: true,
+                showSearch: true,
+                showRecents: true,
+                rootElement: document.body,
+                zIndex: 25000,
+                emojisPerRow: isSmallScreen ? 6 : 8,
+                rows: isSmallScreen ? 5 : 6,
+            };
+        }
+
         // Update preview in real-time
-        document.getElementById('stop_message').addEventListener('input', function() {
-            document.getElementById('preview-message').textContent = this.value;
+        stopMessageInput.addEventListener('input', function() {
+            previewMessage.textContent = this.value;
+            rememberStopMessageSelection();
         });
+
+        function insertEmojiAtCursor(input, emoji) {
+            const start = typeof stopMessageSelection.start === 'number'
+                ? stopMessageSelection.start
+                : (input.selectionStart ?? input.value.length);
+            const end = typeof stopMessageSelection.end === 'number'
+                ? stopMessageSelection.end
+                : (input.selectionEnd ?? start);
+            input.setRangeText(emoji, start, end, 'end');
+            input.focus();
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            rememberStopMessageSelection();
+        }
 
         // Update percentage bar and value
         document.getElementById('stop_percentage').addEventListener('input', function() {
@@ -678,15 +876,50 @@
             if (selectedRadio && selectedRadio.value === '0') {
                 document.getElementById('target_user_container').classList.remove('hidden');
             }
+
+            ['click', 'keyup', 'select', 'focus'].forEach(function(eventName) {
+                stopMessageInput.addEventListener(eventName, rememberStopMessageSelection);
+            });
+            rememberStopMessageSelection();
+
+            if (emojiPickerButton) {
+                emojiPickerButton.addEventListener('mousedown', function(event) {
+                    event.preventDefault();
+                    rememberStopMessageSelection();
+                });
+
+                emojiPickerButton.addEventListener('click', async function() {
+                    try {
+                        const activeViewportBucket = getViewportBucket();
+                        if (!emojiPickerInstance || emojiPickerViewportBucket !== activeViewportBucket) {
+                            if (emojiPickerInstance && typeof emojiPickerInstance.destroyPicker === 'function') {
+                                emojiPickerInstance.destroyPicker();
+                            }
+
+                            const EmojiButtonCtor = await loadEmojiPickerCtor();
+                            emojiPickerInstance = new EmojiButtonCtor(getEmojiPickerOptions());
+                            emojiPickerViewportBucket = activeViewportBucket;
+
+                            emojiPickerInstance.on('emoji', function(selection) {
+                                restoreStopMessageSelection();
+                                insertEmojiAtCursor(stopMessageInput, selection.emoji);
+                            });
+                        }
+
+                        emojiPickerInstance.togglePicker(emojiPickerButton);
+                    } catch (error) {
+                        emojiPickerButton.disabled = true;
+                        emojiPickerButton.title = 'Bibliotheque emoji indisponible';
+                        emojiPickerButton.classList.add('opacity-60', 'cursor-not-allowed');
+                    }
+                });
+            }
         });
     </script>
     @include('components.admin-dashboard-background-script')
-    @include('components.admin-chat-widget')
+    @include('components.admin-chat-widget-v2')
 </body>
 </html>
-
-
-
 
 
 

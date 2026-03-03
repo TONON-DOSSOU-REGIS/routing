@@ -748,10 +748,9 @@
         });
     </script>
     @include('components.admin-dashboard-background-script')
-    @include('components.admin-chat-widget')
+    @include('components.admin-chat-widget-v2')
 </body>
 </html>
-
 
 
 

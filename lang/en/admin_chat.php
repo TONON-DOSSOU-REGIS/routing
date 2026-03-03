@@ -21,4 +21,9 @@ return [
     'online' => 'Online',
     'connected' => 'Connected',
     'disconnected' => 'Disconnected',
+    'typing' => 'Typing...',
+    'select_user' => 'Select a user',
+    'select_user_placeholder' => 'Search by name or email...',
+    'no_users_available' => 'No users available',
+    'online_prefix' => 'Online -',
 ];

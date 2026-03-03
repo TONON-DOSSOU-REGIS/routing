@@ -66,6 +66,8 @@
                     id="client-chat-input"
                     placeholder="{{ __('chat.client_message_placeholder') }}" 
                     class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    oninput="handleClientTypingInput()"
+                    onblur="stopClientTyping()"
                     onkeypress="if(event.key === 'Enter') sendClientMessage()"
                 >
                 <button 
@@ -114,6 +116,8 @@ const chatI18n = @json($clientChatI18n);
 // Client Chat Widget - Isolated namespace
 (function() {
     let clientChatInterval = null;
+    let clientTypingStopTimer = null;
+    let clientLastTypingPingAt = 0;
     const currentUserId = {{ auth()->id() }};
 
     window.toggleClientChat = function() {
@@ -126,11 +130,61 @@ const chatI18n = @json($clientChatI18n);
             loadClientMessages();
             clientChatInterval = setInterval(loadClientMessages, 3000);
         } else {
+            window.stopClientTyping();
             if (clientChatInterval) {
                 clearInterval(clientChatInterval);
                 clientChatInterval = null;
             }
         }
+    };
+
+    function notifyClientTyping(isTyping) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        if (!csrfToken) return;
+
+        const now = Date.now();
+        if (isTyping && now - clientLastTypingPingAt < 2000) {
+            return;
+        }
+        if (isTyping) {
+            clientLastTypingPingAt = now;
+        } else {
+            clientLastTypingPingAt = 0;
+        }
+
+        fetch('{{ route("chat.typing") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                is_typing: Boolean(isTyping),
+            }),
+        }).catch((error) => {
+            console.error('[ClientChat] Typing status error:', error);
+        });
+    }
+
+    window.handleClientTypingInput = function() {
+        notifyClientTyping(true);
+
+        if (clientTypingStopTimer) {
+            clearTimeout(clientTypingStopTimer);
+        }
+
+        clientTypingStopTimer = setTimeout(() => {
+            notifyClientTyping(false);
+        }, 1800);
+    };
+
+    window.stopClientTyping = function() {
+        if (clientTypingStopTimer) {
+            clearTimeout(clientTypingStopTimer);
+            clientTypingStopTimer = null;
+        }
+        notifyClientTyping(false);
     };
 
     function loadClientMessages() {
@@ -362,6 +416,7 @@ const chatI18n = @json($clientChatI18n);
         const message = input.value.trim();
         
         if (message === '' && fileInput.files.length === 0) return;
+        window.stopClientTyping();
         
         input.disabled = true;
         
@@ -491,4 +546,3 @@ const chatI18n = @json($clientChatI18n);
     <button type="button" class="absolute top-4 left-32 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" onclick="resetClientChatImage()">{{ __('chat.reset_image') }}</button>
     <img id="client-chat-image-full" src="" alt="{{ __('chat.image_preview_alt') }}" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
 </div>
-

@@ -2,15 +2,15 @@
 
 return [
     'title' => 'Kundennachrichten',
-    'subtitle' => 'Gespräche verwalten',
+    'subtitle' => 'Unterhaltungen verwalten',
     'loading_conversations' => 'Unterhaltungen werden geladen...',
     'reply_placeholder' => 'Dem Kunden antworten...',
-    'loading_error' => 'Fehler beim Laden',
+    'loading_error' => 'Ladefehler',
     'no_conversations' => 'Keine Unterhaltungen',
     'no_messages' => 'Keine Nachrichten',
     'loading_messages_error' => 'Fehler beim Laden der Nachrichten',
     'error_prefix' => 'Fehler: :message',
-    'start_conversation' => 'Gespräch starten',
+    'start_conversation' => 'Unterhaltung starten',
     'messages_will_appear' => 'Kundennachrichten erscheinen hier',
     'unknown_error' => 'Unbekannter Fehler',
     'format_error' => 'Formatfehler',
@@ -21,4 +21,9 @@ return [
     'online' => 'Online',
     'connected' => 'Verbunden',
     'disconnected' => 'Getrennt',
+    'typing' => 'Schreibt...',
+    'select_user' => 'Benutzer auswaehlen',
+    'select_user_placeholder' => 'Nach Name oder E-Mail suchen...',
+    'no_users_available' => 'Keine Benutzer verfuegbar',
+    'online_prefix' => 'Online -',
 ];

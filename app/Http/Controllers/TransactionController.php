@@ -36,7 +36,7 @@ class TransactionController extends Controller
             'reason' => $request->reason,
             'activation_code' => $request->activation_code,
             'status' => 'pending',
-            'progress' => 1,
+            'progress' => 0,
         ]);
 
         // Notify admins that a user initiated a transfer
@@ -70,6 +70,11 @@ class TransactionController extends Controller
             $settings = Setting::where('is_global', true)->first();
         }
 
+        // Legacy fallback if old rows do not have proper scope flags.
+        if (!$settings) {
+            $settings = Setting::first();
+        }
+
         // Si aucun setting n'existe, creer des valeurs par defaut
         if (!$settings) {
             $settings = new Setting([
@@ -80,11 +85,17 @@ class TransactionController extends Controller
             ]);
         }
 
+        $stopPercentage = max(0, min(100, (int) ($settings->stop_percentage ?? 0)));
+        $stopMessage = trim((string) ($settings->stop_message ?? ''));
+        if ($stopMessage === '') {
+            $stopMessage = __('transactions.transaction_on_hold');
+        }
+
         Log::info('Progress check', [
             'transaction_id' => $tx->id,
             'current_progress' => $tx->progress,
             'status' => $tx->status,
-            'stop_percentage' => $settings->stop_percentage,
+            'stop_percentage' => $stopPercentage,
             'user_id' => auth()->id(),
         ]);
 
@@ -149,11 +160,11 @@ class TransactionController extends Controller
             }
 
             // Check for stop_percentage (only if not yet at 100%)
-            if ($p >= (int) $settings->stop_percentage && (int) $settings->stop_percentage > 0 && $p < 100) {
+            if ($stopPercentage > 0 && $stopPercentage < 100 && $p >= $stopPercentage) {
                 $tx->update([
-                    'progress' => $settings->stop_percentage,
+                    'progress' => $stopPercentage,
                     'status' => 'on_hold',
-                    'message' => $settings->stop_message,
+                    'message' => $stopMessage,
                 ]);
 
                 // Notify user that transaction is on hold
@@ -175,7 +186,7 @@ class TransactionController extends Controller
                     NotificationService::notifyAdminTransferFailed(
                         $tx->user,
                         $tx,
-                        "Transaction mise en attente a {$settings->stop_percentage}%"
+                        "Transaction mise en attente a {$stopPercentage}%"
                     );
                 } catch (\Exception $e) {
                     Log::error('Failed to notify admins of on-hold transfer', [
@@ -186,8 +197,12 @@ class TransactionController extends Controller
 
                 return response()->json([
                     'status' => 'on_hold',
-                    'progress' => (int) $settings->stop_percentage,
-                    'message' => $settings->stop_message,
+                    'progress' => $stopPercentage,
+                    'message' => $stopMessage,
+                    'recipient_name' => $tx->recipient_name,
+                    'recipient_iban' => $tx->recipient_iban,
+                    'recipient_bic' => $tx->recipient_bic,
+                    'bank_name' => $tx->bank_name,
                 ]);
             }
 
@@ -205,6 +220,10 @@ class TransactionController extends Controller
             'status' => $tx->status,
             'progress' => (int) $tx->progress,
             'message' => $tx->message,
+            'recipient_name' => $tx->recipient_name,
+            'recipient_iban' => $tx->recipient_iban,
+            'recipient_bic' => $tx->recipient_bic,
+            'bank_name' => $tx->bank_name,
         ]);
     }
 

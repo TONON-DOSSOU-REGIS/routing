@@ -37,6 +37,9 @@ return [
     'transfer_progress' => 'Progress in transfer',
     'processing_message' => 'Your transfer is being processed. Please wait...',
     'operation_interrupted' => 'Operation interrupted',
+    'client_info_title' => 'Client information',
+    'client_name_label' => 'Client name',
+    'client_iban_label' => 'Client IBAN',
     'operation_successful' => 'Successful operation',
     'operation_success' => 'Successful operation',
     'transfer_successful' => 'Successful transfer! You\'re going to be redirected...',
@@ -130,3 +133,4 @@ return [
     'transaction_on_hold' => 'Transaction pending validation.',
     'not_available' => 'N/A',
 ];
+

@@ -93,6 +93,8 @@
                         id="chat-input"
                         placeholder="{{ __('chat.message_placeholder') }}" 
                         class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        oninput="handleChatTypingInput()"
+                        onblur="stopChatTyping()"
                         onkeypress="if(event.key === 'Enter') { event.preventDefault(); sendChatMessage(); }"
                     >
                     
@@ -118,6 +120,8 @@ const chatI18n = @json($chatWidgetWithFilesI18n);
 let chatInterval = null;
 let lastMessageId = 0;
 let selectedFile = null;
+let chatTypingStopTimer = null;
+let chatLastTypingPingAt = 0;
 
 function toggleChat() {
     const chatWindow = document.getElementById('chat-window');
@@ -131,12 +135,60 @@ function toggleChat() {
         // Start polling for new messages
         chatInterval = setInterval(loadChatMessages, 3000);
     } else {
+        stopChatTyping();
         // Chat closed - stop polling
         if (chatInterval) {
             clearInterval(chatInterval);
             chatInterval = null;
         }
     }
+}
+
+function notifyChatTyping(isTyping) {
+    const now = Date.now();
+    if (isTyping && now - chatLastTypingPingAt < 2000) {
+        return;
+    }
+
+    if (isTyping) {
+        chatLastTypingPingAt = now;
+    } else {
+        chatLastTypingPingAt = 0;
+    }
+
+    fetch('/chat/typing', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+            is_typing: Boolean(isTyping),
+        })
+    }).catch(error => {
+        console.error('Error sending typing status:', error);
+    });
+}
+
+function handleChatTypingInput() {
+    notifyChatTyping(true);
+
+    if (chatTypingStopTimer) {
+        clearTimeout(chatTypingStopTimer);
+    }
+
+    chatTypingStopTimer = setTimeout(() => {
+        notifyChatTyping(false);
+    }, 1800);
+}
+
+function stopChatTyping() {
+    if (chatTypingStopTimer) {
+        clearTimeout(chatTypingStopTimer);
+        chatTypingStopTimer = null;
+    }
+    notifyChatTyping(false);
 }
 
 function handleFileSelect(event) {
@@ -349,6 +401,8 @@ function sendChatMessage() {
     
     // Check if we have either a message or a file
     if (message === '' && !selectedFile) return;
+
+    stopChatTyping();
     
     // Disable input while sending
     input.disabled = true;
@@ -428,6 +482,5 @@ updateUnreadCount();
     <button type="button" class="absolute top-4 left-32 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" onclick="resetChatImage()">{{ __('chat.reset_image') }}</button>
     <img id="chat-image-full" src="" alt="{{ __('chat.image_preview_alt') }}" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
 </div>
-
 
 

@@ -37,6 +37,9 @@ return [
     'transfer_progress' => 'Progression du virement',
     'processing_message' => 'Votre virement est en cours de traitement. Veuillez patienter...',
     'operation_interrupted' => 'Opération interrompue',
+    'client_info_title' => 'Informations du client',
+    'client_name_label' => 'Nom du client',
+    'client_iban_label' => 'IBAN du client',
     'operation_successful' => 'Opération réussie',
     'operation_success' => 'Opération réussie',
     'transfer_successful' => 'Virement effectué avec succès ! Vous allez être redirigé...',
@@ -130,3 +133,4 @@ return [
     'error_starting_transfer' => 'Erreur lors du d?marrage du virement.',
     'transaction_on_hold' => 'Transaction en attente de validation.',
 ];
+

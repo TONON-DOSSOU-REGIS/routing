@@ -213,7 +213,7 @@
                                 <i class="fas fa-tachometer-alt mr-2"></i> {{ __('transactions.dashboard') }}
                                 <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                             </a>
-                            <a href="{{ localized_route('transfer.create', ['locale' => app()->getLocale()]) }}" class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-xl hover:from-blue-600 hover:to-indigo-700 font-medium shadow-lg transition duration-300 flex items-center gap-2">
+                            <a href="{{ localized_route('transfer.create', ['locale' => app()->getLocale()]) }}" class="action-btn bg-gradient-to-r from-orange-500 to-amber-500 text-white px-4 py-2 rounded-xl hover:from-orange-600 hover:to-amber-600 font-medium shadow-lg transition duration-300 flex items-center gap-2">
                                 <i class="fas fa-paper-plane"></i>
                                 {{ __('transactions.new_transfer') }}
                             </a>
@@ -612,7 +612,6 @@
     </script>
 </body>
 </html>
-
 
 
 

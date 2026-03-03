@@ -11,6 +11,11 @@
         'online' => __('admin_chat.online'),
         'connected' => __('admin_chat.connected'),
         'disconnected' => __('admin_chat.disconnected'),
+        'typing' => __('admin_chat.typing'),
+        'selectUser' => __('admin_chat.select_user'),
+        'selectUserPlaceholder' => __('admin_chat.select_user_placeholder'),
+        'noUsersAvailable' => __('admin_chat.no_users_available'),
+        'onlinePrefix' => __('admin_chat.online_prefix'),
     ];
 @endphp
 <div id="admin-chat-widget-v2" class="fixed bottom-4 right-4 z-50">
@@ -51,8 +56,23 @@
         <div id="admin-chat-view-v2" class="flex flex-col flex-1 min-h-0">
             {{-- Conversations list --}}
             <div id="conversations-list-v2" class="flex-1 overflow-y-auto bg-gray-50">
-                <div class="text-center text-gray-500 text-sm py-4">
-                    <i class="fas fa-spinner fa-spin"></i> {{ __('admin_chat.loading_conversations') }}
+                <div class="p-3 border-b bg-white">
+                    <label for="admin-user-search-v2" class="block text-xs font-semibold text-gray-600 mb-2">
+                        {{ __('admin_chat.select_user') }}
+                    </label>
+                    <input
+                        type="text"
+                        id="admin-user-search-v2"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        placeholder="{{ __('admin_chat.select_user_placeholder') }}"
+                        oninput="handleAdminUserSearchV2()"
+                    >
+                    <div id="admin-user-picker-list-v2" class="mt-2 max-h-36 overflow-y-auto space-y-1"></div>
+                </div>
+                <div id="conversations-items-v2">
+                    <div class="text-center text-gray-500 text-sm py-4">
+                        <i class="fas fa-spinner fa-spin"></i> {{ __('admin_chat.loading_conversations') }}
+                    </div>
                 </div>
             </div>
 
@@ -68,6 +88,7 @@
                         <div id="current-user-name-v2" class="font-semibold text-gray-800"></div>
                         <div id="current-user-email-v2" class="text-xs text-gray-500"></div>
                         <div id="current-user-status-v2" class="text-[11px] font-medium"></div>
+                        <div id="current-user-typing-v2" class="hidden text-[11px] font-medium text-purple-600"></div>
                     </div>
                 </div>
                 
@@ -140,6 +161,9 @@
     let adminChatIntervalV2 = null;
     let currentChatUserIdV2 = null;
     let selectedAdminFileV2 = null;
+    let currentChatUserNameV2 = '';
+    let currentChatUserEmailV2 = '';
+    let adminUserSearchTimerV2 = null;
     const currentAdminId = {{ auth()->id() }};
     const adminChatLocale = document.documentElement.lang || '{{ app()->getLocale() }}';
     const adminChatI18n = @json($adminChatV2I18n);
@@ -195,12 +219,54 @@
         return `<span class="inline-flex items-center text-[11px] font-medium ${textClass}">${escapeHtmlV2(label)}</span>`;
     }
 
+    function getUserDisplayNameV2(firstName, lastName) {
+        const label = `${firstName || ''} ${lastName || ''}`.trim();
+        return label !== '' ? label : adminChatI18n.userFallback;
+    }
+
+    function getPrefixedNameV2(name, status) {
+        const normalized = normalizePresenceStatusV2(status);
+        if (normalized === 'online' || normalized === 'connected') {
+            return `${adminChatI18n.onlinePrefix} ${name}`;
+        }
+        return name;
+    }
+
     function setCurrentUserPresenceV2(status) {
         const statusElement = document.getElementById('current-user-status-v2');
         if (!statusElement) return;
         const safeStatus = normalizePresenceStatusV2(status);
         statusElement.textContent = presenceLabelsV2[safeStatus];
         statusElement.className = `text-[11px] font-medium ${getPresenceTextClassV2(safeStatus)}`;
+    }
+
+    function updateCurrentUserHeaderV2(status) {
+        const nameElement = document.getElementById('current-user-name-v2');
+        const emailElement = document.getElementById('current-user-email-v2');
+        const safeStatus = normalizePresenceStatusV2(status);
+        if (nameElement) {
+            nameElement.textContent = getPrefixedNameV2(
+                currentChatUserNameV2 || adminChatI18n.userFallback,
+                safeStatus
+            );
+        }
+        if (emailElement) {
+            emailElement.textContent = currentChatUserEmailV2 || '';
+        }
+        setCurrentUserPresenceV2(safeStatus);
+    }
+
+    function setTypingIndicatorV2(isTyping) {
+        const typingElement = document.getElementById('current-user-typing-v2');
+        if (!typingElement) return;
+
+        if (isTyping) {
+            typingElement.textContent = adminChatI18n.typing;
+            typingElement.classList.remove('hidden');
+            return;
+        }
+
+        typingElement.classList.add('hidden');
     }
 
     window.toggleAdminChatV2 = function() {
@@ -210,6 +276,7 @@
         chatWindow.classList.toggle('hidden');
         
         if (isHidden) {
+            loadAdminUsersV2();
             loadConversationsV2();
             adminChatIntervalV2 = setInterval(loadConversationsV2, 5000);
         } else {
@@ -217,7 +284,7 @@
                 clearInterval(adminChatIntervalV2);
                 adminChatIntervalV2 = null;
             }
-            backToConversationsV2();
+            backToConversationsV2(false);
         }
     };
 
@@ -233,11 +300,14 @@
             if (data.success && data.conversations) {
                 displayConversationsV2(data.conversations);
                 updateAdminUnreadCountV2();
+                const searchInput = document.getElementById('admin-user-search-v2');
+                const searchTerm = searchInput ? searchInput.value.trim() : '';
+                loadAdminUsersV2(searchTerm);
             }
         })
         .catch(error => {
             console.error('[ChatV2] Error loading conversations:', error);
-            const container = document.getElementById('conversations-list-v2');
+            const container = document.getElementById('conversations-items-v2');
             container.innerHTML = `
                 <div class="text-center text-red-500 py-8">
                     <i class="fas fa-exclamation-triangle text-4xl mb-3"></i>
@@ -247,8 +317,83 @@
         });
     }
 
+    function renderAdminUserPickerV2(users) {
+        const listContainer = document.getElementById('admin-user-picker-list-v2');
+        if (!listContainer) return;
+
+        if (!users || users.length === 0) {
+            listContainer.innerHTML = `
+                <div class="text-xs text-gray-500 py-2 px-2">${escapeHtmlV2(adminChatI18n.noUsersAvailable)}</div>
+            `;
+            return;
+        }
+
+        listContainer.innerHTML = '';
+
+        users.forEach((user) => {
+            if (!user || !user.id) return;
+            const presenceStatus = getPresenceStatusV2(user);
+            const displayName = getUserDisplayNameV2(user.first_name, user.last_name);
+            const prefixedName = getPrefixedNameV2(displayName, presenceStatus);
+            const unreadCount = Number(user.unread_count || 0);
+
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'w-full text-left rounded-lg border border-gray-200 bg-white px-3 py-2 hover:border-purple-300 hover:bg-purple-50 transition';
+            button.onclick = () => openChatV2(user.id, displayName, user.email || '', presenceStatus);
+            button.innerHTML = `
+                <div class="flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <div class="text-sm font-semibold text-gray-800 truncate">${escapeHtmlV2(prefixedName)}</div>
+                        <div class="text-xs text-gray-500 truncate">${escapeHtmlV2(user.email || '')}</div>
+                    </div>
+                    ${unreadCount > 0 ? `<span class="shrink-0 bg-red-500 text-white text-[10px] font-bold rounded-full px-2 py-0.5">${unreadCount}</span>` : ''}
+                </div>
+            `;
+            listContainer.appendChild(button);
+        });
+    }
+
+    function loadAdminUsersV2(searchTerm = '') {
+        const query = typeof searchTerm === 'string' ? searchTerm.trim() : '';
+        const url = query === ''
+            ? '{{ route("chat.users") }}'
+            : `{{ route("chat.users") }}?q=${encodeURIComponent(query)}`;
+
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && Array.isArray(data.users)) {
+                renderAdminUserPickerV2(data.users);
+                return;
+            }
+            renderAdminUserPickerV2([]);
+        })
+        .catch(error => {
+            console.error('[ChatV2] Error loading users for picker:', error);
+            renderAdminUserPickerV2([]);
+        });
+    }
+
+    window.handleAdminUserSearchV2 = function() {
+        if (adminUserSearchTimerV2) {
+            clearTimeout(adminUserSearchTimerV2);
+        }
+
+        adminUserSearchTimerV2 = setTimeout(() => {
+            const input = document.getElementById('admin-user-search-v2');
+            const searchTerm = input ? input.value : '';
+            loadAdminUsersV2(searchTerm);
+        }, 250);
+    };
+
     function displayConversationsV2(conversations) {
-        const container = document.getElementById('conversations-list-v2');
+        const container = document.getElementById('conversations-items-v2');
         
         if (!conversations || conversations.length === 0) {
             container.innerHTML = `
@@ -274,12 +419,14 @@
             const email = user.email || '';
             const userId = user.id;
             const presenceStatus = getPresenceStatusV2(user);
+            const displayName = getUserDisplayNameV2(firstName, lastName);
+            const prefixedName = getPrefixedNameV2(displayName, presenceStatus);
             
             if (!userId) return;
             
             const convDiv = document.createElement('div');
             convDiv.className = 'p-4 border-b hover:bg-gray-100 cursor-pointer transition-colors';
-            convDiv.onclick = () => openChatV2(userId, firstName + ' ' + lastName, email, presenceStatus);
+            convDiv.onclick = () => openChatV2(userId, displayName, email, presenceStatus);
             
             const time = lastMsg && lastMsg.created_at ? new Date(lastMsg.created_at).toLocaleTimeString(adminChatLocale, { hour: '2-digit', minute: '2-digit' }) : '';
             const messageText = lastMsg && lastMsg.message ? lastMsg.message : adminChatI18n.noMessages;
@@ -292,7 +439,7 @@
                     <div class="flex-1">
                         <div class="flex items-center justify-between mb-1">
                             <div class="flex items-center">
-                                <div class="font-semibold text-gray-800">${escapeHtmlV2(firstName + ' ' + lastName)}</div>
+                                <div class="font-semibold text-gray-800">${escapeHtmlV2(prefixedName)}</div>
                                 ${presenceDot}
                             </div>
                             ${unreadCount > 0 ? `<span class="bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">${unreadCount}</span>` : ''}
@@ -313,13 +460,11 @@
         if (!userId) return;
         
         currentChatUserIdV2 = userId;
+        currentChatUserNameV2 = userName || adminChatI18n.userFallback;
+        currentChatUserEmailV2 = userEmail || '';
         
-        const nameElement = document.getElementById('current-user-name-v2');
-        const emailElement = document.getElementById('current-user-email-v2');
-        
-        if (nameElement) nameElement.textContent = userName || adminChatI18n.userFallback;
-        if (emailElement) emailElement.textContent = userEmail || '';
-        setCurrentUserPresenceV2(presenceStatus);
+        updateCurrentUserHeaderV2(presenceStatus);
+        setTypingIndicatorV2(false);
         
         const conversationsList = document.getElementById('conversations-list-v2');
         const individualChat = document.getElementById('individual-chat-v2');
@@ -335,16 +480,22 @@
         adminChatIntervalV2 = setInterval(() => loadChatWithUserV2(userId), 3000);
     }
 
-    window.backToConversationsV2 = function() {
+    window.backToConversationsV2 = function(shouldResumePolling = true) {
         currentChatUserIdV2 = null;
+        currentChatUserNameV2 = '';
+        currentChatUserEmailV2 = '';
         document.getElementById('conversations-list-v2').classList.remove('hidden');
         document.getElementById('individual-chat-v2').classList.add('hidden');
+        setTypingIndicatorV2(false);
         
         if (adminChatIntervalV2) {
             clearInterval(adminChatIntervalV2);
         }
-        loadConversationsV2();
-        adminChatIntervalV2 = setInterval(loadConversationsV2, 5000);
+        if (shouldResumePolling) {
+            loadAdminUsersV2();
+            loadConversationsV2();
+            adminChatIntervalV2 = setInterval(loadConversationsV2, 5000);
+        }
     };
 
     function loadChatWithUserV2(userId) {
@@ -370,8 +521,9 @@
             
             if (data.success) {
                 if (data.user_presence) {
-                    setCurrentUserPresenceV2(getPresenceStatusV2(data.user_presence));
+                    updateCurrentUserHeaderV2(getPresenceStatusV2(data.user_presence));
                 }
+                setTypingIndicatorV2(Boolean(data.user_typing));
 
                 if (data.messages && Array.isArray(data.messages)) {
                     console.log('[ChatV2] Messages count:', data.messages.length);
@@ -382,6 +534,7 @@
                 }
             } else {
                 console.error('[ChatV2] API returned success=false');
+                setTypingIndicatorV2(false);
                 const container = document.getElementById('chat-messages-container-v2');
                 if (container) {
                     container.innerHTML = `
@@ -395,6 +548,7 @@
         })
         .catch(error => {
             console.error('[ChatV2] Error loading chat:', error);
+            setTypingIndicatorV2(false);
             const container = document.getElementById('chat-messages-container-v2');
             if (container) {
                 container.innerHTML = `
@@ -714,6 +868,3 @@
     <button type="button" class="absolute top-4 left-32 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" onclick="resetAdminChatImageV2()">Rinitialiser</button>
     <img id="admin-chat-image-full-v2" src="" alt="{{ __('chat.image_preview_alt') }}" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
 </div>
-
-
-

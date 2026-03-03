@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'title' => 'Messaggi dei clienti',
+    'title' => 'Messaggi clienti',
     'subtitle' => 'Gestisci le conversazioni',
     'loading_conversations' => 'Caricamento conversazioni...',
-    'reply_placeholder' => 'Rispondere al cliente...',
+    'reply_placeholder' => 'Rispondi al cliente...',
     'loading_error' => 'Errore di caricamento',
     'no_conversations' => 'Nessuna conversazione',
     'no_messages' => 'Nessun messaggio',
@@ -21,4 +21,9 @@ return [
     'online' => 'Online',
     'connected' => 'Connesso',
     'disconnected' => 'Disconnesso',
+    'typing' => 'Sta scrivendo...',
+    'select_user' => 'Seleziona utente',
+    'select_user_placeholder' => 'Cerca per nome o email...',
+    'no_users_available' => 'Nessun utente disponibile',
+    'online_prefix' => 'Online -',
 ];

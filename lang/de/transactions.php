@@ -36,7 +36,10 @@ return [
     'processing_in_progress' => 'Behandlung im laufenden',
     'transfer_progress' => 'Fortschritte bei der Übertragung',
     'processing_message' => 'Ihr Transfer wird verarbeitet. Bitte warten Sie...',
-    'operation_interrupted' => 'Betrieb unterbrochen',
+    
+    'client_info_title' => 'Kundendaten',
+    'client_name_label' => 'Kundenname',
+    'client_iban_label' => 'Kunden-IBAN',
     'operation_successful' => 'Erfolgreicher Betrieb',
     'operation_success' => 'Erfolgreicher Betrieb',
     'transfer_successful' => 'Erfolgreicher Transfer! Du wirst umgeleitet werden...',
@@ -130,3 +133,4 @@ return [
     'error_starting_transfer' => 'Fehler beim Starten der ?berweisung.',
     'transaction_on_hold' => 'Transaktion wartet auf Freigabe.',
 ];
+

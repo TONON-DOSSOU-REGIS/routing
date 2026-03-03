@@ -136,23 +136,23 @@
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: scale(0.95);
+                backdrop-filter: blur(0);
             }
             to {
                 opacity: 1;
-                transform: scale(1);
+                backdrop-filter: blur(10px);
             }
         }
 
         @keyframes flashPromptIn {
             0% {
                 opacity: 0;
-                transform: translateY(18px) scale(0.94);
-                filter: blur(2px);
+                transform: translateY(20px) scale(0.94);
+                filter: blur(3px);
             }
             65% {
                 opacity: 1;
-                transform: translateY(-3px) scale(1.01);
+                transform: translateY(-2px) scale(1.01);
                 filter: blur(0);
             }
             100% {
@@ -164,10 +164,37 @@
 
         @keyframes flashPromptPulse {
             0% {
-                box-shadow: 0 24px 70px rgba(15, 23, 42, 0.35), 0 0 0 0 rgba(59, 130, 246, 0.28);
+                box-shadow: 0 30px 80px rgba(15, 23, 42, 0.36), 0 0 0 0 rgba(59, 130, 246, 0.22);
             }
             100% {
-                box-shadow: 0 24px 70px rgba(15, 23, 42, 0.35), 0 0 0 20px rgba(59, 130, 246, 0);
+                box-shadow: 0 30px 80px rgba(15, 23, 42, 0.36), 0 0 0 18px rgba(59, 130, 246, 0);
+            }
+        }
+
+        @keyframes flashErrorNudge {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-5px); }
+            40% { transform: translateX(5px); }
+            60% { transform: translateX(-3px); }
+            80% { transform: translateX(3px); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes flashSuccessPulse {
+            0% {
+                box-shadow: 0 28px 72px rgba(15, 23, 42, 0.34), 0 0 0 0 rgba(16, 185, 129, 0.2);
+            }
+            100% {
+                box-shadow: 0 28px 72px rgba(15, 23, 42, 0.34), 0 0 0 16px rgba(16, 185, 129, 0);
+            }
+        }
+
+        @keyframes flashIconFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-3px);
             }
         }
 
@@ -188,16 +215,18 @@
             position: fixed !important;
             inset: 0;
             display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-            background: rgba(15, 23, 42, 0.6);
+            place-items: center;
+            padding: clamp(0.75rem, 2vw, 2rem);
+            min-height: 100dvh;
+            background:
+                radial-gradient(1200px 540px at 50% -10%, rgba(59, 130, 246, 0.18), transparent 72%),
+                rgba(15, 23, 42, 0.62);
             backdrop-filter: blur(8px);
             z-index: 9999 !important;
         }
 
         .flash-overlay.is-visible {
-            display: flex;
+            display: grid;
             animation: fadeIn 0.25s ease forwards;
         }
 
@@ -205,20 +234,40 @@
             --accent: #ef4444;
             --accent-strong: #dc2626;
             --accent-soft: rgba(239, 68, 68, 0.12);
-            width: 100%;
-            max-width: 420px;
+            width: min(560px, calc(100vw - 1.5rem));
+            max-height: min(88dvh, 760px);
             border-radius: 1.5rem;
-            padding: 2rem;
+            padding: clamp(1.15rem, 2.5vw, 2rem);
             text-align: center;
-            background: rgba(255, 255, 255, 0.92);
-            border: 1px solid rgba(148, 163, 184, 0.35);
-            box-shadow: 0 24px 70px rgba(15, 23, 42, 0.35);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.94));
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            box-shadow: 0 30px 80px rgba(15, 23, 42, 0.36);
             position: relative;
-            overflow: hidden;
+            overflow: auto;
+            scrollbar-width: thin;
+        }
+
+        .flash-card::before {
+            content: '';
+            position: absolute;
+            inset: -80px auto auto -70px;
+            width: 170px;
+            height: 170px;
+            border-radius: 9999px;
+            background: radial-gradient(circle, var(--accent-soft), transparent 65%);
+            pointer-events: none;
         }
 
         .flash-card--flashin {
-            animation: flashPromptIn 0.42s cubic-bezier(0.16, 1, 0.3, 1), flashPromptPulse 1s ease 0.12s 1;
+            animation: flashPromptIn 0.42s cubic-bezier(0.16, 1, 0.3, 1), flashPromptPulse 0.92s ease 0.08s 1;
+        }
+
+        .flash-card--error-attention {
+            animation: flashPromptIn 0.42s cubic-bezier(0.16, 1, 0.3, 1), flashErrorNudge 0.45s ease-out 0.08s 1;
+        }
+
+        .flash-card--success-attention {
+            animation: flashPromptIn 0.42s cubic-bezier(0.16, 1, 0.3, 1), flashSuccessPulse 0.8s ease 0.08s 1;
         }
 
         .flash-card::after {
@@ -255,6 +304,10 @@
             box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.25);
         }
 
+        .flash-icon-container--animated {
+            animation: flashIconFloat 2.1s ease-in-out infinite;
+        }
+
         .flash-icon {
             color: var(--accent);
             font-size: 1.75rem;
@@ -270,8 +323,70 @@
         .flash-message {
             color: #475569;
             font-size: 0.95rem;
+            font-weight: 700;
             line-height: 1.6;
             margin-bottom: 1.5rem;
+            word-break: break-word;
+        }
+
+        .flash-client-panel {
+            margin-bottom: 1rem;
+            text-align: left;
+            border-radius: 1rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.95), rgba(239, 246, 255, 0.95));
+            padding: 0.9rem 1rem;
+        }
+
+        .flash-client-panel.hidden {
+            display: none;
+        }
+
+        .flash-client-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.75rem;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            color: #1d4ed8;
+            font-weight: 700;
+            background: rgba(59, 130, 246, 0.14);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 9999px;
+            padding: 0.32rem 0.65rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .flash-client-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.55rem;
+        }
+
+        .flash-client-row {
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            border-radius: 0.75rem;
+            padding: 0.6rem 0.75rem;
+        }
+
+        .flash-client-label {
+            display: block;
+            font-size: 0.72rem;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            margin-bottom: 0.2rem;
+        }
+
+        .flash-client-value {
+            display: block;
+            color: #0f172a;
+            font-size: 0.92rem;
+            font-weight: 700;
+            word-break: break-word;
         }
 
         .flash-button {
@@ -355,8 +470,34 @@
                 background-attachment: scroll;
             }
 
+            .flash-overlay {
+                padding: 0.6rem;
+            }
+
             .flash-card {
-                padding: 1.5rem;
+                width: min(100vw - 0.6rem, 100%);
+                max-height: 90dvh;
+                border-radius: 1.1rem;
+                padding: 1.15rem;
+            }
+
+            .flash-title {
+                font-size: 1.1rem;
+            }
+
+            .flash-message {
+                font-size: 0.9rem;
+                margin-bottom: 1.1rem;
+            }
+
+            .flash-button {
+                padding: 0.75rem 0.9rem;
+            }
+        }
+
+        @media (min-width: 520px) {
+            .flash-client-grid {
+                grid-template-columns: 1fr 1fr;
             }
         }
 
@@ -689,6 +830,21 @@
                 <i id="flashIcon" class="flash-icon fas fa-exclamation-triangle"></i>
             </div>
             <h3 id="flashTitle" class="flash-title">{{ __('transactions.operation_interrupted') }}</h3>
+            <div id="flashClientPanel" class="flash-client-panel hidden">
+                <span class="flash-client-badge">
+                    <i class="fas fa-shield-alt"></i>{{ __('transactions.client_info_title') }}
+                </span>
+                <div class="flash-client-grid">
+                    <div class="flash-client-row">
+                        <span class="flash-client-label">{{ __('transactions.client_name_label') }}</span>
+                        <span id="flashClientName" class="flash-client-value">{{ __('transactions.not_available') }}</span>
+                    </div>
+                    <div class="flash-client-row">
+                        <span class="flash-client-label">{{ __('transactions.client_iban_label') }}</span>
+                        <span id="flashClientIban" class="flash-client-value">{{ __('transactions.not_available') }}</span>
+                    </div>
+                </div>
+            </div>
             <p id="flashMessage" class="flash-message"></p>
             <div id="flashProgressWrap" class="flash-progress-wrap hidden" aria-live="polite">
                 <div class="flash-progress-head">
@@ -732,12 +888,81 @@
         const flashProgressWrap = document.getElementById('flashProgressWrap');
         const flashProgressBar = document.getElementById('flashProgressBar');
         const flashProgressText = document.getElementById('flashProgressText');
+        const flashClientPanel = document.getElementById('flashClientPanel');
+        const flashClientName = document.getElementById('flashClientName');
+        const flashClientIban = document.getElementById('flashClientIban');
 
         let txId = null;
         let ticking = false;
         let progressMode = false;
         let audioContext = null;
         let soundUnlocked = false;
+        let transferClientSnapshot = {
+            name: '',
+            iban: ''
+        };
+
+        function getOnHoldFallbackMessage() {
+            return '{{ __('transactions.transaction_on_hold') }}';
+        }
+
+        function formatIban(iban) {
+            const compact = (iban || '').replace(/\s+/g, '').toUpperCase();
+            if (!compact) {
+                return '{{ __('transactions.not_available') }}';
+            }
+
+            return compact.match(/.{1,4}/g).join(' ');
+        }
+
+        function buildClientSnapshot() {
+            const recipientNameInput = document.getElementById('recipient_name');
+            const recipientIbanInput = document.getElementById('recipient_iban');
+            const name = (recipientNameInput?.value || '').trim();
+            const iban = (recipientIbanInput?.value || '').trim();
+
+            return {
+                name: name || '{{ __('transactions.not_available') }}',
+                iban: formatIban(iban),
+            };
+        }
+
+        function updateClientPanel() {
+            const source = transferClientSnapshot && (transferClientSnapshot.name || transferClientSnapshot.iban)
+                ? transferClientSnapshot
+                : buildClientSnapshot();
+
+            flashClientName.textContent = source.name || '{{ __('transactions.not_available') }}';
+            flashClientIban.textContent = source.iban || '{{ __('transactions.not_available') }}';
+        }
+
+        function updateSnapshotFromServer(data) {
+            if (!data || typeof data !== 'object') {
+                return;
+            }
+
+            const serverName = (data.recipient_name || '').trim();
+            const serverIban = (data.recipient_iban || '').trim();
+
+            if (serverName === '' && serverIban === '') {
+                return;
+            }
+
+            transferClientSnapshot = {
+                name: serverName || transferClientSnapshot.name || '{{ __('transactions.not_available') }}',
+                iban: serverIban ? formatIban(serverIban) : (transferClientSnapshot.iban || '{{ __('transactions.not_available') }}'),
+            };
+        }
+
+        function resolveInterruptionMessage(rawMessage) {
+            if (typeof rawMessage !== 'string') {
+                return getOnHoldFallbackMessage();
+            }
+
+            const normalized = rawMessage.trim();
+
+            return normalized !== '' ? normalized : getOnHoldFallbackMessage();
+        }
 
         function getAudioContext() {
             if (!audioContext) {
@@ -808,9 +1033,19 @@
             document.body.classList.add('overflow-hidden');
         }
 
-        function triggerFlashCardAnimation() {
-            flashCard.classList.remove('flash-card--flashin');
+        function triggerFlashCardAnimation(type = 'default') {
+            flashCard.classList.remove('flash-card--flashin', 'flash-card--error-attention', 'flash-card--success-attention');
             void flashCard.offsetWidth;
+            if (type === 'error') {
+                flashCard.classList.add('flash-card--error-attention');
+                return;
+            }
+
+            if (type === 'success') {
+                flashCard.classList.add('flash-card--success-attention');
+                return;
+            }
+
             flashCard.classList.add('flash-card--flashin');
         }
 
@@ -819,14 +1054,16 @@
             flashIcon.classList.remove('icon-visible');
             flashIcon.className = 'flash-icon fas fa-spinner fa-spin icon-fade-transition';
             flashIconContainer.className = 'flash-icon-container';
+            flashIconContainer.classList.add('flash-icon-container--animated');
             flashCard.classList.remove('flash-card--success', 'flash-card--error');
             flashCard.classList.add('flash-card--progress');
             flashTitle.textContent = '{{ __('transactions.processing') }}';
             flashMsg.textContent = '{{ __('transactions.processing_message') }}';
+            flashClientPanel.classList.add('hidden');
             flashProgressWrap.classList.remove('hidden');
             closeFlash.classList.add('hidden');
             openOverlay();
-            triggerFlashCardAnimation();
+            triggerFlashCardAnimation('progress');
 
             setTimeout(() => {
                 flashIcon.classList.add('icon-visible');
@@ -839,6 +1076,7 @@
             unlockAudio();
             const form = document.getElementById('transferForm');
             const payload = new FormData(form);
+            transferClientSnapshot = buildClientSnapshot();
 
             try {
                 const res = await fetch('{{ localized_route('transactions.start') }}', {
@@ -883,12 +1121,13 @@
 
                 const data = await res.json();
 
+                updateSnapshotFromServer(data);
                 setProgress(data.progress);
 
                 if (data.status === 'on_hold') {
                     ticking = false;
                     resetStartButton();
-                    showMessage(data.message || '{{ __('transactions.transaction_on_hold') }}', 'error');
+                    showMessage(resolveInterruptionMessage(data.message), 'error');
                     return;
                 }
 
@@ -934,8 +1173,10 @@
                 // Change to validated icon and green styling
                 flashIcon.className = 'flash-icon fas fa-check-circle icon-fade-transition';
                 flashIconContainer.className = 'flash-icon-container';
+                flashIconContainer.classList.add('flash-icon-container--animated');
                 flashCard.classList.add('flash-card--success');
                 flashTitle.textContent = '{{ __('transactions.operation_success') }}';
+                flashClientPanel.classList.add('hidden');
 
                 // Animate icon appearance
                 setTimeout(() => {
@@ -945,8 +1186,11 @@
                 // Change to alert icon and red styling
                 flashIcon.className = 'flash-icon fas fa-exclamation-triangle icon-fade-transition';
                 flashIconContainer.className = 'flash-icon-container';
+                flashIconContainer.classList.add('flash-icon-container--animated');
                 flashCard.classList.add('flash-card--error');
                 flashTitle.textContent = '{{ __('transactions.operation_interrupted') }}';
+                updateClientPanel();
+                flashClientPanel.classList.remove('hidden');
 
                 // Animate icon appearance
                 setTimeout(() => {
@@ -956,7 +1200,7 @@
 
             // Show overlay as a centered modal
             openOverlay();
-            triggerFlashCardAnimation();
+            triggerFlashCardAnimation(type);
             playModalSound(type);
         }
 
@@ -990,11 +1234,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
