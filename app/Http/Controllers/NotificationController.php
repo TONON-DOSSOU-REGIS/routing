@@ -71,7 +71,41 @@ class NotificationController extends Controller
      */
     public function index(Request $request)
     {
-        return view('notifications.index');
+        $user = auth()->user();
+        $totalNotificationsCount = $user->notifications()->count();
+        $unreadNotificationsCount = $user->unreadNotifications()->count();
+        $readNotificationsCount = max($totalNotificationsCount - $unreadNotificationsCount, 0);
+        $notificationsLast24HoursCount = $user->notifications()
+            ->where('created_at', '>=', now()->subDay())
+            ->count();
+
+        $profileFields = [
+            $user->first_name,
+            $user->last_name,
+            $user->email,
+            $user->phone,
+            $user->address,
+            $user->country,
+            $user->city,
+            $user->date_of_birth,
+            $user->id_type,
+            $user->id_number,
+            $user->iban,
+            $user->profile_photo_path,
+        ];
+
+        $profileCompletion = (int) round(
+            (collect($profileFields)->filter(fn ($value) => filled($value))->count() / count($profileFields)) * 100
+        );
+
+        return view('notifications.index', compact(
+            'user',
+            'totalNotificationsCount',
+            'unreadNotificationsCount',
+            'readNotificationsCount',
+            'notificationsLast24HoursCount',
+            'profileCompletion'
+        ));
     }
 
     /**
@@ -79,7 +113,8 @@ class NotificationController extends Controller
      */
     public function getData(Request $request)
     {
-        $query = auth()->user()->notifications()->orderBy('created_at', 'desc');
+        $user = auth()->user();
+        $query = $user->notifications()->orderBy('created_at', 'desc');
 
         if ($request->filled('type')) {
             $query->where('type', $request->type);
@@ -94,6 +129,8 @@ class NotificationController extends Controller
         }
 
         $notifications = $query->paginate(20);
+        $overviewTotal = $user->notifications()->count();
+        $overviewUnread = $user->unreadNotifications()->count();
 
         return response()->json([
             'success' => true,
@@ -103,6 +140,14 @@ class NotificationController extends Controller
                 'last_page' => $notifications->lastPage(),
                 'per_page' => $notifications->perPage(),
                 'total' => $notifications->total(),
+            ],
+            'overview' => [
+                'total' => $overviewTotal,
+                'unread' => $overviewUnread,
+                'read' => max($overviewTotal - $overviewUnread, 0),
+                'last_24_hours' => $user->notifications()
+                    ->where('created_at', '>=', now()->subDay())
+                    ->count(),
             ],
         ]);
     }

@@ -16,16 +16,109 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $user = auth()->user();
-        $transactions = $user->transactions()->latest()->take(5)->get();
+        $user = auth()->user()->loadMissing('creditCard');
+        $transactions = $user->transactions()->latest()->take(6)->get();
 
-        return view('dashboard.index', compact('user', 'transactions'));
+        $transactionsLast30Days = $user->transactions()
+            ->where('created_at', '>=', now()->subDays(30))
+            ->get();
+
+        $incomingLast30Days = (float) $transactionsLast30Days
+            ->where('type', 'deposit')
+            ->sum('amount');
+
+        $outgoingLast30Days = (float) $transactionsLast30Days
+            ->whereIn('type', ['withdrawal', 'transfer'])
+            ->sum('amount');
+
+        $pendingOperationsCount = $user->transactions()
+            ->whereIn('status', ['pending', 'on_hold'])
+            ->count();
+
+        $completedTransfersCount = $user->transactions()
+            ->where('type', 'transfer')
+            ->where('status', 'success')
+            ->count();
+
+        $totalTransfersCount = $user->transactions()
+            ->where('type', 'transfer')
+            ->count();
+
+        $transferSuccessRate = $totalTransfersCount > 0
+            ? (int) round(($completedTransfersCount / $totalTransfersCount) * 100)
+            : 100;
+
+        $unreadNotificationsCount = $user->unreadNotifications()->count();
+
+        $profileFields = [
+            $user->first_name,
+            $user->last_name,
+            $user->email,
+            $user->phone,
+            $user->address,
+            $user->country,
+            $user->city,
+            $user->date_of_birth,
+            $user->id_type,
+            $user->id_number,
+            $user->iban,
+            $user->profile_photo_path,
+        ];
+
+        $profileCompletion = (int) round(
+            (collect($profileFields)->filter(fn ($value) => filled($value))->count() / count($profileFields)) * 100
+        );
+
+        $latestTransaction = $user->transactions()->latest()->first();
+
+        return view('dashboard.index', compact(
+            'user',
+            'transactions',
+            'incomingLast30Days',
+            'outgoingLast30Days',
+            'pendingOperationsCount',
+            'transferSuccessRate',
+            'unreadNotificationsCount',
+            'profileCompletion',
+            'latestTransaction'
+        ));
     }
 
     public function profile()
     {
         $user = auth()->user()->load('creditCard');
-        return view('profile.index', compact('user'));
+        $recentTransactions = $user->transactions()->latest()->take(4)->get();
+        $unreadNotificationsCount = $user->unreadNotifications()->count();
+        $pendingOperationsCount = $user->transactions()
+            ->whereIn('status', ['pending', 'on_hold'])
+            ->count();
+
+        $profileFields = [
+            $user->first_name,
+            $user->last_name,
+            $user->email,
+            $user->phone,
+            $user->address,
+            $user->country,
+            $user->city,
+            $user->date_of_birth,
+            $user->id_type,
+            $user->id_number,
+            $user->iban,
+            $user->profile_photo_path,
+        ];
+
+        $profileCompletion = (int) round(
+            (collect($profileFields)->filter(fn ($value) => filled($value))->count() / count($profileFields)) * 100
+        );
+
+        return view('profile.index', compact(
+            'user',
+            'recentTransactions',
+            'unreadNotificationsCount',
+            'pendingOperationsCount',
+            'profileCompletion'
+        ));
     }
 
     /**
@@ -221,4 +314,3 @@ class DashboardController extends Controller
         ]);
     }
 }
-

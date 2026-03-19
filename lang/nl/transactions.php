@@ -37,6 +37,7 @@ return [
     'transfer_progress' => 'Vorderingen bij de overdracht',
     'processing_message' => 'Je transfer wordt verwerkt. Wacht even...',
     
+    'operation_interrupted' => 'Operatie onderbroken',
     'client_info_title' => 'Klantinformatie',
     'client_name_label' => 'Naam klant',
     'client_iban_label' => 'IBAN klant',

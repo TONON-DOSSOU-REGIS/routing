@@ -18,7 +18,9 @@ class TransactionController extends Controller
 {
     public function create()
     {
-        return view('transactions.create');
+        $user = auth()->user();
+
+        return view('transactions.create', $this->getClientShellData($user));
     }
 
     public function start(TransferRequest $request)
@@ -294,7 +296,8 @@ class TransactionController extends Controller
 
     public function history(Request $request)
     {
-        $query = auth()->user()->transactions();
+        $user = auth()->user();
+        $query = $user->transactions()->with('user');
 
         if ($request->filled('type')) {
             $query->where('type', $request->type);
@@ -312,9 +315,56 @@ class TransactionController extends Controller
             $query->whereDate('created_at', '<=', $request->date_to);
         }
 
+        $summaryQuery = clone $query;
         $transactions = $query->latest()->paginate(10)->appends($request->all());
+        $historySummary = [
+            'total' => (clone $summaryQuery)->count(),
+            'success' => (clone $summaryQuery)->where('status', 'success')->count(),
+            'pending' => (clone $summaryQuery)->whereIn('status', ['pending', 'on_hold'])->count(),
+            'volume' => (float) ((clone $summaryQuery)->sum('amount') ?? 0),
+        ];
 
-        return view('transactions.history', compact('transactions'));
+        return view('transactions.history', array_merge(
+            [
+                'transactions' => $transactions,
+                'historySummary' => $historySummary,
+            ],
+            $this->getClientShellData($user)
+        ));
+    }
+
+    private function getClientShellData(User $user): array
+    {
+        $unreadNotificationsCount = $user->unreadNotifications()->count();
+        $pendingOperationsCount = $user->transactions()
+            ->whereIn('status', ['pending', 'on_hold'])
+            ->count();
+
+        $profileFields = [
+            $user->first_name,
+            $user->last_name,
+            $user->email,
+            $user->phone,
+            $user->address,
+            $user->country,
+            $user->city,
+            $user->date_of_birth,
+            $user->id_type,
+            $user->id_number,
+            $user->iban,
+            $user->profile_photo_path,
+        ];
+
+        $profileCompletion = (int) round(
+            (collect($profileFields)->filter(fn ($value) => filled($value))->count() / count($profileFields)) * 100
+        );
+
+        return compact(
+            'user',
+            'unreadNotificationsCount',
+            'pendingOperationsCount',
+            'profileCompletion'
+        );
     }
 
     public function receiptPdf($locale, Transaction $transaction)

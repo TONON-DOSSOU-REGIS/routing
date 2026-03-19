@@ -80,8 +80,13 @@ document.addEventListener('DOMContentLoaded', function() {
     let soundEnabled = localStorage.getItem('notification_sound_enabled') === '1';
     let lastUnreadCount = null;
     let audioContext = null;
+    let notificationOutputNode = null;
+    let notificationMasterGain = null;
     let unreadTimer = null;
     const unreadPollingIntervalMs = isAdmin ? 3000 : 10000;
+    const notificationSoundProfile = isAdmin
+        ? { notes: [740, 932, 1175], step: 0.085, duration: 0.35, bodyGain: 0.26, shimmerGain: 0.18, masterGain: 1.34 }
+        : { notes: [698, 880, 1047], step: 0.09, duration: 0.33, bodyGain: 0.24, shimmerGain: 0.16, masterGain: 1.26 };
 
     function ensureAudioContext() {
         const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
@@ -98,6 +103,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         return audioContext;
+    }
+
+    function ensureNotificationOutput(ctx) {
+        if (notificationOutputNode && notificationMasterGain) {
+            notificationMasterGain.gain.value = notificationSoundProfile.masterGain;
+            return notificationOutputNode;
+        }
+
+        const compressor = ctx.createDynamicsCompressor();
+        compressor.threshold.setValueAtTime(-26, ctx.currentTime);
+        compressor.knee.setValueAtTime(18, ctx.currentTime);
+        compressor.ratio.setValueAtTime(9, ctx.currentTime);
+        compressor.attack.setValueAtTime(0.003, ctx.currentTime);
+        compressor.release.setValueAtTime(0.2, ctx.currentTime);
+
+        notificationMasterGain = ctx.createGain();
+        notificationMasterGain.gain.value = notificationSoundProfile.masterGain;
+
+        compressor.connect(notificationMasterGain);
+        notificationMasterGain.connect(ctx.destination);
+        notificationOutputNode = compressor;
+
+        return notificationOutputNode;
     }
 
     function enableSound() {
@@ -293,6 +321,21 @@ document.addEventListener('DOMContentLoaded', function() {
     updateUnreadCount({ silent: true });
 
     // Real-time updates with Echo (fallback to polling)
+    function playNotificationLayer(ctx, outputNode, frequency, startTime, gainAmount, duration, waveType = 'triangle', detune = 0) {
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        oscillator.type = waveType;
+        oscillator.frequency.value = frequency;
+        oscillator.detune.value = detune;
+        gainNode.gain.setValueAtTime(0.0001, startTime);
+        gainNode.gain.exponentialRampToValueAtTime(gainAmount, startTime + 0.014);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+        oscillator.connect(gainNode);
+        gainNode.connect(outputNode);
+        oscillator.start(startTime);
+        oscillator.stop(startTime + duration);
+    }
+
     function playNotificationSound() {
         if (!soundEnabled) {
             return;
@@ -302,16 +345,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!ctx) {
                 return;
             }
+            const startTime = ctx.currentTime + 0.01;
+            const p = notificationSoundProfile;
+            const outputNode = ensureNotificationOutput(ctx);
 
-            const oscillator = ctx.createOscillator();
-            const gainNode = ctx.createGain();
-            oscillator.type = 'triangle';
-            oscillator.frequency.value = 740;
-            gainNode.gain.value = 0.06;
-            oscillator.connect(gainNode);
-            gainNode.connect(ctx.destination);
-            oscillator.start();
-            oscillator.stop(ctx.currentTime + 0.18);
+            p.notes.forEach((note, index) => {
+                const toneStart = startTime + (index * p.step);
+                playNotificationLayer(ctx, outputNode, note, toneStart, p.bodyGain, p.duration, 'triangle', 0);
+                playNotificationLayer(ctx, outputNode, note, toneStart + 0.008, p.shimmerGain, p.duration * 0.8, 'sine', 6);
+            });
         } catch (e) {
             // Ignore audio errors
         }
@@ -394,8 +436,6 @@ document.addEventListener('DOMContentLoaded', function() {
     background: #cbd5e1;
     border-radius: 9999px;
 }\n</style>
-
-
 
 
 

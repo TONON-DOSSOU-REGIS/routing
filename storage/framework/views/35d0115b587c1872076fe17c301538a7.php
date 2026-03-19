@@ -1,4 +1,4 @@
-<?php if (! $__env->hasRenderedOnce('e4e766d8-f99e-4b65-888c-e942d131e448')): $__env->markAsRenderedOnce('e4e766d8-f99e-4b65-888c-e942d131e448'); ?>
+<?php if (! $__env->hasRenderedOnce('6ddc7fbd-22d5-4927-9a37-380368795990')): $__env->markAsRenderedOnce('6ddc7fbd-22d5-4927-9a37-380368795990'); ?>
 <style>
     .support-hero {
         position: relative;

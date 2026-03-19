@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DepositRequest;
 use App\Mail\PasswordResetMail;
+use App\Models\ChatMessage;
 use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
@@ -25,18 +26,58 @@ class AdminController extends Controller
 {
     public function index($locale)
     {
+        $admin = auth()->user();
+        $thirtyDaysAgo = now()->subDays(30);
+
         $totalUsers = User::count();
+        $activeUsers = User::where('status', 'active')->count();
+        $pendingUsersCount = User::where('status', 'pending')->count();
+        $suspendedUsersCount = User::where('status', 'suspended')->count();
         $totalTransactions = Transaction::count();
         $totalDeposits = Transaction::where('type', 'deposit')->sum('amount');
         $totalWithdrawals = Transaction::where('type', 'withdrawal')->sum('amount');
         $totalTransfers = Transaction::where('type', 'transfer')->sum('amount');
+        $monthlyDeposits = Transaction::where('type', 'deposit')
+            ->where('created_at', '>=', $thirtyDaysAgo)
+            ->sum('amount');
+        $monthlyTransfers = Transaction::where('type', 'transfer')
+            ->where('created_at', '>=', $thirtyDaysAgo)
+            ->sum('amount');
+        $pendingTransactionsCount = Transaction::whereIn('status', ['pending', 'on_hold'])->count();
+        $successfulTransactionsCount = Transaction::where('status', 'success')->count();
+        $transactionSuccessRate = $totalTransactions > 0
+            ? (int) round(($successfulTransactionsCount / $totalTransactions) * 100)
+            : 100;
+        $unreadNotificationsCount = $admin ? $admin->unreadNotifications()->count() : 0;
+        $chatUnreadCount = $admin
+            ? ChatMessage::where('receiver_id', $admin->id)->unread()->count()
+            : 0;
+        $recentTransactions = Transaction::with('user')->latest()->take(6)->get();
+        $pendingUsers = User::where('status', 'pending')->latest()->take(5)->get();
+        $recentUsers = User::latest()->take(5)->get();
+        $activeUsersRate = $totalUsers > 0
+            ? (int) round(($activeUsers / $totalUsers) * 100)
+            : 0;
 
         return view('admin.dashboard', compact(
             'totalUsers',
+            'activeUsers',
+            'pendingUsersCount',
+            'suspendedUsersCount',
             'totalTransactions',
             'totalDeposits',
             'totalWithdrawals',
-            'totalTransfers'
+            'totalTransfers',
+            'monthlyDeposits',
+            'monthlyTransfers',
+            'pendingTransactionsCount',
+            'transactionSuccessRate',
+            'unreadNotificationsCount',
+            'chatUnreadCount',
+            'recentTransactions',
+            'pendingUsers',
+            'recentUsers',
+            'activeUsersRate'
         ));
     }
 

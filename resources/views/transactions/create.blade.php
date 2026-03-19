@@ -1,143 +1,162 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ __('transactions.page_title') }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
-    <link rel="manifest" href="/favicon_io11/site.webmanifest">
+@extends('layouts.premium-dashboard')
+
+@php
+    $balanceFormatted = \App\Helpers\CurrencyHelper::format($user->balance, $user->default_currency ?? 'EUR');
+    $currencyCode = $user->default_currency ?? 'EUR';
+    $formattedClientIban = $user->iban
+        ? trim(chunk_split(preg_replace('/\s+/', '', (string) $user->iban), 4, ' '))
+        : __('transactions.not_available');
+@endphp
+
+@section('title', __('transactions.page_title'))
+@section('dashboard_theme', 'client')
+@section('dashboard_page_title', __('transactions.transfer_title'))
+@section('dashboard_page_subtitle', __('transactions.transfer_subtitle'))
+@section('dashboard_section_label', __('dashboard.client_area'))
+@section('dashboard_search_placeholder', __('dashboard.search_placeholder'))
+@section('dashboard_brand_title', 'Valtrix Bank')
+@section('dashboard_brand_subtitle', __('dashboard.client_area'))
+@section('sidebar_primary_title', __('dashboard.menu'))
+
+@section('sidebar_primary')
+    <a href="{{ localized_route('dashboard') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
+            <i class="fas fa-chart-pie"></i>
+        </span>
+        <span>{{ __('dashboard.dashboard_title') }}</span>
+    </a>
+    <a href="{{ localized_route('transfer.create') }}" class="premium-nav-item is-active flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-orange-600 shadow-sm ring-1 ring-orange-200/80">
+            <i class="fas fa-paper-plane"></i>
+        </span>
+        <span>{{ __('dashboard.new_transfer') }}</span>
+    </a>
+    <a href="{{ localized_route('transactions.history') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
+            <i class="fas fa-clock-rotate-left"></i>
+        </span>
+        <span>{{ __('dashboard.history') }}</span>
+    </a>
+    <a href="{{ localized_route('profile') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
+            <i class="fas fa-user-shield"></i>
+        </span>
+        <span>{{ __('dashboard.profile') }}</span>
+    </a>
+@endsection
+
+@section('sidebar_secondary_title', __('dashboard.services'))
+@section('sidebar_secondary')
+    <a href="{{ localized_route('notifications.index') }}" class="premium-nav-item flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
+        <span class="flex items-center gap-3">
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
+                <i class="fas fa-bell"></i>
+            </span>
+            <span>{{ __('dashboard.notifications') }}</span>
+        </span>
+        <span class="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">{{ $unreadNotificationsCount }}</span>
+    </a>
+    <a href="{{ localized_route('support.nous-contacter') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
+            <i class="fas fa-headset"></i>
+        </span>
+        <span>{{ __('dashboard.support') }}</span>
+    </a>
+    <form method="POST" action="{{ localized_route('logout') }}">
+        @csrf
+        <button type="submit" class="premium-nav-item flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-600">
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
+                <i class="fas fa-right-from-bracket"></i>
+            </span>
+            <span>{{ __('dashboard.logout') }}</span>
+        </button>
+    </form>
+@endsection
+
+@section('sidebar_footer')
+    <div class="premium-gradient-card premium-grid-glow relative overflow-hidden rounded-[26px] p-5">
+        <div class="relative z-10">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">{{ __('dashboard.concierge_service') }}</p>
+            <h3 class="mt-3 premium-brand-title text-xl font-semibold">{{ __('dashboard.priority_access') }}</h3>
+            <p class="mt-2 text-sm leading-6 text-white/78">
+                {{ __('dashboard.concierge_description') }}
+            </p>
+            <div class="mt-5 flex items-center justify-between rounded-2xl bg-white/10 px-4 py-3">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.profile') }}</p>
+                    <p class="text-lg font-semibold">{{ $profileCompletion }}%</p>
+                </div>
+                <a href="{{ localized_route('profile') }}" class="inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-2 text-xs font-semibold text-slate-900">
+                    {{ __('dashboard.complete') }}
+                    <i class="fas fa-arrow-right text-[10px]"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('topbar_actions')
+    <div class="hidden items-center gap-2 rounded-full bg-white/85 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 ring-1 ring-slate-200 md:inline-flex">
+        <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+        {{ __('dashboard.secure_session') }}
+    </div>
+@endsection
+
+@section('dashboard_header_actions')
+    <span class="inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-900/20">
+        <i class="fas fa-paper-plane text-xs"></i>
+        {{ __('transactions.new_transfer') }}
+    </span>
+    <a href="{{ localized_route('transactions.history') }}" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
+        <i class="fas fa-clock-rotate-left text-xs"></i>
+        {{ __('dashboard.history') }}
+    </a>
+@endsection
+
+@push('premium_dashboard_head')
     <style>
-        /* Animations élégantes */
-        @keyframes fadeInUp {
-            from { 
-                opacity: 0; 
-                transform: translateY(30px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            }
-        }
-        
-        @keyframes slideIn {
-            from { 
-                opacity: 0; 
-                transform: translateX(-20px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateX(0); 
-            }
-        }
-        
-        .fade-in-up { 
-            animation: fadeInUp 0.6s ease-out forwards; 
-        }
-        
-        .slide-in { 
-            animation: slideIn 0.5s ease-out forwards; 
-        }
-        
-        /* Animation d'entrée pour les éléments */
-        .stagger-item {
-            opacity: 0;
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-        
-        .stagger-item:nth-child(1) { animation-delay: 0.1s; }
-        .stagger-item:nth-child(2) { animation-delay: 0.2s; }
-        .stagger-item:nth-child(3) { animation-delay: 0.3s; }
-        .stagger-item:nth-child(4) { animation-delay: 0.4s; }
-        .stagger-item:nth-child(5) { animation-delay: 0.5s; }
-        .stagger-item:nth-child(6) { animation-delay: 0.6s; }
-        .stagger-item:nth-child(7) { animation-delay: 0.7s; }
-        
-        /* Effet de survol amélioré */
-        .card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        /* Effet glassmorphism pour la navigation */
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-        
-        /* Style pour les boutons d'action */
-        .action-btn {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .action-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-        
-        .action-btn:hover::before {
-            left: 100%;
-        }
-        
-        /* Style pour les cartes avec effet glass */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Style pour les inputs */
-        .input-field {
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.7);
-        }
-        
-        .input-field:focus {
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-            border-color: #3b82f6;
-            background: rgba(255, 255, 255, 0.9);
-        }
-        
-        /* Animation de pulsation pour les indicateurs */
-        @keyframes pulse-glow {
-            0%, 100% { 
-                box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
-            }
-            50% { 
-                box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
-            }
-        }
-        
-        .pulse-glow {
-            animation: pulse-glow 2s infinite;
+        .transfer-field {
+            background: rgba(248, 250, 252, 0.9);
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+            transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
         }
 
-        /* Overlay popup fade in animation */
+        .transfer-field:focus {
+            background: rgba(255, 255, 255, 0.98);
+            border-color: rgba(249, 115, 22, 0.48);
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.12);
+            outline: none;
+        }
+
+        .transfer-group {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.88));
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06);
+        }
+
+        .transfer-step {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+        }
+
+        .transfer-step.is-active {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .transfer-draft-item {
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            background: rgba(248, 250, 252, 0.82);
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
                 backdrop-filter: blur(0);
             }
+
             to {
                 opacity: 1;
                 backdrop-filter: blur(10px);
@@ -150,11 +169,13 @@
                 transform: translateY(20px) scale(0.94);
                 filter: blur(3px);
             }
+
             65% {
                 opacity: 1;
                 transform: translateY(-2px) scale(1.01);
                 filter: blur(0);
             }
+
             100% {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -166,6 +187,7 @@
             0% {
                 box-shadow: 0 30px 80px rgba(15, 23, 42, 0.36), 0 0 0 0 rgba(59, 130, 246, 0.22);
             }
+
             100% {
                 box-shadow: 0 30px 80px rgba(15, 23, 42, 0.36), 0 0 0 18px rgba(59, 130, 246, 0);
             }
@@ -184,6 +206,7 @@
             0% {
                 box-shadow: 0 28px 72px rgba(15, 23, 42, 0.34), 0 0 0 0 rgba(16, 185, 129, 0.2);
             }
+
             100% {
                 box-shadow: 0 28px 72px rgba(15, 23, 42, 0.34), 0 0 0 16px rgba(16, 185, 129, 0);
             }
@@ -193,12 +216,12 @@
             0%, 100% {
                 transform: translateY(0);
             }
+
             50% {
                 transform: translateY(-3px);
             }
         }
 
-        /* Icon smooth fade & scale */
         .icon-fade-transition {
             transition: opacity 0.5s ease, transform 0.5s ease;
             opacity: 0;
@@ -210,7 +233,6 @@
             transform: scale(1) !important;
         }
 
-        /* Professional modal overlay */
         .flash-overlay {
             position: fixed !important;
             inset: 0;
@@ -219,7 +241,7 @@
             padding: clamp(0.75rem, 2vw, 2rem);
             min-height: 100dvh;
             background:
-                radial-gradient(1200px 540px at 50% -10%, rgba(59, 130, 246, 0.18), transparent 72%),
+                radial-gradient(1200px 540px at 50% -10%, rgba(249, 115, 22, 0.18), transparent 72%),
                 rgba(15, 23, 42, 0.62);
             backdrop-filter: blur(8px);
             z-index: 9999 !important;
@@ -273,9 +295,7 @@
         .flash-card::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            inset: 0 0 auto;
             height: 4px;
             background: linear-gradient(90deg, var(--accent), var(--accent-strong));
         }
@@ -287,9 +307,9 @@
         }
 
         .flash-card--progress {
-            --accent: #3b82f6;
-            --accent-strong: #1d4ed8;
-            --accent-soft: rgba(59, 130, 246, 0.16);
+            --accent: #f97316;
+            --accent-strong: #ea580c;
+            --accent-soft: rgba(249, 115, 22, 0.16);
         }
 
         .flash-icon-container {
@@ -333,8 +353,8 @@
             margin-bottom: 1rem;
             text-align: left;
             border-radius: 1rem;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            background: linear-gradient(135deg, rgba(248, 250, 252, 0.95), rgba(239, 246, 255, 0.95));
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            background: linear-gradient(135deg, rgba(255, 247, 237, 0.95), rgba(255, 255, 255, 0.95));
             padding: 0.9rem 1rem;
         }
 
@@ -349,10 +369,10 @@
             font-size: 0.75rem;
             letter-spacing: 0.02em;
             text-transform: uppercase;
-            color: #1d4ed8;
+            color: #c2410c;
             font-weight: 700;
-            background: rgba(59, 130, 246, 0.14);
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            background: rgba(249, 115, 22, 0.12);
+            border: 1px solid rgba(249, 115, 22, 0.16);
             border-radius: 9999px;
             padding: 0.32rem 0.65rem;
             margin-bottom: 0.75rem;
@@ -407,7 +427,7 @@
 
         .flash-button:focus {
             outline: none;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2), 0 18px 35px rgba(15, 23, 42, 0.24);
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.2), 0 18px 35px rgba(15, 23, 42, 0.24);
         }
 
         .flash-progress-wrap {
@@ -415,8 +435,8 @@
             margin: 1.25rem 0 0.75rem;
             padding: 1rem;
             border-radius: 1rem;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(99, 102, 241, 0.08));
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.08), rgba(251, 191, 36, 0.08));
+            border: 1px solid rgba(249, 115, 22, 0.16);
         }
 
         .flash-progress-head {
@@ -441,67 +461,10 @@
             width: 0%;
             height: 100%;
             border-radius: inherit;
-            background: linear-gradient(90deg, #3b82f6, #6366f1);
+            background: linear-gradient(90deg, #f97316, #f59e0b);
             transition: width 0.45s ease;
         }
 
-        /* Style pour l'arrière-plan */
-        .background-container {
-            background-image: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            position: relative;
-        }
-
-        .background-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.9) 0%, rgba(139, 92, 246, 0.85) 50%, rgba(14, 165, 233, 0.9) 100%);
-            backdrop-filter: blur(2px);
-        }
-
-        @media (max-width: 640px) {
-            .background-container {
-                background-attachment: scroll;
-            }
-
-            .flash-overlay {
-                padding: 0.6rem;
-            }
-
-            .flash-card {
-                width: min(100vw - 0.6rem, 100%);
-                max-height: 90dvh;
-                border-radius: 1.1rem;
-                padding: 1.15rem;
-            }
-
-            .flash-title {
-                font-size: 1.1rem;
-            }
-
-            .flash-message {
-                font-size: 0.9rem;
-                margin-bottom: 1.1rem;
-            }
-
-            .flash-button {
-                padding: 0.75rem 0.9rem;
-            }
-        }
-
-        @media (min-width: 520px) {
-            .flash-client-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        /* Style pour la barre de progression */
         .progress-bar {
             position: relative;
             overflow: hidden;
@@ -514,7 +477,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
             animation: shimmer 2s infinite;
         }
 
@@ -523,307 +486,370 @@
             100% { left: 100%; }
         }
 
-        /* Style pour les étapes */
-        .step-indicator {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
+        @media (min-width: 520px) {
+            .flash-client-grid {
+                grid-template-columns: 1fr 1fr;
+            }
         }
 
-        .step-active {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            color: white;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-        }
+        @media (max-width: 640px) {
+            .flash-overlay {
+                padding: 0.6rem;
+            }
 
-        .step-inactive {
-            background: #e5e7eb;
-            color: #9ca3af;
+            .flash-card {
+                width: min(100vw - 0.6rem, 100%);
+                max-height: 90dvh;
+                border-radius: 1.1rem;
+                padding: 1.15rem;
+            }
         }
     </style>
-</head>
-<body class="min-h-screen">
-  @include('components.background-slider')
-<!-- Container avec image de fond -->
-    <div class="background-container min-h-screen">
-        <div class="min-h-screen relative z-10">
-            <!-- Navigation améliorée -->
-            <nav class="glass-nav sticky top-0 z-50">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex justify-between h-16">
-                        <div class="flex items-center">
-                            <div class="flex items-center space-x-3">
-                                <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
-                                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
-                                </div>
-                                <div>
-                                    <a href="{{ localized_route('dashboard') }}" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"><span class="sr-only">Valtrix Bank</span></a>
-                                    <div class="text-xs text-gray-500 -mt-1">{{ __('transactions.new_transfer') }}</div>
-                                </div>
-                            </div>
-                        </div>
+@endpush
 
-                        <!-- Desktop Navigation -->
-                        <div class="hidden md:flex items-center space-x-6">
-                            <a href="{{ localized_route('dashboard') }}" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
-                                <i class="fas fa-tachometer-alt mr-2"></i> {{ __('transactions.dashboard') }}
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-                            </a>
-                            <form method="POST" action="{{ localized_route('logout') }}">
-                                @csrf
-                                <button type="submit" class="relative text-gray-700 hover:text-red-600 transition duration-300 font-medium group">
-                                    <i class="fas fa-sign-out-alt mr-2"></i> {{ __('transactions.logout') }}
-                                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
-                                </button>
-                            </form>
-                        </div>
+@section('dashboard_content')
+    <section class="premium-gradient-card premium-grid-glow relative overflow-hidden rounded-[30px] p-6 sm:p-7">
+        <div class="relative z-10 flex flex-col gap-6 2xl:flex-row 2xl:items-end 2xl:justify-between">
+            <div class="max-w-3xl">
+                <p class="text-sm uppercase tracking-[0.22em] text-white/65">{{ __('dashboard.secure_session') }}</p>
+                <h2 class="mt-4 premium-page-title text-3xl font-semibold tracking-[-0.05em] sm:text-4xl">
+                    {{ __('transactions.transfer_details') }}
+                </h2>
+                <p class="mt-3 text-sm leading-6 text-white/78 sm:text-base">
+                    {{ __('transactions.transfer_subtitle') }}
+                </p>
+            </div>
 
-                        <!-- Mobile menu button -->
-                        <div class="md:hidden flex items-center">
-                            <button id="mobile-menu-button" class="text-gray-700 hover:text-blue-600 focus:outline-none transition duration-300 p-2 rounded-lg hover:bg-blue-50">
-                                <i class="fas fa-bars text-xl"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Mobile menu -->
-                    <div id="mobile-menu" class="hidden pb-4">
-                        <div class="px-2 pt-2 pb-3 space-y-2 bg-white/95 backdrop-blur-lg border border-gray-200 rounded-lg shadow-xl mt-2">
-                            <a href="{{ localized_route('dashboard') }}" class="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
-                                <i class="fas fa-tachometer-alt w-5 mr-3 text-center"></i>
-                                {{ __('transactions.dashboard') }}
-                            </a>
-                            <form method="POST" action="{{ localized_route('logout') }}" class="inline">
-                                @csrf
-                                <button type="submit" class="flex items-center w-full px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition duration-300">
-                                    <i class="fas fa-sign-out-alt w-5 mr-3 text-center"></i>
-                                    {{ __('transactions.logout') }}
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+            <div class="grid gap-3 sm:grid-cols-3 2xl:min-w-[520px]">
+                <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
+                    <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.current_balance') }}</p>
+                    <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $balanceFormatted }}</p>
                 </div>
-            </nav>
-
-            <div class="max-w-4xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-                <!-- En-tête de la page -->
-                <div class="mb-8 fade-in-up">
-                    <h1 class="text-2xl sm:text-3xl font-bold text-white drop-shadow-lg text-center">{{ __('transactions.transfer_title') }}</h1>
-                    <p class="text-white/90 mt-2 drop-shadow text-center">{{ __('transactions.transfer_subtitle') }}</p>
+                <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
+                    <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.operations_to_track') }}</p>
+                    <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $pendingOperationsCount }}</p>
                 </div>
-
-                <!-- Indicateur d'étapes -->
-                <div class="glass-card rounded-2xl p-4 sm:p-6 mb-8 fade-in-up">
-                    <div class="flex flex-col items-center sm:flex-row sm:items-center sm:justify-between gap-4 max-w-md sm:mx-auto">
-                        <div class="flex flex-col items-center">
-                            <div class="step-indicator step-active">
-                                <i class="fas fa-edit"></i>
-                            </div>
-                            <span class="text-xs sm:text-sm font-medium text-gray-700 mt-2 text-center">{{ __('transactions.step_information') }}</span>
-                        </div>
-                        <div class="hidden sm:block flex-1 h-1 bg-gray-200 mx-4"></div>
-                        <div class="flex flex-col items-center">
-                            <div class="step-indicator step-inactive">
-                                <i class="fas fa-cog"></i>
-                            </div>
-                            <span class="text-xs sm:text-sm font-medium text-gray-500 mt-2 text-center">{{ __('transactions.step_processing') }}</span>
-                        </div>
-                        <div class="hidden sm:block flex-1 h-1 bg-gray-200 mx-4"></div>
-                        <div class="flex flex-col items-center">
-                            <div class="step-indicator step-inactive">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <span class="text-xs sm:text-sm font-medium text-gray-500 mt-2 text-center">{{ __('transactions.step_confirmation') }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Formulaire principal -->
-                <div class="glass-card rounded-2xl overflow-hidden card-hover">
-                    <div class="px-4 sm:px-8 py-6 sm:py-8">
-                        <div class="flex items-center mb-6">
-                            <div class="bg-gradient-to-r from-blue-500 to-indigo-500 p-3 rounded-2xl mr-4 shadow-lg">
-                                <i class="fas fa-paper-plane text-white text-2xl"></i>
-                            </div>
-                            <div>
-                                <h1 class="text-2xl font-bold text-gray-900">{{ __('transactions.transfer_details') }}</h1>
-                                <p class="text-gray-600 mt-1">{{ __('transactions.beneficiary_info') }}</p>
-                            </div>
-                        </div>
-
-                        <form id="transferForm" method="POST" class="space-y-6">
-                            @csrf
-
-                            <!-- Montant -->
-                            <div class="stagger-item">
-                                <label for="amount" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
-                                    <i class="fas fa-euro-sign mr-2 text-green-500"></i>
-                                    {{ __('transactions.transfer_amount') }}
-                                </label>
-                                <div class="relative rounded-xl shadow-sm">
-                                    <input type="number" 
-                                           step="0.01" 
-                                           id="amount" 
-                                           name="amount" 
-                                           required
-                                           class="block w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 input-field"
-                                           placeholder="0.00">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="fas fa-euro-sign text-gray-400"></i>
-                                    </div>
-                                </div>
-                                @error('amount') 
-                                    <p class="text-red-500 text-sm mt-2 flex items-center">
-                                        <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
-                                    </p> 
-                                @enderror
-                            </div>
-
-                            <!-- Informations bénéficiaire -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="stagger-item">
-                                    <label for="recipient_name" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
-                                        <i class="fas fa-user mr-2 text-blue-500"></i>
-                                        {{ __('transactions.recipient_name') }}
-                                    </label>
-                                    <input type="text" 
-                                           id="recipient_name" 
-                                           name="recipient_name" 
-                                           required
-                                           class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 input-field"
-                                           placeholder="{{ __('transactions.recipient_name_placeholder') }}">
-                                    @error('recipient_name') 
-                                        <p class="text-red-500 text-sm mt-2 flex items-center">
-                                            <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
-                                        </p> 
-                                    @enderror
-                                </div>
-
-                                <div class="stagger-item">
-                                    <label for="bank_name" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
-                                        <i class="fas fa-university mr-2 text-purple-500"></i>
-                                        {{ __('transactions.bank_name') }}
-                                    </label>
-                                    <input type="text" 
-                                           id="bank_name" 
-                                           name="bank_name" 
-                                           required
-                                           class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 input-field"
-                                           placeholder="{{ __('transactions.bank_name_placeholder') }}">
-                                    @error('bank_name') 
-                                        <p class="text-red-500 text-sm mt-2 flex items-center">
-                                            <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
-                                        </p> 
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- Coordonnées bancaires -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="stagger-item">
-                                    <label for="recipient_iban" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
-                                        <i class="fas fa-credit-card mr-2 text-indigo-500"></i>
-                                        {{ __('transactions.recipient_iban') }}
-                                    </label>
-                                    <input type="text" 
-                                           id="recipient_iban" 
-                                           name="recipient_iban" 
-                                           required
-                                           class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 input-field"
-                                           placeholder="{{ __('transactions.recipient_iban_placeholder') }}">
-                                    @error('recipient_iban') 
-                                        <p class="text-red-500 text-sm mt-2 flex items-center">
-                                            <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
-                                        </p> 
-                                    @enderror
-                                </div>
-
-                                <div class="stagger-item">
-                                    <label for="recipient_bic" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
-                                        <i class="fas fa-code mr-2 text-orange-500"></i>
-                                        {{ __('transactions.recipient_bic') }}
-                                    </label>
-                                    <input type="text" 
-                                           id="recipient_bic" 
-                                           name="recipient_bic" 
-                                           required
-                                           class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 input-field"
-                                           placeholder="{{ __('transactions.recipient_bic_placeholder') }}">
-                                    @error('recipient_bic') 
-                                        <p class="text-red-500 text-sm mt-2 flex items-center">
-                                            <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
-                                        </p> 
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- Informations supplémentaires -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="stagger-item">
-                                    <label for="reason" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
-                                        <i class="fas fa-comment mr-2 text-gray-500"></i>
-                                        {{ __('transactions.transfer_reason') }}
-                                    </label>
-                                    <input type="text" 
-                                           id="reason" 
-                                           name="reason"
-                                           class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 input-field"
-                                           placeholder="{{ __('transactions.transfer_reason_placeholder') }}">
-                                    @error('reason') 
-                                        <p class="text-red-500 text-sm mt-2 flex items-center">
-                                            <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
-                                        </p> 
-                                    @enderror
-                                </div>
-
-                                <div class="stagger-item">
-                                    <label for="activation_code" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
-                                        <i class="fas fa-shield-alt mr-2 text-red-500"></i>
-                                        {{ __('transactions.activation_code') }}
-                                    </label>
-                                    <input type="text"
-                                           id="activation_code"
-                                           name="activation_code"
-                                           required
-                                           class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 input-field"
-                                           placeholder="{{ __('transactions.activation_code_placeholder') }}">
-                                    @error('activation_code')
-                                        <p class="text-red-500 text-sm mt-2 flex items-center">
-                                            <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
-                                        </p>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- Boutons d'action -->
-                            <div class="stagger-item flex flex-col sm:flex-row sm:justify-end gap-3 pt-6">
-                                <a href="{{ localized_route('dashboard') }}"
-                                   class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-200 transition duration-300 font-medium shadow-sm flex items-center justify-center gap-2 w-full sm:w-auto">
-                                    <i class="fas fa-arrow-left"></i>
-                                    {{ __('transactions.cancel') }}
-                                </a>
-                                <button type="button" 
-                                        id="startBtn" 
-                                        class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-3 rounded-xl hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-semibold shadow-lg transform hover:scale-105 transition duration-300 pulse-glow flex items-center justify-center gap-2 w-full sm:w-auto">
-                                    <i class="fas fa-paper-plane"></i>
-                                    {{ __('transactions.start_transfer') }}
-                                </button>
-                            </div>
-                        </form>
-
-                    </div>
+                <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
+                    <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.notifications') }}</p>
+                    <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $unreadNotificationsCount }}</p>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Overlay d'interruption -->
+    <div class="grid gap-6 2xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,380px)]">
+        <section class="space-y-6">
+            <div class="premium-panel rounded-[30px] bg-slate-900 p-5 sm:p-6">
+                <div class="grid gap-3 sm:grid-cols-3">
+                    <div class="transfer-step is-active rounded-[24px] px-4 py-4 text-white">
+                        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/16 text-sm shadow-sm">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <p class="mt-4 text-sm font-semibold">{{ __('transactions.step_information') }}</p>
+                    </div>
+                    <div class="transfer-step rounded-[24px] px-4 py-4 text-white/82">
+                        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/12 text-sm shadow-sm">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <p class="mt-4 text-sm font-semibold">{{ __('transactions.step_processing') }}</p>
+                    </div>
+                    <div class="transfer-step rounded-[24px] px-4 py-4 text-white/82">
+                        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/12 text-sm shadow-sm">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <p class="mt-4 text-sm font-semibold">{{ __('transactions.step_confirmation') }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <section class="premium-panel premium-card-hover rounded-[30px] p-5 sm:p-6">
+                <div class="flex flex-col gap-3 border-b border-slate-200/70 pb-5 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('dashboard.immediate_summary') }}</p>
+                        <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">{{ __('transactions.transfer_details') }}</h2>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('transactions.beneficiary_info') }}</p>
+                    </div>
+                    <div class="rounded-full bg-orange-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-orange-700 ring-1 ring-orange-200/80">
+                        {{ __('transactions.new_transfer') }}
+                    </div>
+                </div>
+
+                <form id="transferForm" method="POST" class="mt-6 space-y-6">
+                    @csrf
+
+                    <div class="grid gap-6 xl:grid-cols-2">
+                        <div class="transfer-group rounded-[28px] p-5 xl:col-span-2">
+                            <div class="flex items-start gap-4">
+                                <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                                    <i class="fas fa-wallet"></i>
+                                </span>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-slate-950">{{ __('transactions.transfer_amount') }}</h3>
+                                    <p class="mt-1 text-sm text-slate-500">{{ __('transactions.transfer_subtitle') }}</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-5">
+                                <label for="amount" class="mb-3 block text-sm font-semibold text-slate-800">
+                                    {{ __('transactions.transfer_amount') }}
+                                </label>
+                                <div class="relative">
+                                    <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                                        <i class="fas fa-euro-sign"></i>
+                                    </span>
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        id="amount"
+                                        name="amount"
+                                        value="{{ old('amount') }}"
+                                        required
+                                        class="transfer-field input-field block w-full rounded-2xl px-4 py-3.5 pl-12 text-sm text-slate-900 placeholder:text-slate-400"
+                                        placeholder="{{ __('transactions.amount_placeholder') }}"
+                                    >
+                                </div>
+                                @error('amount')
+                                    <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="transfer-group rounded-[28px] p-5">
+                            <div class="flex items-start gap-4">
+                                <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-slate-950">{{ __('transactions.beneficiary_info') }}</h3>
+                                    <p class="mt-1 text-sm text-slate-500">{{ __('transactions.recipient_name') }}</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-5 space-y-5">
+                                <div>
+                                    <label for="recipient_name" class="mb-3 block text-sm font-semibold text-slate-800">
+                                        {{ __('transactions.recipient_name') }}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="recipient_name"
+                                        name="recipient_name"
+                                        value="{{ old('recipient_name') }}"
+                                        required
+                                        class="transfer-field input-field block w-full rounded-2xl px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400"
+                                        placeholder="{{ __('transactions.recipient_name_placeholder') }}"
+                                    >
+                                    @error('recipient_name')
+                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
+                                    <label for="bank_name" class="mb-3 block text-sm font-semibold text-slate-800">
+                                        {{ __('transactions.bank_name') }}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="bank_name"
+                                        name="bank_name"
+                                        value="{{ old('bank_name') }}"
+                                        required
+                                        class="transfer-field input-field block w-full rounded-2xl px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400"
+                                        placeholder="{{ __('transactions.bank_name_placeholder') }}"
+                                    >
+                                    @error('bank_name')
+                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="transfer-group rounded-[28px] p-5">
+                            <div class="flex items-start gap-4">
+                                <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-700">
+                                    <i class="fas fa-building-columns"></i>
+                                </span>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-slate-950">{{ __('transactions.banking_details') }}</h3>
+                                    <p class="mt-1 text-sm text-slate-500">{{ __('transactions.recipient_iban') }}</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-5 space-y-5">
+                                <div>
+                                    <label for="recipient_iban" class="mb-3 block text-sm font-semibold text-slate-800">
+                                        {{ __('transactions.recipient_iban') }}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="recipient_iban"
+                                        name="recipient_iban"
+                                        value="{{ old('recipient_iban') }}"
+                                        required
+                                        class="transfer-field input-field block w-full rounded-2xl px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400"
+                                        placeholder="{{ __('transactions.recipient_iban_placeholder') }}"
+                                    >
+                                    @error('recipient_iban')
+                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
+                                    <label for="recipient_bic" class="mb-3 block text-sm font-semibold text-slate-800">
+                                        {{ __('transactions.recipient_bic') }}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="recipient_bic"
+                                        name="recipient_bic"
+                                        value="{{ old('recipient_bic') }}"
+                                        required
+                                        class="transfer-field input-field block w-full rounded-2xl px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400"
+                                        placeholder="{{ __('transactions.recipient_bic_placeholder') }}"
+                                    >
+                                    @error('recipient_bic')
+                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="transfer-group rounded-[28px] p-5 xl:col-span-2">
+                            <div class="flex items-start gap-4">
+                                <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
+                                    <i class="fas fa-shield-alt"></i>
+                                </span>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-slate-950">{{ __('transactions.additional_info') }}</h3>
+                                    <p class="mt-1 text-sm text-slate-500">{{ __('transactions.activation_code') }}</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-5 grid gap-5 xl:grid-cols-2">
+                                <div>
+                                    <label for="reason" class="mb-3 block text-sm font-semibold text-slate-800">
+                                        {{ __('transactions.transfer_reason') }}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="reason"
+                                        name="reason"
+                                        value="{{ old('reason') }}"
+                                        class="transfer-field input-field block w-full rounded-2xl px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400"
+                                        placeholder="{{ __('transactions.transfer_reason_placeholder') }}"
+                                    >
+                                    @error('reason')
+                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
+                                    <label for="activation_code" class="mb-3 block text-sm font-semibold text-slate-800">
+                                        {{ __('transactions.activation_code') }}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="activation_code"
+                                        name="activation_code"
+                                        value="{{ old('activation_code') }}"
+                                        required
+                                        class="transfer-field input-field block w-full rounded-2xl px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400"
+                                        placeholder="{{ __('transactions.activation_code_placeholder') }}"
+                                    >
+                                    @error('activation_code')
+                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col-reverse gap-3 border-t border-slate-200/70 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                        <a href="{{ localized_route('dashboard') }}" class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
+                            <i class="fas fa-arrow-left text-xs"></i>
+                            {{ __('transactions.cancel') }}
+                        </a>
+                        <button type="button" id="startBtn" class="inline-flex min-w-[220px] items-center justify-center gap-2 rounded-full border border-orange-300 bg-orange-500 px-6 py-3.5 text-sm font-semibold text-white shadow-[0_18px_45px_rgba(249,115,22,0.35)] transition hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-200 disabled:cursor-not-allowed disabled:opacity-80">
+                            <i class="fas fa-paper-plane text-xs"></i>
+                            {{ __('transactions.start_transfer') }}
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </section>
+
+        <aside class="space-y-6">
+            <section class="premium-panel premium-card-hover rounded-[30px] p-5">
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('dashboard.instant_reading') }}</p>
+                        <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">{{ __('transactions.transfer_progress') }}</h2>
+                    </div>
+                    <span class="premium-soft-chip rounded-full px-3 py-1 text-xs font-semibold">
+                        {{ __('dashboard.real_time') }}
+                    </span>
+                </div>
+
+                <div class="mt-5 space-y-3">
+                    <div class="transfer-draft-item rounded-[24px] px-4 py-4">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">{{ __('transactions.transfer_amount') }}</p>
+                        <p id="transferSummaryAmount" class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">0.00 {{ $currencyCode }}</p>
+                    </div>
+                    <div class="transfer-draft-item rounded-[24px] px-4 py-4">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">{{ __('transactions.recipient_name') }}</p>
+                        <p id="transferSummaryRecipient" class="mt-2 text-sm font-semibold text-slate-900">{{ __('transactions.not_available') }}</p>
+                    </div>
+                    <div class="transfer-draft-item rounded-[24px] px-4 py-4">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">{{ __('transactions.recipient_iban') }}</p>
+                        <p id="transferSummaryIban" class="mt-2 break-all text-sm font-semibold text-slate-900">{{ __('transactions.not_available') }}</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="premium-gradient-card rounded-[30px] p-5">
+                <p class="text-xs uppercase tracking-[0.18em] text-white/65">{{ __('dashboard.current_balance') }}</p>
+                <h3 class="mt-3 premium-brand-title text-3xl font-semibold">{{ $balanceFormatted }}</h3>
+                <div class="mt-5 space-y-3">
+                    <div class="rounded-[22px] bg-white/10 px-4 py-3">
+                        <p class="text-xs uppercase tracking-[0.16em] text-white/60">{{ __('transactions.client_name_label') }}</p>
+                        <p class="mt-1 text-sm font-semibold">{{ $user->name }}</p>
+                    </div>
+                    <div class="rounded-[22px] bg-white/10 px-4 py-3">
+                        <p class="text-xs uppercase tracking-[0.16em] text-white/60">{{ __('transactions.client_iban_label') }}</p>
+                        <p class="mt-1 break-all text-sm font-semibold">{{ $formattedClientIban }}</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="premium-panel premium-card-hover rounded-[30px] p-5">
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('dashboard.secure_area') }}</p>
+                <h3 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">{{ __('dashboard.priority_access') }}</h3>
+                <p class="mt-3 text-sm leading-6 text-slate-500">{{ __('dashboard.secure_area_description') }}</p>
+
+                <div class="mt-5 space-y-3">
+                    <div class="rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
+                        <div class="flex items-center justify-between gap-3">
+                            <div>
+                                <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.operations_to_track') }}</p>
+                                <p class="mt-1 text-sm text-slate-500">{{ __('dashboard.operations_to_track_description') }}</p>
+                            </div>
+                            <span class="premium-brand-title text-3xl font-semibold text-slate-950">{{ $pendingOperationsCount }}</span>
+                        </div>
+                    </div>
+
+                    <a href="{{ localized_route('support.nous-contacter') }}" class="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
+                        <i class="fas fa-headset text-xs"></i>
+                        {{ __('dashboard.support') }}
+                    </a>
+                </div>
+            </section>
+        </aside>
+    </div>
+@endsection
+
+@section('dashboard_overlays')
+    @include('components.client-chat-widget')
+
     <div id="flashOverlay" class="flash-overlay" aria-hidden="true">
         <div id="flashCard" class="flash-card flash-card--error" role="dialog" aria-modal="true" aria-labelledby="flashTitle" aria-describedby="flashMessage">
             <div id="flashIconContainer" class="flash-icon-container">
@@ -860,377 +886,401 @@
             </button>
         </div>
     </div>
+@endsection
 
+@push('premium_dashboard_scripts')
     <script>
-        // Toggle mobile menu
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const transferForm = document.getElementById('transferForm');
+            const startBtn = document.getElementById('startBtn');
+            const overlay = document.getElementById('flashOverlay');
+            const flashMsg = document.getElementById('flashMessage');
+            const closeFlash = document.getElementById('closeFlash');
+            const flashIcon = document.getElementById('flashIcon');
+            const flashIconContainer = document.getElementById('flashIconContainer');
+            const flashCard = document.getElementById('flashCard');
+            const flashTitle = document.getElementById('flashTitle');
+            const flashProgressWrap = document.getElementById('flashProgressWrap');
+            const flashProgressBar = document.getElementById('flashProgressBar');
+            const flashProgressText = document.getElementById('flashProgressText');
+            const flashClientPanel = document.getElementById('flashClientPanel');
+            const flashClientName = document.getElementById('flashClientName');
+            const flashClientIban = document.getElementById('flashClientIban');
+            const summaryAmount = document.getElementById('transferSummaryAmount');
+            const summaryRecipient = document.getElementById('transferSummaryRecipient');
+            const summaryIban = document.getElementById('transferSummaryIban');
 
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(event) {
-            const menu = document.getElementById('mobile-menu');
-            const button = document.getElementById('mobile-menu-button');
-            if (!menu.contains(event.target) && !button.contains(event.target)) {
-                menu.classList.add('hidden');
-            }
-        });
-
-        const startBtn = document.getElementById('startBtn');
-        const overlay = document.getElementById('flashOverlay');
-        const flashMsg = document.getElementById('flashMessage');
-        const closeFlash = document.getElementById('closeFlash');
-        const flashIcon = document.getElementById('flashIcon');
-        const flashIconContainer = document.getElementById('flashIconContainer');
-        const flashCard = document.getElementById('flashCard');
-        const flashTitle = document.getElementById('flashTitle');
-        const flashProgressWrap = document.getElementById('flashProgressWrap');
-        const flashProgressBar = document.getElementById('flashProgressBar');
-        const flashProgressText = document.getElementById('flashProgressText');
-        const flashClientPanel = document.getElementById('flashClientPanel');
-        const flashClientName = document.getElementById('flashClientName');
-        const flashClientIban = document.getElementById('flashClientIban');
-
-        let txId = null;
-        let ticking = false;
-        let progressMode = false;
-        let audioContext = null;
-        let soundUnlocked = false;
-        let transferClientSnapshot = {
-            name: '',
-            iban: ''
-        };
-
-        function getOnHoldFallbackMessage() {
-            return '{{ __('transactions.transaction_on_hold') }}';
-        }
-
-        function formatIban(iban) {
-            const compact = (iban || '').replace(/\s+/g, '').toUpperCase();
-            if (!compact) {
-                return '{{ __('transactions.not_available') }}';
-            }
-
-            return compact.match(/.{1,4}/g).join(' ');
-        }
-
-        function buildClientSnapshot() {
-            const recipientNameInput = document.getElementById('recipient_name');
-            const recipientIbanInput = document.getElementById('recipient_iban');
-            const name = (recipientNameInput?.value || '').trim();
-            const iban = (recipientIbanInput?.value || '').trim();
-
-            return {
-                name: name || '{{ __('transactions.not_available') }}',
-                iban: formatIban(iban),
-            };
-        }
-
-        function updateClientPanel() {
-            const source = transferClientSnapshot && (transferClientSnapshot.name || transferClientSnapshot.iban)
-                ? transferClientSnapshot
-                : buildClientSnapshot();
-
-            flashClientName.textContent = source.name || '{{ __('transactions.not_available') }}';
-            flashClientIban.textContent = source.iban || '{{ __('transactions.not_available') }}';
-        }
-
-        function updateSnapshotFromServer(data) {
-            if (!data || typeof data !== 'object') {
+            if (!transferForm || !startBtn || !overlay) {
                 return;
             }
 
-            const serverName = (data.recipient_name || '').trim();
-            const serverIban = (data.recipient_iban || '').trim();
-
-            if (serverName === '' && serverIban === '') {
-                return;
-            }
-
-            transferClientSnapshot = {
-                name: serverName || transferClientSnapshot.name || '{{ __('transactions.not_available') }}',
-                iban: serverIban ? formatIban(serverIban) : (transferClientSnapshot.iban || '{{ __('transactions.not_available') }}'),
+            let txId = null;
+            let ticking = false;
+            let progressMode = false;
+            let audioContext = null;
+            let soundUnlocked = false;
+            let transferClientSnapshot = {
+                name: '',
+                iban: ''
             };
-        }
 
-        function resolveInterruptionMessage(rawMessage) {
-            if (typeof rawMessage !== 'string') {
-                return getOnHoldFallbackMessage();
+            function getOnHoldFallbackMessage() {
+                return '{{ __('transactions.transaction_on_hold') }}';
             }
 
-            const normalized = rawMessage.trim();
-
-            return normalized !== '' ? normalized : getOnHoldFallbackMessage();
-        }
-
-        function getAudioContext() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            return audioContext;
-        }
-
-        function unlockAudio() {
-            try {
-                const ctx = getAudioContext();
-                if (ctx.state === 'suspended') {
-                    ctx.resume();
+            function formatIban(iban) {
+                const compact = (iban || '').replace(/\s+/g, '').toUpperCase();
+                if (!compact) {
+                    return '{{ __('transactions.not_available') }}';
                 }
-            } catch (e) {
-                // Ignore audio unlock errors
+
+                return compact.match(/.{1,4}/g).join(' ');
             }
-        }
 
-        function playTone(frequency, startTime, duration, volume) {
-            const ctx = getAudioContext();
-            const oscillator = ctx.createOscillator();
-            const gainNode = ctx.createGain();
+            function formatAmount(amount) {
+                const normalized = Number.parseFloat(amount);
 
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(frequency, startTime);
+                if (Number.isNaN(normalized)) {
+                    return '0.00 {{ $currencyCode }}';
+                }
 
-            gainNode.gain.setValueAtTime(0, startTime);
-            gainNode.gain.linearRampToValueAtTime(volume, startTime + 0.02);
-            gainNode.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+                return normalized.toFixed(2) + ' {{ $currencyCode }}';
+            }
 
-            oscillator.connect(gainNode);
-            gainNode.connect(ctx.destination);
+            function updateTransferSummary() {
+                const amountInput = document.getElementById('amount');
+                const recipientNameInput = document.getElementById('recipient_name');
+                const recipientIbanInput = document.getElementById('recipient_iban');
 
-            oscillator.start(startTime);
-            oscillator.stop(startTime + duration + 0.02);
-        }
+                summaryAmount.textContent = formatAmount(amountInput ? amountInput.value : 0);
+                summaryRecipient.textContent = recipientNameInput && recipientNameInput.value.trim() !== ''
+                    ? recipientNameInput.value.trim()
+                    : '{{ __('transactions.not_available') }}';
+                summaryIban.textContent = formatIban(recipientIbanInput ? recipientIbanInput.value : '');
+            }
 
-        function playModalSound(type) {
-            if (!soundUnlocked) return;
-            try {
+            function buildClientSnapshot() {
+                const recipientNameInput = document.getElementById('recipient_name');
+                const recipientIbanInput = document.getElementById('recipient_iban');
+                const name = (recipientNameInput && recipientNameInput.value ? recipientNameInput.value : '').trim();
+                const iban = (recipientIbanInput && recipientIbanInput.value ? recipientIbanInput.value : '').trim();
+
+                return {
+                    name: name || '{{ __('transactions.not_available') }}',
+                    iban: formatIban(iban),
+                };
+            }
+
+            function updateClientPanel() {
+                const source = transferClientSnapshot && (transferClientSnapshot.name || transferClientSnapshot.iban)
+                    ? transferClientSnapshot
+                    : buildClientSnapshot();
+
+                flashClientName.textContent = source.name || '{{ __('transactions.not_available') }}';
+                flashClientIban.textContent = source.iban || '{{ __('transactions.not_available') }}';
+            }
+
+            function updateSnapshotFromServer(data) {
+                if (!data || typeof data !== 'object') {
+                    return;
+                }
+
+                const serverName = (data.recipient_name || '').trim();
+                const serverIban = (data.recipient_iban || '').trim();
+
+                if (serverName === '' && serverIban === '') {
+                    return;
+                }
+
+                transferClientSnapshot = {
+                    name: serverName || transferClientSnapshot.name || '{{ __('transactions.not_available') }}',
+                    iban: serverIban ? formatIban(serverIban) : (transferClientSnapshot.iban || '{{ __('transactions.not_available') }}'),
+                };
+            }
+
+            function resolveInterruptionMessage(rawMessage) {
+                if (typeof rawMessage !== 'string') {
+                    return getOnHoldFallbackMessage();
+                }
+
+                const normalized = rawMessage.trim();
+
+                return normalized !== '' ? normalized : getOnHoldFallbackMessage();
+            }
+
+            function getAudioContext() {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+
+                return audioContext;
+            }
+
+            function unlockAudio() {
+                try {
+                    const ctx = getAudioContext();
+                    if (ctx.state === 'suspended') {
+                        ctx.resume();
+                    }
+                } catch (error) {
+                }
+            }
+
+            function playTone(frequency, startTime, duration, volume) {
                 const ctx = getAudioContext();
-                const now = ctx.currentTime;
+                const oscillator = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(frequency, startTime);
+                gainNode.gain.setValueAtTime(0, startTime);
+                gainNode.gain.linearRampToValueAtTime(volume, startTime + 0.02);
+                gainNode.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(ctx.destination);
+
+                oscillator.start(startTime);
+                oscillator.stop(startTime + duration + 0.02);
+            }
+
+            function playModalSound(type) {
+                if (!soundUnlocked) {
+                    return;
+                }
+
+                try {
+                    const ctx = getAudioContext();
+                    const now = ctx.currentTime;
+
+                    if (type === 'success') {
+                        playTone(660, now, 0.2, 0.07);
+                        playTone(880, now + 0.05, 0.25, 0.06);
+                    } else {
+                        playTone(360, now, 0.25, 0.08);
+                    }
+                } catch (error) {
+                }
+            }
+
+            document.addEventListener('click', function () {
+                soundUnlocked = true;
+                unlockAudio();
+            }, { once: true });
+
+            function setProgress(progress) {
+                flashProgressBar.style.width = progress + '%';
+                flashProgressText.textContent = progress + '%';
+            }
+
+            function openOverlay() {
+                overlay.classList.add('is-visible');
+                overlay.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('overflow-hidden');
+            }
+
+            function triggerFlashCardAnimation(type) {
+                flashCard.classList.remove('flash-card--flashin', 'flash-card--error-attention', 'flash-card--success-attention');
+                void flashCard.offsetWidth;
+
+                if (type === 'error') {
+                    flashCard.classList.add('flash-card--error-attention');
+                    return;
+                }
+
                 if (type === 'success') {
-                    playTone(660, now, 0.2, 0.07);
-                    playTone(880, now + 0.05, 0.25, 0.06);
-                } else {
-                    playTone(360, now, 0.25, 0.08);
-                }
-            } catch (e) {
-                // Ignore audio playback errors
-            }
-        }
-
-        document.addEventListener('click', () => {
-            soundUnlocked = true;
-            unlockAudio();
-        }, { once: true });
-
-        function setProgress(p) {
-            flashProgressBar.style.width = p + '%';
-            flashProgressText.textContent = p + '%';
-        }
-
-        function openOverlay() {
-            overlay.classList.add('is-visible');
-            overlay.setAttribute('aria-hidden', 'false');
-            document.body.classList.add('overflow-hidden');
-        }
-
-        function triggerFlashCardAnimation(type = 'default') {
-            flashCard.classList.remove('flash-card--flashin', 'flash-card--error-attention', 'flash-card--success-attention');
-            void flashCard.offsetWidth;
-            if (type === 'error') {
-                flashCard.classList.add('flash-card--error-attention');
-                return;
-            }
-
-            if (type === 'success') {
-                flashCard.classList.add('flash-card--success-attention');
-                return;
-            }
-
-            flashCard.classList.add('flash-card--flashin');
-        }
-
-        function showProgressFlash() {
-            progressMode = true;
-            flashIcon.classList.remove('icon-visible');
-            flashIcon.className = 'flash-icon fas fa-spinner fa-spin icon-fade-transition';
-            flashIconContainer.className = 'flash-icon-container';
-            flashIconContainer.classList.add('flash-icon-container--animated');
-            flashCard.classList.remove('flash-card--success', 'flash-card--error');
-            flashCard.classList.add('flash-card--progress');
-            flashTitle.textContent = '{{ __('transactions.processing') }}';
-            flashMsg.textContent = '{{ __('transactions.processing_message') }}';
-            flashClientPanel.classList.add('hidden');
-            flashProgressWrap.classList.remove('hidden');
-            closeFlash.classList.add('hidden');
-            openOverlay();
-            triggerFlashCardAnimation('progress');
-
-            setTimeout(() => {
-                flashIcon.classList.add('icon-visible');
-            }, 50);
-        }
-
-        startBtn.addEventListener('click', async () => {
-            if (ticking) return;
-            soundUnlocked = true;
-            unlockAudio();
-            const form = document.getElementById('transferForm');
-            const payload = new FormData(form);
-            transferClientSnapshot = buildClientSnapshot();
-
-            try {
-                const res = await fetch('{{ localized_route('transactions.start') }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: payload
-                });
-
-                const data = await res.json();
-
-                if (res.ok) {
-                    txId = data.tx_id;
-                    ticking = true;
-                    setProgress(0);
-                    showProgressFlash();
-                    startBtn.disabled = true;
-                    startBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>{{ __('transactions.processing_in_progress') }}';
-                    tick();
-                } else {
-                    showMessage('{{ __('transactions.error_starting_transfer') }}', 'error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showMessage('{{ __('transactions.connection_error') }}', 'error');
-            }
-        });
-
-        async function tick() {
-            if (!ticking || !txId) return;
-
-            try {
-                const res = await fetch('{{ localized_route('transactions.progress') }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ tx_id: txId })
-                });
-
-                const data = await res.json();
-
-                updateSnapshotFromServer(data);
-                setProgress(data.progress);
-
-                if (data.status === 'on_hold') {
-                    ticking = false;
-                    resetStartButton();
-                    showMessage(resolveInterruptionMessage(data.message), 'error');
+                    flashCard.classList.add('flash-card--success-attention');
                     return;
                 }
 
-                if (data.status === 'success') {
-                    ticking = false;
-                    resetStartButton();
-                    // Animation de succès avant redirection
-                    setProgress(100);
-                    showMessage('{{ __('transactions.transfer_success_message') }}', 'success');
-                    // Let the success message show for 2 seconds before redirect
-                    setTimeout(() => {
-                        window.location.href = '{{ localized_route('transactions.history') }}';
-                    }, 2000);
-                    return;
-                }
-
-                // Continue ticking avec un délai réduit pour une progression plus fluide
-                setTimeout(tick, 500);
-            } catch (error) {
-                console.error('Error:', error);
-                ticking = false;
-                resetStartButton();
-                showMessage('{{ __('transactions.connection_error_processing') }}', 'error');
+                flashCard.classList.add('flash-card--flashin');
             }
-        }
 
-        function resetStartButton() {
-            startBtn.disabled = false;
-            startBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>{{ __('transactions.start_transfer') }}';
-        }
-
-        function showMessage(message, type = 'error') {
-            progressMode = false;
-            flashMsg.textContent = message;
-            flashProgressWrap.classList.add('hidden');
-            closeFlash.classList.remove('hidden');
-            // Remove previous icon classes and animation classes
-            flashIcon.classList.remove('icon-visible');
-            flashIcon.classList.add('icon-fade-transition');
-            flashCard.classList.remove('flash-card--success', 'flash-card--error', 'flash-card--progress');
-
-            if (type === 'success') {
-                // Change to validated icon and green styling
-                flashIcon.className = 'flash-icon fas fa-check-circle icon-fade-transition';
+            function showProgressFlash() {
+                progressMode = true;
+                flashIcon.classList.remove('icon-visible');
+                flashIcon.className = 'flash-icon fas fa-spinner fa-spin icon-fade-transition';
                 flashIconContainer.className = 'flash-icon-container';
                 flashIconContainer.classList.add('flash-icon-container--animated');
-                flashCard.classList.add('flash-card--success');
-                flashTitle.textContent = '{{ __('transactions.operation_success') }}';
+                flashCard.classList.remove('flash-card--success', 'flash-card--error');
+                flashCard.classList.add('flash-card--progress');
+                flashTitle.textContent = '{{ __('transactions.processing') }}';
+                flashMsg.textContent = '{{ __('transactions.processing_message') }}';
                 flashClientPanel.classList.add('hidden');
+                flashProgressWrap.classList.remove('hidden');
+                closeFlash.classList.add('hidden');
+                openOverlay();
+                triggerFlashCardAnimation('progress');
 
-                // Animate icon appearance
-                setTimeout(() => {
-                    flashIcon.classList.add('icon-visible');
-                }, 50);
-            } else {
-                // Change to alert icon and red styling
-                flashIcon.className = 'flash-icon fas fa-exclamation-triangle icon-fade-transition';
-                flashIconContainer.className = 'flash-icon-container';
-                flashIconContainer.classList.add('flash-icon-container--animated');
-                flashCard.classList.add('flash-card--error');
-                flashTitle.textContent = '{{ __('transactions.operation_interrupted') }}';
-                updateClientPanel();
-                flashClientPanel.classList.remove('hidden');
-
-                // Animate icon appearance
-                setTimeout(() => {
+                setTimeout(function () {
                     flashIcon.classList.add('icon-visible');
                 }, 50);
             }
 
-            // Show overlay as a centered modal
-            openOverlay();
-            triggerFlashCardAnimation(type);
-            playModalSound(type);
-        }
+            function resetStartButton() {
+                startBtn.disabled = false;
+                startBtn.innerHTML = '<i class="fas fa-paper-plane text-xs"></i>{{ __('transactions.start_transfer') }}';
+            }
 
-        closeFlash.addEventListener('click', () => {
-            if (progressMode) return;
-            overlay.classList.remove('is-visible');
-            overlay.setAttribute('aria-hidden', 'true');
-            document.body.classList.remove('overflow-hidden');
-        });
+            function showMessage(message, type) {
+                progressMode = false;
+                flashMsg.textContent = message;
+                flashProgressWrap.classList.add('hidden');
+                closeFlash.classList.remove('hidden');
+                flashIcon.classList.remove('icon-visible');
+                flashIcon.classList.add('icon-fade-transition');
+                flashCard.classList.remove('flash-card--success', 'flash-card--error', 'flash-card--progress');
 
-        overlay.addEventListener('click', (event) => {
-            if (progressMode) return;
-            if (event.target === overlay) {
+                if (type === 'success') {
+                    flashIcon.className = 'flash-icon fas fa-check-circle icon-fade-transition';
+                    flashIconContainer.className = 'flash-icon-container';
+                    flashIconContainer.classList.add('flash-icon-container--animated');
+                    flashCard.classList.add('flash-card--success');
+                    flashTitle.textContent = '{{ __('transactions.operation_success') }}';
+                    flashClientPanel.classList.add('hidden');
+
+                    setTimeout(function () {
+                        flashIcon.classList.add('icon-visible');
+                    }, 50);
+                } else {
+                    flashIcon.className = 'flash-icon fas fa-exclamation-triangle icon-fade-transition';
+                    flashIconContainer.className = 'flash-icon-container';
+                    flashIconContainer.classList.add('flash-icon-container--animated');
+                    flashCard.classList.add('flash-card--error');
+                    flashTitle.textContent = '{{ __('transactions.operation_interrupted') }}';
+                    updateClientPanel();
+                    flashClientPanel.classList.remove('hidden');
+
+                    setTimeout(function () {
+                        flashIcon.classList.add('icon-visible');
+                    }, 50);
+                }
+
+                openOverlay();
+                triggerFlashCardAnimation(type);
+                playModalSound(type);
+            }
+
+            async function tick() {
+                if (!ticking || !txId) {
+                    return;
+                }
+
+                try {
+                    const res = await fetch('{{ localized_route('transactions.progress') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ tx_id: txId })
+                    });
+                    const data = await res.json();
+
+                    updateSnapshotFromServer(data);
+                    setProgress(data.progress);
+
+                    if (data.status === 'on_hold') {
+                        ticking = false;
+                        resetStartButton();
+                        showMessage(resolveInterruptionMessage(data.message), 'error');
+                        return;
+                    }
+
+                    if (data.status === 'success') {
+                        ticking = false;
+                        resetStartButton();
+                        setProgress(100);
+                        showMessage('{{ __('transactions.transfer_success_message') }}', 'success');
+
+                        setTimeout(function () {
+                            window.location.href = '{{ localized_route('transactions.history') }}';
+                        }, 2000);
+                        return;
+                    }
+
+                    setTimeout(tick, 500);
+                } catch (error) {
+                    ticking = false;
+                    resetStartButton();
+                    showMessage('{{ __('transactions.connection_error_processing') }}', 'error');
+                }
+            }
+
+            async function handleTransferStart() {
+                if (ticking) {
+                    return;
+                }
+
+                soundUnlocked = true;
+                unlockAudio();
+                transferClientSnapshot = buildClientSnapshot();
+
+                try {
+                    const res = await fetch('{{ localized_route('transactions.start') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: new FormData(transferForm)
+                    });
+                    const data = await res.json().catch(function () {
+                        return {};
+                    });
+
+                    if (res.ok) {
+                        txId = data.tx_id;
+                        ticking = true;
+                        setProgress(0);
+                        showProgressFlash();
+                        startBtn.disabled = true;
+                        startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>{{ __('transactions.processing_in_progress') }}';
+                        tick();
+                        return;
+                    }
+
+                    const firstError = data.errors
+                        ? Object.values(data.errors)[0][0]
+                        : (data.message || '{{ __('transactions.error_starting_transfer') }}');
+                    showMessage(firstError, 'error');
+                } catch (error) {
+                    showMessage('{{ __('transactions.connection_error') }}', 'error');
+                }
+            }
+
+            startBtn.addEventListener('click', handleTransferStart);
+
+            closeFlash.addEventListener('click', function () {
+                if (progressMode) {
+                    return;
+                }
+
                 overlay.classList.remove('is-visible');
                 overlay.setAttribute('aria-hidden', 'true');
                 document.body.classList.remove('overflow-hidden');
-            }
-        });
+            });
 
-        // Validation en temps réel
-        document.querySelectorAll('.input-field').forEach(input => {
-            input.addEventListener('input', function() {
-                if (this.value.trim() !== '') {
-                    this.classList.remove('border-red-300');
-                    this.classList.add('border-green-300');
-                } else {
-                    this.classList.remove('border-green-300');
+            overlay.addEventListener('click', function (event) {
+                if (progressMode) {
+                    return;
+                }
+
+                if (event.target === overlay) {
+                    overlay.classList.remove('is-visible');
+                    overlay.setAttribute('aria-hidden', 'true');
+                    document.body.classList.remove('overflow-hidden');
                 }
             });
+
+            document.querySelectorAll('.input-field').forEach(function (input) {
+                input.addEventListener('input', function () {
+                    updateTransferSummary();
+                });
+            });
+
+            updateTransferSummary();
         });
     </script>
-</body>
-</html>
+@endpush

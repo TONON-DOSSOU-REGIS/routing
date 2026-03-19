@@ -37,6 +37,7 @@ return [
     'transfer_progress' => 'Progresos en la transferencia',
     'processing_message' => 'Su transferencia está siendo procesada. Por favor, espera...',
     
+    'operation_interrupted' => 'Operacion interrumpida',
     'client_info_title' => 'Informacion del cliente',
     'client_name_label' => 'Nombre del cliente',
     'client_iban_label' => 'IBAN del cliente',

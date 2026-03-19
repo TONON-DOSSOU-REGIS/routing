@@ -1,10 +1,10 @@
-@php
+<?php
     $analyticsI18n = [
         'transactions' => __('dashboard.transactions'),
         'updated' => __('dashboard.data_updated'),
         'loadingError' => __('dashboard.loading_data_error'),
     ];
-@endphp
+?>
 
 <section class="premium-panel premium-card-hover min-w-0 overflow-hidden rounded-[30px] p-6">
     <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
@@ -13,15 +13,15 @@
                 <i class="fas fa-chart-line text-xl"></i>
             </div>
             <div class="min-w-0">
-                <h2 class="premium-brand-title text-2xl font-semibold text-slate-950">{{ __('dashboard.analytics_title') }}</h2>
-                <p class="mt-1 text-sm text-slate-500">{{ __('dashboard.analytics_subtitle') }}</p>
+                <h2 class="premium-brand-title text-2xl font-semibold text-slate-950"><?php echo e(__('dashboard.analytics_title')); ?></h2>
+                <p class="mt-1 text-sm text-slate-500"><?php echo e(__('dashboard.analytics_subtitle')); ?></p>
             </div>
         </div>
 
         <div class="hidden flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-1 shadow-sm md:flex">
-            <button type="button" onclick="changePremiumAnalyticsPeriod(7, this)" class="analytics-period-btn rounded-xl px-4 py-2 text-sm font-semibold text-slate-500 transition">7 {{ __('common.days') }}</button>
-            <button type="button" onclick="changePremiumAnalyticsPeriod(30, this)" class="analytics-period-btn is-active rounded-xl px-4 py-2 text-sm font-semibold text-slate-500 transition">30 {{ __('common.days') }}</button>
-            <button type="button" onclick="changePremiumAnalyticsPeriod(90, this)" class="analytics-period-btn rounded-xl px-4 py-2 text-sm font-semibold text-slate-500 transition">90 {{ __('common.days') }}</button>
+            <button type="button" onclick="changePremiumAnalyticsPeriod(7, this)" class="analytics-period-btn rounded-xl px-4 py-2 text-sm font-semibold text-slate-500 transition">7 <?php echo e(__('common.days')); ?></button>
+            <button type="button" onclick="changePremiumAnalyticsPeriod(30, this)" class="analytics-period-btn is-active rounded-xl px-4 py-2 text-sm font-semibold text-slate-500 transition">30 <?php echo e(__('common.days')); ?></button>
+            <button type="button" onclick="changePremiumAnalyticsPeriod(90, this)" class="analytics-period-btn rounded-xl px-4 py-2 text-sm font-semibold text-slate-500 transition">90 <?php echo e(__('common.days')); ?></button>
         </div>
     </div>
 
@@ -35,11 +35,11 @@
                     <span id="analytics-deposits-trend">--</span>
                 </span>
             </div>
-            <p class="mt-4 text-sm font-semibold text-slate-500">{{ __('dashboard.total_deposits') }}</p>
+            <p class="mt-4 text-sm font-semibold text-slate-500"><?php echo e(__('dashboard.total_deposits')); ?></p>
             <p class="analytics-metric-value premium-kpi-number mt-3 font-semibold text-slate-950" id="analytics-total-deposits">
                 <i class="fas fa-spinner fa-spin text-slate-300"></i>
             </p>
-            <p class="mt-auto pt-3 text-xs uppercase tracking-[0.16em] text-slate-400">{{ __('dashboard.selected_period') }}</p>
+            <p class="mt-auto pt-3 text-xs uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('dashboard.selected_period')); ?></p>
         </article>
 
         <article class="analytics-metric-card min-w-0 rounded-[26px] bg-slate-50 p-5 ring-1 ring-slate-200/70">
@@ -51,11 +51,11 @@
                     <span id="analytics-withdrawals-trend">--</span>
                 </span>
             </div>
-            <p class="mt-4 text-sm font-semibold text-slate-500">{{ __('dashboard.total_withdrawals') }}</p>
+            <p class="mt-4 text-sm font-semibold text-slate-500"><?php echo e(__('dashboard.total_withdrawals')); ?></p>
             <p class="analytics-metric-value premium-kpi-number mt-3 font-semibold text-slate-950" id="analytics-total-withdrawals">
                 <i class="fas fa-spinner fa-spin text-slate-300"></i>
             </p>
-            <p class="mt-auto pt-3 text-xs uppercase tracking-[0.16em] text-slate-400">{{ __('dashboard.selected_period') }}</p>
+            <p class="mt-auto pt-3 text-xs uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('dashboard.selected_period')); ?></p>
         </article>
 
         <article class="analytics-metric-card min-w-0 rounded-[26px] bg-slate-50 p-5 ring-1 ring-slate-200/70">
@@ -64,14 +64,15 @@
                     <i class="fas fa-wave-square"></i>
                 </span>
                 <span class="analytics-metric-chip rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700">
-                    {{ __('dashboard.net_flow_label') }}
+                    <?php echo e(__('dashboard.net_flow_label')); ?>
+
                 </span>
             </div>
-            <p class="mt-4 text-sm font-semibold text-slate-500">{{ __('dashboard.net_flow') }}</p>
+            <p class="mt-4 text-sm font-semibold text-slate-500"><?php echo e(__('dashboard.net_flow')); ?></p>
             <p class="analytics-metric-value premium-kpi-number mt-3 font-semibold text-slate-950" id="analytics-net-flow">
                 <i class="fas fa-spinner fa-spin text-slate-300"></i>
             </p>
-            <p class="mt-auto pt-3 text-xs uppercase tracking-[0.16em] text-slate-400">{{ __('dashboard.net_flow_description') }}</p>
+            <p class="mt-auto pt-3 text-xs uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('dashboard.net_flow_description')); ?></p>
         </article>
 
         <article class="analytics-metric-card min-w-0 rounded-[26px] bg-slate-50 p-5 ring-1 ring-slate-200/70">
@@ -80,22 +81,23 @@
                     <i class="fas fa-calculator"></i>
                 </span>
                 <span class="analytics-metric-chip rounded-full bg-purple-100 px-2.5 py-1 text-xs font-semibold text-purple-700">
-                    <span id="analytics-transaction-count">--</span> {{ __('dashboard.transactions_label') }}
+                    <span id="analytics-transaction-count">--</span> <?php echo e(__('dashboard.transactions_label')); ?>
+
                 </span>
             </div>
-            <p class="mt-4 text-sm font-semibold text-slate-500">{{ __('dashboard.average_transaction') }}</p>
+            <p class="mt-4 text-sm font-semibold text-slate-500"><?php echo e(__('dashboard.average_transaction')); ?></p>
             <p class="analytics-metric-value premium-kpi-number mt-3 font-semibold text-slate-950" id="analytics-average-transaction">
                 <i class="fas fa-spinner fa-spin text-slate-300"></i>
             </p>
-            <p class="mt-auto pt-3 text-xs uppercase tracking-[0.16em] text-slate-400">{{ __('dashboard.per_transaction') }}</p>
+            <p class="mt-auto pt-3 text-xs uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('dashboard.per_transaction')); ?></p>
         </article>
     </div>
 
     <div class="mt-6 grid gap-6 2xl:grid-cols-2">
         <article class="min-w-0 overflow-hidden rounded-[28px] bg-white p-6 ring-1 ring-slate-200/70 shadow-sm">
             <div class="flex items-center justify-between gap-3">
-                <h3 class="text-lg font-semibold text-slate-900">{{ __('dashboard.balance_evolution') }}</h3>
-                <span class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('dashboard.last_days') }}</span>
+                <h3 class="text-lg font-semibold text-slate-900"><?php echo e(__('dashboard.balance_evolution')); ?></h3>
+                <span class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('dashboard.last_days')); ?></span>
             </div>
             <div class="mt-5 h-[240px] sm:h-[280px] xl:h-[300px]">
                 <canvas id="premiumBalanceChart"></canvas>
@@ -104,8 +106,8 @@
 
         <article class="min-w-0 overflow-hidden rounded-[28px] bg-white p-6 ring-1 ring-slate-200/70 shadow-sm">
             <div class="flex items-center justify-between gap-3">
-                <h3 class="text-lg font-semibold text-slate-900">{{ __('dashboard.distribution_by_type') }}</h3>
-                <span class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('dashboard.transactions') }}</span>
+                <h3 class="text-lg font-semibold text-slate-900"><?php echo e(__('dashboard.distribution_by_type')); ?></h3>
+                <span class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('dashboard.transactions')); ?></span>
             </div>
             <div class="mt-5 h-[240px] sm:h-[280px] xl:h-[300px]">
                 <canvas id="premiumTypeChart"></canvas>
@@ -115,8 +117,8 @@
 
     <article class="mt-6 min-w-0 overflow-hidden rounded-[28px] bg-white p-6 ring-1 ring-slate-200/70 shadow-sm">
         <div class="flex items-center justify-between gap-3">
-            <h3 class="text-lg font-semibold text-slate-900">{{ __('dashboard.monthly_comparison') }}</h3>
-            <span class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('dashboard.last_6_months') }}</span>
+            <h3 class="text-lg font-semibold text-slate-900"><?php echo e(__('dashboard.monthly_comparison')); ?></h3>
+            <span class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('dashboard.last_6_months')); ?></span>
         </div>
         <div class="mt-5 h-[260px] sm:h-[320px] xl:h-[340px]">
             <canvas id="premiumMonthlyChart"></canvas>
@@ -131,9 +133,9 @@ let premiumTypeChart;
 let premiumMonthlyChart;
 let premiumAnalyticsLoading = false;
 let premiumAnalyticsRefreshTimer = null;
-const premiumAnalyticsLocale = document.documentElement.lang || '{{ app()->getLocale() }}';
-const premiumAnalyticsCurrency = '{{ $user->default_currency ?? "EUR" }}';
-const premiumAnalyticsI18n = @json($analyticsI18n);
+const premiumAnalyticsLocale = document.documentElement.lang || '<?php echo e(app()->getLocale()); ?>';
+const premiumAnalyticsCurrency = '<?php echo e($user->default_currency ?? "EUR"); ?>';
+const premiumAnalyticsI18n = <?php echo json_encode($analyticsI18n, 15, 512) ?>;
 
 function premiumAnalyticsFormatCurrency(amount) {
     return new Intl.NumberFormat(premiumAnalyticsLocale, {
@@ -208,7 +210,7 @@ function drawPremiumBalanceChart(data) {
         data: {
             labels: data.labels || [],
             datasets: [{
-                label: '{{ __('dashboard.balance') }}',
+                label: '<?php echo e(__('dashboard.balance')); ?>',
                 data: data.data || [],
                 borderColor: '#167c5b',
                 backgroundColor: 'rgba(22, 124, 91, 0.12)',
@@ -299,14 +301,14 @@ function drawPremiumMonthlyChart(data) {
             labels: dataset.map((item) => item.month),
             datasets: [
                 {
-                    label: '{{ __('dashboard.deposits') }}',
+                    label: '<?php echo e(__('dashboard.deposits')); ?>',
                     data: dataset.map((item) => item.deposits),
                     backgroundColor: 'rgba(22, 124, 91, 0.78)',
                     borderRadius: 14,
                     borderSkipped: false,
                 },
                 {
-                    label: '{{ __('dashboard.withdrawals') }}',
+                    label: '<?php echo e(__('dashboard.withdrawals')); ?>',
                     data: dataset.map((item) => item.withdrawals),
                     backgroundColor: 'rgba(59, 130, 246, 0.74)',
                     borderRadius: 14,
@@ -439,3 +441,4 @@ document.addEventListener('visibilitychange', function () {
         color: #0f172a;
     }
 </style>
+<?php /**PATH C:\xampp\htdocs\cerveau\resources\views/components/analytics-section.blade.php ENDPATH**/ ?>

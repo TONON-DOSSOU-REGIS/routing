@@ -381,4 +381,4 @@ document.addEventListener('DOMContentLoaded', function () {
         100% { color: #f8fafc; }
     }
 </style>
-<?php /**PATH C:\xampp\htdocs\cerveau\resources\views\components\market-tracker-fixed.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\cerveau\resources\views/components/market-tracker-fixed.blade.php ENDPATH**/ ?>

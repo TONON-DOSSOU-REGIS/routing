@@ -472,4 +472,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<?php /**PATH C:\xampp\htdocs\cerveau\resources\views\components\notification-bell.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\cerveau\resources\views/components/notification-bell.blade.php ENDPATH**/ ?>

@@ -1,375 +1,489 @@
-<!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{{ __('dashboard.dashboard_title') }} - {{ __('dashboard.bank_name') }}</title>
-  <meta name="csrf-token" content="{{ csrf_token() }}">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
-  <link rel="manifest" href="/favicon_io11/site.webmanifest">
-  <style>
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: translateY(0);} }
-    .fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
+@extends('layouts.premium-dashboard')
 
-    .card-hover { transition: all 0.25s ease; }
-    .card-hover:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(0,0,0,0.12); }
+@section('title', __('dashboard.dashboard_title'))
+@section('dashboard_theme', 'client')
+@section('dashboard_page_title', __('dashboard.dashboard_title'))
+@section('dashboard_page_subtitle', __('dashboard.page_subtitle'))
+@section('dashboard_section_label', __('dashboard.client_area'))
+@section('dashboard_search_placeholder', __('dashboard.search_placeholder'))
+@section('dashboard_brand_title', 'Valtrix Bank')
+@section('dashboard_brand_subtitle', __('dashboard.client_area'))
+@section('sidebar_primary_title', __('dashboard.menu'))
 
-    .glass-card {
-      background: rgba(255,255,255,0.9);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
+@section('sidebar_primary')
+    <a href="{{ localized_route('dashboard') }}" class="premium-nav-item is-active flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-emerald-700 shadow-sm ring-1 ring-slate-200">
+            <i class="fas fa-chart-pie"></i>
+        </span>
+        <span>{{ __('dashboard.dashboard_title') }}</span>
+    </a>
+    <a href="{{ localized_route('transfer.create') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
+            <i class="fas fa-paper-plane"></i>
+        </span>
+        <span>{{ __('dashboard.new_transfer') }}</span>
+    </a>
+    <a href="{{ localized_route('transactions.history') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
+            <i class="fas fa-clock-rotate-left"></i>
+        </span>
+        <span>{{ __('dashboard.history') }}</span>
+    </a>
+    <a href="{{ localized_route('profile') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
+            <i class="fas fa-user-shield"></i>
+        </span>
+        <span>{{ __('dashboard.profile') }}</span>
+    </a>
+@endsection
 
-    .stat-chip {
-      background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(99,102,241,0.12));
-      border: 1px solid rgba(255,255,255,0.4);
-    }
+@section('sidebar_secondary_title', __('dashboard.services'))
+@section('sidebar_secondary')
+    <a href="{{ localized_route('notifications.index') }}" class="premium-nav-item flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
+        <span class="flex items-center gap-3">
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
+                <i class="fas fa-bell"></i>
+            </span>
+            <span>{{ __('dashboard.notifications') }}</span>
+        </span>
+        <span class="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">{{ $unreadNotificationsCount }}</span>
+    </a>
+    <a href="{{ localized_route('support.nous-contacter') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
+            <i class="fas fa-headset"></i>
+        </span>
+        <span>{{ __('dashboard.support') }}</span>
+    </a>
+    <form method="POST" action="{{ localized_route('logout') }}">
+        @csrf
+        <button type="submit" class="premium-nav-item flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-600">
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
+                <i class="fas fa-right-from-bracket"></i>
+            </span>
+            <span>{{ __('dashboard.logout') }}</span>
+        </button>
+    </form>
+@endsection
 
-    /* Flash for price changes (market tracker uses these) */
-    .flash-up { animation: flashUp 0.8s ease; }
-    .flash-down { animation: flashDown 0.8s ease; }
-    @keyframes flashUp { 0%{ background-color: rgba(34,197,94,0.25);} 100%{ background-color: transparent;} }
-    @keyframes flashDown { 0%{ background-color: rgba(239,68,68,0.25);} 100%{ background-color: transparent;} }
-
-    /* Background slider */
-    .dashboard-bg {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    .dashboard-bg::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.35));
-      z-index: 2;
-    }
-
-    .dashboard-slide {
-      position: absolute;
-      inset: 0;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
-      opacity: 0;
-      transition: opacity 1.8s ease-in-out;
-      z-index: 1;
-      filter: saturate(1.05) contrast(1.05);
-    }
-
-    .dashboard-slide.active {
-      opacity: 1;
-    }
-  </style>
-</head>
-
-<body class="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-red-700">
-  <div class="dashboard-bg" aria-hidden="true">
-    <div class="dashboard-slide active" style="background-image: url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1920&q=80');"></div>
-    <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1920&q=80');"></div>
-    <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80');"></div>
-    <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1920&q=80');"></div>
-    <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?auto=format&fit=crop&w=1920&q=80');"></div>
-    <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1920&q=80');"></div>
-    <div class="dashboard-slide" style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1920&q=80');"></div>
-    <div class="dashboard-slide" style="background-image: url('https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg');"></div>
-    <div class="dashboard-slide" style="background-image: url('https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg');"></div>
-  </div>
-  <!-- Top Navigation -->
-  <header class="bg-white shadow-sm relative z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
-        {{-- <i class="fas fa-building-columns text-blue-600 text-2xl"></i> --}}
-        <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-blue-600"><span class="sr-only">{{ __('dashboard.bank_name') }}</span></a>
-        <span class="ml-3 hidden sm:inline-block text-sm text-slate-500">{{ __('dashboard.client_area') }}</span>
-      </div>
-
-      <nav class="flex items-center gap-3">
-        {{-- Notification bell component (polling + sound) --}}
-        @include('components.notification-bell')
-
-        <a href="{{ localized_route('profile', ['locale' => app()->getLocale()]) }}" class="hidden sm:inline-flex items-center px-3 py-2 text-sm rounded-lg text-slate-700 hover:text-blue-700 hover:bg-blue-50">
-          <i class="fa-regular fa-user mr-2"></i> {{ __('dashboard.profile') }}
-        </a>
-
-        <form method="POST" action="{{ localized_route('logout', ['locale' => app()->getLocale()]) }}">
-          @csrf
-          <button type="submit" class="inline-flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-            <i class="fa-solid fa-right-from-bracket mr-2"></i> {{ __('dashboard.logout') }}
-          </button>
-        </form>
-      </nav>
+@section('sidebar_footer')
+    <div class="premium-gradient-card premium-grid-glow relative overflow-hidden rounded-[26px] p-5">
+        <div class="relative z-10">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">{{ __('dashboard.concierge_service') }}</p>
+            <h3 class="mt-3 premium-brand-title text-xl font-semibold">{{ __('dashboard.priority_access') }}</h3>
+            <p class="mt-2 text-sm leading-6 text-white/78">
+                {{ __('dashboard.concierge_description') }}
+            </p>
+            <div class="mt-5 flex items-center justify-between rounded-2xl bg-white/10 px-4 py-3">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.profile') }}</p>
+                    <p class="text-lg font-semibold">{{ $profileCompletion }}%</p>
+                </div>
+                <a href="{{ localized_route('profile') }}" class="inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-2 text-xs font-semibold text-slate-900">
+                    {{ __('dashboard.complete') }}
+                    <i class="fas fa-arrow-right text-[10px]"></i>
+                </a>
+            </div>
+        </div>
     </div>
-  </header>
+@endsection
 
-  <!-- Page container -->
-  <main class="py-8 relative z-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Welcome + quick stats -->
-      <section class="mb-8 fade-in-up">
-        <div class="bg-gradient-to-r from-white via-blue-50/30 to-indigo-50/30 rounded-2xl shadow-lg border border-white/60 px-4 sm:px-6 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between backdrop-blur-sm">
-          <div class="flex items-center gap-4 flex-wrap sm:flex-nowrap">
-            @php
-              $currentUser = $user ?? auth()->user();
-              $displayName = $currentUser && $currentUser->first_name && $currentUser->last_name
-                ? $currentUser->first_name . ' ' . $currentUser->last_name
-                : ($currentUser && $currentUser->first_name ? $currentUser->first_name : __('common.user'));
-              $initials = $currentUser
-                ? strtoupper(substr($currentUser->first_name ?? '', 0, 1) . substr($currentUser->last_name ?? '', 0, 1))
-                : '';
-              $profilePhotoUrl = $currentUser ? $currentUser->profile_photo_url : null;
-            @endphp
-            <div class="h-12 w-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold overflow-hidden shadow">
-              @if($profilePhotoUrl)
-                <img src="{{ $profilePhotoUrl }}" alt="Photo de {{ $displayName }}" class="h-full w-full object-cover">
-              @else
-                {{ $initials !== '' ? $initials : 'U' }}
-              @endif
-            </div>
-            <div class="min-w-0">
-              <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 break-words">
-                {!! __('dashboard.welcome_greeting', ['name' => $displayName]) !!}
-              </h1>
-              <p class="mt-1 text-slate-500">{{ __('dashboard.welcome_subtitle') }}</p>
-            </div>
-          </div>
-          <div class="flex flex-col sm:flex-row sm:items-center gap-2 mt-4 sm:mt-0 w-full sm:w-auto">
-            <a href="{{ localized_route('transfer.create', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-orange-500 text-white hover:bg-orange-600 card-hover w-full sm:w-auto">
-              <i class="fa-solid fa-paper-plane mr-2"></i> {{ __('dashboard.new_transfer') }}
-            </a>
-            <a href="{{ localized_route('transactions.history', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 card-hover w-full sm:w-auto">
-              <i class="fa-solid fa-clock-rotate-left mr-2"></i> {{ __('dashboard.history') }}
-            </a>
-          </div>
-        </div>
-      </section>
+@section('topbar_actions')
+    <div class="hidden items-center gap-2 rounded-full bg-white/85 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 ring-1 ring-slate-200 md:inline-flex">
+        <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+        {{ __('dashboard.secure_session') }}
+    </div>
+@endsection
 
-      <!-- KPI cards -->
-      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8 fade-in-up">
-        <div class="glass-card card-hover rounded-2xl p-5">
-          <div class="flex items-center justify-between">
-            <span class="text-slate-500 text-sm">{{ __('dashboard.current_balance') }}</span>
-            <i class="fa-solid fa-wallet text-blue-600"></i>
-          </div>
-          <div class="mt-3 text-2xl font-bold text-slate-800">
-            @if(isset($user) && $user->balance)
-              {{ \App\Helpers\CurrencyHelper::format($user->balance, $user->default_currency ?? 'EUR') }}
-            @else
-              {{ __('dashboard.empty_value') }}
-            @endif
-          </div>
-          <div class="mt-2 text-xs stat-chip inline-block px-2 py-1 rounded-full text-slate-700">
-            {{ __('dashboard.updated_today') }}
-          </div>
-        </div>
+@section('dashboard_header_actions')
+    <a href="{{ localized_route('transfer.create') }}" class="inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-900/20 transition hover:bg-orange-600">
+        <i class="fas fa-paper-plane text-xs"></i>
+        {{ __('dashboard.new_transfer') }}
+    </a>
+    <a href="{{ localized_route('transactions.history') }}" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
+        <i class="fas fa-list-ul text-xs"></i>
+        {{ __('dashboard.view_all') }}
+    </a>
+@endsection
 
-        <div class="glass-card card-hover rounded-2xl p-5">
-          <div class="flex items-center justify-between">
-            <span class="text-slate-500 text-sm">{{ __('dashboard.transactions_30_days') }}</span>
-            <i class="fa-solid fa-arrow-right-arrow-left text-indigo-600"></i>
-          </div>
-          <div class="mt-3 text-2xl font-bold text-slate-800">
-            {{ isset($user) && method_exists($user, 'transactions') ? $user->transactions()->where('created_at','>=',now()->subDays(30))->count() : '' }}
-          </div>
-          <div class="mt-2 text-xs stat-chip inline-block px-2 py-1 rounded-full text-slate-700">
-            {{ __('dashboard.last_month') }}
-          </div>
-        </div>
+@section('dashboard_content')
+    @php
+        $balanceFormatted = \App\Helpers\CurrencyHelper::format($user->balance, $user->default_currency ?? 'EUR');
+        $incomingFormatted = \App\Helpers\CurrencyHelper::format($incomingLast30Days, $user->default_currency ?? 'EUR');
+        $outgoingFormatted = \App\Helpers\CurrencyHelper::format($outgoingLast30Days, $user->default_currency ?? 'EUR');
+        $transactionTypeKeys = [
+            'transfer' => 'type_transfer',
+            'deposit' => 'type_deposit',
+            'withdrawal' => 'type_withdrawal',
+        ];
+        $transactionStatusKeys = [
+            'pending' => 'status_pending',
+            'on_hold' => 'status_on_hold',
+            'success' => 'status_success',
+            'failed' => 'status_failed',
+            'refunded' => 'status_refunded',
+        ];
+        $translateTransactionType = function ($type) use ($transactionTypeKeys) {
+            $key = $transactionTypeKeys[$type] ?? null;
 
-        <div class="glass-card card-hover rounded-2xl p-5">
-          <div class="flex items-center justify-between">
-            <span class="text-slate-500 text-sm">{{ __('dashboard.status') }}</span>
-            <i class="fa-solid fa-circle-check text-emerald-600"></i>
-          </div>
-          <div class="mt-3 text-2xl font-bold text-slate-800 text-emerald-600">
-            {{ isset($user) && $user->status ? ucfirst($user->status) : '' }}
-          </div>
-          <div class="mt-2 text-xs stat-chip inline-block px-2 py-1 rounded-full text-slate-700">
-            {{ __('dashboard.verified_account') }}
-          </div>
-        </div>
+            return $key ? __('transactions.' . $key) : ucfirst(str_replace('_', ' ', (string) $type));
+        };
+        $translateTransactionStatus = function ($status) use ($transactionStatusKeys) {
+            $key = $transactionStatusKeys[$status] ?? null;
 
-        <div class="glass-card card-hover rounded-2xl p-5">
-          <div class="flex items-center justify-between">
-            <span class="text-slate-500 text-sm">{{ __('dashboard.card') }}</span>
-            <i class="fa-regular fa-credit-card text-fuchsia-600"></i>
-          </div>
-          <div class="mt-3 text-2xl font-bold text-slate-800">
-            {{ isset($user) && $user->creditCard ? __('dashboard.card_mask_prefix').substr($user->creditCard->card_number ?? '0000', -4) : __('dashboard.empty_value') }}
-          </div>
-          <div class="mt-2 text-xs stat-chip inline-block px-2 py-1 rounded-full text-slate-700">
-            {{ __('dashboard.payment_method') }}
-          </div>
-        </div>
-      </section>
+            return $key ? __('transactions.' . $key) : ucfirst(str_replace('_', ' ', (string) $status));
+        };
+        $accountStatusKey = 'profile.account_statuses.' . $user->status;
+        $accountStatusLabel = __($accountStatusKey);
+        if ($accountStatusLabel === $accountStatusKey) {
+            $accountStatusLabel = ucfirst((string) $user->status);
+        }
+        $latestTransactionLabel = $latestTransaction
+            ? $translateTransactionType($latestTransaction->type) . ' #' . $latestTransaction->id
+            : __('dashboard.no_recent_operation');
+        $cardLabel = $user->creditCard?->masked_card_number ?? __('dashboard.empty_value');
+        $cardExpiry = $user->creditCard?->expiry_date?->format('m/y');
+    @endphp
 
-      <!-- Analytics section -->
-      <section class="mb-8 fade-in-up">
-        {{-- Include Analytics Section (graphiques) --}}
-        @include('components.analytics-section')
-      </section>
-
-      <!-- Market tracker widget -->
-      <section class="mb-8 fade-in-up">
-        <div class="glass-card rounded-2xl overflow-hidden card-hover border border-white/50">
-          <div class="px-6 sm:px-8 py-6">
-            {{-- Market tracker (rafrachissement ~5s) --}}
-            @include('components.market-tracker-fixed')
-          </div>
-        </div>
-      </section>
-
-      <!-- {{ __('dashboard.recent_transactions_and_quick_actions') }} -->
-      <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 fade-in-up">
-        <!-- Transactions -->
-        <div class="lg:col-span-2">
-          <div class="bg-white rounded-2xl shadow-sm p-6">
-            <div class="flex items-center justify-between mb-4">
-              <h2 class="text-lg font-semibold text-slate-800">
-                <i class="fa-solid fa-list-ul mr-2 text-slate-500"></i> {{ __('dashboard.recent_transactions') }}
-              </h2>
-              <a href="{{ localized_route('transactions.history', ['locale' => app()->getLocale()]) }}" class="text-sm text-blue-600 hover:text-blue-700">
-                {{ __('dashboard.view_all') }}
-              </a>
-            </div>
-
-            @php
-              $items = isset($transactions) ? $transactions : collect();
-            @endphp
-
-            @if($items->count() === 0)
-              <div class="text-slate-500 text-sm">
-                {{ __('dashboard.no_recent_transactions') }}
-              </div>
-            @else
-              <div class="divide-y divide-slate-100">
-                @foreach($items as $tx)
-                  <div class="py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                    <div class="flex items-center gap-3">
-                      <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
-                        @if(($tx->type ?? '') === 'credit')
-                          <i class="fa-solid fa-arrow-down text-emerald-600"></i>
-                        @else
-                          <i class="fa-solid fa-arrow-up text-rose-600"></i>
-                        @endif
-                      </div>
-                      <div>
-                        <div class="text-slate-800 font-medium">
-                          {{ ucfirst($tx->type ?? __('dashboard.transaction_type')) }}
-                          <span class="text-xs text-slate-400 ml-2">{{ __('dashboard.transaction_id_prefix') }}{{ $tx->id }}</span>
-                        </div>
-                        <div class="text-xs text-slate-500">
-                          {{ \Carbon\Carbon::parse($tx->created_at)->format(__('dashboard.date_format')) }}
-                        </div>
-                      </div>
+    <div class="grid gap-6 2xl:grid-cols-[minmax(0,1.7fr)_minmax(300px,360px)]">
+        <section class="premium-gradient-card premium-grid-glow premium-card-hover relative min-w-0 overflow-hidden rounded-[30px] p-6 sm:p-7">
+            <div class="relative z-10">
+                <div class="flex min-w-0 flex-col gap-6 lg:items-start 2xl:flex-row 2xl:justify-between">
+                    <div class="min-w-0 max-w-2xl">
+                        <p class="text-sm uppercase tracking-[0.22em] text-white/65">{{ __('dashboard.immediate_summary') }}</p>
+                        <h2 class="mt-4 premium-page-title text-3xl font-semibold tracking-[-0.05em] sm:text-4xl">
+                            {{ $balanceFormatted }}
+                        </h2>
+                        <p class="mt-3 max-w-xl text-sm leading-6 text-white/78">
+                            {{ __('dashboard.hero_summary') }}
+                        </p>
                     </div>
-                    <div class="text-left sm:text-right">
-                      <div class="font-semibold {{ ($tx->type ?? '') === 'credit' ? 'text-emerald-600' : 'text-rose-600' }}">
-                        @if(isset($tx->amount) && isset($user))
-                          {{ \App\Helpers\CurrencyHelper::format($tx->amount, $user->default_currency ?? 'EUR') }}
-                        @else
-                          {{ __('dashboard.zero_amount') }}
-                        @endif
-                      </div>
-                      <div class="text-xs text-slate-500 capitalize">
-                        {{ str_replace('_', ' ', $tx->status ?? '') }}
-                      </div>
+
+                    <div class="grid w-full gap-3 sm:grid-cols-2 2xl:max-w-[340px]">
+                        <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
+                            <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.primary_card') }}</p>
+                            <p class="mt-2 text-lg font-semibold">{{ $cardLabel }}</p>
+                            <p class="mt-1 text-xs text-white/70">
+                                {{ $cardExpiry ? __('dashboard.expires', ['date' => $cardExpiry]) : __('dashboard.virtual_card_active') }}
+                            </p>
+                        </div>
+                        <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
+                            <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.latest_operation') }}</p>
+                            <p class="mt-2 text-lg font-semibold">{{ $latestTransactionLabel }}</p>
+                            <p class="mt-1 text-xs text-white/70">
+                                {{ $latestTransaction?->created_at?->format('d/m/Y H:i') ?? __('dashboard.no_recorded_movement') }}
+                            </p>
+                        </div>
                     </div>
-                  </div>
-                @endforeach
-              </div>
-            @endif
-          </div>
-        </div>
-
-        <!-- Actions rapides -->
-        <div class="lg:col-span-1">
-          <div class="bg-white rounded-2xl shadow-sm p-6">
-            <h3 class="text-lg font-semibold text-slate-800 mb-4">{{ __('dashboard.quick_actions') }}</h3>
-            <div class="space-y-3">
-              <a href="{{ localized_route('transfer.create', ['locale' => app()->getLocale()]) }}" class="block action-btn bg-gradient-to-r from-orange-500 to-amber-500 text-white p-4 rounded-xl hover:from-orange-600 hover:to-amber-600 transition card-hover">
-                <div class="flex items-center">
-                  <div class="bg-white/20 p-2 rounded-full w-10 h-10 flex items-center justify-center mr-3">
-                    <i class="fas fa-paper-plane text-lg"></i>
-                  </div>
-                  <div>
-                    <div class="font-bold text-sm">{{ __('dashboard.new_transfer') }}</div>
-                    <div class="text-xs text-white/90">{{ __('dashboard.send_payment') }}</div>
-                  </div>
                 </div>
-              </a>
 
-              <a href="{{ localized_route('transactions.history', ['locale' => app()->getLocale()]) }}" class="block action-btn bg-gradient-to-r from-slate-600 to-slate-700 text-white p-4 rounded-xl hover:from-slate-700 hover:to-slate-800 transition card-hover">
-                <div class="flex items-center">
-                  <div class="bg-white/20 p-2 rounded-full w-10 h-10 flex items-center justify-center mr-3">
-                    <i class="fas fa-history text-lg"></i>
-                  </div>
-                  <div>
-                    <div class="font-bold text-sm">{{ __('dashboard.history') }}</div>
-                    <div class="text-xs text-white/90">{{ __('dashboard.view_operations') }}</div>
-                  </div>
+                <div class="mt-8 grid gap-3 sm:grid-cols-3">
+                    <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
+                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.incoming_30_days') }}</p>
+                        <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $incomingFormatted }}</p>
+                    </div>
+                    <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
+                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.outgoing_30_days') }}</p>
+                        <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $outgoingFormatted }}</p>
+                    </div>
+                    <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
+                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.transfer_success') }}</p>
+                        <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $transferSuccessRate }}%</p>
+                    </div>
                 </div>
-              </a>
-
-              <a href="{{ localized_route('profile', ['locale' => app()->getLocale()]) }}" class="block action-btn bg-gradient-to-r from-emerald-500 to-green-600 text-white p-4 rounded-xl hover:from-emerald-600 hover:to-green-700 transition card-hover">
-                <div class="flex items-center">
-                  <div class="bg-white/20 p-2 rounded-full w-10 h-10 flex items-center justify-center mr-3">
-                    <i class="fas fa-user-cog text-lg"></i>
-                  </div>
-                  <div>
-                    <div class="font-bold text-sm">{{ __('dashboard.my_profile') }}</div>
-                    <div class="text-xs text-white/90">{{ __('dashboard.manage_my_information') }}</div>
-                  </div>
-                </div>
-              </a>
             </div>
-          </div>
+        </section>
+
+        <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-5">
+            <div class="flex items-start justify-between gap-3">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('dashboard.daily_focus') }}</p>
+                    <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">{{ __('dashboard.client_priorities') }}</h2>
+                </div>
+                <span class="premium-soft-chip rounded-full px-3 py-1 text-xs font-semibold">
+                    {{ __('dashboard.real_time') }}
+                </span>
+            </div>
+
+            <div class="mt-5 space-y-4">
+                <div class="rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.unread_notifications') }}</p>
+                            <p class="mt-1 text-sm text-slate-500">{{ __('dashboard.unread_notifications_description') }}</p>
+                        </div>
+                        <span class="premium-brand-title text-3xl font-semibold text-slate-900">{{ $unreadNotificationsCount }}</span>
+                    </div>
+                </div>
+
+                <div class="rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.operations_to_track') }}</p>
+                            <p class="mt-1 text-sm text-slate-500">{{ __('dashboard.operations_to_track_description') }}</p>
+                        </div>
+                        <span class="premium-brand-title text-3xl font-semibold text-slate-900">{{ $pendingOperationsCount }}</span>
+                    </div>
+                </div>
+
+                <div class="rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.premium_profile') }}</p>
+                            <p class="mt-1 text-sm text-slate-500">{{ __('dashboard.premium_profile_description') }}</p>
+                        </div>
+                        <span class="premium-brand-title text-3xl font-semibold text-slate-900">{{ $profileCompletion }}%</span>
+                    </div>
+                    <div class="mt-3 h-2.5 rounded-full bg-slate-200">
+                        <div class="h-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-700" style="width: {{ $profileCompletion }}%"></div>
+                    </div>
+                </div>
+
+                <a href="{{ localized_route('support.nous-contacter') }}" class="premium-gradient-card block rounded-[24px] p-4">
+                    <p class="text-xs uppercase tracking-[0.18em] text-white/65">{{ __('dashboard.direct_support') }}</p>
+                    <h3 class="mt-2 text-lg font-semibold">{{ __('dashboard.support_immediate_title') }}</h3>
+                    <p class="mt-2 text-sm text-white/78">{{ __('dashboard.support_immediate_description') }}</p>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <section class="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
+        <article class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
+            <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold text-slate-500">{{ __('dashboard.current_balance') }}</span>
+                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                    <i class="fas fa-wallet"></i>
+                </span>
+            </div>
+            <p class="premium-kpi-number mt-4 text-3xl font-semibold text-slate-950">{{ $balanceFormatted }}</p>
+            <p class="mt-2 text-sm text-slate-500">{{ __('dashboard.updated_today') }}</p>
+        </article>
+
+        <article class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
+            <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold text-slate-500">{{ __('dashboard.incoming_flows') }}</span>
+                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                    <i class="fas fa-arrow-down"></i>
+                </span>
+            </div>
+            <p class="premium-kpi-number mt-4 text-3xl font-semibold text-slate-950">{{ $incomingFormatted }}</p>
+            <p class="mt-2 text-sm text-slate-500">{{ __('dashboard.incoming_flows_description') }}</p>
+        </article>
+
+        <article class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
+            <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold text-slate-500">{{ __('dashboard.outgoing_flows') }}</span>
+                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-rose-50 text-rose-700">
+                    <i class="fas fa-arrow-up"></i>
+                </span>
+            </div>
+            <p class="premium-kpi-number mt-4 text-3xl font-semibold text-slate-950">{{ $outgoingFormatted }}</p>
+            <p class="mt-2 text-sm text-slate-500">{{ __('dashboard.outgoing_flows_description') }}</p>
+        </article>
+
+        <article class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
+            <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold text-slate-500">{{ __('dashboard.account') }}</span>
+                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
+                    <i class="fas fa-shield-check"></i>
+                </span>
+            </div>
+            <p class="premium-kpi-number mt-4 text-3xl font-semibold text-slate-950">{{ $accountStatusLabel }}</p>
+            <p class="mt-2 text-sm text-slate-500">{{ __('dashboard.verified_account') }}</p>
+        </article>
+    </section>
+
+    <div class="grid gap-6 2xl:grid-cols-[minmax(0,1.65fr)_minmax(300px,360px)]">
+        <section class="min-w-0">
+            @include('components.analytics-section')
+        </section>
+
+        <div class="min-w-0 space-y-6">
+            <section class="premium-panel premium-card-hover min-w-0 rounded-[28px] p-5">
+                <div class="flex items-center justify-between gap-3">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('dashboard.quick_pilot') }}</p>
+                        <h2 class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">{{ __('dashboard.smart_actions') }}</h2>
+                    </div>
+                    <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">{{ __('dashboard.flash') }}</span>
+                </div>
+
+                <div class="mt-5 space-y-3">
+                    <a href="{{ localized_route('transfer.create') }}" class="flex items-center justify-between gap-3 rounded-[22px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70 transition hover:bg-white">
+                        <div class="flex min-w-0 items-center gap-3">
+                            <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                                <i class="fas fa-paper-plane"></i>
+                            </span>
+                            <div>
+                                <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.new_transfer') }}</p>
+                                <p class="text-sm text-slate-500">{{ __('dashboard.send_payment') }}</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-arrow-right text-slate-300"></i>
+                    </a>
+
+                    <a href="{{ localized_route('notifications.index') }}" class="flex items-center justify-between gap-3 rounded-[22px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70 transition hover:bg-white">
+                        <div class="flex min-w-0 items-center gap-3">
+                            <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                                <i class="fas fa-bell"></i>
+                            </span>
+                            <div>
+                                <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.notification_center') }}</p>
+                                <p class="text-sm text-slate-500">{{ __('dashboard.notification_center_description', ['count' => $unreadNotificationsCount]) }}</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-arrow-right text-slate-300"></i>
+                    </a>
+
+                    <a href="{{ localized_route('profile') }}" class="flex items-center justify-between gap-3 rounded-[22px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70 transition hover:bg-white">
+                        <div class="flex min-w-0 items-center gap-3">
+                            <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
+                                <i class="fas fa-user-gear"></i>
+                            </span>
+                            <div>
+                                <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.my_profile') }}</p>
+                                <p class="text-sm text-slate-500">{{ __('dashboard.profile_completion_short', ['percent' => $profileCompletion]) }}</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-arrow-right text-slate-300"></i>
+                    </a>
+                </div>
+            </section>
+
+            <section class="premium-panel premium-card-hover min-w-0 rounded-[28px] p-3">
+                @include('components.market-tracker-fixed', ['compact' => true])
+            </section>
         </div>
-      </section>
     </div>
-  </main>
 
-  <!-- Footer -->
-  <footer class="mt-10 py-8 bg-white border-t relative z-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-sm text-slate-500 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-      <p>&copy; {{ date('Y') }} Valtrix Bank. {{ __('dashboard.all_rights_reserved') }}</p>
-      <div class="flex flex-wrap gap-3">
-        <a href="#" class="hover:text-slate-700">{{ __('dashboard.privacy') }}</a>
-        <a href="#" class="hover:text-slate-700">{{ __('dashboard.terms') }}</a>
-        <a href="#" class="hover:text-slate-700">{{ __('dashboard.support') }}</a>
-      </div>
+    <div class="grid gap-6 xl:grid-cols-2 2xl:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
+        <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-6">
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('dashboard.activity') }}</p>
+                    <h2 class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">{{ __('dashboard.recent_transactions') }}</h2>
+                </div>
+                <a href="{{ localized_route('transactions.history') }}" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50">
+                    {{ __('dashboard.view_all') }}
+                    <i class="fas fa-arrow-right text-xs"></i>
+                </a>
+            </div>
+
+            <div class="mt-6 space-y-3">
+                @forelse($transactions as $transaction)
+                    @php
+                        $isPositive = $transaction->type === 'deposit';
+                        $transactionColor = $isPositive ? 'emerald' : ($transaction->status === 'on_hold' ? 'amber' : 'slate');
+                        $transactionTypeLabel = $translateTransactionType($transaction->type);
+                        $transactionStatusLabel = $translateTransactionStatus($transaction->status);
+                    @endphp
+                    <div class="flex flex-col gap-3 rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70 sm:flex-row sm:items-center sm:justify-between">
+                        <div class="flex min-w-0 items-center gap-3">
+                            <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-{{ $transactionColor }}-50 text-{{ $transactionColor }}-700">
+                                <i class="fas {{ $isPositive ? 'fa-arrow-down' : 'fa-arrow-up' }}"></i>
+                            </span>
+                            <div class="min-w-0">
+                                <p class="text-sm font-semibold text-slate-900">
+                                    {{ $transactionTypeLabel }}
+                                    <span class="ml-2 text-xs font-medium uppercase tracking-[0.16em] text-slate-400">#{{ $transaction->id }}</span>
+                                </p>
+                                <p class="mt-1 truncate text-sm text-slate-500">
+                                    {{ $transaction->created_at->format('d/m/Y H:i') }}
+                                    @if($transaction->recipient_name)
+                                        | {{ $transaction->recipient_name }}
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="text-left sm:text-right">
+                            <p class="text-sm font-semibold {{ $isPositive ? 'text-emerald-700' : 'text-slate-900' }}">
+                                {{ \App\Helpers\CurrencyHelper::format($transaction->amount, $user->default_currency ?? 'EUR') }}
+                            </p>
+                            <p class="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+                                {{ $transactionStatusLabel }}
+                            </p>
+                        </div>
+                    </div>
+                @empty
+                    <div class="rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-5 py-10 text-center">
+                        <p class="text-lg font-semibold text-slate-900">{{ __('dashboard.no_recent_transactions') }}</p>
+                        <p class="mt-2 text-sm text-slate-500">{{ __('dashboard.no_recent_transactions_description') }}</p>
+                    </div>
+                @endforelse
+            </div>
+        </section>
+
+        <div class="min-w-0 space-y-6">
+            <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('dashboard.experience') }}</p>
+                        <h2 class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">{{ __('dashboard.premium_journey') }}</h2>
+                    </div>
+                    <span class="premium-soft-chip rounded-full px-3 py-1 text-xs font-semibold">{{ __('dashboard.guidance') }}</span>
+                </div>
+
+                <div class="mt-6 space-y-4">
+                    <div class="rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
+                        <div class="flex items-start gap-3">
+                            <span class="mt-1 flex h-9 w-9 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                                <i class="fas fa-shield-heart"></i>
+                            </span>
+                            <div>
+                                <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.secure_area') }}</p>
+                                <p class="mt-1 text-sm leading-6 text-slate-500">{{ __('dashboard.secure_area_description') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
+                        <div class="flex items-start gap-3">
+                            <span class="mt-1 flex h-9 w-9 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                                <i class="fas fa-wave-square"></i>
+                            </span>
+                            <div>
+                                <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.instant_reading') }}</p>
+                                <p class="mt-1 text-sm leading-6 text-slate-500">{{ __('dashboard.instant_reading_description') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
+                        <div class="flex items-start gap-3">
+                            <span class="mt-1 flex h-9 w-9 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
+                                <i class="fas fa-headset"></i>
+                            </span>
+                            <div>
+                                <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.support_close') }}</p>
+                                <p class="mt-1 text-sm leading-6 text-slate-500">{{ __('dashboard.support_close_description') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="premium-gradient-card min-w-0 rounded-[30px] p-6">
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white/65">{{ __('dashboard.priority_channel') }}</p>
+                <h2 class="premium-brand-title mt-3 text-2xl font-semibold">{{ __('dashboard.banking_assistance') }}</h2>
+                <p class="mt-3 text-sm leading-6 text-white/78">
+                    {{ __('dashboard.banking_assistance_description') }}
+                </p>
+                <div class="mt-5 flex flex-wrap gap-3">
+                    <button type="button" onclick="toggleClientChat()" class="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-slate-900">
+                        <i class="fas fa-comments text-xs"></i>
+                        {{ __('dashboard.open_chat') }}
+                    </button>
+                    <a href="{{ localized_route('support.nous-contacter') }}" class="inline-flex items-center gap-2 rounded-full border border-white/30 px-4 py-2.5 text-sm font-semibold text-white">
+                        {{ __('home.footer_contact_us') }}
+                        <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+            </section>
+        </div>
     </div>
-  </footer>
+@endsection
 
-  {{-- Client Chat Widget --}}
-  @include('components.client-chat-widget')
-
-  <script>
-    (function () {
-      const slides = document.querySelectorAll('.dashboard-bg .dashboard-slide');
-      if (!slides.length) return;
-      let current = 0;
-      setInterval(() => {
-        slides[current].classList.remove('active');
-        current = (current + 1) % slides.length;
-        slides[current].classList.add('active');
-      }, 6000);
-    })();
-  </script>
-</body>
-</html>
-
-
-
-
-
-
+@section('dashboard_overlays')
+    @include('components.client-chat-widget')
+@endsection

@@ -1,449 +1,286 @@
-
 <?php
     $analyticsI18n = [
         'transactions' => __('dashboard.transactions'),
+        'updated' => __('dashboard.data_updated'),
+        'loadingError' => __('dashboard.loading_data_error'),
     ];
 ?>
-<div class="mt-8 fade-in-up">
-    <!-- En-tête de la section -->
-    <div class="flex items-center justify-between mb-6">
-        <div class="flex items-center">
-            <div class="bg-gradient-to-r from-indigo-500 to-purple-500 p-3 rounded-2xl mr-4 shadow-lg">
-                <i class="fas fa-chart-line text-white text-2xl"></i>
+
+<section class="premium-panel premium-card-hover min-w-0 overflow-hidden rounded-[30px] p-6">
+    <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+        <div class="flex min-w-0 items-center gap-4">
+            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-900/10">
+                <i class="fas fa-chart-line text-xl"></i>
             </div>
-            <div>
-                <h2 class="text-2xl font-bold text-white drop-shadow-lg">📊 <?php echo e(__('dashboard.analytics_title')); ?></h2>
-                <p class="text-white/90 drop-shadow"><?php echo e(__('dashboard.analytics_subtitle')); ?></p>
+            <div class="min-w-0">
+                <h2 class="premium-brand-title text-2xl font-semibold text-slate-950"><?php echo e(__('dashboard.analytics_title')); ?></h2>
+                <p class="mt-1 text-sm text-slate-500"><?php echo e(__('dashboard.analytics_subtitle')); ?></p>
             </div>
         </div>
-        
-        <!-- Sélecteur de période -->
-        <div class="hidden md:flex items-center gap-2 bg-white/90 backdrop-blur-lg rounded-xl p-1 shadow-lg">
-            <button onclick="changePeriod(7)" class="period-btn px-4 py-2 rounded-lg text-sm font-medium transition-all">
-                7 <?php echo e(__('common.days')); ?>
 
-            </button>
-            <button onclick="changePeriod(30)" class="period-btn active px-4 py-2 rounded-lg text-sm font-medium transition-all">
-                30 <?php echo e(__('common.days')); ?>
-
-            </button>
-            <button onclick="changePeriod(90)" class="period-btn px-4 py-2 rounded-lg text-sm font-medium transition-all">
-                90 <?php echo e(__('common.days')); ?>
-
-            </button>
+        <div class="hidden flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-1 shadow-sm md:flex">
+            <button type="button" onclick="changePremiumAnalyticsPeriod(7, this)" class="analytics-period-btn rounded-xl px-4 py-2 text-sm font-semibold text-slate-500 transition">7 <?php echo e(__('common.days')); ?></button>
+            <button type="button" onclick="changePremiumAnalyticsPeriod(30, this)" class="analytics-period-btn is-active rounded-xl px-4 py-2 text-sm font-semibold text-slate-500 transition">30 <?php echo e(__('common.days')); ?></button>
+            <button type="button" onclick="changePremiumAnalyticsPeriod(90, this)" class="analytics-period-btn rounded-xl px-4 py-2 text-sm font-semibold text-slate-500 transition">90 <?php echo e(__('common.days')); ?></button>
         </div>
     </div>
 
-    <!-- Cartes de statistiques détaillées -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <!-- Total Dépôts -->
-        <div class="glass-card rounded-2xl overflow-hidden card-hover stat-card">
-            <div class="p-6 relative z-10">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="bg-green-100 p-2 rounded-lg">
-                        <i class="fas fa-arrow-down text-green-600 text-xl"></i>
-                    </div>
-                    <span class="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">
-                        <i class="fas fa-arrow-up"></i> <span id="deposits-trend">--</span>
-                    </span>
-                </div>
-                <p class="text-sm font-semibold text-gray-600 mb-1"><?php echo e(__('dashboard.total_deposits')); ?></p>
-                <p class="text-2xl font-bold text-gray-900" id="total-deposits">
-                    <i class="fas fa-spinner fa-spin text-gray-400"></i>
-                </p>
-                <p class="text-xs text-gray-500 mt-2"><?php echo e(__('dashboard.selected_period')); ?></p>
+    <div class="analytics-metric-grid mt-6 grid gap-4">
+        <article class="analytics-metric-card min-w-0 rounded-[26px] bg-slate-50 p-5 ring-1 ring-slate-200/70">
+            <div class="analytics-metric-card-header flex min-w-0 items-start justify-between">
+                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+                    <i class="fas fa-arrow-down"></i>
+                </span>
+                <span class="analytics-metric-chip rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                    <span id="analytics-deposits-trend">--</span>
+                </span>
             </div>
-        </div>
+            <p class="mt-4 text-sm font-semibold text-slate-500"><?php echo e(__('dashboard.total_deposits')); ?></p>
+            <p class="analytics-metric-value premium-kpi-number mt-3 font-semibold text-slate-950" id="analytics-total-deposits">
+                <i class="fas fa-spinner fa-spin text-slate-300"></i>
+            </p>
+            <p class="mt-auto pt-3 text-xs uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('dashboard.selected_period')); ?></p>
+        </article>
 
-        <!-- Total Retraits -->
-        <div class="glass-card rounded-2xl overflow-hidden card-hover stat-card">
-            <div class="p-6 relative z-10">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="bg-red-100 p-2 rounded-lg">
-                        <i class="fas fa-arrow-up text-red-600 text-xl"></i>
-                    </div>
-                    <span class="text-xs font-semibold text-red-600 bg-red-100 px-2 py-1 rounded-full">
-                        <i class="fas fa-arrow-down"></i> <span id="withdrawals-trend">--</span>
-                    </span>
-                </div>
-                <p class="text-sm font-semibold text-gray-600 mb-1"><?php echo e(__('dashboard.total_withdrawals')); ?></p>
-                <p class="text-2xl font-bold text-gray-900" id="total-withdrawals">
-                    <i class="fas fa-spinner fa-spin text-gray-400"></i>
-                </p>
-                <p class="text-xs text-gray-500 mt-2"><?php echo e(__('dashboard.selected_period')); ?></p>
+        <article class="analytics-metric-card min-w-0 rounded-[26px] bg-slate-50 p-5 ring-1 ring-slate-200/70">
+            <div class="analytics-metric-card-header flex min-w-0 items-start justify-between">
+                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-rose-100 text-rose-700">
+                    <i class="fas fa-arrow-up"></i>
+                </span>
+                <span class="analytics-metric-chip rounded-full bg-rose-100 px-2.5 py-1 text-xs font-semibold text-rose-700">
+                    <span id="analytics-withdrawals-trend">--</span>
+                </span>
             </div>
-        </div>
+            <p class="mt-4 text-sm font-semibold text-slate-500"><?php echo e(__('dashboard.total_withdrawals')); ?></p>
+            <p class="analytics-metric-value premium-kpi-number mt-3 font-semibold text-slate-950" id="analytics-total-withdrawals">
+                <i class="fas fa-spinner fa-spin text-slate-300"></i>
+            </p>
+            <p class="mt-auto pt-3 text-xs uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('dashboard.selected_period')); ?></p>
+        </article>
 
-        <!-- Flux Net -->
-        <div class="glass-card rounded-2xl overflow-hidden card-hover stat-card">
-            <div class="p-6 relative z-10">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="bg-blue-100 p-2 rounded-lg">
-                        <i class="fas fa-exchange-alt text-blue-600 text-xl"></i>
-                    </div>
-                    <span class="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
-                        <?php echo e(__('dashboard.net_flow_label')); ?>
+        <article class="analytics-metric-card min-w-0 rounded-[26px] bg-slate-50 p-5 ring-1 ring-slate-200/70">
+            <div class="analytics-metric-card-header flex min-w-0 items-start justify-between">
+                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-100 text-blue-700">
+                    <i class="fas fa-wave-square"></i>
+                </span>
+                <span class="analytics-metric-chip rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700">
+                    <?php echo e(__('dashboard.net_flow_label')); ?>
 
-                    </span>
-                </div>
-                <p class="text-sm font-semibold text-gray-600 mb-1"><?php echo e(__('dashboard.net_flow')); ?></p>
-                <p class="text-2xl font-bold" id="net-flow">
-                    <i class="fas fa-spinner fa-spin text-gray-400"></i>
-                </p>
-                <p class="text-xs text-gray-500 mt-2"><?php echo e(__('dashboard.net_flow_description')); ?></p>
+                </span>
             </div>
-        </div>
+            <p class="mt-4 text-sm font-semibold text-slate-500"><?php echo e(__('dashboard.net_flow')); ?></p>
+            <p class="analytics-metric-value premium-kpi-number mt-3 font-semibold text-slate-950" id="analytics-net-flow">
+                <i class="fas fa-spinner fa-spin text-slate-300"></i>
+            </p>
+            <p class="mt-auto pt-3 text-xs uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('dashboard.net_flow_description')); ?></p>
+        </article>
 
-        <!-- Moyenne Transaction -->
-        <div class="glass-card rounded-2xl overflow-hidden card-hover stat-card">
-            <div class="p-6 relative z-10">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="bg-purple-100 p-2 rounded-lg">
-                        <i class="fas fa-calculator text-purple-600 text-xl"></i>
-                    </div>
-                    <span class="text-xs font-semibold text-purple-600 bg-purple-100 px-2 py-1 rounded-full">
-                        <span id="transaction-count">--</span> <?php echo e(__('dashboard.transactions_label')); ?>
+        <article class="analytics-metric-card min-w-0 rounded-[26px] bg-slate-50 p-5 ring-1 ring-slate-200/70">
+            <div class="analytics-metric-card-header flex min-w-0 items-start justify-between">
+                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-purple-100 text-purple-700">
+                    <i class="fas fa-calculator"></i>
+                </span>
+                <span class="analytics-metric-chip rounded-full bg-purple-100 px-2.5 py-1 text-xs font-semibold text-purple-700">
+                    <span id="analytics-transaction-count">--</span> <?php echo e(__('dashboard.transactions_label')); ?>
 
-                    </span>
-                </div>
-                <p class="text-sm font-semibold text-gray-600 mb-1"><?php echo e(__('dashboard.average_transaction')); ?></p>
-                <p class="text-2xl font-bold text-gray-900" id="average-transaction">
-                    <i class="fas fa-spinner fa-spin text-gray-400"></i>
-                </p>
-                <p class="text-xs text-gray-500 mt-2"><?php echo e(__('dashboard.per_transaction')); ?></p>
+                </span>
             </div>
-        </div>
+            <p class="mt-4 text-sm font-semibold text-slate-500"><?php echo e(__('dashboard.average_transaction')); ?></p>
+            <p class="analytics-metric-value premium-kpi-number mt-3 font-semibold text-slate-950" id="analytics-average-transaction">
+                <i class="fas fa-spinner fa-spin text-slate-300"></i>
+            </p>
+            <p class="mt-auto pt-3 text-xs uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('dashboard.per_transaction')); ?></p>
+        </article>
     </div>
 
-    <!-- Graphiques -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <!-- Graphique 1: Évolution du Solde -->
-        <div class="glass-card rounded-2xl overflow-hidden card-hover">
-            <div class="p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
-                        <i class="fas fa-chart-line text-blue-600"></i>
-                        <?php echo e(__('dashboard.balance_evolution')); ?>
-
-                    </h3>
-                    <span class="text-xs text-gray-500"><?php echo e(__('dashboard.last_days')); ?></span>
-                </div>
-                <div class="relative" style="height: 300px;">
-                    <canvas id="balanceChart"></canvas>
-                </div>
+    <div class="mt-6 grid gap-6 2xl:grid-cols-2">
+        <article class="min-w-0 overflow-hidden rounded-[28px] bg-white p-6 ring-1 ring-slate-200/70 shadow-sm">
+            <div class="flex items-center justify-between gap-3">
+                <h3 class="text-lg font-semibold text-slate-900"><?php echo e(__('dashboard.balance_evolution')); ?></h3>
+                <span class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('dashboard.last_days')); ?></span>
             </div>
-        </div>
-
-        <!-- Graphique 2: Répartition par Type -->
-        <div class="glass-card rounded-2xl overflow-hidden card-hover">
-            <div class="p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
-                        <i class="fas fa-chart-pie text-purple-600"></i>
-                        <?php echo e(__('dashboard.distribution_by_type')); ?>
-
-                    </h3>
-                    <span class="text-xs text-gray-500"><?php echo e(__('dashboard.transactions')); ?></span>
-                </div>
-                <div class="relative" style="height: 300px;">
-                    <canvas id="typeChart"></canvas>
-                </div>
+            <div class="mt-5 h-[240px] sm:h-[280px] xl:h-[300px]">
+                <canvas id="premiumBalanceChart"></canvas>
             </div>
-        </div>
+        </article>
+
+        <article class="min-w-0 overflow-hidden rounded-[28px] bg-white p-6 ring-1 ring-slate-200/70 shadow-sm">
+            <div class="flex items-center justify-between gap-3">
+                <h3 class="text-lg font-semibold text-slate-900"><?php echo e(__('dashboard.distribution_by_type')); ?></h3>
+                <span class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('dashboard.transactions')); ?></span>
+            </div>
+            <div class="mt-5 h-[240px] sm:h-[280px] xl:h-[300px]">
+                <canvas id="premiumTypeChart"></canvas>
+            </div>
+        </article>
     </div>
 
-    <!-- Graphique 3: Comparaison Mensuelle (Pleine largeur) -->
-    <div class="glass-card rounded-2xl overflow-hidden card-hover mb-8">
-        <div class="p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
-                    <i class="fas fa-chart-bar text-green-600"></i>
-                    <?php echo e(__('dashboard.monthly_comparison')); ?>
-
-                </h3>
-                <span class="text-xs text-gray-500"><?php echo e(__('dashboard.last_6_months')); ?></span>
-            </div>
-            <div class="relative" style="height: 350px;">
-                <canvas id="monthlyChart"></canvas>
-            </div>
+    <article class="mt-6 min-w-0 overflow-hidden rounded-[28px] bg-white p-6 ring-1 ring-slate-200/70 shadow-sm">
+        <div class="flex items-center justify-between gap-3">
+            <h3 class="text-lg font-semibold text-slate-900"><?php echo e(__('dashboard.monthly_comparison')); ?></h3>
+            <span class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('dashboard.last_6_months')); ?></span>
         </div>
-    </div>
-</div>
-
-<style>
-    .period-btn {
-        color: #6b7280;
-    }
-    
-    .period-btn.active {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    }
-    
-    .period-btn:hover:not(.active) {
-        background: #f3f4f6;
-        color: #374151;
-    }
-</style>
+        <div class="mt-5 h-[260px] sm:h-[320px] xl:h-[340px]">
+            <canvas id="premiumMonthlyChart"></canvas>
+        </div>
+    </article>
+</section>
 
 <script>
-let currentPeriod = 30;
-let balanceChart, typeChart, monthlyChart;
-let userCurrency = '<?php echo e($user->default_currency ?? "EUR"); ?>';
-let userCurrencySymbol = '<?php echo e($user->currency_symbol); ?>';
-const analyticsLocale = document.documentElement.lang || '<?php echo e(app()->getLocale()); ?>';
-const analyticsI18n = <?php echo json_encode($analyticsI18n, 15, 512) ?>;
-let analyticsRefreshInterval;
-let isLoadingAnalytics = false;
+let premiumAnalyticsPeriod = 30;
+let premiumBalanceChart;
+let premiumTypeChart;
+let premiumMonthlyChart;
+let premiumAnalyticsLoading = false;
+let premiumAnalyticsRefreshTimer = null;
+const premiumAnalyticsLocale = document.documentElement.lang || '<?php echo e(app()->getLocale()); ?>';
+const premiumAnalyticsCurrency = '<?php echo e($user->default_currency ?? "EUR"); ?>';
+const premiumAnalyticsI18n = <?php echo json_encode($analyticsI18n, 15, 512) ?>;
 
-// Fonction pour changer la période
-function changePeriod(days) {
-    currentPeriod = days;
-    
-    // Mettre à jour les boutons actifs
-    document.querySelectorAll('.period-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    event.target.classList.add('active');
-    
-    // Recharger les données
-    loadAnalytics();
-}
-
-// Fonction pour formater les montants avec la devise de l'utilisateur
-function formatCurrency(amount) {
-    return new Intl.NumberFormat(analyticsLocale, {
+function premiumAnalyticsFormatCurrency(amount) {
+    return new Intl.NumberFormat(premiumAnalyticsLocale, {
         style: 'currency',
-        currency: userCurrency
-    }).format(amount);
+        currency: premiumAnalyticsCurrency,
+    }).format(amount || 0);
 }
 
-// Fonction pour charger les analytics
-async function loadAnalytics(showIndicators = true) {
-    // Éviter les chargements multiples simultanés
-    if (isLoadingAnalytics) {
+function changePremiumAnalyticsPeriod(days, button) {
+    premiumAnalyticsPeriod = days;
+    document.querySelectorAll('.analytics-period-btn').forEach((item) => item.classList.remove('is-active'));
+    if (button) {
+        button.classList.add('is-active');
+    }
+    loadPremiumAnalytics();
+}
+
+async function loadPremiumAnalytics(showIndicator = false) {
+    if (premiumAnalyticsLoading) {
         return;
     }
-    
-    isLoadingAnalytics = true;
-    
+
+    premiumAnalyticsLoading = true;
+
     try {
-        // Ajouter un timestamp pour éviter le cache
-        const timestamp = Date.now();
-        
-        // Charger toutes les données en parallèle
-        const [balanceData, typeData, monthlyData, stats] = await Promise.all([
-            fetch(`/api/analytics/balance-evolution?days=${currentPeriod}&ts=${timestamp}`)
-                .then(async r => {
-                    if (!r.ok) {
-                        const text = await r.text();
-                        console.error('Balance evolution error:', text);
-                        throw new Error(`HTTP error! status: ${r.status}`);
-                    }
-                    const contentType = r.headers.get('content-type');
-                    if (!contentType || !contentType.includes('application/json')) {
-                        throw new Error('Response is not JSON');
-                    }
-                    return r.json();
-                }),
-            fetch(`/api/analytics/transactions-by-type?days=${currentPeriod}&ts=${timestamp}`)
-                .then(async r => {
-                    if (!r.ok) {
-                        const text = await r.text();
-                        console.error('Transactions by type error:', text);
-                        throw new Error(`HTTP error! status: ${r.status}`);
-                    }
-                    const contentType = r.headers.get('content-type');
-                    if (!contentType || !contentType.includes('application/json')) {
-                        throw new Error('Response is not JSON');
-                    }
-                    return r.json();
-                }),
-            fetch(`/api/analytics/monthly-comparison?ts=${timestamp}`)
-                .then(async r => {
-                    if (!r.ok) {
-                        const text = await r.text();
-                        console.error('Monthly comparison error:', text);
-                        throw new Error(`HTTP error! status: ${r.status}`);
-                    }
-                    const contentType = r.headers.get('content-type');
-                    if (!contentType || !contentType.includes('application/json')) {
-                        throw new Error('Response is not JSON');
-                    }
-                    return r.json();
-                }),
-            fetch(`/api/analytics/statistics?days=${currentPeriod}&ts=${timestamp}`)
-                .then(async r => {
-                    if (!r.ok) {
-                        const text = await r.text();
-                        console.error('Statistics error:', text);
-                        throw new Error(`HTTP error! status: ${r.status}`);
-                    }
-                    const contentType = r.headers.get('content-type');
-                    if (!contentType || !contentType.includes('application/json')) {
-                        throw new Error('Response is not JSON');
-                    }
-                    return r.json();
-                })
+        const stamp = Date.now();
+        const [balanceData, typeData, monthlyData, statsData] = await Promise.all([
+            fetch(`/api/analytics/balance-evolution?days=${premiumAnalyticsPeriod}&ts=${stamp}`).then((response) => response.json()),
+            fetch(`/api/analytics/transactions-by-type?days=${premiumAnalyticsPeriod}&ts=${stamp}`).then((response) => response.json()),
+            fetch(`/api/analytics/monthly-comparison?ts=${stamp}`).then((response) => response.json()),
+            fetch(`/api/analytics/statistics?days=${premiumAnalyticsPeriod}&ts=${stamp}`).then((response) => response.json()),
         ]);
 
-        // Mettre à jour les statistiques
-        updateStatistics(stats.statistics);
-        
-        // Créer/Mettre à jour les graphiques
-        createBalanceChart(balanceData);
-        createTypeChart(typeData);
-        createMonthlyChart(monthlyData);
-        
-        // Ajouter un indicateur visuel de mise à jour (seulement pour les rafraîchissements automatiques)
-        if (showIndicators) {
-            showUpdateIndicator();
+        updatePremiumAnalyticsStats(statsData.statistics || {});
+        drawPremiumBalanceChart(balanceData || { labels: [], data: [] });
+        drawPremiumTypeChart(typeData || { labels: [], amounts: [], counts: [] });
+        drawPremiumMonthlyChart(monthlyData || { data: [] });
+
+        if (showIndicator) {
+            premiumAnalyticsToast(premiumAnalyticsI18n.updated, 'success');
         }
-        
     } catch (error) {
-        console.error('<?php echo e(__('dashboard.analytics_loading_error')); ?>', error);
-        
-        // Afficher un message d'erreur à l'utilisateur
-        showErrorIndicator('<?php echo e(__('dashboard.loading_data_error')); ?>');
-        
-        // Initialize with empty data if needed
-        if (!balanceChart && !typeChart && !monthlyChart) {
-            // Initialize empty charts on first load failure
-            createBalanceChart({ labels: [], data: [] });
-            createTypeChart({ labels: [], amounts: [], counts: [] });
-            createMonthlyChart({ data: [] });
-        }
+        console.error('Premium analytics loading error:', error);
+        premiumAnalyticsToast(premiumAnalyticsI18n.loadingError, 'error');
     } finally {
-        isLoadingAnalytics = false;
+        premiumAnalyticsLoading = false;
     }
 }
 
-// Fonction pour afficher un indicateur de mise à jour
-function showUpdateIndicator() {
-    const indicator = document.createElement('div');
-    indicator.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in-out';
-    indicator.innerHTML = '<i class="fas fa-check-circle mr-2"></i><?php echo e(__('dashboard.data_updated')); ?>';
-    document.body.appendChild(indicator);
-    
-    setTimeout(() => {
-        indicator.remove();
-    }, 2000);
+function updatePremiumAnalyticsStats(stats) {
+    const netFlow = Number(stats.net_flow || 0);
+    const netFlowElement = document.getElementById('analytics-net-flow');
+
+    document.getElementById('analytics-total-deposits').textContent = premiumAnalyticsFormatCurrency(stats.total_deposits || 0);
+    document.getElementById('analytics-total-withdrawals').textContent = premiumAnalyticsFormatCurrency(stats.total_withdrawals || 0);
+    document.getElementById('analytics-average-transaction').textContent = premiumAnalyticsFormatCurrency(stats.average_transaction || 0);
+    document.getElementById('analytics-transaction-count').textContent = stats.transaction_count || 0;
+    document.getElementById('analytics-deposits-trend').textContent = stats.deposits_trend ? `${stats.deposits_trend}%` : '--';
+    document.getElementById('analytics-withdrawals-trend').textContent = stats.withdrawals_trend ? `${stats.withdrawals_trend}%` : '--';
+
+    netFlowElement.textContent = premiumAnalyticsFormatCurrency(Math.abs(netFlow));
+    netFlowElement.className = `analytics-metric-value premium-kpi-number mt-3 font-semibold ${netFlow >= 0 ? 'text-emerald-700' : 'text-rose-700'}`;
 }
 
-// Fonction pour afficher un indicateur d'erreur
-function showErrorIndicator(message) {
-    const indicator = document.createElement('div');
-    indicator.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in-out';
-    indicator.innerHTML = `<i class="fas fa-exclamation-circle mr-2"></i>${message}`;
-    document.body.appendChild(indicator);
-    
-    setTimeout(() => {
-        indicator.remove();
-    }, 5000);
-}
+function drawPremiumBalanceChart(data) {
+    const context = document.getElementById('premiumBalanceChart');
+    if (!context) return;
+    if (premiumBalanceChart) premiumBalanceChart.destroy();
 
-// Fonction pour démarrer le rafraîchissement automatique
-function startAnalyticsAutoRefresh() {
-    // Rafraîchir toutes les 30 secondes
-    analyticsRefreshInterval = setInterval(() => {
-        loadAnalytics(true); // Afficher les indicateurs pour les rafraîchissements automatiques
-    }, 30000);
-}
-
-// Fonction pour arrêter le rafraîchissement automatique
-function stopAnalyticsAutoRefresh() {
-    if (analyticsRefreshInterval) {
-        clearInterval(analyticsRefreshInterval);
-    }
-}
-
-// Mettre à jour les statistiques
-function updateStatistics(stats) {
-    document.getElementById('total-deposits').textContent = formatCurrency(stats.total_deposits || 0);
-    document.getElementById('total-withdrawals').textContent = formatCurrency(stats.total_withdrawals || 0);
-    
-    const netFlow = stats.net_flow || 0;
-    const netFlowElement = document.getElementById('net-flow');
-    netFlowElement.textContent = formatCurrency(Math.abs(netFlow));
-    netFlowElement.className = `text-2xl font-bold ${netFlow >= 0 ? 'text-green-600' : 'text-red-600'}`;
-    
-    document.getElementById('average-transaction').textContent = formatCurrency(stats.average_transaction || 0);
-    document.getElementById('transaction-count').textContent = stats.transaction_count || 0;
-    
-    document.getElementById('deposits-trend').textContent = stats.deposits_trend ? `${stats.deposits_trend}%` : '--';
-    document.getElementById('withdrawals-trend').textContent = stats.withdrawals_trend ? `${stats.withdrawals_trend}%` : '--';
-}
-
-// Créer le graphique d'évolution du solde
-function createBalanceChart(data) {
-    const ctx = document.getElementById('balanceChart');
-    
-    if (balanceChart) {
-        balanceChart.destroy();
-    }
-    
-    // Vérifier si nous avons des données
-    if (!data || !data.labels || data.labels.length === 0) {
-        ctx.getContext('2d').clearRect(0, 0, ctx.width, ctx.height);
-        return;
-    }
-    
-    balanceChart = new Chart(ctx, {
+    premiumBalanceChart = new Chart(context, {
         type: 'line',
         data: {
-            labels: data.labels,
+            labels: data.labels || [],
             datasets: [{
                 label: '<?php echo e(__('dashboard.balance')); ?>',
-                data: data.data,
-                borderColor: 'rgb(59, 130, 246)',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                borderWidth: 3,
+                data: data.data || [],
+                borderColor: '#167c5b',
+                backgroundColor: 'rgba(22, 124, 91, 0.12)',
                 fill: true,
-                tension: 0.4,
-                pointRadius: 4,
-                pointHoverRadius: 6,
-                pointBackgroundColor: 'rgb(59, 130, 246)',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2
-            }]
+                borderWidth: 3,
+                pointRadius: 0,
+                tension: 0.35,
+            }],
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    display: false
-                },
+                legend: { display: false },
                 tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    padding: 12,
-                    titleColor: '#fff',
-                    bodyColor: '#fff',
-                    borderColor: 'rgb(59, 130, 246)',
-                    borderWidth: 1,
                     callbacks: {
-                        label: function(context) {
-                            return '<?php echo e(__('dashboard.balance')); ?>: ' + formatCurrency(context.parsed.y);
+                        label: function (context) {
+                            return premiumAnalyticsFormatCurrency(context.parsed.y);
                         }
                     }
                 }
             },
             scales: {
+                x: { grid: { display: false } },
                 y: {
-                    beginAtZero: false,
                     ticks: {
-                        callback: function(value) {
-                            return formatCurrency(value);
+                        callback: function (value) {
+                            return premiumAnalyticsFormatCurrency(value);
                         }
                     },
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)'
-                    }
+                    grid: { color: 'rgba(148, 163, 184, 0.16)' }
+                }
+            }
+        }
+    });
+}
+
+function drawPremiumTypeChart(data) {
+    const context = document.getElementById('premiumTypeChart');
+    if (!context) return;
+    if (premiumTypeChart) premiumTypeChart.destroy();
+
+    premiumTypeChart = new Chart(context, {
+        type: 'doughnut',
+        data: {
+            labels: data.labels || [],
+            datasets: [{
+                data: data.amounts || [],
+                backgroundColor: ['rgba(22, 124, 91, 0.85)', 'rgba(59, 130, 246, 0.76)', 'rgba(245, 158, 11, 0.76)'],
+                borderWidth: 0,
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '68%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 18,
+                    },
                 },
-                x: {
-                    grid: {
-                        display: false
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            const count = (data.counts || [])[context.dataIndex] || 0;
+                            return `${context.label}: ${premiumAnalyticsFormatCurrency(context.parsed)} (${count} ${premiumAnalyticsI18n.transactions})`;
+                        }
                     }
                 }
             }
@@ -451,110 +288,33 @@ function createBalanceChart(data) {
     });
 }
 
-// Créer le graphique par type
-function createTypeChart(data) {
-    const ctx = document.getElementById('typeChart');
-    
-    if (typeChart) {
-        typeChart.destroy();
-    }
-    
-    // Vérifier si nous avons des données
-    if (!data || !data.labels || data.labels.length === 0) {
-        ctx.getContext('2d').clearRect(0, 0, ctx.width, ctx.height);
-        return;
-    }
-    
-    typeChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: data.labels,
-            datasets: [{
-                data: data.amounts,
-                backgroundColor: [
-                    'rgba(16, 185, 129, 0.8)',
-                    'rgba(239, 68, 68, 0.8)',
-                    'rgba(59, 130, 246, 0.8)'
-                ],
-                borderColor: [
-                    'rgb(16, 185, 129)',
-                    'rgb(239, 68, 68)',
-                    'rgb(59, 130, 246)'
-                ],
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 15,
-                        font: {
-                            size: 12
-                        }
-                    }
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    padding: 12,
-                    callbacks: {
-                        label: function(context) {
-                            const label = context.label || '';
-                            const value = formatCurrency(context.parsed);
-                            const count = data.counts[context.dataIndex];
-                            return `${label}: ${value} (${count} ${analyticsI18n.transactions})`;
-                        }
-                    }
-                }
-            },
-            cutout: '65%'
-        }
-    });
-}
+function drawPremiumMonthlyChart(data) {
+    const context = document.getElementById('premiumMonthlyChart');
+    if (!context) return;
+    if (premiumMonthlyChart) premiumMonthlyChart.destroy();
 
-// Créer le graphique de comparaison mensuelle
-function createMonthlyChart(data) {
-    const ctx = document.getElementById('monthlyChart');
-    
-    if (monthlyChart) {
-        monthlyChart.destroy();
-    }
-    
-    // Vérifier si nous avons des données
-    if (!data || !data.data || data.data.length === 0) {
-        ctx.getContext('2d').clearRect(0, 0, ctx.width, ctx.height);
-        return;
-    }
-    
-    const labels = data.data.map(d => d.month);
-    const deposits = data.data.map(d => d.deposits);
-    const withdrawals = data.data.map(d => d.withdrawals);
-    
-    monthlyChart = new Chart(ctx, {
+    const dataset = data.data || [];
+
+    premiumMonthlyChart = new Chart(context, {
         type: 'bar',
         data: {
-            labels: labels,
+            labels: dataset.map((item) => item.month),
             datasets: [
                 {
                     label: '<?php echo e(__('dashboard.deposits')); ?>',
-                    data: deposits,
-                    backgroundColor: 'rgba(16, 185, 129, 0.8)',
-                    borderColor: 'rgb(16, 185, 129)',
-                    borderWidth: 2,
-                    borderRadius: 8
+                    data: dataset.map((item) => item.deposits),
+                    backgroundColor: 'rgba(22, 124, 91, 0.78)',
+                    borderRadius: 14,
+                    borderSkipped: false,
                 },
                 {
                     label: '<?php echo e(__('dashboard.withdrawals')); ?>',
-                    data: withdrawals,
-                    backgroundColor: 'rgba(239, 68, 68, 0.8)',
-                    borderColor: 'rgb(239, 68, 68)',
-                    borderWidth: 2,
-                    borderRadius: 8
+                    data: dataset.map((item) => item.withdrawals),
+                    backgroundColor: 'rgba(59, 130, 246, 0.74)',
+                    borderRadius: 14,
+                    borderSkipped: false,
                 }
-            ]
+            ],
         },
         options: {
             responsive: true,
@@ -563,92 +323,122 @@ function createMonthlyChart(data) {
                 legend: {
                     position: 'top',
                     labels: {
-                        padding: 15,
-                        font: {
-                            size: 12,
-                            weight: 'bold'
-                        }
-                    }
+                        usePointStyle: true,
+                        padding: 18,
+                    },
                 },
                 tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    padding: 12,
                     callbacks: {
-                        label: function(context) {
-                            return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
+                        label: function (context) {
+                            return `${context.dataset.label}: ${premiumAnalyticsFormatCurrency(context.parsed.y)}`;
                         }
                     }
                 }
             },
             scales: {
+                x: { grid: { display: false } },
                 y: {
-                    beginAtZero: true,
                     ticks: {
-                        callback: function(value) {
-                            return formatCurrency(value);
+                        callback: function (value) {
+                            return premiumAnalyticsFormatCurrency(value);
                         }
                     },
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)'
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    }
+                    grid: { color: 'rgba(148, 163, 184, 0.16)' }
                 }
             }
         }
     });
 }
 
-// Charger les analytics au chargement de la page
-document.addEventListener('DOMContentLoaded', function() {
-    loadAnalytics(false); // Pas d'indicateurs au chargement initial
-    startAnalyticsAutoRefresh();
+function premiumAnalyticsToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `fixed right-4 top-4 z-[100] rounded-2xl px-4 py-3 text-sm font-semibold text-white shadow-2xl ${type === 'error' ? 'bg-rose-600' : 'bg-emerald-700'}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 2200);
+}
+
+function startPremiumAnalyticsAutoRefresh() {
+    if (premiumAnalyticsRefreshTimer) {
+        clearInterval(premiumAnalyticsRefreshTimer);
+    }
+
+    premiumAnalyticsRefreshTimer = setInterval(() => {
+        if (document.visibilityState === 'visible') {
+            loadPremiumAnalytics(true);
+        }
+    }, 30000);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    loadPremiumAnalytics(false);
+    startPremiumAnalyticsAutoRefresh();
 });
 
-// Arrêter le rafraîchissement quand l'utilisateur quitte la page
-window.addEventListener('beforeunload', function() {
-    stopAnalyticsAutoRefresh();
-});
+document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') {
+        loadPremiumAnalytics(true);
+        startPremiumAnalyticsAutoRefresh();
+        return;
+    }
 
-// Reprendre le rafraîchissement quand l'utilisateur revient sur la page
-document.addEventListener('visibilitychange', function() {
-    if (document.hidden) {
-        stopAnalyticsAutoRefresh();
-    } else {
-        startAnalyticsAutoRefresh();
-        loadAnalytics(true); // Afficher les indicateurs lors du retour
+    if (premiumAnalyticsRefreshTimer) {
+        clearInterval(premiumAnalyticsRefreshTimer);
+        premiumAnalyticsRefreshTimer = null;
     }
 });
 </script>
 
 <style>
-@keyframes fadeInOut {
-    0% {
-        opacity: 0;
-        transform: translateY(-10px);
+    .analytics-metric-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
     }
-    10% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    90% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    100% {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-}
 
-.animate-fade-in-out {
-    animation: fadeInOut 2s ease-in-out;
-}
+    .analytics-metric-card {
+        display: flex;
+        flex-direction: column;
+        min-height: 280px;
+    }
+
+    .analytics-metric-card-header {
+        gap: 0.75rem;
+    }
+
+    .analytics-metric-chip {
+        max-width: calc(100% - 3.5rem);
+        white-space: normal;
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+    .analytics-metric-value {
+        display: block;
+        max-width: 100%;
+        font-size: clamp(1.9rem, 1.1rem + 1.55vw, 3rem);
+        line-height: 1.05;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    @media (max-width: 767px) {
+        .analytics-metric-card {
+            min-height: auto;
+        }
+    }
+
+    .analytics-period-btn.is-active {
+        background: linear-gradient(135deg, #167c5b 0%, #0f5b42 100%);
+        color: #ffffff;
+        box-shadow: 0 10px 22px rgba(15, 91, 66, 0.22);
+    }
+
+    .analytics-period-btn:hover:not(.is-active) {
+        background: #ffffff;
+        color: #0f172a;
+    }
 </style>
-
-
-
 <?php /**PATH C:\xampp\htdocs\cerveau\resources\views\components\analytics-section.blade.php ENDPATH**/ ?>
