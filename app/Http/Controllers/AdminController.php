@@ -95,7 +95,12 @@ class AdminController extends Controller
     public function settings($locale)
     {
         $settings = Setting::first();
-        return view('admin.settings', compact('settings'));
+        $users = User::where('role', 'user')->orderBy('first_name')->get();
+
+        return view('admin.settings', array_merge(
+            compact('settings', 'users'),
+            $this->getAdminShellData()
+        ));
     }
 
     public function saveSettings(Request $request)
@@ -191,8 +196,11 @@ class AdminController extends Controller
         }
 
         $users = $query->orderBy('created_at', 'desc')->paginate(20);
-        
-        return view('admin.users', compact('users'));
+
+        return view('admin.users', array_merge(
+            compact('users'),
+            $this->getAdminShellData()
+        ));
     }
 
     public function toggleUser($locale, User $user)
@@ -210,8 +218,23 @@ class AdminController extends Controller
 
     public function depositForm($locale)
     {
-        $users = User::where('role', 'user')->get();
-        return view('admin.deposit', compact('users'));
+        $users = User::where('role', 'user')->orderBy('first_name')->get();
+        $recentDeposits = Transaction::with('user')
+            ->where('type', 'deposit')
+            ->latest()
+            ->take(6)
+            ->get();
+        $depositVolume30Days = Transaction::where('type', 'deposit')
+            ->where('created_at', '>=', now()->subDays(30))
+            ->sum('amount');
+        $depositsTodayCount = Transaction::where('type', 'deposit')
+            ->whereDate('created_at', today())
+            ->count();
+
+        return view('admin.deposit', array_merge(
+            compact('users', 'recentDeposits', 'depositVolume30Days', 'depositsTodayCount'),
+            $this->getAdminShellData()
+        ));
     }
 
     public function depositStore(DepositRequest $request)
@@ -316,7 +339,42 @@ class AdminController extends Controller
     public function createUser($locale)
     {
         $countries = config('countries');
-        return view('admin.users.create', compact('countries'));
+        $recentUsers = User::latest()->take(5)->get();
+
+        return view('admin.users.create', array_merge(
+            compact('countries', 'recentUsers'),
+            $this->getAdminShellData()
+        ));
+    }
+
+    private function getAdminShellData(): array
+    {
+        $admin = auth()->user();
+        $totalUsers = User::count();
+        $activeUsers = User::where('status', 'active')->count();
+        $pendingUsersCount = User::where('status', 'pending')->count();
+        $suspendedUsersCount = User::where('status', 'suspended')->count();
+        $totalTransactions = Transaction::count();
+        $pendingTransactionsCount = Transaction::whereIn('status', ['pending', 'on_hold'])->count();
+        $unreadNotificationsCount = $admin ? $admin->unreadNotifications()->count() : 0;
+        $chatUnreadCount = $admin
+            ? ChatMessage::where('receiver_id', $admin->id)->unread()->count()
+            : 0;
+        $activeUsersRate = $totalUsers > 0
+            ? (int) round(($activeUsers / $totalUsers) * 100)
+            : 0;
+
+        return compact(
+            'totalUsers',
+            'activeUsers',
+            'pendingUsersCount',
+            'suspendedUsersCount',
+            'totalTransactions',
+            'pendingTransactionsCount',
+            'unreadNotificationsCount',
+            'chatUnreadCount',
+            'activeUsersRate'
+        );
     }
 
     // Helper to generate random credit card number (16 digits)
