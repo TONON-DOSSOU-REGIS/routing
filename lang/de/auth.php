@@ -4,7 +4,7 @@ return [
     'failed' => 'Diese Kennungen passen nicht zu unseren Aufzeichnungen.',
     'password' => 'Passwort vergessen?',
     'throttle' => 'Zu viele Versuche zu verbinden. Bitte versuchen Sie es erneut in:Sekunden.',
-    'login_page_title' => 'Verbindung - SG BANK',
+    'login_page_title' => 'Verbindung - Valtrix Bank',
     'nav_home' => 'Home',
     'nav_create_account' => 'Registrieren',
     'nav_login' => 'Verbindung',
@@ -29,7 +29,7 @@ return [
     'social_invalid_provider' => 'Nicht unterstützter Anmeldeanbieter.',
     'social_login_error' => 'Anmeldung mit diesem Anbieter ist derzeit nicht möglich.',
     'social_missing_email' => 'Ihr Konto hat keine E-Mail-Adresse geteilt. Bitte erneut versuchen oder eine andere Methode verwenden.',
-    'register_page_title' => 'Anmeldung - SG BANK',
+    'register_page_title' => 'Anmeldung - Valtrix Bank',
     'register_hero_title_1' => 'Öffnen Sie Ihre',
     'register_hero_title_2' => 'Rechnung',
     'register_hero_title_3' => 'in ein paar',
@@ -44,7 +44,7 @@ return [
     'register_feature_security_bold' => 'Banken',
     'register_feature_notifications' => 'Mitteilungen',
     'register_feature_notifications_bold' => 'Reale Zeit',
-    'register_title' => 'Mitglied der SG BANK',
+    'register_title' => 'Mitglied von Valtrix Bank',
     'already_account' => 'Bereits registriert?',
     'login_link' => 'Anmeldung',
     'first_name' => 'Vorname',
@@ -178,6 +178,8 @@ return [
     '2fa_password_invalid' => 'Falsches Passwort.',
     '2fa_missing_secret' => 'Fehlender Schl?ssel. Bitte neu einrichten.',
     'register_error_title' => 'Registrierungsfehler',
+    'forgot_password_page_title' => 'Passwortwiederherstellung - Valtrix Bank',
+    'forgot_password_title' => 'Stellen Sie Ihren Zugang wieder her',
+    'forgot_password_subtitle' => 'Geben Sie Ihre E-Mail-Adresse ein, um einen sicheren Link zum Zurucksetzen des Passworts zu erhalten.',
+    'reset_password_subtitle' => 'Wahlen Sie ein neues Passwort, um Ihren Kundenzugang zu sichern.',
 ];
-
-

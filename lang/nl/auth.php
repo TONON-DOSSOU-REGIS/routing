@@ -4,7 +4,7 @@ return [
     'failed' => 'Deze identificaties komen niet overeen met onze gegevens.',
     'password' => 'Wachtwoord',
     'throttle' => 'Te veel pogingen om verbinding te maken. Probeer opnieuw in:seconden.',
-    'login_page_title' => 'Verbinding - SG BANK',
+    'login_page_title' => 'Verbinding - Valtrix Bank',
     'nav_home' => 'Begin',
     'nav_create_account' => 'Registreren',
     'nav_login' => 'Verbinding',
@@ -29,7 +29,7 @@ return [
     'social_invalid_provider' => 'Niet-ondersteunde aanmeldprovider.',
     'social_login_error' => 'Inloggen met deze provider is momenteel niet mogelijk.',
     'social_missing_email' => 'Je account heeft geen e-mailadres gedeeld. Probeer het opnieuw of gebruik een andere methode.',
-    'register_page_title' => 'Registratie - SG BANK',
+    'register_page_title' => 'Registratie - Valtrix Bank',
     'register_hero_title_1' => 'Open je',
     'register_hero_title_2' => 'rekening',
     'register_hero_title_3' => 'in een paar',
@@ -44,7 +44,7 @@ return [
     'register_feature_security_bold' => 'banken',
     'register_feature_notifications' => 'Kennisgevingen',
     'register_feature_notifications_bold' => 'real time',
-    'register_title' => 'Lid worden van SG BANK',
+    'register_title' => 'Lid worden van Valtrix Bank',
     'already_account' => 'Al geregistreerd?',
     'login_link' => 'Aanmelden',
     'first_name' => 'Voornaam',
@@ -178,6 +178,8 @@ return [
     '2fa_password_invalid' => 'Onjuist wachtwoord.',
     '2fa_missing_secret' => 'Sleutel ontbreekt. Start de setup opnieuw.',
     'register_error_title' => 'Registratiefouten',
+    'forgot_password_page_title' => 'Wachtwoordherstel - Valtrix Bank',
+    'forgot_password_title' => 'Herstel uw toegang',
+    'forgot_password_subtitle' => 'Voer uw e-mailadres in om een veilige resetlink te ontvangen.',
+    'reset_password_subtitle' => 'Kies een nieuw wachtwoord om uw klanttoegang te beveiligen.',
 ];
-
-

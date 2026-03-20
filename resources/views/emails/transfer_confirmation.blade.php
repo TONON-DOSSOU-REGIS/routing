@@ -1,568 +1,143 @@
+@php
+    $clientName = trim(implode(' ', array_filter([
+        $transaction->user->first_name ?? null,
+        $transaction->user->last_name ?? null,
+    ])));
+    $clientName = $clientName !== '' ? $clientName : ($transaction->user->email ?? 'Client');
+    $beneficiaryName = trim((string) ($transaction->recipient_name ?? ''));
+    $beneficiaryName = $beneficiaryName !== '' ? $beneficiaryName : __('transactions.not_available');
+    $bankName = trim((string) ($transaction->bank_name ?? ''));
+    $bankName = $bankName !== '' ? $bankName : __('transactions.not_available');
+    $reason = trim((string) ($transaction->reason ?? ''));
+    $executedAt = optional($transaction->updated_at ?? $transaction->created_at)->format('d/m/Y H:i');
+    $mailLanguage = str_replace('_', '-', $mailLocale ?? app()->getLocale());
+    $successLabel = __('transactions.status_success');
+@endphp
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ $mailLanguage }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmation de virement - Valtrix Bank</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
-  <link rel="manifest" href="/favicon_io11/site.webmanifest">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', Arial, sans-serif;
-            line-height: 1.6;
-            color: #374151;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .email-container {
-            max-width: 650px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.15),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
-            animation: slideInUp 0.8s ease-out;
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .header {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 50px 40px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.1)"><polygon points="0,0 1000,100 1000,0"/></svg>');
-            background-size: cover;
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
-        .logo-icon {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            backdrop-filter: blur(10px);
-        }
-
-        .header h1 {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            position: relative;
-        }
-
-        .header h2 {
-            font-size: 20px;
-            font-weight: 400;
-            opacity: 0.95;
-            position: relative;
-        }
-
-        .content {
-            padding: 50px 40px;
-            background: #ffffff;
-        }
-
-        .greeting {
-            font-size: 20px;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .greeting::before {
-            content: '👋';
-            font-size: 28px;
-        }
-
-        .success-banner {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-            border: 2px solid #10b981;
-            border-radius: 20px;
-            padding: 30px;
-            margin: 30px 0;
-            text-align: center;
-            position: relative;
-            animation: successPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes successPulse {
-            0%, 100% {
-                transform: scale(1);
-                box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
-            }
-            50% {
-                transform: scale(1.01);
-                box-shadow: 0 12px 35px rgba(16, 185, 129, 0.25);
-            }
-        }
-
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            background: #10b981;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 36px;
-            color: white;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .success-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #065f46;
-            margin-bottom: 8px;
-        }
-
-        .success-subtitle {
-            color: #047857;
-            font-size: 16px;
-        }
-
-        .transaction-card {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border: 2px solid #e2e8f0;
-            border-radius: 20px;
-            padding: 0;
-            margin: 40px 0;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .card-header {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            color: white;
-            padding: 25px 30px;
-            text-align: center;
-        }
-
-        .card-header h3 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .card-header p {
-            opacity: 0.9;
-            font-size: 14px;
-        }
-
-        .transaction-details {
-            padding: 30px;
-        }
-
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            border-bottom: 1px solid #f1f5f9;
-            transition: all 0.3s ease;
-        }
-
-        .detail-row:hover {
-            background: rgba(255, 255, 255, 0.5);
-            padding-left: 15px;
-            padding-right: 15px;
-            border-radius: 12px;
-        }
-
-        .detail-row:last-child {
-            border-bottom: none;
-        }
-
-        .label {
-            font-weight: 600;
-            color: #374151;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-        }
-
-        .label i {
-            width: 20px;
-            text-align: center;
-            color: #6b7280;
-        }
-
-        .value {
-            color: #6b7280;
-            text-align: right;
-            font-size: 14px;
-        }
-
-        .amount-section {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            padding: 25px 30px;
-            text-align: center;
-            color: white;
-        }
-
-        .amount-label {
-            font-size: 16px;
-            margin-bottom: 8px;
-            opacity: 0.9;
-        }
-
-        .amount {
-            font-size: 42px;
-            font-weight: 700;
-            margin: 0;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .info-section {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            border: 2px solid #0ea5e9;
-            border-radius: 16px;
-            padding: 25px;
-            margin: 30px 0;
-        }
-
-        .info-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #0369a1;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .info-title::before {
-            content: '💡';
-        }
-
-        .info-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .info-list li {
-            padding: 8px 0;
-            color: #0369a1;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .info-list li::before {
-            content: '→';
-            color: #0ea5e9;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .support-section {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 25px;
-            margin: 30px 0;
-            text-align: center;
-            border-left: 4px solid #10b981;
-        }
-
-        .support-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 12px;
-        }
-
-        .support-contact {
-            color: #10b981;
-            font-weight: 600;
-            text-decoration: none;
-            font-size: 15px;
-        }
-
-        .closing {
-            margin: 40px 0 30px;
-            text-align: center;
-        }
-
-        .signature {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 8px;
-        }
-
-        .team {
-            color: #6b7280;
-            font-size: 15px;
-        }
-
-        .footer {
-            background: #f8fafc;
-            padding: 35px 40px;
-            text-align: center;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        .footer p {
-            color: #9ca3af;
-            font-size: 13px;
-            line-height: 1.5;
-            margin-bottom: 10px;
-        }
-
-        .security-notice {
-            background: #fef3c7;
-            border: 1px solid #f59e0b;
-            border-radius: 12px;
-            padding: 15px;
-            margin: 20px 0;
-            font-size: 12px;
-            color: #92400e;
-        }
-
-        .copyright {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
-            color: #9ca3af;
-            font-size: 12px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 640px) {
-            body {
-                padding: 15px;
-            }
-
-            .email-container {
-                border-radius: 20px;
-            }
-
-            .header {
-                padding: 40px 25px;
-            }
-
-            .header h1 {
-                font-size: 28px;
-            }
-
-            .header h2 {
-                font-size: 18px;
-            }
-
-            .content {
-                padding: 40px 25px;
-            }
-
-            .logo-icon {
-                width: 50px;
-                height: 50px;
-                font-size: 24px;
-            }
-
-            .amount {
-                font-size: 36px;
-            }
-
-            .detail-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-                text-align: left;
-            }
-
-            .value {
-                text-align: left;
-            }
-
-            .transaction-details {
-                padding: 20px;
-            }
-        }
-    </style>
+    <title>{{ __('transactions.transfer_receipt_email_title') }}</title>
 </head>
-<body>
-    <div class="email-container">
-        <!-- En-tête -->
-        <div class="header">
-            <div class="logo-section">
-                <div class="logo-icon">
-                    <i class="fas fa-building-columns"></i>
-                </div>
-            </div>
-            <h1>Valtrix Bank</h1>
-            <h2>Confirmation de virement</h2>
-        </div>
+<body style="margin:0; padding:0; background-color:#eef2f7; font-family:Arial, Helvetica, sans-serif; color:#1f2937;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#eef2f7; margin:0; padding:24px 0;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:680px; background:#ffffff; border-radius:24px; overflow:hidden; box-shadow:0 18px 50px rgba(15,23,42,0.10);">
+                    <tr>
+                        <td style="padding:32px 36px; background:linear-gradient(135deg, #0f766e 0%, #0f9f84 100%); color:#ffffff;">
+                            <div style="font-size:12px; letter-spacing:0.18em; text-transform:uppercase; opacity:0.82;">Valtrix Bank</div>
+                            <h1 style="margin:14px 0 10px; font-size:30px; line-height:1.2;">{{ __('transactions.transfer_receipt_email_title') }}</h1>
+                            <p style="margin:0; font-size:15px; line-height:1.7; max-width:520px; color:rgba(255,255,255,0.88);">
+                                {{ __('transactions.transfer_receipt_email_intro') }}
+                            </p>
+                        </td>
+                    </tr>
 
-        <!-- Contenu principal -->
-        <div class="content">
-            <!-- Salutation personnalisée -->
-            <div class="greeting">
-                Bonjour <strong>{{ $transaction->user->first_name }} {{ $transaction->user->last_name }}</strong>,
-            </div>
+                    <tr>
+                        <td style="padding:34px 36px 18px;">
+                            <p style="margin:0 0 16px; font-size:16px; line-height:1.8;">
+                                {{ __('transactions.transfer_receipt_email_greeting', ['name' => $clientName]) }}
+                            </p>
+                            <p style="margin:0; font-size:15px; line-height:1.8; color:#475467;">
+                                {{ __('transactions.transfer_receipt_email_body', ['file' => $receiptFileName]) }}
+                            </p>
+                        </td>
+                    </tr>
 
-            <!-- Bannière de succès -->
-            <div class="success-banner">
-                <div class="success-icon">
-                    <i class="fas fa-check"></i>
-                </div>
-                <div class="success-title">Virement effectué avec succès !</div>
-                <div class="success-subtitle">Votre transaction a été traitée et votre compte a été débité</div>
-            </div>
+                    <tr>
+                        <td style="padding:0 36px 28px;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:separate; border-spacing:0; background:#f8fafc; border:1px solid #dbe4ee; border-radius:20px; overflow:hidden;">
+                                <tr>
+                                    <td colspan="2" style="padding:18px 22px; background:#111827; color:#ffffff; font-size:15px; font-weight:700;">
+                                        {{ __('transactions.transfer_receipt_email_summary_title') }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:16px 22px; border-bottom:1px solid #e5e7eb; font-size:13px; font-weight:700; color:#667085; text-transform:uppercase; letter-spacing:0.08em;">{{ __('transactions.receipt_transaction_id') }}</td>
+                                    <td style="padding:16px 22px; border-bottom:1px solid #e5e7eb; font-size:14px; color:#111827;">#{{ $transaction->id }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:16px 22px; border-bottom:1px solid #e5e7eb; font-size:13px; font-weight:700; color:#667085; text-transform:uppercase; letter-spacing:0.08em;">{{ __('transactions.receipt_amount') }}</td>
+                                    <td style="padding:16px 22px; border-bottom:1px solid #e5e7eb; font-size:18px; font-weight:700; color:#0f766e;">{{ $formattedAmount }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:16px 22px; border-bottom:1px solid #e5e7eb; font-size:13px; font-weight:700; color:#667085; text-transform:uppercase; letter-spacing:0.08em;">{{ __('transactions.receipt_recipient_name') }}</td>
+                                    <td style="padding:16px 22px; border-bottom:1px solid #e5e7eb; font-size:14px; color:#111827;">{{ $beneficiaryName }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:16px 22px; border-bottom:1px solid #e5e7eb; font-size:13px; font-weight:700; color:#667085; text-transform:uppercase; letter-spacing:0.08em;">{{ __('transactions.receipt_bank_name') }}</td>
+                                    <td style="padding:16px 22px; border-bottom:1px solid #e5e7eb; font-size:14px; color:#111827;">{{ $bankName }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:16px 22px; border-bottom:1px solid #e5e7eb; font-size:13px; font-weight:700; color:#667085; text-transform:uppercase; letter-spacing:0.08em;">{{ __('transactions.receipt_status') }}</td>
+                                    <td style="padding:16px 22px; border-bottom:1px solid #e5e7eb;">
+                                        <span style="display:inline-block; padding:8px 12px; border-radius:999px; background:#dcfce7; color:#166534; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;">{{ $successLabel }} - 100%</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:16px 22px; border-bottom:1px solid #e5e7eb; font-size:13px; font-weight:700; color:#667085; text-transform:uppercase; letter-spacing:0.08em;">{{ __('transactions.transfer_receipt_email_processed_at') }}</td>
+                                    <td style="padding:16px 22px; border-bottom:1px solid #e5e7eb; font-size:14px; color:#111827;">{{ $executedAt }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:16px 22px; font-size:13px; font-weight:700; color:#667085; text-transform:uppercase; letter-spacing:0.08em;">{{ __('transactions.receipt_reason') }}</td>
+                                    <td style="padding:16px 22px; font-size:14px; color:#111827;">{{ $reason !== '' ? $reason : __('transactions.transfer_receipt_email_reason_fallback') }}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
 
-            <!-- Carte de transaction -->
-            <div class="transaction-card">
-                <div class="card-header">
-                    <h3>Détails de la transaction</h3>
-                    <p>Référence : #{{ $transaction->id }}</p>
-                </div>
-                
-                <div class="amount-section">
-                    <div class="amount-label">Montant du virement</div>
-                    <div class="amount">{{ number_format($transaction->amount, 2, ',', ' ') }} €</div>
-                </div>
+                    <tr>
+                        <td style="padding:0 36px 28px;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#ecfdf3; border:1px solid #b7efcf; border-radius:18px;">
+                                <tr>
+                                    <td style="padding:18px 20px;">
+                                        <div style="font-size:15px; font-weight:700; color:#166534; margin-bottom:8px;">{{ __('transactions.transfer_receipt_email_attachment_title') }}</div>
+                                        <div style="font-size:14px; line-height:1.7; color:#166534;">
+                                            {{ __('transactions.transfer_receipt_email_attachment_text') }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
 
-                <div class="transaction-details">
-                    <div class="detail-row">
-                        <span class="label">
-                            <i class="fas fa-user"></i>
-                            Bénéficiaire
-                        </span>
-                        <span class="value">{{ $transaction->recipient_name }}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">
-                            <i class="fas fa-credit-card"></i>
-                            IBAN du bénéficiaire
-                        </span>
-                        <span class="value">{{ $transaction->recipient_iban }}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">
-                            <i class="fas fa-university"></i>
-                            Banque du bénéficiaire
-                        </span>
-                        <span class="value">{{ $transaction->bank_name }}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">
-                            <i class="fas fa-comment"></i>
-                            Motif du virement
-                        </span>
-                        <span class="value">{{ $transaction->reason }}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">
-                            <i class="fas fa-calendar"></i>
-                            Date et heure
-                        </span>
-                        <span class="value">{{ $transaction->created_at->format('d/m/Y à H:i') }}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">
-                            <i class="fas fa-hashtag"></i>
-                            Référence
-                        </span>
-                        <span class="value">#{{ $transaction->id }}</span>
-                    </div>
-                </div>
-            </div>
+                    <tr>
+                        <td style="padding:0 36px 34px;">
+                            <table role="presentation" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td style="padding-right:12px; padding-bottom:12px;">
+                                        <a href="{{ $historyUrl }}" style="display:inline-block; padding:14px 22px; border-radius:999px; background:#0f766e; color:#ffffff; text-decoration:none; font-size:14px; font-weight:700;">
+                                            {{ __('transactions.transfer_receipt_email_history_cta') }}
+                                        </a>
+                                    </td>
+                                    <td style="padding-bottom:12px;">
+                                        <a href="{{ $receiptUrl }}" style="display:inline-block; padding:14px 22px; border-radius:999px; background:#ffffff; color:#0f172a; text-decoration:none; font-size:14px; font-weight:700; border:1px solid #cbd5e1;">
+                                            {{ __('transactions.transfer_receipt_email_receipt_cta') }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
 
-            <!-- Informations supplémentaires -->
-            <div class="info-section">
-                <div class="info-title">Informations importantes</div>
-                <ul class="info-list">
-                    <li>Vous pouvez consulter le détail de cette transaction dans votre historique de virements</li>
-                    <li>Le débit de votre compte est effectif immédiatement</li>
-                    <li>Le crédit sur le compte du bénéficiaire peut prendre 1 à 2 jours ouvrés</li>
-                    <li>Conservez cette confirmation pour vos archives</li>
-                </ul>
-            </div>
-
-            <!-- Support -->
-            <div class="support-section">
-                <div class="support-title">Des questions sur cette transaction ?</div>
-                <p>Notre équipe de support est à votre disposition pour vous aider.</p>
-                <a href="mailto:support@valtrixbank.com" class="support-contact">support@valtrixbank.com</a>
-            </div>
-
-            <!-- Signature -->
-            <div class="closing">
-                <div class="signature">Cordialement,</div>
-                <div class="team">L'équipe Valtrix Bank</div>
-            </div>
-        </div>
-
-        <!-- Pied de page -->
-        <div class="footer">
-            <p>Cet email a été envoyé automatiquement. Ne pas répondre à cet email.</p>
-            <div class="security-notice">
-                <strong>🛡️ Sécurité :</strong> Valtrix Bank ne vous demandera jamais vos informations personnelles par email.
-            </div>
-            <div class="copyright">
-                &copy; 2025 Valtrix Bank. Tous droits réservés.<br>
-                Votre confiance est notre priorité.
-            </div>
-        </div>
-    </div>
-
-    <!-- Font Awesome pour les icônes -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+                    <tr>
+                        <td style="padding:24px 36px; background:#f8fafc; border-top:1px solid #e5e7eb;">
+                            <p style="margin:0 0 10px; font-size:13px; line-height:1.7; color:#667085;">
+                                {{ __('transactions.transfer_receipt_email_footer_intro') }}
+                            </p>
+                            <p style="margin:0 0 10px; font-size:13px; line-height:1.7; color:#667085;">
+                                {{ __('transactions.transfer_receipt_email_footer_support') }}
+                            </p>
+                            <p style="margin:0; font-size:12px; line-height:1.7; color:#98a2b3;">
+                                {{ __('transactions.transfer_receipt_email_footer_notice', ['year' => date('Y')]) }}
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
-
-
-

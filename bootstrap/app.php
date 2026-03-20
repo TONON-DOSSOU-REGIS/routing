@@ -18,6 +18,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
         ]);
+
+        // Allow logout even when the previous CSRF token has expired,
+        // so users can always leave their session without seeing a 419 page.
+        $middleware->validateCsrfTokens(except: [
+            'logout',
+            '*/logout',
+        ]);
         
         $middleware->alias([
             'admin' => \App\Http\Middleware\IsAdmin::class,

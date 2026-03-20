@@ -4,7 +4,7 @@ return [
     'failed' => 'Te identyfikatory nie pasują do naszych danych.',
     'password' => 'Hasło',
     'throttle' => 'Zbyt wiele prób połączenia. Proszę spróbować ponownie w ciągu: sekund.',
-    'login_page_title' => 'Połączenie - SG BANK',
+    'login_page_title' => 'Połączenie - Valtrix Bank',
     'nav_home' => 'Spis treści',
     'nav_create_account' => 'Zarejestruj sie',
     'nav_login' => 'Połączenie',
@@ -29,7 +29,7 @@ return [
     'social_invalid_provider' => 'Nieobsługiwany dostawca logowania.',
     'social_login_error' => 'Nie można teraz zalogować się przez tego dostawcę.',
     'social_missing_email' => 'Twoje konto nie udostępniło adresu e-mail. Spróbuj ponownie lub użyj innej metody.',
-    'register_page_title' => 'Rejestracja - SG BANK',
+    'register_page_title' => 'Rejestracja - Valtrix Bank',
     'register_hero_title_1' => 'Otwórz',
     'register_hero_title_2' => 'rachunek',
     'register_hero_title_3' => 'w kilku',
@@ -44,7 +44,7 @@ return [
     'register_feature_security_bold' => 'bankowość',
     'register_feature_notifications' => 'Powiadomienia',
     'register_feature_notifications_bold' => 'w czasie rzeczywistym',
-    'register_title' => 'Dołącz do SG BANK',
+    'register_title' => 'Dołącz do Valtrix Bank',
     'already_account' => 'Już zarejestrowany?',
     'login_link' => 'Zaloguj się',
     'first_name' => 'Imię',
@@ -178,6 +178,8 @@ return [
     '2fa_password_invalid' => 'Nieprawid?owe has?o.',
     '2fa_missing_secret' => 'Brak klucza. Uruchom konfiguracj? ponownie.',
     'register_error_title' => 'B??dy rejestracji',
+    'forgot_password_page_title' => 'Odzyskiwanie hasla - Valtrix Bank',
+    'forgot_password_title' => 'Odzyskaj dostep',
+    'forgot_password_subtitle' => 'Wpisz swoj adres e-mail, aby otrzymac bezpieczny link do resetu hasla.',
+    'reset_password_subtitle' => 'Wybierz nowe haslo, aby zabezpieczyc dostep do konta klienta.',
 ];
-
-

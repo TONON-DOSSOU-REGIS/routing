@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
     <title><?php echo e(config('app.name', 'Laravel')); ?> <?php if (! empty(trim($__env->yieldContent('title')))): ?> - <?php echo $__env->yieldContent('title'); ?> <?php endif; ?></title>
+    <?php echo $__env->make('partials.favicon', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -26,5 +27,4 @@
     <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html>
-
 <?php /**PATH C:\xampp\htdocs\cerveau\resources\views\layouts\app.blade.php ENDPATH**/ ?>

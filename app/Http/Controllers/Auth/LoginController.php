@@ -125,6 +125,7 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
         $request->session()->forget('2fa_passed');
+        $request->session()->regenerateToken();
 
         $locale = app()->getLocale();
 

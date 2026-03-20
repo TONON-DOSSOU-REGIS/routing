@@ -1,929 +1,196 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paramètres de progression - Valtrix Bank Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
-  <link rel="manifest" href="/favicon_io11/site.webmanifest">
+<?php
+    $targetUser = collect($users)->firstWhere('id', old('target_user_id', $settings->target_user_id ?? null));
+    $stopPercentage = old('stop_percentage', $settings->stop_percentage ?? 70);
+    $stopMessage = old('stop_message', $settings->stop_message ?? 'Transaction suspendue pour verification de securite.');
+    $isGlobal = (bool) old('is_global', $settings->is_global ?? true);
+?>
+
+<?php $__env->startSection('title', 'Parametres admin - Valtrix Bank'); ?>
+<?php $__env->startSection('admin_nav_active', 'settings'); ?>
+<?php $__env->startSection('dashboard_page_title', 'Parametres des virements'); ?>
+<?php $__env->startSection('dashboard_page_subtitle', 'Reglez les seuils d arret, la portee de la regle et le message envoye au client dans un environnement premium.'); ?>
+<?php $__env->startSection('dashboard_section_label', 'System settings'); ?>
+
+<?php $__env->startSection('dashboard_header_actions'); ?>
+    <a href="<?php echo e(localized_route('admin.deposit')); ?>" class="inline-flex items-center gap-2 rounded-full bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-800">
+        <i class="fas fa-plus-circle text-xs"></i>
+        Nouveau depot
+    </a>
+    <a href="<?php echo e(localized_route('admin.users')); ?>" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
+        <i class="fas fa-users text-xs"></i>
+        Utilisateurs
+    </a>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startPush('premium_dashboard_head'); ?>
     <style>
-        /* Animations élégantes */
-        @keyframes fadeInUp {
-            from { 
-                opacity: 0; 
-                transform: translateY(30px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            }
-        }
-        
-        @keyframes slideIn {
-            from { 
-                opacity: 0; 
-                transform: translateX(-20px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateX(0); 
-            }
-        }
-        
-        .fade-in-up { 
-            animation: fadeInUp 0.6s ease-out forwards; 
-        }
-        
-        .slide-in { 
-            animation: slideIn 0.5s ease-out forwards; 
-        }
-        
-        /* Animation d'entrée pour les éléments */
-        .stagger-item {
-            opacity: 0;
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-        
-        .stagger-item:nth-child(1) { animation-delay: 0.1s; }
-        .stagger-item:nth-child(2) { animation-delay: 0.2s; }
-        .stagger-item:nth-child(3) { animation-delay: 0.3s; }
-        .stagger-item:nth-child(4) { animation-delay: 0.4s; }
-        
-        /* Effet de survol amélioré */
-        .card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        /* Effet glassmorphism pour la navigation */
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-        
-        /* Style pour les boutons d'action */
-        .action-btn {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .action-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-        
-        .action-btn:hover::before {
-            left: 100%;
-        }
-        
-        /* Style pour les cartes avec effet glass */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Style pour les inputs */
-        .input-field {
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.7);
-        }
-        
-        .input-field:focus {
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-            border-color: #3b82f6;
-            background: rgba(255, 255, 255, 0.9);
-        }
-        
-        /* Animation de pulsation pour les indicateurs */
-        @keyframes pulse-glow {
-            0%, 100% { 
-                box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
-            }
-            50% { 
-                box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
-            }
-        }
-        
-        .pulse-glow {
-            animation: pulse-glow 2s infinite;
-        }
-
-        /* Emoji picker toolbar */
-        .emoji-toolbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.75rem;
-            margin-bottom: 0.6rem;
-        }
-
-        .emoji-picker-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            border-radius: 9999px;
-            border: 1px solid rgba(14, 116, 144, 0.25);
-            background: linear-gradient(135deg, rgba(236, 254, 255, 0.9), rgba(224, 242, 254, 0.9));
-            color: #0f766e;
-            font-weight: 700;
-            font-size: 0.75rem;
-            padding: 0.45rem 0.75rem;
-            transition: all 0.25s ease;
-            white-space: nowrap;
-        }
-
-        .emoji-picker-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
-            border-color: rgba(14, 116, 144, 0.4);
-        }
-
-        .emoji-picker-btn:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.2);
-        }
-
-        .emoji-hint {
-            margin-top: 0.5rem;
-            color: #64748b;
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-        }
-
-        /* Keep emoji picker above admin cards/widgets */
-        .emoji-picker__wrapper {
-            z-index: 25000 !important;
-        }
-
-        .emoji-picker {
-            z-index: 25001 !important;
-            width: min(420px, calc(100vw - 1rem)) !important;
-            max-width: calc(100vw - 1rem) !important;
-        }
-
-        @media (max-width: 1024px) {
-            .card-hover:hover {
-                transform: none;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .emoji-toolbar {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.5rem;
-            }
-
-            .emoji-picker-btn {
-                width: 100%;
-                justify-content: center;
-                font-size: 0.82rem;
-                padding: 0.55rem 0.8rem;
-            }
-
-            .emoji-hint {
-                font-size: 0.72rem;
-                line-height: 1.35;
-                align-items: flex-start;
-            }
-
-            .emoji-picker {
-                width: calc(100vw - 0.75rem) !important;
-                max-width: calc(100vw - 0.75rem) !important;
-                font-size: 15px !important;
-            }
-        }
-
-        @media (max-width: 420px) {
-            .emoji-picker {
-                width: calc(100vw - 0.5rem) !important;
-                max-width: calc(100vw - 0.5rem) !important;
-            }
-        }
-
-        /* Style pour l'arrière-plan */
-        .background-container {
-            background-image: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            position: relative;
-        }
-
-        .background-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.9) 0%, rgba(139, 92, 246, 0.85) 50%, rgba(14, 165, 233, 0.9) 100%);
-            backdrop-filter: blur(2px);
-        }
-
-        /* Style pour les boutons radio personnalisés */
-        .custom-radio {
-            position: relative;
-            cursor: pointer;
-        }
-
-        .custom-radio input {
-            position: absolute;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .radio-checkmark {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 1.25rem;
-            width: 1.25rem;
-            background-color: #fff;
-            border: 2px solid #d1d5db;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .custom-radio:hover input ~ .radio-checkmark {
-            border-color: #3b82f6;
-        }
-
-        .custom-radio input:checked ~ .radio-checkmark {
-            background-color: #3b82f6;
-            border-color: #3b82f6;
-        }
-
-        .radio-checkmark:after {
-            content: "";
-            position: absolute;
-            display: none;
-        }
-
-        .custom-radio input:checked ~ .radio-checkmark:after {
-            display: block;
-        }
-
-        .custom-radio .radio-checkmark:after {
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 0.5rem;
-            height: 0.5rem;
-            border-radius: 50%;
-            background: white;
-        }
-
-        <?php echo $__env->make('components.admin-dashboard-background-styles', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+        .admin-field { background: rgba(248, 250, 252, 0.9); border: 1px solid rgba(148, 163, 184, 0.24); box-shadow: inset 0 1px 0 rgba(255,255,255,0.72); transition: border-color .18s, box-shadow .18s, background-color .18s; }
+        .admin-field:focus { background: rgba(255,255,255,.98); border-color: rgba(21, 94, 239, 0.36); box-shadow: 0 0 0 4px rgba(21, 94, 239, 0.08); outline: none; }
+        .admin-surface { border: 1px solid rgba(148,163,184,.18); background: linear-gradient(180deg, rgba(255,255,255,.94), rgba(248,250,252,.88)); box-shadow: 0 18px 36px rgba(15,23,42,.06); }
+        .emoji-btn { display: inline-flex; align-items: center; gap: .45rem; border-radius: 9999px; border: 1px solid rgba(14,116,144,.25); background: linear-gradient(135deg, rgba(236,254,255,.9), rgba(224,242,254,.9)); color: #0f766e; font-weight: 700; font-size: .75rem; padding: .45rem .75rem; transition: all .25s ease; }
+        .emoji-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 20px rgba(15,23,42,.12); }
+        .emoji-picker__wrapper, .emoji-picker { z-index: 25000 !important; }
     </style>
-</head>
-<body class="min-h-screen">
-    <?php echo $__env->make('components.admin-dashboard-background', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-    <div class="min-h-screen relative z-10">
-        <!-- Navigation améliorée -->
-        <nav class="glass-nav sticky top-0 z-50">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex justify-between h-16">
-                        <div class="flex items-center">
-                            <div class="flex items-center space-x-3">
-                                <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
-                                    <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>"><img src='<?php echo e(asset("images/Logosite.png")); ?>' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
-                                </div>
-                                <div>
-                                    <a href="<?php echo e(localized_route('admin.dashboard')); ?>" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"><span class="sr-only">Valtrix Bank Admin</span></a>
-                                    <div class="text-xs text-gray-500 -mt-1">Paramètres système</div>
-                                </div>
-                            </div>
-                        </div>
+<?php $__env->stopPush(); ?>
 
-                        <!-- Desktop Navigation -->
-                        <div class="hidden md:flex items-center space-x-6">
-                            <a href="<?php echo e(localized_route('admin.dashboard')); ?>" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
-                                <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-                            </a>
-                            <a href="<?php echo e(localized_route('admin.settings')); ?>" class="relative text-blue-600 font-semibold transition duration-300 group">
-                                <i class="fas fa-cog mr-2"></i> Paramètres
-                                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600"></span>
-                            </a>
-                            <a href="<?php echo e(localized_route('admin.users')); ?>" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
-                                <i class="fas fa-users mr-2"></i> Utilisateurs
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-                            </a>
-                            <a href="<?php echo e(localized_route('admin.deposit')); ?>" class="relative text-gray-700 hover:text-blue-600 transition duration-300 font-medium group">
-                                <i class="fas fa-plus-circle mr-2"></i> Dépôt
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-                            </a>
-                            <a href="<?php echo e(localized_route('dashboard', ['locale' => app()->getLocale()])); ?>" class="relative text-gray-700 hover:text-green-600 transition duration-300 font-medium group">
-                                <i class="fas fa-arrow-left mr-2"></i> Retour au site
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
-                            </a>
-                            <form method="POST" action="<?php echo e(localized_route('logout', ['locale' => app()->getLocale()])); ?>">
-                                <?php echo csrf_field(); ?>
-                                <button type="submit" class="relative text-gray-700 hover:text-red-600 transition duration-300 font-medium group">
-                                    <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
-                                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
-                                </button>
-                            </form>
-                        </div>
-
-                        <!-- Mobile menu button -->
-                        <div class="md:hidden flex items-center">
-                            <button type="button" id="mobile-menu-button" class="text-gray-700 hover:text-blue-600 focus:outline-none transition duration-300 p-2 rounded-lg hover:bg-blue-50">
-                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Mobile Navigation Menu -->
-                    <div class="md:hidden hidden" id="mobile-menu">
-                        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/95 backdrop-blur-lg border border-gray-200 rounded-lg shadow-xl mt-2">
-                            <a href="<?php echo e(localized_route('admin.dashboard')); ?>" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
-                                <i class="fas fa-tachometer-alt w-5 mr-3 text-center"></i> Dashboard
-                            </a>
-                            <a href="<?php echo e(localized_route('admin.settings')); ?>" class="flex items-center px-3 py-3 text-base font-medium text-blue-600 bg-blue-50 rounded-lg transition duration-300">
-                                <i class="fas fa-cog w-5 mr-3 text-center"></i> Paramètres
-                            </a>
-                            <a href="<?php echo e(localized_route('admin.users')); ?>" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
-                                <i class="fas fa-users w-5 mr-3 text-center"></i> Utilisateurs
-                            </a>
-                            <a href="<?php echo e(localized_route('admin.deposit')); ?>" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-300">
-                                <i class="fas fa-plus-circle w-5 mr-3 text-center"></i> Dépôt
-                            </a>
-                            <a href="<?php echo e(localized_route('dashboard', ['locale' => app()->getLocale()])); ?>" class="flex items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-lg transition duration-300">
-                                <i class="fas fa-arrow-left w-5 mr-3 text-center"></i> Retour au site
-                            </a>
-                            <form method="POST" action="<?php echo e(localized_route('logout', ['locale' => app()->getLocale()])); ?>" class="block">
-                                <?php echo csrf_field(); ?>
-                                <button type="submit" class="flex items-center w-full px-3 py-3 text-base font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition duration-300">
-                                    <i class="fas fa-sign-out-alt w-5 mr-3 text-center"></i> Déconnexion
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            <div class="max-w-4xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-                <!-- En-tête de la page -->
-                <div class="mb-8 fade-in-up">
-                    <h1 class="text-2xl sm:text-3xl font-bold text-white drop-shadow-lg text-center">Paramètres de progression</h1>
-                    <p class="text-white/90 mt-2 drop-shadow text-center">Configurez le comportement des virements en cours</p>
-                </div>
-
-                <!-- Flash Messages améliorées -->
-                <?php if(session('status')): ?>
-                    <div class="mb-6 glass-card border-l-4 border-l-green-500 rounded-2xl fade-in-up">
-                        <div class="px-4 sm:px-6 py-4">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 bg-green-100 p-2 rounded-full">
-                                    <i class="fas fa-check-circle text-green-500 text-lg"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm font-medium text-gray-800"><?php echo e(session('status')); ?></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <?php if($errors->any()): ?>
-                    <div class="mb-6 glass-card border-l-4 border-l-red-500 rounded-2xl fade-in-up">
-                        <div class="px-4 sm:px-6 py-4">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 bg-red-100 p-2 rounded-full">
-                                    <i class="fas fa-exclamation-circle text-red-500 text-lg"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <h3 class="text-sm font-semibold text-gray-800 mb-1">Erreurs de validation</h3>
-                                    <ul class="text-sm text-gray-700 list-disc list-inside">
-                                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <li><?php echo e($error); ?></li>
-                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-                    <!-- Formulaire principal -->
-                    <div class="lg:col-span-2">
-                        <div class="glass-card rounded-2xl overflow-hidden card-hover">
-                            <div class="px-4 sm:px-8 py-6 sm:py-8">
-                                <div class="flex items-center mb-6">
-                                    <div class="bg-gradient-to-r from-blue-500 to-indigo-500 p-3 rounded-2xl mr-4 shadow-lg">
-                                        <i class="fas fa-cog text-white text-2xl"></i>
-                                    </div>
-                                    <div>
-                                        <h1 class="text-2xl font-bold text-gray-900">Paramètres des virements</h1>
-                                        <p class="text-gray-600 mt-1">Configurez le pourcentage d'arrêt et le message de suspension</p>
-                                    </div>
-                                </div>
-
-                                <form method="POST" action="<?php echo e(localized_route('admin.settings.save')); ?>" class="space-y-6">
-                                    <?php echo csrf_field(); ?>
-
-                                    <!-- Pourcentage d'arrêt -->
-                                    <div class="stagger-item">
-                                        <label for="stop_percentage" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
-                                            <i class="fas fa-percentage mr-2 text-blue-500"></i>
-                                            Pourcentage d'arrêt automatique
-                                        </label>
-                                        <div class="relative rounded-xl shadow-sm">
-                                            <input type="number"
-                                                   name="stop_percentage"
-                                                   id="stop_percentage"
-                                                   min="1"
-                                                   max="100"
-                                                   value="<?php echo e(old('stop_percentage', $settings->stop_percentage ?? 70)); ?>"
-                                                   class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm input-field"
-                                                   required>
-                                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                                <span class="text-gray-500 font-medium">%</span>
-                                            </div>
-                                        </div>
-                                        <div class="mt-3">
-                                            <div class="flex justify-between text-sm text-gray-600 mb-1">
-                                                <span>0%</span>
-                                                <span id="percentage-value"><?php echo e(old('stop_percentage', $settings->stop_percentage ?? 70)); ?>%</span>
-                                                <span>100%</span>
-                                            </div>
-                                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                                <div id="percentage-bar" class="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all duration-300" 
-                                                     style="width: <?php echo e(old('stop_percentage', $settings->stop_percentage ?? 70)); ?>%"></div>
-                                            </div>
-                                        </div>
-                                        <p class="mt-2 text-sm text-gray-500 flex items-center">
-                                            <i class="fas fa-info-circle mr-1 text-blue-500"></i>
-                                            Le virement s'arrêtera automatiquement à ce pourcentage (ex: 70 = arrêt à 70%)
-                                        </p>
-                                    </div>
-
-                                    <!-- Portée des paramètres -->
-                                    <div class="stagger-item">
-                                        <label class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
-                                            <i class="fas fa-globe mr-2 text-purple-500"></i>
-                                            Portée des paramètres
-                                        </label>
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            <label class="custom-radio bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-4 cursor-pointer transition duration-300 hover:border-blue-300">
-                                                <input type="radio"
-                                                       name="is_global"
-                                                       value="1"
-                                                       <?php echo e(old('is_global', $settings->is_global ?? true) ? 'checked' : ''); ?>
-
-                                                       class="form-radio">
-                                                <span class="radio-checkmark"></span>
-                                                <div class="ml-6">
-                                                    <div class="flex items-center">
-                                                        <i class="fas fa-globe-americas text-blue-500 text-lg mr-2"></i>
-                                                        <span class="font-medium text-gray-800">Global</span>
-                                                    </div>
-                                                    <p class="text-sm text-gray-600 mt-1">Tous les utilisateurs</p>
-                                                </div>
-                                            </label>
-                                            <label class="custom-radio bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-xl p-4 cursor-pointer transition duration-300 hover:border-purple-300">
-                                                <input type="radio"
-                                                       name="is_global"
-                                                       value="0"
-                                                       <?php echo e(old('is_global', $settings->is_global ?? true) ? '' : 'checked'); ?>
-
-                                                       class="form-radio">
-                                                <span class="radio-checkmark"></span>
-                                                <div class="ml-6">
-                                                    <div class="flex items-center">
-                                                        <i class="fas fa-user text-purple-500 text-lg mr-2"></i>
-                                                        <span class="font-medium text-gray-800">Spécifique</span>
-                                                    </div>
-                                                    <p class="text-sm text-gray-600 mt-1">Un utilisateur</p>
-                                                </div>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <!-- Sélection utilisateur spécifique -->
-                                    <div id="target_user_container" class="stagger-item hidden">
-                                        <label for="target_user_id" class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
-                                            <i class="fas fa-user-circle mr-2 text-green-500"></i>
-                                            Sélectionner un client
-                                        </label>
-                                        <div class="relative">
-                                            <select name="target_user_id"
-                                                    id="target_user_id"
-                                                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 sm:text-sm input-field">
-                                                <option value="">Choisir un client...</option>
-                                                <?php $__currentLoopData = \App\Models\User::where('role', 'user')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                    <option value="<?php echo e($user->id); ?>" <?php echo e(old('target_user_id', $settings->target_user_id ?? '') == $user->id ? 'selected' : ''); ?>>
-                                                        <?php echo e($user->first_name); ?> <?php echo e($user->last_name); ?> (<?php echo e($user->email); ?>)
-                                                    </option>
-                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                            </select>
-                                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                                <i class="fas fa-chevron-down text-gray-400"></i>
-                                            </div>
-                                        </div>
-                                        <p class="mt-2 text-sm text-gray-500 flex items-center">
-                                            <i class="fas fa-lightbulb mr-1 text-yellow-500"></i>
-                                            Ces paramètres s'appliqueront uniquement aux virements de ce client
-                                        </p>
-                                    </div>
-
-                                    <!-- Message de suspension -->
-                                    <div class="stagger-item">
-                                        <div class="emoji-toolbar">
-                                            <label for="stop_message" class="block text-sm font-semibold text-gray-800 flex items-center">
-                                            <i class="fas fa-comment-alt mr-2 text-orange-500"></i>
-                                            Message de suspension
-                                            </label>
-                                            <button type="button" id="emoji-picker-button" class="emoji-picker-btn">
-                                                <i class="fa-regular fa-face-smile"></i>
-                                                Emojis premium
-                                            </button>
-                                        </div>
-                                        <textarea name="stop_message"
-                                                  id="stop_message"
-                                                  rows="3"
-                                                  class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm input-field resize-none"
-                                                  placeholder="Message affiché lors de la suspension..."
-                                                  required><?php echo e(old('stop_message', $settings->stop_message ?? 'Transaction suspendue pour vérification de sécurité.')); ?></textarea>
-                                        <p class="emoji-hint">
-                                            <i class="fa-solid fa-wand-magic-sparkles text-cyan-600"></i>
-                                            Utilisez le bouton emoji pour enrichir le message envoye au client.
-                                        </p>
-                                        <p class="mt-2 text-sm text-gray-500 flex items-center">
-                                            <i class="fas fa-info-circle mr-1 text-blue-500"></i>
-                                            Ce message sera affiché à l'utilisateur lorsque le virement sera suspendu
-                                        </p>
-                                    </div>
-
-                                    <!-- Information actuelle -->
-                                    <div class="stagger-item">
-                                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 sm:p-5">
-                                            <div class="flex items-start">
-                                                <div class="flex-shrink-0 bg-blue-100 p-2 rounded-lg mr-4">
-                                                    <i class="fas fa-info-circle text-blue-500 text-lg"></i>
-                                                </div>
-                                                <div class="flex-1">
-                                                    <h3 class="text-sm font-semibold text-blue-800 mb-2">Configuration actuelle</h3>
-                                                    <div class="text-sm text-blue-700 space-y-2">
-                                                        <p class="flex items-center">
-                                                            <i class="fas fa-percentage w-4 mr-2"></i>
-                                                            <strong>Pourcentage :</strong> 
-                                                            <span class="ml-1"><?php echo e($settings->stop_percentage ?? 70); ?>%</span>
-                                                        </p>
-                                                        <p class="flex items-center">
-                                                            <i class="fas fa-comment w-4 mr-2"></i>
-                                                            <strong>Message :</strong> 
-                                                            <span class="ml-1"><?php echo e($settings->stop_message ?? 'Transaction suspendue pour vérification de sécurité.'); ?></span>
-                                                        </p>
-                                                        <p class="flex items-center">
-                                                            <i class="fas fa-globe w-4 mr-2"></i>
-                                                            <strong>Portée :</strong> 
-                                                            <span class="ml-1"><?php echo e(($settings->is_global ?? true) ? 'Globale' : 'Spécifique'); ?></span>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Boutons d'action -->
-                                    <div class="stagger-item flex flex-col sm:flex-row sm:justify-end gap-3 pt-4">
-                                        <a href="<?php echo e(localized_route('admin.dashboard')); ?>" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-200 transition duration-300 font-medium shadow-sm w-full sm:w-auto">
-                                            <i class="fas fa-arrow-left mr-2"></i>Annuler
-                                        </a>
-                                        <button type="submit"
-                                                class="action-btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-3 rounded-xl hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-semibold shadow-lg transform hover:scale-105 transition duration-300 pulse-glow w-full sm:w-auto">
-                                            <i class="fas fa-save mr-2"></i>Enregistrer
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Aperçu du message -->
-                    <div class="lg:col-span-1 space-y-6">
-                        <div class="glass-card rounded-2xl overflow-hidden card-hover">
-                            <div class="px-4 sm:px-6 py-6">
-                                <div class="flex items-center mb-6">
-                                    <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-2 rounded-xl mr-3 shadow-lg">
-                                        <i class="fas fa-eye text-white"></i>
-                                    </div>
-                                    <h3 class="text-lg font-bold text-gray-900">Aperçu du message</h3>
-                                </div>
-
-                                <div class="space-y-4">
-                                    <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4">
-                                        <div class="flex items-start">
-                                            <div class="flex-shrink-0 bg-amber-100 p-2 rounded-lg mr-3">
-                                                <i class="fas fa-exclamation-triangle text-amber-500"></i>
-                                            </div>
-                                            <div class="flex-1">
-                                                <h4 class="text-sm font-semibold text-amber-800 mb-1">Transaction suspendue</h4>
-                                                <p id="preview-message" class="text-sm text-amber-700">
-                                                    <?php echo e(old('stop_message', $settings->stop_message ?? 'Transaction suspendue pour vérification de sécurité.')); ?>
-
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200 rounded-xl p-4">
-                                        <div class="text-center">
-                                            <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-3">
-                                                <i class="fas fa-cog text-blue-500 text-xl"></i>
-                                            </div>
-                                            <h4 class="text-sm font-semibold text-gray-800 mb-1">Simulation</h4>
-                                            <p class="text-xs text-gray-600">
-                                                Le virement s'arrêtera à <span id="preview-percentage" class="font-bold"><?php echo e(old('stop_percentage', $settings->stop_percentage ?? 70)); ?>%</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="glass-card rounded-2xl overflow-hidden card-hover">
-                            <div class="px-4 sm:px-6 py-6">
-                                <div class="flex items-center mb-5">
-                                    <div class="bg-gradient-to-r from-purple-500 to-indigo-500 p-2 rounded-xl mr-3 shadow-lg">
-                                        <i class="fas fa-key text-white"></i>
-                                    </div>
-                                    <h3 class="text-lg font-bold text-gray-900">Mot de passe admin</h3>
-                                </div>
-
-                                <form method="POST" action="<?php echo e(localized_route('admin.password.update')); ?>" class="space-y-4">
-                                    <?php echo csrf_field(); ?>
-
-                                    <div>
-                                        <label for="current_password" class="block text-sm font-semibold text-gray-800 mb-2">
-                                            Mot de passe actuel
-                                        </label>
-                                        <input
-                                            type="password"
-                                            id="current_password"
-                                            name="current_password"
-                                            class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm input-field"
-                                            autocomplete="current-password"
-                                            required
-                                        >
-                                    </div>
-
-                                    <div>
-                                        <label for="new_password" class="block text-sm font-semibold text-gray-800 mb-2">
-                                            Nouveau mot de passe
-                                        </label>
-                                        <input
-                                            type="password"
-                                            id="new_password"
-                                            name="new_password"
-                                            class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm input-field"
-                                            autocomplete="new-password"
-                                            required
-                                        >
-                                    </div>
-
-                                    <div>
-                                        <label for="new_password_confirmation" class="block text-sm font-semibold text-gray-800 mb-2">
-                                            Confirmer le nouveau mot de passe
-                                        </label>
-                                        <input
-                                            type="password"
-                                            id="new_password_confirmation"
-                                            name="new_password_confirmation"
-                                            class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm input-field"
-                                            autocomplete="new-password"
-                                            required
-                                        >
-                                    </div>
-
-                                    <button
-                                        type="submit"
-                                        class="w-full action-btn bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-xl hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 font-semibold shadow-lg transition duration-300"
-                                    >
-                                        <i class="fas fa-shield-alt mr-2"></i>Mettre à jour le mot de passe
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<?php $__env->startSection('dashboard_content'); ?>
+    <section class="premium-gradient-card premium-grid-glow relative overflow-hidden rounded-[30px] p-6 sm:p-7">
+        <div class="relative z-10 grid gap-3 sm:grid-cols-2 2xl:grid-cols-4">
+            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">Stop actuel</p><p class="premium-kpi-number mt-2 text-2xl font-semibold"><?php echo e($stopPercentage); ?>%</p></div>
+            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">Portee</p><p class="premium-kpi-number mt-2 text-2xl font-semibold"><?php echo e($isGlobal ? 'Globale' : 'Specifique'); ?></p></div>
+            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">Client cible</p><p class="mt-2 text-lg font-semibold"><?php echo e($targetUser ? $targetUser->first_name . ' ' . $targetUser->last_name : 'Tous les clients'); ?></p></div>
+            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">Files a traiter</p><p class="premium-kpi-number mt-2 text-2xl font-semibold"><?php echo e($pendingTransactionsCount); ?></p></div>
         </div>
+    </section>
+
+    <?php if(session('status')): ?>
+        <div class="rounded-[26px] border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-medium text-emerald-800"><?php echo e(session('status')); ?></div>
+    <?php endif; ?>
+
+    <?php if($errors->any()): ?>
+        <div class="rounded-[26px] border border-rose-200 bg-rose-50 px-5 py-4">
+            <p class="text-sm font-semibold text-rose-800">Erreurs de validation</p>
+            <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-rose-700"><?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><li><?php echo e($error); ?></li><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?></ul>
+        </div>
+    <?php endif; ?>
+
+    <div class="grid gap-6 2xl:grid-cols-[minmax(0,1.55fr)_380px]">
+        <section class="admin-surface rounded-[30px] p-5 sm:p-6">
+            <div class="border-b border-slate-200/70 pb-5">
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Configuration</p>
+                <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">Regle d arret des virements</h2>
+                <p class="mt-2 text-sm leading-6 text-slate-500">Ajustez le seuil, la cible et le message affiche lors d une suspension.</p>
+            </div>
+
+            <form method="POST" action="<?php echo e(localized_route('admin.settings.save')); ?>" class="mt-6 space-y-6">
+                <?php echo csrf_field(); ?>
+                <div>
+                    <label for="stop_percentage" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Pourcentage d arret</label>
+                    <input type="number" name="stop_percentage" id="stop_percentage" min="0" max="100" value="<?php echo e($stopPercentage); ?>" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" required>
+                    <div class="mt-3 flex items-center justify-between text-sm text-slate-500"><span>0%</span><span id="percentage-value" class="font-semibold text-slate-900"><?php echo e($stopPercentage); ?>%</span><span>100%</span></div>
+                    <div class="mt-2 h-2 rounded-full bg-slate-200"><div id="percentage-bar" class="h-2 rounded-full bg-blue-700" style="width: <?php echo e($stopPercentage); ?>%"></div></div>
+                </div>
+
+                <div class="grid gap-4 md:grid-cols-2">
+                    <label class="rounded-[24px] border px-4 py-4 <?php echo e($isGlobal ? 'border-blue-300 bg-blue-50' : 'border-slate-200 bg-white'); ?>">
+                        <input type="radio" name="is_global" value="1" <?php echo e($isGlobal ? 'checked' : ''); ?> class="sr-only">
+                        <p class="text-sm font-semibold text-slate-900">Globale</p>
+                        <p class="mt-1 text-sm text-slate-500">La regle s applique a tous les clients.</p>
+                    </label>
+                    <label class="rounded-[24px] border px-4 py-4 <?php echo e(!$isGlobal ? 'border-blue-300 bg-blue-50' : 'border-slate-200 bg-white'); ?>">
+                        <input type="radio" name="is_global" value="0" <?php echo e(!$isGlobal ? 'checked' : ''); ?> class="sr-only">
+                        <p class="text-sm font-semibold text-slate-900">Specifique</p>
+                        <p class="mt-1 text-sm text-slate-500">La regle cible un client precis.</p>
+                    </label>
+                </div>
+
+                <div id="target_user_container" class="<?php echo e($isGlobal ? 'hidden' : ''); ?>">
+                    <label for="target_user_id" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Client cible</label>
+                    <select name="target_user_id" id="target_user_id" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700">
+                        <option value="">Choisir un client...</option>
+                        <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($user->id); ?>" <?php echo e(old('target_user_id', $settings->target_user_id ?? '') == $user->id ? 'selected' : ''); ?>><?php echo e($user->first_name); ?> <?php echo e($user->last_name); ?> (<?php echo e($user->email); ?>)</option>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </select>
+                </div>
+
+                <div>
+                    <div class="mb-2 flex items-center justify-between gap-3">
+                        <label for="stop_message" class="block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Message de suspension</label>
+                        <button type="button" id="emoji-picker-button" class="emoji-btn"><i class="fa-regular fa-face-smile"></i> Emojis premium</button>
+                    </div>
+                    <textarea name="stop_message" id="stop_message" rows="4" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" required><?php echo e($stopMessage); ?></textarea>
+                    <p class="mt-2 text-sm text-slate-500">Ce message sera affiche au client lors de la mise en attente du virement.</p>
+                </div>
+
+                <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                    <a href="<?php echo e(localized_route('admin.dashboard')); ?>" class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"><i class="fas fa-arrow-left text-xs"></i> Retour</a>
+                    <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-full bg-blue-700 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-800"><i class="fas fa-save text-xs"></i> Enregistrer</button>
+                </div>
+            </form>
+        </section>
+
+        <aside class="space-y-6">
+            <section class="admin-surface rounded-[30px] p-5">
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Simulation</p>
+                <h3 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">Apercu client</h3>
+                <div class="mt-5 rounded-[24px] bg-amber-50 px-4 py-4 ring-1 ring-amber-200/80">
+                    <p class="text-sm font-semibold text-amber-900">Transaction suspendue</p>
+                    <p id="preview-message" class="mt-2 text-sm leading-6 text-amber-700"><?php echo e($stopMessage); ?></p>
+                    <p class="mt-3 text-sm text-amber-800">Le virement s arretera a <span id="preview-percentage" class="font-semibold"><?php echo e($stopPercentage); ?>%</span>.</p>
+                </div>
+            </section>
+
+            <section class="admin-surface rounded-[30px] p-5">
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Securite admin</p>
+                <h3 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">Mot de passe</h3>
+                <form method="POST" action="<?php echo e(localized_route('admin.password.update')); ?>" class="mt-5 space-y-4">
+                    <?php echo csrf_field(); ?>
+                    <div><label for="current_password" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Mot de passe actuel</label><input type="password" id="current_password" name="current_password" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" autocomplete="current-password" required></div>
+                    <div><label for="new_password" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Nouveau mot de passe</label><input type="password" id="new_password" name="new_password" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" autocomplete="new-password" required></div>
+                    <div><label for="new_password_confirmation" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Confirmation</label><input type="password" id="new_password_confirmation" name="new_password_confirmation" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" autocomplete="new-password" required></div>
+                    <button type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:bg-slate-800"><i class="fas fa-shield-alt text-xs"></i> Mettre a jour</button>
+                </form>
+            </section>
+        </aside>
     </div>
+<?php $__env->stopSection(); ?>
 
+<?php $__env->startPush('premium_dashboard_scripts'); ?>
     <script>
-        // Toggle mobile menu
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const stopPercentage = document.getElementById('stop_percentage');
+            const percentageValue = document.getElementById('percentage-value');
+            const percentageBar = document.getElementById('percentage-bar');
+            const previewPercentage = document.getElementById('preview-percentage');
+            const stopMessage = document.getElementById('stop_message');
+            const previewMessage = document.getElementById('preview-message');
+            const targetUserContainer = document.getElementById('target_user_container');
+            const emojiButton = document.getElementById('emoji-picker-button');
+            let picker = null;
 
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(event) {
-            const menu = document.getElementById('mobile-menu');
-            const button = document.getElementById('mobile-menu-button');
-            if (!menu.contains(event.target) && !button.contains(event.target)) {
-                menu.classList.add('hidden');
-            }
-        });
+            stopPercentage?.addEventListener('input', function () {
+                const value = Math.max(0, Math.min(100, Number(this.value || 0)));
+                percentageValue.textContent = `${value}%`;
+                previewPercentage.textContent = `${value}%`;
+                percentageBar.style.width = `${value}%`;
+            });
 
-        const stopMessageInput = document.getElementById('stop_message');
-        const previewMessage = document.getElementById('preview-message');
-        const emojiPickerButton = document.getElementById('emoji-picker-button');
-        const stopMessageSelection = {
-            start: null,
-            end: null,
-        };
-        let emojiPickerInstance = null;
-        let emojiPickerCtor = null;
-        let emojiPickerLoadPromise = null;
-        let emojiPickerViewportBucket = null;
+            stopMessage?.addEventListener('input', function () {
+                previewMessage.textContent = this.value || 'Transaction suspendue pour verification de securite.';
+            });
 
-        function loadEmojiPickerCtor() {
-            if (emojiPickerCtor) {
-                return Promise.resolve(emojiPickerCtor);
-            }
+            document.querySelectorAll('input[name="is_global"]').forEach((radio) => {
+                radio.addEventListener('change', function () {
+                    targetUserContainer.classList.toggle('hidden', this.value === '1');
+                });
+            });
 
-            if (!emojiPickerLoadPromise) {
-                emojiPickerLoadPromise = import('https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.4/dist/index.min.js')
-                    .then(function(moduleRef) {
-                        const ctor = moduleRef.EmojiButton
-                            || (moduleRef.default && moduleRef.default.EmojiButton)
-                            || moduleRef.default
-                            || null;
-
-                        if (!ctor) {
-                            throw new Error('EmojiButton constructor introuvable');
-                        }
-
-                        emojiPickerCtor = ctor;
-                        return emojiPickerCtor;
-                    });
-            }
-
-            return emojiPickerLoadPromise;
-        }
-
-        function rememberStopMessageSelection() {
-            if (!stopMessageInput) return;
-            const start = typeof stopMessageInput.selectionStart === 'number'
-                ? stopMessageInput.selectionStart
-                : stopMessageInput.value.length;
-            const end = typeof stopMessageInput.selectionEnd === 'number'
-                ? stopMessageInput.selectionEnd
-                : start;
-
-            stopMessageSelection.start = start;
-            stopMessageSelection.end = end;
-        }
-
-        function restoreStopMessageSelection() {
-            if (!stopMessageInput) return;
-            stopMessageInput.focus();
-
-            if (typeof stopMessageSelection.start === 'number' && typeof stopMessageSelection.end === 'number') {
-                stopMessageInput.setSelectionRange(stopMessageSelection.start, stopMessageSelection.end);
-            }
-        }
-
-        function getViewportBucket() {
-            return window.matchMedia('(max-width: 640px)').matches ? 'small' : 'default';
-        }
-
-        function getEmojiPickerOptions() {
-            const isSmallScreen = getViewportBucket() === 'small';
-
-            return {
-                position: isSmallScreen ? 'auto' : 'bottom-start',
-                theme: 'light',
-                autoHide: true,
-                showSearch: true,
-                showRecents: true,
-                rootElement: document.body,
-                zIndex: 25000,
-                emojisPerRow: isSmallScreen ? 6 : 8,
-                rows: isSmallScreen ? 5 : 6,
+            const insertAtCursor = (input, value) => {
+                const start = input.selectionStart || input.value.length;
+                const end = input.selectionEnd || input.value.length;
+                input.setRangeText(value, start, end, 'end');
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.focus();
             };
-        }
 
-        // Update preview in real-time
-        stopMessageInput.addEventListener('input', function() {
-            previewMessage.textContent = this.value;
-            rememberStopMessageSelection();
-        });
+            emojiButton?.addEventListener('click', async function () {
+                try {
+                    if (!picker) {
+                        const module = await import('https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.4/dist/index.min.js');
+                        const EmojiButton = module.EmojiButton || module.default || module;
+                        picker = new EmojiButton({ position: 'bottom-start', zIndex: 25001 });
+                        picker.on('emoji', (selection) => insertAtCursor(stopMessage, selection.emoji));
+                    }
 
-        function insertEmojiAtCursor(input, emoji) {
-            const start = typeof stopMessageSelection.start === 'number'
-                ? stopMessageSelection.start
-                : (input.selectionStart ?? input.value.length);
-            const end = typeof stopMessageSelection.end === 'number'
-                ? stopMessageSelection.end
-                : (input.selectionEnd ?? start);
-            input.setRangeText(emoji, start, end, 'end');
-            input.focus();
-            input.dispatchEvent(new Event('input', { bubbles: true }));
-            rememberStopMessageSelection();
-        }
-
-        // Update percentage bar and value
-        document.getElementById('stop_percentage').addEventListener('input', function() {
-            const value = this.value;
-            document.getElementById('percentage-value').textContent = value + '%';
-            document.getElementById('percentage-bar').style.width = value + '%';
-            document.getElementById('preview-percentage').textContent = value + '%';
-        });
-
-        // Show/hide target user selection based on scope
-        document.querySelectorAll('input[name="is_global"]').forEach(function(radio) {
-            radio.addEventListener('change', function() {
-                const targetUserContainer = document.getElementById('target_user_container');
-                if (this.value === '0') {
-                    targetUserContainer.classList.remove('hidden');
-                } else {
-                    targetUserContainer.classList.add('hidden');
+                    picker.togglePicker(emojiButton);
+                } catch (error) {
+                    emojiButton.disabled = true;
+                    emojiButton.classList.add('opacity-60', 'cursor-not-allowed');
                 }
             });
         });
-
-        // Initialize visibility on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            const selectedRadio = document.querySelector('input[name="is_global"]:checked');
-            if (selectedRadio && selectedRadio.value === '0') {
-                document.getElementById('target_user_container').classList.remove('hidden');
-            }
-
-            ['click', 'keyup', 'select', 'focus'].forEach(function(eventName) {
-                stopMessageInput.addEventListener(eventName, rememberStopMessageSelection);
-            });
-            rememberStopMessageSelection();
-
-            if (emojiPickerButton) {
-                emojiPickerButton.addEventListener('mousedown', function(event) {
-                    event.preventDefault();
-                    rememberStopMessageSelection();
-                });
-
-                emojiPickerButton.addEventListener('click', async function() {
-                    try {
-                        const activeViewportBucket = getViewportBucket();
-                        if (!emojiPickerInstance || emojiPickerViewportBucket !== activeViewportBucket) {
-                            if (emojiPickerInstance && typeof emojiPickerInstance.destroyPicker === 'function') {
-                                emojiPickerInstance.destroyPicker();
-                            }
-
-                            const EmojiButtonCtor = await loadEmojiPickerCtor();
-                            emojiPickerInstance = new EmojiButtonCtor(getEmojiPickerOptions());
-                            emojiPickerViewportBucket = activeViewportBucket;
-
-                            emojiPickerInstance.on('emoji', function(selection) {
-                                restoreStopMessageSelection();
-                                insertEmojiAtCursor(stopMessageInput, selection.emoji);
-                            });
-                        }
-
-                        emojiPickerInstance.togglePicker(emojiPickerButton);
-                    } catch (error) {
-                        emojiPickerButton.disabled = true;
-                        emojiPickerButton.title = 'Bibliotheque emoji indisponible';
-                        emojiPickerButton.classList.add('opacity-60', 'cursor-not-allowed');
-                    }
-                });
-            }
-        });
     </script>
-    <?php echo $__env->make('components.admin-dashboard-background-script', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-    <?php echo $__env->make('components.admin-chat-widget-v2', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-</body>
-</html>
+<?php $__env->stopPush(); ?>
 
-
-
-<?php /**PATH C:\xampp\htdocs\cerveau\resources\views\admin\settings.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.admin-premium', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\cerveau\resources\views\admin\settings.blade.php ENDPATH**/ ?>

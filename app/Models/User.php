@@ -85,6 +85,11 @@ class User extends Authenticatable
         return $this->hasOne(CreditCard::class);
     }
 
+    public function canViewCreditCard(): bool
+    {
+        return (bool) optional($this->creditCard)->is_visible_to_user;
+    }
+
     public function isAdmin()
     {
         return $this->role === 'admin';

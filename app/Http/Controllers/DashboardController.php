@@ -35,18 +35,7 @@ class DashboardController extends Controller
             ->whereIn('status', ['pending', 'on_hold'])
             ->count();
 
-        $completedTransfersCount = $user->transactions()
-            ->where('type', 'transfer')
-            ->where('status', 'success')
-            ->count();
-
-        $totalTransfersCount = $user->transactions()
-            ->where('type', 'transfer')
-            ->count();
-
-        $transferSuccessRate = $totalTransfersCount > 0
-            ? (int) round(($completedTransfersCount / $totalTransfersCount) * 100)
-            : 100;
+        $transactionsLast30DaysCount = $transactionsLast30Days->count();
 
         $unreadNotificationsCount = $user->unreadNotifications()->count();
 
@@ -76,8 +65,8 @@ class DashboardController extends Controller
             'transactions',
             'incomingLast30Days',
             'outgoingLast30Days',
+            'transactionsLast30DaysCount',
             'pendingOperationsCount',
-            'transferSuccessRate',
             'unreadNotificationsCount',
             'profileCompletion',
             'latestTransaction'

@@ -186,8 +186,11 @@
                         <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $outgoingFormatted }}</p>
                     </div>
                     <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.transfer_success') }}</p>
-                        <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $transferSuccessRate }}%</p>
+                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.transactions_30_days') }}</p>
+                        <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $transactionsLast30DaysCount }}</p>
+                        <p class="mt-1 text-xs text-white/70">
+                            {{ __('dashboard.last_month') }}
+                        </p>
                     </div>
                 </div>
             </div>

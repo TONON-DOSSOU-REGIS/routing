@@ -4,7 +4,7 @@ return [
     'failed' => 'Ces identifiants ne correspondent pas à nos enregistrements.',
     'password' => 'Mot de passe',
     'throttle' => 'Trop de tentatives de connexion. Veuillez réessayer dans :seconds secondes.',
-    'login_page_title' => 'Connexion - SG BANK',
+    'login_page_title' => 'Connexion - Valtrix Bank',
     'nav_home' => 'Accueil',
     'nav_create_account' => "S'inscrire",
     'nav_login' => 'Connexion',
@@ -29,7 +29,7 @@ return [
     'social_invalid_provider' => 'Fournisseur de connexion non pris en charge.',
     'social_login_error' => 'Impossible de se connecter avec ce fournisseur pour le moment.',
     'social_missing_email' => 'Votre compte n\'a pas partagé d\'adresse e-mail. Veuillez réessayer ou utiliser une autre méthode.',
-    'register_page_title' => 'Inscription - SG BANK',
+    'register_page_title' => 'Inscription - Valtrix Bank',
     'register_hero_title_1' => 'Ouvrez votre',
     'register_hero_title_2' => 'compte',
     'register_hero_title_3' => 'en quelques',
@@ -44,7 +44,7 @@ return [
     'register_feature_security_bold' => 'bancaire',
     'register_feature_notifications' => 'Notifications en',
     'register_feature_notifications_bold' => 'temps réel',
-    'register_title' => 'Rejoignez SG BANK',
+    'register_title' => 'Rejoignez Valtrix Bank',
     'already_account' => 'Déjà inscrit ?',
     'login_link' => 'Connectez-vous',
     'first_name' => 'Prénom',
@@ -178,6 +178,8 @@ return [
     '2fa_password_invalid' => 'Mot de passe incorrect.',
     '2fa_missing_secret' => 'Cl? manquante. Reprenez la configuration.',
     'register_error_title' => 'Erreurs d\'inscription',
+    'forgot_password_page_title' => 'Recuperation du mot de passe - Valtrix Bank',
+    'forgot_password_title' => 'Recuperez votre acces',
+    'forgot_password_subtitle' => 'Saisissez votre adresse email pour recevoir un lien de reinitialisation securise.',
+    'reset_password_subtitle' => 'Choisissez un nouveau mot de passe pour proteger votre acces client.',
 ];
-
-

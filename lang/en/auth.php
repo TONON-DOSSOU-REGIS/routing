@@ -4,7 +4,7 @@ return [
     'failed' => 'These identifiers do not match our records.',
     'password' => 'Password',
     'throttle' => 'Too many attempts to connect. Please try again in:seconds.',
-    'login_page_title' => 'Connection - SG BANK',
+    'login_page_title' => 'Connection - Valtrix Bank',
     'nav_home' => 'Home',
     'nav_create_account' => 'Sign up',
     'nav_login' => 'Connection',
@@ -29,7 +29,7 @@ return [
     'social_invalid_provider' => 'Unsupported sign-in provider.',
     'social_login_error' => 'Unable to sign in with this provider right now.',
     'social_missing_email' => 'Your account did not share an email address. Please try again or use another method.',
-    'register_page_title' => 'Registration - SG BANK',
+    'register_page_title' => 'Registration - Valtrix Bank',
     'register_hero_title_1' => 'Open your',
     'register_hero_title_2' => 'account',
     'register_hero_title_3' => 'in a few',
@@ -44,7 +44,7 @@ return [
     'register_feature_security_bold' => 'banking',
     'register_feature_notifications' => 'Notifications',
     'register_feature_notifications_bold' => 'real time',
-    'register_title' => 'Join SG BANK',
+    'register_title' => 'Join Valtrix Bank',
     'already_account' => 'Already registered?',
     'login_link' => 'Log in',
     'first_name' => 'First name',
@@ -178,6 +178,8 @@ return [
     '2fa_password_invalid' => 'Incorrect password.',
     '2fa_missing_secret' => 'Missing secret. Please restart setup.',
     'register_error_title' => 'Registration errors',
+    'forgot_password_page_title' => 'Password recovery - Valtrix Bank',
+    'forgot_password_title' => 'Recover your access',
+    'forgot_password_subtitle' => 'Enter your email address to receive a secure password reset link.',
+    'reset_password_subtitle' => 'Choose a new password to secure your client access.',
 ];
-
-

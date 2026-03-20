@@ -1,427 +1,427 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Virements - Valtrix Bank Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
+@extends('layouts.admin-premium')
+
+@php
+    $filteredTransactionsVolumeFormatted = \App\Helpers\CurrencyHelper::format($filteredTransactionsVolume ?? 0, 'EUR');
+    $activeFiltersCount = collect([
+        request('search'),
+        request('type'),
+        request('status'),
+        request('user_id'),
+        request('date_from'),
+        request('date_to'),
+    ])->filter(fn ($value) => filled($value))->count();
+@endphp
+
+@section('title', 'Pilotage des transactions - Valtrix Bank Admin')
+@section('admin_nav_active', 'transactions')
+@section('dashboard_page_title', 'Gestion des transactions')
+@section('dashboard_page_subtitle', 'Supervisez les virements, depots, retraits et remboursements depuis une interface premium alignee sur le control room admin.')
+@section('dashboard_section_label', 'Transaction desk')
+
+@section('dashboard_header_actions')
+    <a href="{{ localized_route('admin.export.pdf') }}" class="inline-flex items-center gap-2 rounded-full bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-800">
+        <i class="fas fa-file-pdf text-xs"></i>
+        Export PDF
+    </a>
+    <a href="{{ localized_route('admin.deposit') }}" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
+        <i class="fas fa-plus-circle text-xs"></i>
+        Depot
+    </a>
+@endsection
+
+@push('premium_dashboard_head')
     <style>
-        @keyframes fadeInUp {
-            from { 
-                opacity: 0; 
-                transform: translateY(30px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            }
-        }
-        
-        .fade-in-up { 
-            animation: fadeInUp 0.6s ease-out forwards; 
-        }
-        
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-        
-        .card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        @include('components.admin-dashboard-background-styles')
+        .admin-field { background: rgba(248, 250, 252, 0.9); border: 1px solid rgba(148, 163, 184, 0.24); box-shadow: inset 0 1px 0 rgba(255,255,255,0.72); transition: border-color .18s, box-shadow .18s, background-color .18s; }
+        .admin-field:focus { background: rgba(255,255,255,.98); border-color: rgba(21, 94, 239, 0.36); box-shadow: 0 0 0 4px rgba(21, 94, 239, 0.08); outline: none; }
+        .admin-surface { border: 1px solid rgba(148,163,184,.18); background: linear-gradient(180deg, rgba(255,255,255,.94), rgba(248,250,252,.88)); box-shadow: 0 18px 36px rgba(15,23,42,.06); }
+        .admin-row { transition: background-color .18s ease; }
+        .admin-row:hover { background: rgba(248, 250, 252, 0.95); }
+        .admin-amount { display: block; max-width: 100%; font-size: clamp(1.35rem, 1rem + .85vw, 2.3rem); line-height: 1.08; overflow-wrap: anywhere; word-break: break-word; }
     </style>
-</head>
-<body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen">
-    @include('components.admin-dashboard-background')
-    <div class="min-h-screen relative z-10">
-    <!-- Navigation -->
-    <nav class="glass-nav sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-4">
-                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}">
-                        <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                            <img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
-                        </div>
-                        <span class="sr-only">Valtrix Bank Admin</span>
-                    </a>
+@endpush
+
+@section('dashboard_content')
+    <section class="premium-gradient-card premium-grid-glow relative overflow-hidden rounded-[30px] p-6 sm:p-7">
+        <div class="relative z-10 grid gap-3 sm:grid-cols-2 2xl:grid-cols-4">
+            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
+                <p class="text-xs uppercase tracking-[0.18em] text-white/60">Transactions affichees</p>
+                <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $filteredTransactionsCount }}</p>
+                <p class="mt-2 text-xs text-white/72">{{ $transactionsTodayCount }} aujourd hui dans la vue courante.</p>
+            </div>
+            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
+                <p class="text-xs uppercase tracking-[0.18em] text-white/60">Volume filtre</p>
+                <p class="admin-amount premium-kpi-number mt-2 font-semibold">{{ $filteredTransactionsVolumeFormatted }}</p>
+                <p class="mt-2 text-xs text-white/72">Montant cumule pour les resultats visibles.</p>
+            </div>
+            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
+                <p class="text-xs uppercase tracking-[0.18em] text-white/60">A surveiller</p>
+                <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $filteredReviewCount }}</p>
+                <p class="mt-2 text-xs text-white/72">{{ $filteredRefundedCount }} deja remboursees.</p>
+            </div>
+            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
+                <p class="text-xs uppercase tracking-[0.18em] text-white/60">Taux de succes</p>
+                <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $filteredSuccessRate }}%</p>
+                <p class="mt-2 text-xs text-white/72">{{ $filteredSuccessCount }} operation(s) reussie(s).</p>
+            </div>
+        </div>
+    </section>
+
+    @if(session('status'))
+        <div class="rounded-[26px] border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-medium text-emerald-800">
+            {{ session('status') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="rounded-[26px] border border-rose-200 bg-rose-50 px-5 py-4">
+            <p class="text-sm font-semibold text-rose-800">Action impossible</p>
+            <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-rose-700">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class="grid gap-6 2xl:grid-cols-[minmax(0,1.65fr)_360px]">
+        <section class="space-y-6">
+            <section class="admin-surface rounded-[30px] p-5 sm:p-6">
+                <div class="flex flex-col gap-4 border-b border-slate-200/70 pb-5 lg:flex-row lg:items-start lg:justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Filtrage intelligent</p>
+                        <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">Explorer les flux</h2>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">
+                            {{ $activeFiltersCount }} filtre(s) actif(s). Ajustez la recherche pour cibler un utilisateur, un statut ou une periode.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        @if($activeFiltersCount > 0)
+                            <span class="inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-xs font-semibold text-blue-700 ring-1 ring-blue-200/80">
+                                <i class="fas fa-sliders text-[11px]"></i>
+                                Vue filtree
+                            </span>
+                        @endif
+                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-600">
+                            <i class="fas fa-clock text-[11px]"></i>
+                            Mise a jour temps reel
+                        </span>
+                    </div>
                 </div>
 
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="{{ localized_route('admin.dashboard') }}" class="text-gray-600 hover:text-blue-600 transition">
-                        <i class="fas fa-chart-line mr-2"></i>Dashboard
-                    </a>
-                    <a href="{{ localized_route('admin.users') }}" class="text-gray-600 hover:text-blue-600 transition">
-                        <i class="fas fa-users mr-2"></i>Utilisateurs
-                    </a>
-                    <a href="{{ localized_route('admin.transactions') }}" class="text-blue-600 font-semibold">
-                        <i class="fas fa-exchange-alt mr-2"></i>Virements
-                    </a>
-                    <a href="{{ localized_route('admin.settings') }}" class="text-gray-600 hover:text-blue-600 transition">
-                        <i class="fas fa-cog mr-2"></i>Paramètres
-                    </a>
-                    <form action="{{ localized_route('logout', ['locale' => app()->getLocale()]) }}" method="POST" class="inline">
-                        @csrf
-                        <button type="submit" class="text-red-600 hover:text-red-700 transition">
-                            <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+                <form method="GET" action="{{ localized_route('admin.transactions') }}" class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    <div class="xl:col-span-2">
+                        <label for="search" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Recherche</label>
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="ID, client, email ou beneficiaire..." class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700">
+                    </div>
+                    <div>
+                        <label for="type" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Type</label>
+                        <select name="type" id="type" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700">
+                            <option value="">Tous les types</option>
+                            <option value="transfer" {{ request('type') === 'transfer' ? 'selected' : '' }}>Virement</option>
+                            <option value="deposit" {{ request('type') === 'deposit' ? 'selected' : '' }}>Depot</option>
+                            <option value="withdrawal" {{ request('type') === 'withdrawal' ? 'selected' : '' }}>Retrait</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="status" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Statut</label>
+                        <select name="status" id="status" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700">
+                            <option value="">Tous les statuts</option>
+                            <option value="success" {{ request('status') === 'success' ? 'selected' : '' }}>Reussi</option>
+                            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>En attente</option>
+                            <option value="on_hold" {{ request('status') === 'on_hold' ? 'selected' : '' }}>En hold</option>
+                            <option value="refunded" {{ request('status') === 'refunded' ? 'selected' : '' }}>Rembourse</option>
+                        </select>
+                    </div>
+                    <div class="xl:col-span-2">
+                        <label for="user_id" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Utilisateur</label>
+                        <select name="user_id" id="user_id" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700">
+                            <option value="">Tous les utilisateurs</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}" {{ (string) request('user_id') === (string) $user->id ? 'selected' : '' }}>
+                                    {{ $user->first_name }} {{ $user->last_name }} - {{ $user->email }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label for="date_from" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Date debut</label>
+                        <input type="date" name="date_from" id="date_from" value="{{ request('date_from') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700">
+                    </div>
+                    <div>
+                        <label for="date_to" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Date fin</label>
+                        <input type="date" name="date_to" id="date_to" value="{{ request('date_to') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700">
+                    </div>
+                    <div class="xl:col-span-4 flex flex-col gap-3 pt-2 sm:flex-row sm:justify-end">
+                        <a href="{{ localized_route('admin.transactions') }}" class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50">
+                            <i class="fas fa-rotate-left text-xs"></i>
+                            Reinitialiser
+                        </a>
+                        <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-full bg-blue-700 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-800">
+                            <i class="fas fa-search text-xs"></i>
+                            Appliquer les filtres
                         </button>
-                    </form>
+                    </div>
+                </form>
+            </section>
+
+            <section class="admin-surface rounded-[30px] p-5 sm:p-6">
+                <div class="flex flex-col gap-4 border-b border-slate-200/70 pb-5 lg:flex-row lg:items-start lg:justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Operations</p>
+                        <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">Journal des transactions</h2>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">
+                            Affichage de {{ $transactions->count() }} ligne(s) sur {{ $transactions->total() }} resultat(s).
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200/80">
+                            <i class="fas fa-check text-[11px]"></i>
+                            {{ $filteredSuccessCount }} succes
+                        </span>
+                        <span class="inline-flex items-center gap-2 rounded-full bg-amber-50 px-4 py-2 text-xs font-semibold text-amber-700 ring-1 ring-amber-200/80">
+                            <i class="fas fa-triangle-exclamation text-[11px]"></i>
+                            {{ $filteredReviewCount }} a revoir
+                        </span>
+                    </div>
                 </div>
 
-                <button id="mobile-menu-button" class="md:hidden text-gray-600">
-                    <i class="fas fa-bars text-2xl"></i>
+                <div class="mt-6 overflow-hidden rounded-[24px] border border-slate-200">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-[1120px] w-full divide-y divide-slate-200 text-sm">
+                            <thead class="bg-slate-50/90">
+                                <tr>
+                                    <th class="px-4 py-4 text-left font-semibold uppercase tracking-[0.16em] text-slate-400">Transaction</th>
+                                    <th class="px-4 py-4 text-left font-semibold uppercase tracking-[0.16em] text-slate-400">Utilisateur</th>
+                                    <th class="px-4 py-4 text-left font-semibold uppercase tracking-[0.16em] text-slate-400">Montant</th>
+                                    <th class="px-4 py-4 text-left font-semibold uppercase tracking-[0.16em] text-slate-400">Beneficiaire</th>
+                                    <th class="px-4 py-4 text-left font-semibold uppercase tracking-[0.16em] text-slate-400">Statut</th>
+                                    <th class="px-4 py-4 text-left font-semibold uppercase tracking-[0.16em] text-slate-400">Date</th>
+                                    <th class="px-4 py-4 text-left font-semibold uppercase tracking-[0.16em] text-slate-400">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 bg-white">
+                                @forelse($transactions as $transaction)
+                                    @php
+                                        $typeConfig = match ($transaction->type) {
+                                            'deposit' => ['label' => 'Depot', 'class' => 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200/80', 'icon' => 'fa-plus-circle'],
+                                            'withdrawal' => ['label' => 'Retrait', 'class' => 'bg-orange-50 text-orange-700 ring-1 ring-orange-200/80', 'icon' => 'fa-minus-circle'],
+                                            default => ['label' => 'Virement', 'class' => 'bg-blue-50 text-blue-700 ring-1 ring-blue-200/80', 'icon' => 'fa-right-left'],
+                                        };
+                                        $statusConfig = match ($transaction->status) {
+                                            'success' => ['label' => 'Reussi', 'class' => 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200/80', 'icon' => 'fa-circle-check'],
+                                            'pending' => ['label' => 'En attente', 'class' => 'bg-amber-50 text-amber-700 ring-1 ring-amber-200/80', 'icon' => 'fa-clock'],
+                                            'on_hold' => ['label' => 'En hold', 'class' => 'bg-orange-50 text-orange-700 ring-1 ring-orange-200/80', 'icon' => 'fa-pause-circle'],
+                                            'refunded' => ['label' => 'Rembourse', 'class' => 'bg-violet-50 text-violet-700 ring-1 ring-violet-200/80', 'icon' => 'fa-rotate-left'],
+                                            default => ['label' => ucfirst(str_replace('_', ' ', $transaction->status)), 'class' => 'bg-slate-100 text-slate-700 ring-1 ring-slate-200/80', 'icon' => 'fa-circle'],
+                                        };
+                                    @endphp
+                                    <tr class="admin-row">
+                                        <td class="px-4 py-4">
+                                            <div class="min-w-0">
+                                                <div class="flex items-center gap-2">
+                                                    <p class="font-semibold text-slate-900">#{{ $transaction->id }}</p>
+                                                    <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold {{ $typeConfig['class'] }}">
+                                                        <i class="fas {{ $typeConfig['icon'] }} text-[10px]"></i>
+                                                        {{ $typeConfig['label'] }}
+                                                    </span>
+                                                </div>
+                                                <p class="mt-2 text-sm text-slate-500">{{ $transaction->reason ?: 'Aucun motif renseigne' }}</p>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-4">
+                                            <p class="font-semibold text-slate-900">{{ $transaction->user?->first_name }} {{ $transaction->user?->last_name }}</p>
+                                            <p class="mt-1 text-sm text-slate-500">{{ $transaction->user?->email }}</p>
+                                        </td>
+                                        <td class="px-4 py-4">
+                                            <p class="font-semibold text-slate-900">{{ \App\Helpers\CurrencyHelper::format($transaction->amount, $transaction->user->default_currency ?? 'EUR') }}</p>
+                                            <p class="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">{{ $transaction->user->default_currency ?? 'EUR' }}</p>
+                                        </td>
+                                        <td class="px-4 py-4">
+                                            @if($transaction->recipient_name)
+                                                <p class="font-semibold text-slate-900">{{ $transaction->recipient_name }}</p>
+                                                <p class="mt-1 text-sm text-slate-500">{{ $transaction->bank_name ?: 'Banque non renseignee' }}</p>
+                                            @else
+                                                <span class="text-sm text-slate-400">Aucun beneficiaire</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-4">
+                                            <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold {{ $statusConfig['class'] }}">
+                                                <i class="fas {{ $statusConfig['icon'] }} text-[10px]"></i>
+                                                {{ $statusConfig['label'] }}
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-4 text-slate-600">
+                                            <p>{{ $transaction->created_at->format('d/m/Y H:i') }}</p>
+                                            <p class="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">{{ $transaction->created_at->diffForHumans() }}</p>
+                                        </td>
+                                        <td class="px-4 py-4">
+                                            <div class="flex flex-wrap gap-2">
+                                                @if($transaction->status === 'success' && $transaction->type === 'transfer')
+                                                    <button
+                                                        type="button"
+                                                        class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200/80 transition hover:bg-emerald-100"
+                                                        onclick="openRefundModal({{ $transaction->id }}, @js(($transaction->user?->first_name ?? '') . ' ' . ($transaction->user?->last_name ?? '')), {{ (float) $transaction->amount }}, @js($transaction->user->default_currency ?? 'EUR'))"
+                                                    >
+                                                        <i class="fas fa-rotate-left text-[11px]"></i>
+                                                        Rembourser
+                                                    </button>
+                                                @elseif($transaction->status === 'refunded')
+                                                    <span class="inline-flex items-center gap-2 rounded-full bg-violet-50 px-3 py-2 text-xs font-semibold text-violet-700 ring-1 ring-violet-200/80">
+                                                        <i class="fas fa-check text-[11px]"></i>
+                                                        {{ $transaction->refunded_at ? 'Le ' . $transaction->refunded_at->format('d/m/Y') : 'Traitee' }}
+                                                    </span>
+                                                @else
+                                                    <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-500">
+                                                        <i class="fas fa-minus text-[11px]"></i>
+                                                        Aucun
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="px-5 py-12 text-center">
+                                            <p class="text-lg font-semibold text-slate-900">Aucune transaction trouvee</p>
+                                            <p class="mt-2 text-sm text-slate-500">Essayez d ajuster les filtres pour elargir la recherche.</p>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                @if($transactions->hasPages())
+                    <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <p class="text-sm text-slate-500">Affichage de {{ $transactions->firstItem() }} a {{ $transactions->lastItem() }} sur {{ $transactions->total() }} transactions</p>
+                        <div>{{ $transactions->links('vendor.pagination.tailwind') }}</div>
+                    </div>
+                @endif
+            </section>
+        </section>
+
+        <aside class="space-y-6">
+            <section class="admin-surface rounded-[30px] p-5">
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Surveillance</p>
+                <h3 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">Dernieres operations</h3>
+                <div class="mt-5 space-y-3">
+                    @forelse($recentTransactions as $transaction)
+                        <div class="rounded-[22px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="min-w-0">
+                                    <p class="text-sm font-semibold text-slate-900">#{{ $transaction->id }} - {{ $transaction->user?->first_name }} {{ $transaction->user?->last_name }}</p>
+                                    <p class="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">{{ ucfirst(str_replace('_', ' ', $transaction->type)) }} | {{ ucfirst(str_replace('_', ' ', $transaction->status)) }}</p>
+                                    <p class="mt-2 text-sm text-slate-500">{{ $transaction->created_at->format('d/m/Y H:i') }}</p>
+                                </div>
+                                <span class="text-sm font-semibold text-slate-900">{{ \App\Helpers\CurrencyHelper::format($transaction->amount, $transaction->user->default_currency ?? 'EUR') }}</span>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="rounded-[22px] border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center">
+                            <p class="text-sm font-semibold text-slate-900">Aucune donnee recente</p>
+                            <p class="mt-2 text-sm text-slate-500">Les transactions les plus recentes apparaitront ici.</p>
+                        </div>
+                    @endforelse
+                </div>
+            </section>
+
+            <section class="admin-surface rounded-[30px] p-5">
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Actions critiques</p>
+                <h3 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">Cadre de remboursement</h3>
+                <div class="mt-5 space-y-4 text-sm leading-6 text-slate-500">
+                    <p>Les remboursements restent limites aux virements reussis. Une trace horodatee est conservee avec le motif et l administrateur responsable.</p>
+                    <div class="rounded-[22px] bg-amber-50 px-4 py-4 ring-1 ring-amber-200/80">
+                        <p class="font-semibold text-amber-900">Point d attention</p>
+                        <p class="mt-2 text-amber-700">Verifiez toujours le motif et l impact solde avant de confirmer une annulation ou un remboursement.</p>
+                    </div>
+                </div>
+            </section>
+        </aside>
+    </div>
+
+    <div id="refundModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-slate-950/45 px-4 backdrop-blur-sm">
+        <div class="admin-surface w-full max-w-lg rounded-[30px] p-6 sm:p-7">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Confirmation</p>
+                    <h3 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">Rembourser la transaction</h3>
+                </div>
+                <button type="button" class="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100 text-slate-500 transition hover:bg-slate-200 hover:text-slate-700" onclick="closeRefundModal()">
+                    <i class="fas fa-xmark"></i>
                 </button>
             </div>
-        </div>
 
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
-            <div class="px-4 py-3 space-y-3">
-                <a href="{{ localized_route('admin.dashboard') }}" class="block text-gray-600 hover:text-blue-600">
-                    <i class="fas fa-chart-line mr-2"></i>Dashboard
-                </a>
-                <a href="{{ localized_route('admin.users') }}" class="block text-gray-600 hover:text-blue-600">
-                    <i class="fas fa-users mr-2"></i>Utilisateurs
-                </a>
-                <a href="{{ localized_route('admin.transactions') }}" class="block text-blue-600 font-semibold">
-                    <i class="fas fa-exchange-alt mr-2"></i>Virements
-                </a>
-                <a href="{{ localized_route('admin.settings') }}" class="block text-gray-600 hover:text-blue-600">
-                    <i class="fas fa-cog mr-2"></i>Paramètres
-                </a>
-                <form action="{{ localized_route('logout', ['locale' => app()->getLocale()]) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="block w-full text-left text-red-600 hover:text-red-700">
-                        <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
-                    </button>
-                </form>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Header -->
-        <div class="mb-8 fade-in-up">
-            <h1 class="text-2xl sm:text-4xl font-bold text-white mb-2">
-                <i class="fas fa-exchange-alt text-blue-600 mr-3"></i>
-                Gestion des Virements
-            </h1>
-            <p class="text-white">Gérez tous les virements et effectuez des remboursements</p>
-        </div>
-
-        <!-- Success/Error Messages -->
-        @if(session('status'))
-            <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg fade-in-up">
-                <i class="fas fa-check-circle mr-2"></i>{{ session('status') }}
-            </div>
-        @endif
-
-        @if($errors->any())
-            <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg fade-in-up">
-                <i class="fas fa-exclamation-circle mr-2"></i>
-                @foreach($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            </div>
-        @endif
-
-        <!-- Filters -->
-        <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-8 fade-in-up card-hover">
-            <h2 class="text-xl font-bold text-gray-900 mb-4">
-                <i class="fas fa-filter text-blue-600 mr-2"></i>Filtres
-            </h2>
-            
-            <form method="GET" action="{{ localized_route('admin.transactions') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Search -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Recherche</label>
-                    <input type="text" name="search" value="{{ request('search') }}" 
-                           placeholder="ID, nom, email..." 
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
-
-                <!-- Type Filter -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
-                    <select name="type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Tous les types</option>
-                        <option value="transfer" {{ request('type') == 'transfer' ? 'selected' : '' }}>Virement</option>
-                        <option value="deposit" {{ request('type') == 'deposit' ? 'selected' : '' }}>Dépôt</option>
-                        <option value="withdrawal" {{ request('type') == 'withdrawal' ? 'selected' : '' }}>Retrait</option>
-                    </select>
-                </div>
-
-                <!-- Status Filter -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
-                    <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Tous les statuts</option>
-                        <option value="success" {{ request('status') == 'success' ? 'selected' : '' }}>Réussi</option>
-                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>En attente</option>
-                        <option value="on_hold" {{ request('status') == 'on_hold' ? 'selected' : '' }}>En suspens</option>
-                        <option value="refunded" {{ request('status') == 'refunded' ? 'selected' : '' }}>Remboursé</option>
-                    </select>
-                </div>
-
-                <!-- User Filter -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Utilisateur</label>
-                    <select name="user_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Tous les utilisateurs</option>
-                        @foreach($users as $u)
-                            <option value="{{ $u->id }}" {{ request('user_id') == $u->id ? 'selected' : '' }}>
-                                {{ $u->first_name }} {{ $u->last_name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <!-- Date From -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Date début</label>
-                    <input type="date" name="date_from" value="{{ request('date_from') }}" 
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
-
-                <!-- Date To -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Date fin</label>
-                    <input type="date" name="date_to" value="{{ request('date_to') }}" 
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
-
-                <!-- Buttons -->
-                <div class="flex flex-col sm:flex-row sm:items-end gap-2 md:col-span-2">
-                    <button type="submit" class="w-full sm:flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition">
-                        <i class="fas fa-search mr-2"></i>Filtrer
-                    </button>
-                    <a href="{{ localized_route('admin.transactions') }}" class="w-full sm:flex-1 bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition text-center">
-                        <i class="fas fa-redo mr-2"></i>Réinitialiser
-                    </a>
-                </div>
-            </form>
-        </div>
-
-        <!-- Transactions Table -->
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden fade-in-up">
-            <div class="overflow-x-auto">
-                <table class="min-w-[900px] w-full text-sm sm:text-base">
-                    <thead class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-                        <tr>
-                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm font-semibold">ID</th>
-                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm font-semibold">Utilisateur</th>
-                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm font-semibold">Type</th>
-                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm font-semibold">Montant</th>
-                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm font-semibold">Bénéficiaire</th>
-                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm font-semibold">Statut</th>
-                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm font-semibold">Date</th>
-                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm font-semibold">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        @forelse($transactions as $transaction)
-                            <tr class="hover:bg-gray-50 transition">
-                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-sm font-medium text-gray-900">#{{ $transaction->id }}</td>
-                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-sm text-gray-900">
-                                    <div class="font-medium">{{ $transaction->user->first_name }} {{ $transaction->user->last_name }}</div>
-                                    <div class="text-gray-500 text-xs">{{ $transaction->user->email }}</div>
-                                </td>
-                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-sm">
-                                    @if($transaction->type === 'transfer')
-                                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">
-                                            <i class="fas fa-exchange-alt mr-1"></i>Virement
-                                        </span>
-                                    @elseif($transaction->type === 'deposit')
-                                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
-                                            <i class="fas fa-plus-circle mr-1"></i>Dépôt
-                                        </span>
-                                    @else
-                                        <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-semibold">
-                                            <i class="fas fa-minus-circle mr-1"></i>Retrait
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-sm font-bold text-gray-900">
-                                    {{ \App\Helpers\CurrencyHelper::format($transaction->amount, $transaction->user->default_currency ?? 'EUR') }}
-                                </td>
-                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-sm text-gray-900">
-                                    @if($transaction->recipient_name)
-                                        <div class="font-medium">{{ $transaction->recipient_name }}</div>
-                                        <div class="text-gray-500 text-xs">{{ $transaction->bank_name ?? 'N/A' }}</div>
-                                    @else
-                                        <span class="text-gray-400">-</span>
-                                    @endif
-                                </td>
-                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-sm">
-                                    @if($transaction->status === 'success')
-                                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
-                                            <i class="fas fa-check-circle mr-1"></i>Réussi
-                                        </span>
-                                    @elseif($transaction->status === 'pending')
-                                        <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-semibold">
-                                            <i class="fas fa-clock mr-1"></i>En attente
-                                        </span>
-                                    @elseif($transaction->status === 'on_hold')
-                                        <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-semibold">
-                                            <i class="fas fa-pause-circle mr-1"></i>En suspens
-                                        </span>
-                                    @elseif($transaction->status === 'refunded')
-                                        <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-semibold">
-                                            <i class="fas fa-undo mr-1"></i>Remboursé
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-sm text-gray-500">
-                                    {{ $transaction->created_at->format('d/m/Y H:i') }}
-                                </td>
-                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-sm">
-                                    @if($transaction->status === 'success' && $transaction->type === 'transfer')
-                                        <button onclick="openRefundModal({{ $transaction->id }}, '{{ $transaction->user->first_name }} {{ $transaction->user->last_name }}', {{ $transaction->amount }}, '{{ $transaction->user->default_currency ?? 'EUR' }}')" 
-                                                class="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-green-700 transition text-xs font-semibold">
-                                            <i class="fas fa-undo mr-1"></i>Rembourser
-                                        </button>
-                                    @elseif($transaction->status === 'refunded')
-                                        @if($transaction->refunded_at)
-                                            <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-semibold">
-                                                <i class="fas fa-undo mr-1"></i>Remboursé le {{ $transaction->refunded_at->format('d/m/Y') }}
-                                            </span>
-                                        @else
-                                            <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-semibold">
-                                                <i class="fas fa-undo mr-1"></i>Remboursé
-                                            </span>
-                                        @endif
-                                    @else
-                                        <span class="text-gray-400 text-xs">-</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="8" class="px-4 sm:px-6 py-10 sm:py-12 text-center text-gray-500">
-                                    <i class="fas fa-inbox text-4xl mb-4 text-gray-300"></i>
-                                    <p class="text-lg font-medium">Aucune transaction trouvée</p>
-                                    <p class="text-sm">Essayez de modifier vos filtres</p>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+            <div class="mt-5 rounded-[24px] bg-blue-50 px-4 py-4 ring-1 ring-blue-200/80">
+                <p class="text-sm font-semibold text-blue-900">Client concerne</p>
+                <p id="modalUserName" class="mt-2 text-sm text-blue-700"></p>
+                <p id="modalAmount" class="mt-2 text-sm font-semibold text-blue-900"></p>
             </div>
 
-            <!-- Pagination -->
-            @if($transactions->hasPages())
-                <div class="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200">
-                    {{ $transactions->links() }}
-                </div>
-            @endif
-        </div>
-    </div>
-
-    <!-- Refund Modal -->
-    <div id="refundModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-5 sm:p-8">
-            <h3 class="text-2xl font-bold text-gray-900 mb-4">
-                <i class="fas fa-undo text-green-600 mr-2"></i>Confirmer le remboursement
-            </h3>
-            
-            <div class="mb-6 p-4 bg-blue-50 rounded-lg">
-                <p class="text-sm text-gray-700 mb-2"><strong>Utilisateur:</strong> <span id="modalUserName"></span></p>
-                <p class="text-sm text-gray-700"><strong>Montant:</strong> <span id="modalAmount"></span></p>
-            </div>
-
-            <form id="refundForm" method="POST">
+            <form id="refundForm" method="POST" class="mt-6 space-y-5">
                 @csrf
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Motif du remboursement (optionnel)</label>
-                    <textarea name="refund_reason" rows="3" 
-                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                              placeholder="Ex: Erreur de transaction, demande du client..."></textarea>
+                <div>
+                    <label for="refund_reason" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Motif du remboursement</label>
+                    <textarea id="refund_reason" name="refund_reason" rows="4" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="Erreur de saisie, double operation, demande client..."></textarea>
                 </div>
 
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <button type="button" onclick="closeRefundModal()" 
-                            class="flex-1 w-full bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition font-semibold">
+                <div class="rounded-[24px] bg-amber-50 px-4 py-4 ring-1 ring-amber-200/80">
+                    <p class="text-sm font-semibold text-amber-900">Impact immediat</p>
+                    <p class="mt-2 text-sm text-amber-700">Le montant sera recredite sur le compte du client et la transaction passera au statut rembourse.</p>
+                </div>
+
+                <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                    <button type="button" class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" onclick="closeRefundModal()">
+                        <i class="fas fa-arrow-left text-xs"></i>
                         Annuler
                     </button>
-                    <button type="submit" 
-                            class="flex-1 w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg hover:from-green-600 hover:to-green-700 transition font-semibold">
-                        <i class="fas fa-check mr-2"></i>Confirmer
+                    <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-900/20 transition hover:bg-emerald-700">
+                        <i class="fas fa-check text-xs"></i>
+                        Confirmer le remboursement
                     </button>
                 </div>
             </form>
         </div>
     </div>
+@endsection
 
+@push('premium_dashboard_scripts')
     <script>
-        // Toggle mobile menu
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const refundModal = document.getElementById('refundModal');
+            const refundBaseUrl = @json(url(app()->getLocale() . '/admin/transactions'));
 
-        // Refund Modal Functions
-        function openRefundModal(transactionId, userName, amount, currency = 'EUR') {
-            const currencySymbols = {
-                'EUR': '€', 'USD': '$', 'GBP': '£', 'JPY': '¥', 'CHF': 'CHF',
-                'CAD': 'C$', 'AUD': 'A$', 'CNY': '¥', 'INR': '₹', 'BRL': 'R$',
-                'ZAR': 'R', 'RUB': '₽', 'KRW': '₩', 'MXN': 'MX$', 'SGD': 'S$',
-                'HKD': 'HK$', 'NOK': 'kr', 'SEK': 'kr', 'DKK': 'kr', 'PLN': 'zł',
-                'THB': '฿', 'IDR': 'Rp', 'HUF': 'Ft', 'CZK': 'Kč', 'ILS': '₪',
-                'CLP': 'CLP$', 'PHP': '₱', 'AED': 'د.إ', 'COP': 'COL$', 'SAR': 'ر.س',
-                'MYR': 'RM', 'RON': 'lei', 'TRY': '₺', 'NZD': 'NZ$', 'TWD': 'NT$',
-                'VND': '₫', 'ARS': 'ARS$', 'EGP': 'E£', 'PKR': '₨', 'BDT': '৳',
-                'NGN': '₦', 'UAH': '₴', 'KES': 'KSh', 'MAD': 'د.م.', 'XOF': 'CFA'
+            window.openRefundModal = function (transactionId, userName, amount, currency) {
+                const locale = document.documentElement.lang || '{{ app()->getLocale() }}';
+                const formattedAmount = new Intl.NumberFormat(locale, {
+                    style: 'currency',
+                    currency: currency || 'EUR',
+                    minimumFractionDigits: 2,
+                }).format(amount);
+
+                document.getElementById('modalUserName').textContent = userName.trim();
+                document.getElementById('modalAmount').textContent = formattedAmount;
+                document.getElementById('refundForm').action = `${refundBaseUrl}/${transactionId}/refund`;
+                refundModal.classList.remove('hidden');
+                refundModal.classList.add('flex');
             };
 
-            const symbol = currencySymbols[currency] || currency;
-            const locale = document.documentElement.lang || '{{ app()->getLocale() }}';
-            const formattedAmount = new Intl.NumberFormat(locale, { minimumFractionDigits: 2 }).format(amount);
+            window.closeRefundModal = function () {
+                refundModal.classList.add('hidden');
+                refundModal.classList.remove('flex');
+            };
 
-            // Currencies that go before the amount
-            const prefixCurrencies = ['USD', 'GBP', 'CAD', 'AUD', 'HKD', 'SGD', 'MXN', 'NZD', 'ARS', 'CLP', 'COP', 'EGP'];
+            refundModal?.addEventListener('click', function (event) {
+                if (event.target === refundModal) {
+                    window.closeRefundModal();
+                }
+            });
 
-            const displayAmount = prefixCurrencies.includes(currency)
-                ? symbol + formattedAmount
-                : formattedAmount + ' ' + symbol;
-
-            document.getElementById('modalUserName').textContent = userName;
-            document.getElementById('modalAmount').textContent = displayAmount;
-            document.getElementById('refundForm').action = `/${locale}/admin/transactions/${transactionId}/refund`;
-            document.getElementById('refundModal').classList.remove('hidden');
-        }
-
-        function closeRefundModal() {
-            document.getElementById('refundModal').classList.add('hidden');
-        }
-
-        // Close modal on outside click
-        document.getElementById('refundModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeRefundModal();
-            }
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && refundModal && !refundModal.classList.contains('hidden')) {
+                    window.closeRefundModal();
+                }
+            });
         });
     </script>
-    @include('components.admin-dashboard-background-script')
-    </div>
-</body>
-</html>
-
-
-
-
-
-
-
+@endpush

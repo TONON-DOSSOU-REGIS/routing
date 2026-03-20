@@ -260,49 +260,47 @@
 
                 <div class="relative z-10 flex min-w-0 flex-1 flex-col overflow-x-clip">
                     <header class="border-b border-slate-200/70 px-4 py-4 sm:px-6 lg:px-8">
-                        <div class="flex flex-col gap-4 2xl:flex-row 2xl:items-center 2xl:justify-between">
-                            <div class="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center">
-                                <button
-                                    type="button"
-                                    id="premium-dashboard-sidebar-toggle"
-                                    class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm lg:hidden"
-                                    aria-controls="premium-dashboard-sidebar"
-                                    aria-expanded="false"
-                                >
-                                    <i class="fas fa-bars text-sm"></i>
-                                </button>
+                        <div class="flex flex-wrap items-center gap-3 lg:gap-4">
+                            <button
+                                type="button"
+                                id="premium-dashboard-sidebar-toggle"
+                                class="order-1 inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm lg:hidden"
+                                aria-controls="premium-dashboard-sidebar"
+                                aria-expanded="false"
+                            >
+                                <i class="fas fa-bars text-sm"></i>
+                            </button>
 
-                                <div class="premium-search flex min-w-0 flex-1 items-center gap-3 rounded-2xl px-4 py-3 lg:min-w-[320px] 2xl:min-w-[420px]">
-                                    <i class="fas fa-search text-slate-400"></i>
-                                    <input
-                                        type="text"
-                                        class="w-full border-0 bg-transparent p-0 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0"
-                                        placeholder="{{ $dashboardSearchPlaceholder }}"
-                                    >
-                                    <span class="hidden rounded-xl bg-slate-100 px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 sm:inline-flex">
-                                        {{ __('dashboard.search_quick_label') }}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="flex min-w-0 flex-wrap items-center justify-between gap-3 sm:justify-end sm:gap-4">
+                            <div class="order-2 ml-auto flex items-center gap-3 lg:ml-0">
                                 @yield('topbar_actions')
                                 @include('components.notification-bell')
+                            </div>
 
-                                <div class="flex min-w-0 items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm">
-                                    <div class="hidden text-right sm:block">
-                                        <p class="text-sm font-semibold text-slate-900">{{ $displayName }}</p>
-                                        <p class="text-xs text-slate-500">{{ $displayEmail }}</p>
-                                    </div>
-                                    <div class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-slate-200">
-                                        @if($profilePhotoUrl)
-                                            <img src="{{ $profilePhotoUrl }}" alt="{{ $displayName }}" class="h-full w-full object-cover">
-                                        @else
-                                            <span class="premium-brand-title text-sm font-semibold text-slate-700">
-                                                {{ strtoupper(substr($authUser?->first_name ?? 'U', 0, 1) . substr($authUser?->last_name ?? '', 0, 1)) }}
-                                            </span>
-                                        @endif
-                                    </div>
+                            <div class="premium-search order-3 flex min-w-0 basis-full items-center gap-3 rounded-2xl px-4 py-3 lg:order-1 lg:min-w-[320px] lg:flex-1 lg:basis-auto 2xl:min-w-[420px]">
+                                <i class="fas fa-search text-slate-400"></i>
+                                <input
+                                    type="text"
+                                    class="w-full border-0 bg-transparent p-0 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0"
+                                    placeholder="{{ $dashboardSearchPlaceholder }}"
+                                >
+                                <span class="hidden rounded-xl bg-slate-100 px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 sm:inline-flex">
+                                    {{ __('dashboard.search_quick_label') }}
+                                </span>
+                            </div>
+
+                            <div class="order-4 hidden min-w-0 w-full items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-center shadow-sm sm:w-auto sm:justify-start sm:text-left lg:order-3 lg:flex">
+                                <div class="hidden text-right sm:block">
+                                    <p class="text-sm font-semibold text-slate-900">{{ $displayName }}</p>
+                                    <p class="text-xs text-slate-500">{{ $displayEmail }}</p>
+                                </div>
+                                <div class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-slate-200">
+                                    @if($profilePhotoUrl)
+                                        <img src="{{ $profilePhotoUrl }}" alt="{{ $displayName }}" class="h-full w-full object-cover">
+                                    @else
+                                        <span class="premium-brand-title text-sm font-semibold text-slate-700">
+                                            {{ strtoupper(substr($authUser?->first_name ?? 'U', 0, 1) . substr($authUser?->last_name ?? '', 0, 1)) }}
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -325,7 +323,7 @@
                                 @endif
                             </div>
 
-                            <div class="flex flex-wrap items-center gap-3">
+                            <div class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
                                 @yield('dashboard_header_actions')
                             </div>
                         </div>
@@ -336,14 +334,14 @@
                     </main>
 
                     <footer class="border-t border-slate-200/70 bg-white/55 px-4 py-4 backdrop-blur-sm sm:px-6 lg:px-8">
-                        <div class="flex flex-col gap-3 text-sm text-slate-500 lg:flex-row lg:items-center lg:justify-between">
-                            <p>
+                        <div class="flex flex-col items-center gap-3 text-center text-sm text-slate-500 lg:flex-row lg:items-center lg:justify-between lg:text-left">
+                            <p class="max-w-2xl">
                                 &copy; {{ date('Y') }}
                                 <span class="font-semibold text-slate-900">{{ $dashboardFooterBrand }}</span>.
                                 {{ __('home.footer_copyright') }}
                             </p>
 
-                            <div class="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                            <div class="flex flex-wrap items-center justify-center gap-3 text-center text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 lg:justify-end lg:text-right">
                                 <a href="{{ localized_route('support.nous-contacter') }}" class="transition hover:text-slate-900">
                                     {{ __('home.footer_contact_us') }}
                                 </a>

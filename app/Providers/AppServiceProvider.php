@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Transaction;
 use App\Observers\TransactionObserver;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Middleware\Authenticate;
 
@@ -29,6 +30,18 @@ class AppServiceProvider extends ServiceProvider
         Authenticate::redirectUsing(function ($request) {
             $locale = session('locale', config('app.locale', 'fr'));
             return route('login', ['locale' => $locale]);
+        });
+
+        ResetPassword::createUrlUsing(function ($user, string $token) {
+            $locale = request()?->route('locale')
+                ?? $user->locale
+                ?? session('locale', config('app.locale', 'fr'));
+
+            return url(route('password.reset', [
+                'locale' => $locale,
+                'token' => $token,
+                'email' => $user->getEmailForPasswordReset(),
+            ], false));
         });
 
         Transaction::observe(TransactionObserver::class);

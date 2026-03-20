@@ -180,6 +180,17 @@
             border-radius: inherit;
             transition: width 220ms ease;
         }
+
+        .history-mobile-card {
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.92));
+            box-shadow: 0 18px 32px rgba(15, 23, 42, 0.06);
+        }
+
+        .history-mobile-meta {
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            background: rgba(248, 250, 252, 0.92);
+        }
     </style>
 <?php $__env->stopPush(); ?>
 
@@ -229,7 +240,7 @@
                         <p class="mt-2 text-sm leading-6 text-slate-500"><?php echo e(__('transactions.history_subtitle')); ?></p>
                     </div>
                     <?php if($activeFiltersCount > 0): ?>
-                        <a href="<?php echo e(localized_route('transactions.history')); ?>" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
+                        <a href="<?php echo e(localized_route('transactions.history')); ?>" class="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 sm:w-auto">
                             <i class="fas fa-rotate-left text-xs"></i>
                             <?php echo e(__('transactions.reset_filters')); ?>
 
@@ -237,7 +248,7 @@
                     <?php endif; ?>
                 </div>
 
-                <form method="GET" class="mt-6 grid gap-4 xl:grid-cols-5">
+                <form method="GET" class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
                     <div>
                         <label for="type" class="mb-3 block text-sm font-semibold text-slate-800"><?php echo e(__('transactions.filter_type')); ?></label>
                         <select name="type" id="type" class="history-field block w-full rounded-2xl px-4 py-3.5 text-sm text-slate-900">
@@ -285,7 +296,7 @@
                         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400"><?php echo e(__('dashboard.activity')); ?></p>
                         <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950"><?php echo e(__('transactions.history_overview')); ?></h2>
                     </div>
-                    <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                         <?php if($activeFiltersCount > 0): ?>
                             <span class="premium-soft-chip rounded-full px-3 py-1 text-xs font-semibold">
                                 <?php echo e($activeFiltersCount); ?> <?php echo e(__('transactions.filter_type')); ?>
@@ -294,12 +305,12 @@
                         <?php endif; ?>
 
                         <?php if(auth()->user()->isAdmin()): ?>
-                            <a href="<?php echo e(localized_route('admin.export.pdf')); ?>" class="history-export-link inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-700 transition hover:border-rose-300 hover:bg-rose-100">
+                            <a href="<?php echo e(localized_route('admin.export.pdf')); ?>" class="history-export-link inline-flex w-full items-center justify-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-700 transition hover:border-rose-300 hover:bg-rose-100 sm:w-auto">
                                 <i class="fas fa-file-pdf text-xs"></i>
                                 <?php echo e(__('transactions.export_pdf')); ?>
 
                             </a>
-                            <a href="<?php echo e(localized_route('admin.export.excel')); ?>" class="history-export-link inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:border-emerald-300 hover:bg-emerald-100">
+                            <a href="<?php echo e(localized_route('admin.export.excel')); ?>" class="history-export-link inline-flex w-full items-center justify-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:border-emerald-300 hover:bg-emerald-100 sm:w-auto">
                                 <i class="fas fa-file-excel text-xs"></i>
                                 <?php echo e(__('transactions.export_excel')); ?>
 
@@ -308,7 +319,132 @@
                     </div>
                 </div>
 
-                <div class="premium-scroll overflow-x-auto">
+                <div class="space-y-4 px-4 py-4 sm:hidden">
+                    <?php $__empty_1 = true; $__currentLoopData = $transactions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $transaction): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                        <?php
+                            $typeKey = $typeMap[$transaction->type] ?? null;
+                            $typeLabel = $typeKey ? __('transactions.' . $typeKey) : ucfirst($transaction->type);
+                            $statusKey = $statusMap[$transaction->status] ?? null;
+                            $statusLabel = $statusKey ? __('transactions.' . $statusKey) : ucfirst(str_replace('_', ' ', $transaction->status));
+                            $statusClass = match ($transaction->status) {
+                                'success' => 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200/80',
+                                'on_hold' => 'bg-amber-50 text-amber-700 ring-1 ring-amber-200/80',
+                                'pending' => 'bg-sky-50 text-sky-700 ring-1 ring-sky-200/80',
+                                'failed', 'refunded' => 'bg-rose-50 text-rose-700 ring-1 ring-rose-200/80',
+                                default => 'bg-slate-100 text-slate-700 ring-1 ring-slate-200',
+                            };
+                            $progressClass = match (true) {
+                                $transaction->progress >= 100 => 'bg-emerald-500',
+                                $transaction->progress >= 70 => 'bg-sky-500',
+                                $transaction->progress >= 30 => 'bg-amber-500',
+                                default => 'bg-rose-500',
+                            };
+                            $typeIconShellClass = match ($transaction->type) {
+                                'transfer' => 'bg-sky-50 text-sky-700',
+                                'deposit' => 'bg-emerald-50 text-emerald-700',
+                                default => 'bg-rose-50 text-rose-700',
+                            };
+                            $typeIcon = match ($transaction->type) {
+                                'transfer' => 'paper-plane',
+                                'deposit' => 'arrow-down',
+                                default => 'arrow-up',
+                            };
+                            $amountClass = match ($transaction->type) {
+                                'deposit' => 'text-emerald-700',
+                                'withdrawal' => 'text-rose-700',
+                                default => 'text-slate-950',
+                            };
+                            $formattedAmount = \App\Helpers\CurrencyHelper::format($transaction->amount, $transaction->user->default_currency ?? 'EUR');
+                            $recipientName = $transaction->recipient_name ?? __('transactions.not_available');
+                        ?>
+                        <article class="history-mobile-card rounded-[28px] p-4">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="flex min-w-0 items-center gap-3">
+                                    <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl <?php echo e($typeIconShellClass); ?>">
+                                        <i class="fas fa-<?php echo e($typeIcon); ?>"></i>
+                                    </span>
+                                    <div class="min-w-0">
+                                        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('transactions.table_transaction')); ?></p>
+                                        <h3 class="mt-1 truncate text-base font-semibold text-slate-950"><?php echo e($typeLabel); ?></h3>
+                                        <p class="text-xs text-slate-500">#<?php echo e($transaction->id); ?></p>
+                                    </div>
+                                </div>
+
+                                <div class="text-right">
+                                    <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('transactions.table_amount')); ?></p>
+                                    <p class="mt-1 text-base font-semibold <?php echo e($amountClass); ?>"><?php echo e($formattedAmount); ?></p>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 flex flex-wrap items-center gap-2">
+                                <span class="history-status-badge <?php echo e($statusClass); ?>">
+                                    <i class="fas fa-<?php if($transaction->status === 'success'): ?> check-circle <?php elseif($transaction->status === 'on_hold'): ?> clock <?php elseif($transaction->status === 'pending'): ?> hourglass-half <?php else: ?> ban <?php endif; ?>"></i>
+                                    <?php echo e($statusLabel); ?>
+
+                                </span>
+                                <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-600 ring-1 ring-slate-200/80">
+                                    <i class="fas fa-calendar-days text-[10px]"></i>
+                                    <?php echo e($transaction->created_at->format('d/m/Y H:i')); ?>
+
+                                </span>
+                            </div>
+
+                            <div class="mt-4 space-y-3">
+                                <div class="history-mobile-meta rounded-[22px] px-4 py-3">
+                                    <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('transactions.table_beneficiary')); ?></p>
+                                    <p class="mt-1 text-sm font-semibold text-slate-900"><?php echo e($recipientName); ?></p>
+                                    <?php if($transaction->recipient_iban): ?>
+                                        <p class="mt-1 text-xs text-slate-500"><?php echo e(substr($transaction->recipient_iban, 0, 4)); ?>...<?php echo e(substr($transaction->recipient_iban, -4)); ?></p>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="history-mobile-meta rounded-[22px] px-4 py-3">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('transactions.table_progress')); ?></p>
+                                        <p class="text-xs font-semibold text-slate-500"><?php echo e($transaction->progress); ?>%</p>
+                                    </div>
+                                    <div class="mt-3 history-progress-track w-full">
+                                        <div class="history-progress-fill <?php echo e($progressClass); ?>" style="width: <?php echo e($transaction->progress); ?>%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <?php if($transaction->status === 'success' && in_array($transaction->type, ['transfer', 'deposit'])): ?>
+                                    <a href="<?php echo e(localized_route('transactions.receipt', $transaction)); ?>" class="inline-flex w-full items-center justify-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-3 text-sm font-semibold text-sky-700 transition hover:border-sky-300 hover:bg-sky-100">
+                                        <i class="fas fa-download text-[10px]"></i>
+                                        <?php echo e(__('transactions.action_receipt')); ?>
+
+                                    </a>
+                                <?php endif; ?>
+                                <?php if($transaction->status === 'on_hold'): ?>
+                                    <span class="inline-flex w-full items-center justify-center gap-2 rounded-[18px] border border-amber-200 bg-amber-50 px-3 py-3 text-center text-sm font-semibold text-amber-700">
+                                        <i class="fas fa-triangle-exclamation text-[10px]"></i>
+                                        <?php echo e($transaction->message); ?>
+
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                        </article>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                        <div class="px-2 py-10 text-center">
+                            <div class="mx-auto max-w-md rounded-[28px] border border-slate-200 bg-white px-5 py-10 shadow-sm">
+                                <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+                                    <i class="fas fa-exchange-alt text-2xl"></i>
+                                </div>
+                                <h3 class="mt-5 text-lg font-semibold text-slate-950"><?php echo e(__('transactions.no_transactions')); ?></h3>
+                                <p class="mt-2 text-sm leading-6 text-slate-500"><?php echo e(__('transactions.no_transactions_message')); ?></p>
+                                <a href="<?php echo e(localized_route('transactions.history')); ?>" class="mt-5 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
+                                    <i class="fas fa-rotate-left text-xs"></i>
+                                    <?php echo e(__('transactions.reset_filters')); ?>
+
+                                </a>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <div class="premium-scroll hidden overflow-x-auto sm:block">
                     <table class="min-w-[980px] w-full divide-y divide-slate-200 text-sm">
                         <thead class="bg-slate-50/85">
                             <tr>
@@ -435,12 +571,12 @@
                 </div>
 
                 <?php if($transactions->hasPages()): ?>
-                    <div class="flex flex-col gap-4 border-t border-slate-200/70 px-5 py-5 sm:px-6 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex flex-col items-center gap-4 border-t border-slate-200/70 px-5 py-5 text-center sm:px-6 sm:text-left lg:flex-row lg:items-center lg:justify-between">
                         <div class="text-sm text-slate-600">
                             <?php echo e(__('transactions.showing_results', ['first' => $transactions->firstItem(), 'last' => $transactions->lastItem(), 'total' => $transactions->total()])); ?>
 
                         </div>
-                        <div>
+                        <div class="w-full overflow-x-auto lg:w-auto">
                             <?php echo e($transactions->links('vendor.pagination.tailwind')); ?>
 
                         </div>

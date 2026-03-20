@@ -8,7 +8,7 @@ use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Services\NotificationService;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Services\TransactionReceiptService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Mail;
 
 class TransactionController extends Controller
 {
+    public function __construct(private TransactionReceiptService $transactionReceiptService)
+    {
+    }
+
     public function create()
     {
         $user = auth()->user();
@@ -373,10 +377,27 @@ class TransactionController extends Controller
             abort(403);
         }
 
-        $pdf = Pdf::loadView('transactions.receipt', compact('transaction'))
-            ->setOption('defaultFont', 'dejavu sans')
-            ->setOption('isRemoteEnabled', true);
-        return $pdf->download('receipt_' . $transaction->id . '.pdf');
+        $transaction->loadMissing(['user', 'refundedBy']);
+
+        try {
+            return response($this->transactionReceiptService->renderPdf($transaction), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="' . $this->transactionReceiptService->makeFilename($transaction) . '"',
+            ]);
+        } catch (\Throwable $exception) {
+            Log::warning('Receipt PDF fallback to HTML', [
+                'transaction_id' => $transaction->id,
+                'user_id' => auth()->id(),
+                'gd_loaded' => extension_loaded('gd'),
+                'error' => $exception->getMessage(),
+            ]);
+
+            $reason = extension_loaded('gd')
+                ? 'Le PDF premium est temporairement indisponible. La version HTML securisee est affichee a la place.'
+                : 'Le serveur ne dispose pas de l extension GD requise pour certains rendus PDF. La version HTML securisee est affichee a la place.';
+
+            return response()->view('transactions.receipt', $this->transactionReceiptService->buildViewData($transaction, 'html', $reason));
+        }
     }
 
     // New method to return HTML receipt view
@@ -386,6 +407,8 @@ class TransactionController extends Controller
             abort(403);
         }
 
-        return view('transactions.receipt', compact('transaction'));
+        $transaction->loadMissing(['user', 'refundedBy']);
+
+        return view('transactions.receipt', $this->transactionReceiptService->buildViewData($transaction, 'html'));
     }
 }

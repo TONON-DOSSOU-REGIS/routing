@@ -4,7 +4,7 @@ return [
     'failed' => 'Questi identificatori non corrispondono ai nostri record.',
     'password' => 'Password',
     'throttle' => 'Troppi tentativi di connettersi. Si prega di riprovare in:secondi.',
-    'login_page_title' => 'Connessione - SG BANK',
+    'login_page_title' => 'Connessione - Valtrix Bank',
     'nav_home' => 'Home',
     'nav_create_account' => 'Iscriviti',
     'nav_login' => 'Connessione',
@@ -29,7 +29,7 @@ return [
     'social_invalid_provider' => 'Provider di accesso non supportato.',
     'social_login_error' => 'Impossibile accedere con questo provider al momento.',
     'social_missing_email' => 'Il tuo account non ha condiviso un indirizzo email. Riprova o usa un altro metodo.',
-    'register_page_title' => 'Registrazione - SG BANK',
+    'register_page_title' => 'Registrazione - Valtrix Bank',
     'register_hero_title_1' => 'Apri il tuo',
     'register_hero_title_2' => 'conto',
     'register_hero_title_3' => 'in pochi',
@@ -44,7 +44,7 @@ return [
     'register_feature_security_bold' => 'bancario',
     'register_feature_notifications' => 'Notifica',
     'register_feature_notifications_bold' => 'tempo reale',
-    'register_title' => 'Iscriviti a SG BANK',
+    'register_title' => 'Iscriviti a Valtrix Bank',
     'already_account' => 'Già registrato?',
     'login_link' => 'Accedi',
     'first_name' => 'Nome',
@@ -178,6 +178,8 @@ return [
     '2fa_password_invalid' => 'Password non corretta.',
     '2fa_missing_secret' => 'Chiave mancante. Riavvia la configurazione.',
     'register_error_title' => 'Errori di registrazione',
+    'forgot_password_page_title' => 'Recupero password - Valtrix Bank',
+    'forgot_password_title' => 'Recupera il tuo accesso',
+    'forgot_password_subtitle' => 'Inserisci il tuo indirizzo email per ricevere un link sicuro di reimpostazione.',
+    'reset_password_subtitle' => 'Scegli una nuova password per proteggere il tuo accesso cliente.',
 ];
-
-

@@ -193,8 +193,12 @@
                         <p class="premium-kpi-number mt-2 text-2xl font-semibold"><?php echo e($outgoingFormatted); ?></p>
                     </div>
                     <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                        <p class="text-xs uppercase tracking-[0.18em] text-white/60"><?php echo e(__('dashboard.transfer_success')); ?></p>
-                        <p class="premium-kpi-number mt-2 text-2xl font-semibold"><?php echo e($transferSuccessRate); ?>%</p>
+                        <p class="text-xs uppercase tracking-[0.18em] text-white/60"><?php echo e(__('dashboard.transactions_30_days')); ?></p>
+                        <p class="premium-kpi-number mt-2 text-2xl font-semibold"><?php echo e($transactionsLast30DaysCount); ?></p>
+                        <p class="mt-1 text-xs text-white/70">
+                            <?php echo e(__('dashboard.last_month')); ?>
+
+                        </p>
                     </div>
                 </div>
             </div>

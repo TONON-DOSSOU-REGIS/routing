@@ -7,10 +7,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io11/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io11/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io11/favicon-16x16.png">
-  <link rel="manifest" href="/favicon_io11/site.webmanifest">
+  @include('partials.favicon')
   <style>
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(30px); }
@@ -132,7 +129,6 @@
   </footer>
 </body>
 </html>
-
 
 
 

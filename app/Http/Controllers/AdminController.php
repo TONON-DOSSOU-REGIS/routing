@@ -464,6 +464,7 @@ class AdminController extends Controller
             'card_number' => $this->generateRandomCardNumber(),
             'card_type' => $this->getRandomCardType(),
             'expiry_date' => $this->generateRandomExpiryDate(),
+            'is_visible_to_user' => false,
         ]);
 
         $loginLink = null;
@@ -545,6 +546,7 @@ class AdminController extends Controller
             'card_number' => 'nullable|string|max:20',
             'card_type' => 'nullable|string|max:50',
             'expiry_date' => 'nullable|date_format:Y-m-d',
+            'card_visible_to_user' => 'nullable|boolean',
             'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
@@ -572,25 +574,25 @@ class AdminController extends Controller
         $user->update($updateData);
 
         // Manage credit card info
-        $cardDataProvided = $request->filled('card_holder_name') || $request->filled('card_number') || $request->filled('card_type') || $request->filled('expiry_date');
+        $sanitizedCardNumber = $request->filled('card_number')
+            ? preg_replace('/\s+/', '', (string) $request->input('card_number'))
+            : null;
+        $cardDataProvided = $request->filled('card_holder_name') || filled($sanitizedCardNumber) || $request->filled('card_type') || $request->filled('expiry_date');
+        $cardPayload = [
+            'card_holder_name' => $request->input('card_holder_name'),
+            'card_number' => $sanitizedCardNumber,
+            'card_type' => $request->input('card_type'),
+            'expiry_date' => $request->input('expiry_date'),
+            'is_visible_to_user' => $request->boolean('card_visible_to_user'),
+        ];
 
         if ($cardDataProvided) {
             if ($user->creditCard) {
                 // Update existing credit card
-                $user->creditCard->update([
-                    'card_holder_name' => $request->input('card_holder_name'),
-                    'card_number' => $request->input('card_number'),
-                    'card_type' => $request->input('card_type'),
-                    'expiry_date' => $request->input('expiry_date'),
-                ]);
+                $user->creditCard->update($cardPayload);
             } else {
                 // Create new credit card
-                $user->creditCard()->create([
-                    'card_holder_name' => $request->input('card_holder_name'),
-                    'card_number' => $request->input('card_number'),
-                    'card_type' => $request->input('card_type'),
-                    'expiry_date' => $request->input('expiry_date'),
-                ]);
+                $user->creditCard()->create($cardPayload);
             }
         } else {
             // No data provided, delete existing credit card if any
@@ -705,10 +707,35 @@ class AdminController extends Controller
             $query->whereDate('created_at', '<=', $request->date_to);
         }
 
-        $transactions = $query->latest()->paginate(20);
+        $filteredTransactionsCount = (clone $query)->count();
+        $filteredTransactionsVolume = (clone $query)->sum('amount');
+        $filteredSuccessCount = (clone $query)->where('status', 'success')->count();
+        $filteredReviewCount = (clone $query)->whereIn('status', ['pending', 'on_hold'])->count();
+        $filteredRefundedCount = (clone $query)->where('status', 'refunded')->count();
+        $transactionsTodayCount = (clone $query)->whereDate('created_at', today())->count();
+        $filteredSuccessRate = $filteredTransactionsCount > 0
+            ? (int) round(($filteredSuccessCount / $filteredTransactionsCount) * 100)
+            : 0;
+        $recentTransactions = (clone $query)->latest()->take(6)->get();
+
+        $transactions = $query->latest()->paginate(20)->withQueryString();
         $users = User::where('role', 'user')->orderBy('first_name')->get();
 
-        return view('admin.transactions', compact('transactions', 'users'));
+        return view('admin.transactions', array_merge(
+            compact(
+                'transactions',
+                'users',
+                'filteredTransactionsCount',
+                'filteredTransactionsVolume',
+                'filteredSuccessCount',
+                'filteredReviewCount',
+                'filteredRefundedCount',
+                'transactionsTodayCount',
+                'filteredSuccessRate',
+                'recentTransactions'
+            ),
+            $this->getAdminShellData()
+        ));
     }
 
     /**

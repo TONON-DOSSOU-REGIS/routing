@@ -4,7 +4,7 @@ return [
     'failed' => 'Estos identificadores no coinciden con nuestros registros.',
     'password' => 'Contraseña',
     'throttle' => 'Demasiados intentos de conectarse. Por favor, intente de nuevo en:segundos.',
-    'login_page_title' => 'Conexión - SG BANK',
+    'login_page_title' => 'Conexión - Valtrix Bank',
     'nav_home' => 'Home',
     'nav_create_account' => 'Registrarse',
     'nav_login' => 'Conexión',
@@ -29,7 +29,7 @@ return [
     'social_invalid_provider' => 'Proveedor de inicio de sesión no compatible.',
     'social_login_error' => 'No se puede iniciar sesión con este proveedor en este momento.',
     'social_missing_email' => 'Tu cuenta no compartió una dirección de correo electrónico. Inténtalo de nuevo o usa otro método.',
-    'register_page_title' => 'Registro - SG BANK',
+    'register_page_title' => 'Registro - Valtrix Bank',
     'register_hero_title_1' => 'Abre tu',
     'register_hero_title_2' => 'cuenta',
     'register_hero_title_3' => 'en unos pocos',
@@ -44,7 +44,7 @@ return [
     'register_feature_security_bold' => 'banca',
     'register_feature_notifications' => 'Notificaciones',
     'register_feature_notifications_bold' => 'tiempo real',
-    'register_title' => 'Únase a SG BANK',
+    'register_title' => 'Únase a Valtrix Bank',
     'already_account' => '¿Ya registrado?',
     'login_link' => 'Iniciar sesión',
     'first_name' => 'Nombre',
@@ -178,6 +178,8 @@ return [
     '2fa_password_invalid' => 'Contrase?a incorrecta.',
     '2fa_missing_secret' => 'Falta la clave. Reinicia la configuraci?n.',
     'register_error_title' => 'Errores de registro',
+    'forgot_password_page_title' => 'Recuperacion de contrasena - Valtrix Bank',
+    'forgot_password_title' => 'Recupere su acceso',
+    'forgot_password_subtitle' => 'Introduzca su correo electronico para recibir un enlace seguro de restablecimiento.',
+    'reset_password_subtitle' => 'Elija una nueva contrasena para proteger su acceso de cliente.',
 ];
-
-
