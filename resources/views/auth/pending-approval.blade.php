@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{ __('auth.pending_approval_title') ?? 'Pending Approval' }}</title>
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <script src="https://cdn.tailwindcss.com"></script>
+  @vite(['resources/css/app.css'])
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
   @include('partials.favicon')
   <style>
@@ -129,7 +129,6 @@
   </footer>
 </body>
 </html>
-
 
 
 

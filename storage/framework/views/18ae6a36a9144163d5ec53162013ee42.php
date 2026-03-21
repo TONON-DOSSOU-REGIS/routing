@@ -659,8 +659,12 @@
 
     resizeInput();
     syncComposerState();
-    state.unreadPoll = setInterval(unreadCount, 12000);
-    unreadCount();
+    state.unreadPoll = setInterval(unreadCount, 20000);
+    if (typeof window.requestIdleCallback === 'function') {
+        window.requestIdleCallback(() => unreadCount(), { timeout: 1500 });
+    } else {
+        window.setTimeout(() => unreadCount(), 400);
+    }
     window.toggleAdminChatV2 = toggle;
 })();
 </script>

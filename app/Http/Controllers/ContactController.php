@@ -66,7 +66,7 @@ class ContactController extends Controller
                 ->first();
 
             if ($existingContact) {
-                Mail::to($existingContact->email)->send(new ContactConfirmationMail($existingContact));
+                Mail::to($existingContact->email)->queue(new ContactConfirmationMail($existingContact));
                 Log::info('Duplicate contact submission detected, resent confirmation mail to:', ['email' => $existingContact->email]);
             }
 
@@ -81,7 +81,7 @@ class ContactController extends Controller
         Log::info('Contact saved to DB:', $contact->toArray());
 
         // Send confirmation mail for new contact
-        Mail::to($contact->email)->send(new ContactConfirmationMail($contact));
+        Mail::to($contact->email)->queue(new ContactConfirmationMail($contact));
 
         Log::info('Confirmation mail sent to:', ['email' => $contact->email]);
 
@@ -94,4 +94,3 @@ class ContactController extends Controller
         return view('support.contact_thank_you');
     }
 }
-

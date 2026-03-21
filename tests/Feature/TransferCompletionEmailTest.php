@@ -38,8 +38,8 @@ class TransferCompletionEmailTest extends TestCase
         $this->assertSame('success', $response['status']);
         $this->assertSame(100, (int) $response['progress']);
 
-        Mail::assertSent(TransferConfirmationMail::class, 1);
-        Mail::assertSent(TransferConfirmationMail::class, function (TransferConfirmationMail $mail) use ($user, $transaction) {
+        Mail::assertQueued(TransferConfirmationMail::class, 1);
+        Mail::assertQueued(TransferConfirmationMail::class, function (TransferConfirmationMail $mail) use ($user, $transaction) {
             return $mail->hasTo($user->email) && $mail->transaction->id === $transaction->id;
         });
 
@@ -73,7 +73,7 @@ class TransferCompletionEmailTest extends TestCase
         $this->callProgressAsUser($user, $transaction->id);
         $this->callProgressAsUser($user, $transaction->id);
 
-        Mail::assertSent(TransferConfirmationMail::class, 1);
+        Mail::assertQueued(TransferConfirmationMail::class, 1);
     }
 
     private function callProgressAsUser(User $user, int $transactionId): array

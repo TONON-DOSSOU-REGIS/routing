@@ -1,4 +1,4 @@
-@php
+<?php
     $clientChatI18n = [
         'loadingError' => __('chat.loading_error'),
         'startConversation' => __('chat.start_conversation'),
@@ -23,9 +23,9 @@
         'disconnected' => __('admin_chat.disconnected'),
         'typing' => __('admin_chat.typing'),
     ];
-@endphp
+?>
 
-@include('components.chat-premium-styles')
+<?php echo $__env->make('components.chat-premium-styles', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
 <div id="client-chat-widget" class="chat-premium-shell fixed bottom-[calc(env(safe-area-inset-bottom,0px)+1rem)] right-4 z-[72]" style="--chat-accent:#155eef; --chat-accent-strong:#1d4ed8;">
     <div id="client-chat-backdrop" class="chat-premium-backdrop hidden"></div>
@@ -45,10 +45,10 @@
                     <div class="min-w-0">
                         <div class="chat-premium-badge">
                             <span id="client-chat-status-dot" class="chat-premium-status-dot is-connected"></span>
-                            <span id="client-chat-status-label">{{ __('admin_chat.connected') }}</span>
+                            <span id="client-chat-status-label"><?php echo e(__('admin_chat.connected')); ?></span>
                         </div>
-                        <h3 class="mt-3 truncate text-lg font-semibold">{{ __('chat.client_support_title') }}</h3>
-                        <p id="client-chat-subtitle" class="mt-1 text-sm leading-5 text-white/80 sm:truncate">{{ __('chat.client_support_subtitle') }}</p>
+                        <h3 class="mt-3 truncate text-lg font-semibold"><?php echo e(__('chat.client_support_title')); ?></h3>
+                        <p id="client-chat-subtitle" class="mt-1 text-sm leading-5 text-white/80 sm:truncate"><?php echo e(__('chat.client_support_subtitle')); ?></p>
                     </div>
                 </div>
                 <button type="button" id="client-chat-close" class="chat-premium-close" aria-label="Close">
@@ -67,14 +67,14 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                         </svg>
                     </span>
-                    <p class="text-sm font-semibold text-slate-800">{{ __('chat.loading_messages') }}</p>
+                    <p class="text-sm font-semibold text-slate-800"><?php echo e(__('chat.loading_messages')); ?></p>
                 </div>
             </div>
 
             <div id="client-chat-typing-wrap" class="hidden px-4 pb-3 sm:px-5">
                 <div class="chat-premium-typing">
                     <span class="chat-premium-typing-dots" aria-hidden="true"><span></span><span></span><span></span></span>
-                    <span id="client-chat-typing-text" class="text-xs font-medium">{{ __('admin_chat.typing') }}</span>
+                    <span id="client-chat-typing-text" class="text-xs font-medium"><?php echo e(__('admin_chat.typing')); ?></span>
                 </div>
             </div>
 
@@ -92,12 +92,12 @@
 
                 <div class="chat-premium-composer-row">
                     <input type="file" id="client-chat-file" accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip" class="hidden">
-                    <button type="button" id="client-file-trigger" class="chat-premium-icon-button" aria-label="{{ __('chat.attach_file') }}">
+                    <button type="button" id="client-file-trigger" class="chat-premium-icon-button" aria-label="<?php echo e(__('chat.attach_file')); ?>">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
                         </svg>
                     </button>
-                    <textarea id="client-chat-input" rows="1" class="chat-premium-input" placeholder="{{ __('chat.client_message_placeholder') }}"></textarea>
+                    <textarea id="client-chat-input" rows="1" class="chat-premium-input" placeholder="<?php echo e(__('chat.client_message_placeholder')); ?>"></textarea>
                     <button type="button" id="client-send-button" class="chat-premium-send" aria-label="Send">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
@@ -112,8 +112,8 @@
 
 <div id="client-chat-image-modal" class="chat-premium-image-modal">
     <button type="button" id="client-chat-image-close" class="absolute right-4 top-4 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-sm font-semibold text-white">X</button>
-    <a id="client-chat-image-download" class="absolute left-4 top-4 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-sm font-semibold text-white" download>{{ __('chat.download') }}</a>
-    <img id="client-chat-image-full" src="" alt="{{ __('chat.image_preview_alt') }}" class="chat-premium-image-view">
+    <a id="client-chat-image-download" class="absolute left-4 top-4 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-sm font-semibold text-white" download><?php echo e(__('chat.download')); ?></a>
+    <img id="client-chat-image-full" src="" alt="<?php echo e(__('chat.image_preview_alt')); ?>" class="chat-premium-image-view">
 </div>
 
 <script>
@@ -121,9 +121,9 @@
     if (window.ValtrixClientChatMounted) return;
     window.ValtrixClientChatMounted = true;
 
-    const i18n = @json($clientChatI18n);
-    const currentUserId = {{ auth()->id() }};
-    const locale = document.documentElement.lang || '{{ app()->getLocale() }}';
+    const i18n = <?php echo json_encode($clientChatI18n, 15, 512) ?>;
+    const currentUserId = <?php echo e(auth()->id()); ?>;
+    const locale = document.documentElement.lang || '<?php echo e(app()->getLocale()); ?>';
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
     const el = {
         toggle: document.getElementById('client-chat-toggle'),
@@ -250,7 +250,7 @@
         state.loading = true;
         if (forceLoader && !state.init) loadingState();
         try {
-            const { response, data } = await json('{{ route("chat.messages") }}');
+            const { response, data } = await json('<?php echo e(route("chat.messages")); ?>');
             if (!response.ok || !data || !data.success) {
                 emptyState(i18n.loadingError, data?.message || (response.status === 419 ? i18n.securitySessionExpired : i18n.unknownError));
                 return;
@@ -270,7 +270,7 @@
     async function unreadCount() {
         if (state.open) { el.badge.classList.add('hidden'); return; }
         try {
-            const { response, data } = await json('{{ route("chat.unread-count") }}');
+            const { response, data } = await json('<?php echo e(route("chat.unread-count")); ?>');
             if (!response.ok || !data || !data.success) return;
             const count = Number(data.count || 0);
             if (count > 0) {
@@ -288,7 +288,7 @@
         if (isTyping && now - state.lastPing < 1800) return;
         state.lastPing = isTyping ? now : 0;
         try {
-            await json('{{ route("chat.typing") }}', { method: 'POST', headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' }, body: JSON.stringify({ is_typing: Boolean(isTyping) }) });
+            await json('<?php echo e(route("chat.typing")); ?>', { method: 'POST', headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' }, body: JSON.stringify({ is_typing: Boolean(isTyping) }) });
         } catch {}
     }
 
@@ -314,7 +314,7 @@
         if (message) form.append('message', message);
         if (state.file) form.append('attachment', state.file);
         try {
-            const { response, data } = await json('{{ route("chat.send") }}', { method: 'POST', headers: { 'X-CSRF-TOKEN': csrfToken }, body: form });
+            const { response, data } = await json('<?php echo e(route("chat.send")); ?>', { method: 'POST', headers: { 'X-CSRF-TOKEN': csrfToken }, body: form });
             if (response.ok && data && data.success) {
                 el.input.value = '';
                 resizeInput();
@@ -419,3 +419,4 @@
     window.toggleClientChat = toggle;
 })();
 </script>
+<?php /**PATH C:\xampp\htdocs\cerveau\resources\views/components/client-chat-widget.blade.php ENDPATH**/ ?>

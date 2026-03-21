@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let isLoadingNotifications = false;
         let pendingNotificationsRefresh = false;
         let notificationsRequestId = 0;
-        const unreadPollingIntervalMs = isAdmin ? 3000 : 10000;
+        const unreadPollingIntervalMs = isAdmin ? 12000 : 20000;
         const notificationSoundProfile = isAdmin
             ? { notes: [740, 932, 1175], step: 0.085, duration: 0.35, bodyGain: 0.26, shimmerGain: 0.18, masterGain: 1.34 }
             : { notes: [698, 880, 1047], step: 0.09, duration: 0.33, bodyGain: 0.24, shimmerGain: 0.16, masterGain: 1.26 };
@@ -741,8 +741,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        updateUnreadCount({ silent: true });
-        startUnreadPolling();
+        if (typeof window.requestIdleCallback === 'function') {
+            window.requestIdleCallback(function () {
+                updateUnreadCount({ silent: true });
+                startUnreadPolling();
+            }, { timeout: 1200 });
+        } else {
+            window.setTimeout(function () {
+                updateUnreadCount({ silent: true });
+                startUnreadPolling();
+            }, 320);
+        }
     });
 });
 </script>

@@ -283,7 +283,7 @@ class TransactionController extends Controller
         }
 
         try {
-            Mail::to($mailTransaction->user->email)->send(new TransferConfirmationMail($mailTransaction));
+            Mail::to($mailTransaction->user->email)->queue(new TransferConfirmationMail($mailTransaction));
         } catch (\Throwable $e) {
             Log::error('Failed to send transfer confirmation email', [
                 'transaction_id' => $transactionId,

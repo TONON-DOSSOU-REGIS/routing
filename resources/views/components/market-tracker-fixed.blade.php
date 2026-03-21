@@ -136,6 +136,15 @@ document.addEventListener('DOMContentLoaded', function () {
     let refreshInterval = null;
     let previousPrices = {};
 
+    function runMarketTrackerWhenIdle(callback) {
+        if (typeof window.requestIdleCallback === 'function') {
+            window.requestIdleCallback(callback, { timeout: 1500 });
+            return;
+        }
+
+        window.setTimeout(callback, 360);
+    }
+
     function getItemKey(item) {
         return item.id || item.symbol || item.pair || item.name || Math.random().toString(36).slice(2);
     }
@@ -339,8 +348,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    fetchMarketData();
-    startAutoRefresh();
+    runMarketTrackerWhenIdle(() => {
+        fetchMarketData();
+        startAutoRefresh();
+    });
 
     document.addEventListener('visibilitychange', function () {
         if (document.visibilityState === 'visible') {

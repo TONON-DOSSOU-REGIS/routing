@@ -1,3 +1,5 @@
+﻿
+
 <?php $__env->startSection('title', 'Administration - Valtrix Bank'); ?>
 <?php $__env->startSection('dashboard_theme', 'admin'); ?>
 <?php $__env->startSection('dashboard_page_title', 'Dashboard administrateur'); ?>
@@ -112,6 +114,10 @@
     </a>
 <?php $__env->stopSection(); ?>
 
+<?php $__env->startPush('premium_dashboard_head'); ?>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<?php $__env->stopPush(); ?>
+
 <?php $__env->startSection('dashboard_content'); ?>
     <?php
         $monthlyTransfersFormatted = \App\Helpers\CurrencyHelper::format($monthlyTransfers, 'EUR');
@@ -212,7 +218,7 @@
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <div class="rounded-[22px] border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center">
                             <p class="text-sm font-semibold text-slate-900">Aucune validation urgente</p>
-                            <p class="mt-2 text-sm text-slate-500">La file d’attente est vide pour le moment.</p>
+                            <p class="mt-2 text-sm text-slate-500">La file d'attente est vide pour le moment.</p>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -240,7 +246,7 @@
                 </span>
             </div>
             <p class="premium-kpi-number mt-4 text-3xl font-semibold text-slate-950"><?php echo e($totalTransactions); ?></p>
-            <p class="mt-2 text-sm text-slate-500">Activite consolidee sur l’ensemble du systeme.</p>
+            <p class="mt-2 text-sm text-slate-500">Activite consolidee sur l'ensemble du systeme.</p>
         </article>
 
         <article class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
@@ -367,7 +373,7 @@
 
                             </p>
                             <p class="mt-1 truncate text-sm text-slate-500">
-                                <?php echo e($transaction->user?->name ?? 'Client inconnu'); ?> • <?php echo e($transaction->created_at->format('d/m/Y H:i')); ?>
+                                <?php echo e($transaction->user?->name ?? 'Client inconnu'); ?> - <?php echo e($transaction->created_at->format('d/m/Y H:i')); ?>
 
                             </p>
                         </div>
@@ -385,7 +391,7 @@
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <div class="rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-5 py-10 text-center">
                         <p class="text-lg font-semibold text-slate-900">Aucune transaction recente</p>
-                        <p class="mt-2 text-sm text-slate-500">Le flux operationnel s’affichera ici des qu’un mouvement sera enregistre.</p>
+                        <p class="mt-2 text-sm text-slate-500">Le flux operationnel s'affichera ici des qu'un mouvement sera enregistre.</p>
                     </div>
                 <?php endif; ?>
             </div>
@@ -554,5 +560,7 @@
         });
     </script>
 <?php $__env->stopPush(); ?>
+
+
 
 <?php echo $__env->make('layouts.premium-dashboard', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\cerveau\resources\views/admin/dashboard.blade.php ENDPATH**/ ?>

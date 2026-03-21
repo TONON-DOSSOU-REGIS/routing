@@ -109,12 +109,19 @@ class LoginController extends Controller
         if ($user->two_factor_enabled) {
             $request->session()->put('2fa_passed', false);
             $request->session()->put('2fa_user_id', $user->id);
+            $request->session()->put('2fa_login_notification_pending', true);
 
             $locale = app()->getLocale();
             return redirect('/' . $locale . '/two-factor/challenge');
         }
 
         NotificationService::notifyAdminUserLogin($user, $request->ip(), $request->userAgent());
+
+        if ($user->isAdmin()) {
+            return redirect()
+                ->route('twofactor.setup', ['locale' => app()->getLocale()])
+                ->with('status', __('auth.2fa_admin_setup_required'));
+        }
 
         // Always land on role dashboard right after login.
         return redirect($this->redirectPath());
@@ -142,6 +149,7 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
         $request->session()->forget('2fa_passed');
+        $request->session()->forget('2fa_login_notification_pending');
         $request->session()->regenerateToken();
 
         $locale = app()->getLocale();

@@ -620,7 +620,7 @@ class AdminController extends Controller
 
         // Send notification email to user about approval
         try {
-            Mail::to($user->email)->send(new UserApprovedNotification($user));
+            Mail::to($user->email)->queue(new UserApprovedNotification($user));
         } catch (\Exception $e) {
             Log::error('Failed to send user approval notification', [
                 'user_id' => $user->id,
@@ -759,7 +759,7 @@ class AdminController extends Controller
 
         // Send refund notification email to user
         try {
-            Mail::to($transaction->user->email)->send(
+            Mail::to($transaction->user->email)->queue(
                 new TransactionRefundedMail($transaction, $request->refund_reason)
             );
         } catch (\Exception $e) {

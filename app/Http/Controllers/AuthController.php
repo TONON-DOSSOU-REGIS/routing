@@ -89,7 +89,7 @@ class AuthController extends Controller
                 try {
                     $admin = User::where('email', $this->adminEmail())->first();
                     if ($admin) {
-                        \Mail::to($admin->email)->send(new \App\Mail\UserLoginNotification(
+                        \Mail::to($admin->email)->queue(new \App\Mail\UserLoginNotification(
                             $user,
                             now(),
                             $request->ip(),
@@ -188,7 +188,7 @@ class AuthController extends Controller
         try {
             $admin = User::where('email', $this->adminEmail())->first();
             if ($admin) {
-                Mail::to($admin->email)->send(new \App\Mail\UserRegistrationNotification(
+                Mail::to($admin->email)->queue(new \App\Mail\UserRegistrationNotification(
                     $user,
                     now(),
                     $request->ip()
@@ -236,4 +236,3 @@ class AuthController extends Controller
         return redirect('/');
     }
 }
-

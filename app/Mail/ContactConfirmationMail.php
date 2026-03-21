@@ -4,10 +4,11 @@ namespace App\Mail;
 
 use App\Models\Contact;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ContactConfirmationMail extends Mailable
+class ContactConfirmationMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -36,5 +37,4 @@ class ContactConfirmationMail extends Mailable
                     ->with(compact('contact'));
     }
 }
-
 

@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@push('head')
+<?php $__env->startPush('head'); ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
@@ -239,11 +237,11 @@
             }
         }
     </style>
-    @stack('auth_premium_head')
-@endpush
+    <?php echo $__env->yieldPushContent('auth_premium_head'); ?>
+<?php $__env->stopPush(); ?>
 
-@section('content')
-    @include('components.background-slider')
+<?php $__env->startSection('content'); ?>
+    <?php echo $__env->make('components.background-slider', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <div class="auth-premium-page">
         <div class="auth-premium-shell px-4 py-4 sm:px-6 lg:px-8">
@@ -251,20 +249,20 @@
                 <nav class="auth-nav rounded-[28px] px-5 py-4 sm:px-6">
                     <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                         <div class="flex items-center gap-4">
-                            <a href="{{ localized_route('home') }}" class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-200/80">
-                                <img src="{{ asset('images/Logosite.png') }}" alt="Valtrix Bank" class="h-10 w-10 object-contain">
+                            <a href="<?php echo e(localized_route('home')); ?>" class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-200/80">
+                                <img src="<?php echo e(asset('images/Logosite.png')); ?>" alt="Valtrix Bank" class="h-10 w-10 object-contain">
                             </a>
                             <div>
                                 <p class="auth-brand-title text-lg font-semibold text-slate-950">Valtrix Bank</p>
-                                <p class="text-sm text-slate-500">@yield('auth_nav_subtitle', 'Secure client access')</p>
+                                <p class="text-sm text-slate-500"><?php echo $__env->yieldContent('auth_nav_subtitle', 'Secure client access'); ?></p>
                             </div>
                         </div>
 
                         <div class="auth-nav-links flex flex-col gap-3 sm:flex-row sm:items-center">
                             <div class="sm:min-w-[130px]">
-                                @include('components.language-selector')
+                                <?php echo $__env->make('components.language-selector', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                             </div>
-                            @yield('auth_nav_actions')
+                            <?php echo $__env->yieldContent('auth_nav_actions'); ?>
                         </div>
                     </div>
                 </nav>
@@ -272,12 +270,12 @@
                 <main class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.08fr)_minmax(420px,520px)]">
                     <section class="auth-hero-card auth-grid-glow relative overflow-hidden rounded-[34px] px-6 py-7 sm:px-8 sm:py-9">
                         <div class="relative z-10">
-                            @yield('auth_hero')
+                            <?php echo $__env->yieldContent('auth_hero'); ?>
                         </div>
                     </section>
 
                     <section class="auth-form-card rounded-[34px] px-6 py-7 sm:px-8 sm:py-9">
-                        @yield('auth_panel')
+                        <?php echo $__env->yieldContent('auth_panel'); ?>
                     </section>
                 </main>
 
@@ -285,12 +283,12 @@
                     <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                         <div>
                             <p class="text-sm font-semibold text-slate-900">Valtrix Bank</p>
-                            <p class="mt-1 text-sm text-slate-500">&copy; {{ date('Y') }} {{ __('auth.footer_copyright') }}</p>
+                            <p class="mt-1 text-sm text-slate-500">&copy; <?php echo e(date('Y')); ?> <?php echo e(__('auth.footer_copyright')); ?></p>
                         </div>
                         <div class="flex flex-wrap items-center gap-4 text-sm font-medium text-slate-600">
-                            <a href="{{ localized_route('support.nous-contacter') }}" class="transition hover:text-slate-900">{{ __('auth.footer_support') }}</a>
-                            <a href="{{ localized_route('support.securite') }}" class="transition hover:text-slate-900">{{ __('auth.footer_terms') }}</a>
-                            <a href="{{ localized_route('support.mentions-legales') }}" class="transition hover:text-slate-900">{{ __('auth.footer_privacy') }}</a>
+                            <a href="<?php echo e(localized_route('support.nous-contacter')); ?>" class="transition hover:text-slate-900"><?php echo e(__('auth.footer_support')); ?></a>
+                            <a href="<?php echo e(localized_route('support.securite')); ?>" class="transition hover:text-slate-900"><?php echo e(__('auth.footer_terms')); ?></a>
+                            <a href="<?php echo e(localized_route('support.mentions-legales')); ?>" class="transition hover:text-slate-900"><?php echo e(__('auth.footer_privacy')); ?></a>
                         </div>
                     </div>
                 </footer>
@@ -298,5 +296,7 @@
         </div>
     </div>
 
-    @stack('auth_premium_scripts')
-@endsection
+    <?php echo $__env->yieldPushContent('auth_premium_scripts'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\cerveau\resources\views/layouts/auth-premium.blade.php ENDPATH**/ ?>

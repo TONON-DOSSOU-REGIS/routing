@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="<?php echo e(app()->getLocale()); ?>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ __('home.page_title') }}</title>
-  @vite(['resources/css/app.css'])
+  <title><?php echo e(__('home.page_title')); ?></title>
+  <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css']); ?>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  @include('partials.favicon')
+  <?php echo $__env->make('partials.favicon', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
   <style>
     /* Police et fondations visuelles */
@@ -322,35 +322,55 @@
       <div class="flex justify-between h-20">
         <div class="flex items-center space-x-3">
           <div class="bg-white p-2 rounded-lg">
-            <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
-            {{-- <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a> --}}
+            <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>"><img src='<?php echo e(asset("images/Logosite.png")); ?>' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
+            
           </div>
-          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">Valtrix Bank</span></a>
+          <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>" class="text-2xl font-bold text-white"><span class="sr-only">Valtrix Bank</span></a>
         </div>
         
         <!-- Menu Desktop -->
         <div class="hidden md:flex items-center space-x-6">
-          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">{{ __('home.nav_home') }}</a>
+          <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>" class="text-white hover:text-blue-200 transition font-medium"><?php echo e(__('home.nav_home')); ?></a>
           <div class="relative group">
             <button class="text-white hover:text-blue-200 transition font-medium inline-flex items-center">
-              {{ __('home.nav_services') }}
+              <?php echo e(__('home.nav_services')); ?>
+
               <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
               </svg>
             </button>
             <div class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-1 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
-              <a href="{{ localized_route('services.comptes-professionnels', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900">{{ __('home.services_business_accounts') }}</a>
-              <a href="{{ localized_route('services.virements-internationaux', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900">{{ __('home.services_international_transfers') }}</a>
-              <a href="{{ localized_route('services.gestion-tresorerie', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900">{{ __('home.services_treasury_management') }}</a>
-              <a href="{{ localized_route('services.cartes-paiement', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900">{{ __('home.services_payment_cards') }}</a>
+              <a href="<?php echo e(localized_route('services.comptes-professionnels', ['locale' => app()->getLocale()])); ?>" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900"><?php echo e(__('home.services_business_accounts')); ?></a>
+              <a href="<?php echo e(localized_route('services.virements-internationaux', ['locale' => app()->getLocale()])); ?>" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900"><?php echo e(__('home.services_international_transfers')); ?></a>
+              <a href="<?php echo e(localized_route('services.gestion-tresorerie', ['locale' => app()->getLocale()])); ?>" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900"><?php echo e(__('home.services_treasury_management')); ?></a>
+              <a href="<?php echo e(localized_route('services.cartes-paiement', ['locale' => app()->getLocale()])); ?>" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-900"><?php echo e(__('home.services_payment_cards')); ?></a>
             </div>
           </div>
-          <a href="#testimonial-slider" class="text-white hover:text-blue-200 transition font-medium">{{ __('home.nav_testimonials') }}</a>
-          <a href="#faq-list" class="text-white hover:text-blue-200 transition font-medium">{{ __('home.nav_faq') }}</a>
-          <a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}" class="text-white hover:text-blue-200 transition font-medium">{{ __('home.nav_contact') }}</a>
-          <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="btn-auth px-6 py-3 rounded-lg font-semibold">{{ __('home.nav_login') }}</a>
-          <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-auth px-6 py-3 rounded-lg font-semibold">{{ __('home.nav_register') }}</a>
-          <x-language-selector />
+          <a href="#testimonial-slider" class="text-white hover:text-blue-200 transition font-medium"><?php echo e(__('home.nav_testimonials')); ?></a>
+          <a href="#faq-list" class="text-white hover:text-blue-200 transition font-medium"><?php echo e(__('home.nav_faq')); ?></a>
+          <a href="<?php echo e(localized_route('support.nous-contacter', ['locale' => app()->getLocale()])); ?>" class="text-white hover:text-blue-200 transition font-medium"><?php echo e(__('home.nav_contact')); ?></a>
+          <a href="<?php echo e(localized_route('login', ['locale' => app()->getLocale()])); ?>" class="btn-auth px-6 py-3 rounded-lg font-semibold"><?php echo e(__('home.nav_login')); ?></a>
+          <a href="<?php echo e(localized_route('register', ['locale' => app()->getLocale()])); ?>" class="btn-auth px-6 py-3 rounded-lg font-semibold"><?php echo e(__('home.nav_register')); ?></a>
+          <?php if (isset($component)) { $__componentOriginal27dc6277b85491d47ded5f7c284c1a13 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal27dc6277b85491d47ded5f7c284c1a13 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.language-selector','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('language-selector'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal27dc6277b85491d47ded5f7c284c1a13)): ?>
+<?php $attributes = $__attributesOriginal27dc6277b85491d47ded5f7c284c1a13; ?>
+<?php unset($__attributesOriginal27dc6277b85491d47ded5f7c284c1a13); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal27dc6277b85491d47ded5f7c284c1a13)): ?>
+<?php $component = $__componentOriginal27dc6277b85491d47ded5f7c284c1a13; ?>
+<?php unset($__componentOriginal27dc6277b85491d47ded5f7c284c1a13); ?>
+<?php endif; ?>
         </div>
         
         <!-- Bouton Menu Mobile -->
@@ -364,36 +384,55 @@
       <!-- Menu Mobile -->
       <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-800 border-t border-blue-700">
         <div class="px-4 py-6 space-y-4">
-          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="mobile-menu-item mobile-menu-link text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400">
-            <span>{{ __('home.nav_home') }}</span>
+          <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>" class="mobile-menu-item mobile-menu-link text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400">
+            <span><?php echo e(__('home.nav_home')); ?></span>
           </a>
           <div class="mobile-menu-item relative group">
             <button class="w-full mobile-menu-link text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400 inline-flex items-center justify-between" type="button">
-              <span>{{ __('home.nav_services') }}</span>
+              <span><?php echo e(__('home.nav_services')); ?></span>
               <svg class="w-4 h-4 ml-2 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
               </svg>
             </button>
             <div class="mobile-submenu hidden flex flex-col bg-blue-900/80 border border-blue-700 rounded-md mt-2 p-2 space-y-1">
-              <a href="{{ localized_route('services.comptes-professionnels', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md">{{ __('home.services_business_accounts') }}</a>
-              <a href="{{ localized_route('services.virements-internationaux', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md">{{ __('home.services_international_transfers') }}</a>
-              <a href="{{ localized_route('services.gestion-tresorerie', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md">{{ __('home.services_treasury_management') }}</a>
-              <a href="{{ localized_route('services.cartes-paiement', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md">{{ __('home.services_payment_cards') }}</a>
+              <a href="<?php echo e(localized_route('services.comptes-professionnels', ['locale' => app()->getLocale()])); ?>" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md"><?php echo e(__('home.services_business_accounts')); ?></a>
+              <a href="<?php echo e(localized_route('services.virements-internationaux', ['locale' => app()->getLocale()])); ?>" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md"><?php echo e(__('home.services_international_transfers')); ?></a>
+              <a href="<?php echo e(localized_route('services.gestion-tresorerie', ['locale' => app()->getLocale()])); ?>" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md"><?php echo e(__('home.services_treasury_management')); ?></a>
+              <a href="<?php echo e(localized_route('services.cartes-paiement', ['locale' => app()->getLocale()])); ?>" class="block px-4 py-2 text-white hover:bg-blue-700 hover:text-white rounded-md"><?php echo e(__('home.services_payment_cards')); ?></a>
             </div>
           </div>
           <a href="#testimonial-slider" class="mobile-menu-item mobile-menu-link text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400">
-            <span>{{ __('home.nav_testimonials') }}</span>
+            <span><?php echo e(__('home.nav_testimonials')); ?></span>
           </a>
           <a href="#faq-list" class="mobile-menu-item mobile-menu-link text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400">
-            <span>{{ __('home.nav_faq') }}</span>
+            <span><?php echo e(__('home.nav_faq')); ?></span>
           </a>
-          <a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}" class="mobile-menu-item mobile-menu-link text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400">
-            <span>{{ __('home.nav_contact') }}</span>
+          <a href="<?php echo e(localized_route('support.nous-contacter', ['locale' => app()->getLocale()])); ?>" class="mobile-menu-item mobile-menu-link text-white hover:text-blue-200 transition font-medium py-3 px-4 rounded-lg hover:bg-red-400">
+            <span><?php echo e(__('home.nav_contact')); ?></span>
           </a>
-          <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="mobile-menu-item btn-auth block font-semibold py-3 px-4 rounded-lg text-center">{{ __('home.nav_login') }}</a>
-          <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="mobile-menu-item btn-auth block font-semibold py-3 px-4 rounded-lg text-center">{{ __('home.nav_register') }}</a>
+          <a href="<?php echo e(localized_route('login', ['locale' => app()->getLocale()])); ?>" class="mobile-menu-item btn-auth block font-semibold py-3 px-4 rounded-lg text-center"><?php echo e(__('home.nav_login')); ?></a>
+          <a href="<?php echo e(localized_route('register', ['locale' => app()->getLocale()])); ?>" class="mobile-menu-item btn-auth block font-semibold py-3 px-4 rounded-lg text-center"><?php echo e(__('home.nav_register')); ?></a>
           <div class="mobile-menu-item">
-            <x-language-selector />
+            <?php if (isset($component)) { $__componentOriginal27dc6277b85491d47ded5f7c284c1a13 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal27dc6277b85491d47ded5f7c284c1a13 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.language-selector','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('language-selector'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal27dc6277b85491d47ded5f7c284c1a13)): ?>
+<?php $attributes = $__attributesOriginal27dc6277b85491d47ded5f7c284c1a13; ?>
+<?php unset($__attributesOriginal27dc6277b85491d47ded5f7c284c1a13); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal27dc6277b85491d47ded5f7c284c1a13)): ?>
+<?php $component = $__componentOriginal27dc6277b85491d47ded5f7c284c1a13; ?>
+<?php unset($__componentOriginal27dc6277b85491d47ded5f7c284c1a13); ?>
+<?php endif; ?>
           </div>
         </div>
       </div>
@@ -408,64 +447,69 @@
       <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1920&q=80');"></div>
       <div class="bg-slide" style="background-image: url('https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg');"></div>
       <div class="bg-slide" style="background-image: url('https://images.pexels.com/photos/3184325/pexels-photo-3184325.jpeg');"></div>
-      <div class="bg-slide" style="background-image: url('{{ asset('images/photo-15.avif') }}');"></div>
-      <div class="bg-slide" style="background-image: url('{{ asset('images/photo-154.avif') }}');"></div>
+      <div class="bg-slide" style="background-image: url('<?php echo e(asset('images/photo-15.avif')); ?>');"></div>
+      <div class="bg-slide" style="background-image: url('<?php echo e(asset('images/photo-154.avif')); ?>');"></div>
     </div>
 
     <div class="bg-black bg-opacity-70 py-20 relative z-10">
       <div class="max-w-7xl mx-auto px-6 grid gap-12 items-center fade-in-up lg:grid-cols-[0.86fr,1.14fr] lg:gap-10 xl:grid-cols-[0.82fr,1.18fr] xl:gap-14">
         <div>
           <span class="inline-flex items-center px-4 py-2 rounded-full security-badge text-sm mb-6">
-            <i class="fas fa-shield-alt mr-2"></i> {{ __('home.hero_badge') }}
+            <i class="fas fa-shield-alt mr-2"></i> <?php echo e(__('home.hero_badge')); ?>
+
           </span>
           <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-            {{ __('home.hero_title_1') }}<br>
-            <span class="text-blue-300">{{ __('home.hero_title_2') }}</span>
+            <?php echo e(__('home.hero_title_1')); ?><br>
+            <span class="text-blue-300"><?php echo e(__('home.hero_title_2')); ?></span>
           </h1>
           <p class="text-xl mb-8 max-w-xl leading-relaxed">
-            {{ __('home.hero_description') }}
+            <?php echo e(__('home.hero_description')); ?>
+
           </p>
           <ul class="grid sm:grid-cols-2 gap-4 text-base mb-8">
             <li class="flex items-start space-x-3">
               <i class="fas fa-check-circle text-green-400 mt-1"></i>
-              <span>{{ __('home.hero_feature_1') }}</span>
+              <span><?php echo e(__('home.hero_feature_1')); ?></span>
             </li>
             <li class="flex items-start space-x-3">
               <i class="fas fa-check-circle text-green-400 mt-1"></i>
-              <span>{{ __('home.hero_feature_2') }}</span>
+              <span><?php echo e(__('home.hero_feature_2')); ?></span>
             </li>
             <li class="flex items-start space-x-3">
               <i class="fas fa-check-circle text-green-400 mt-1"></i>
-              <span>{{ __('home.hero_feature_3') }}</span>
+              <span><?php echo e(__('home.hero_feature_3')); ?></span>
             </li>
             <li class="flex items-start space-x-3">
               <i class="fas fa-check-circle text-green-400 mt-1"></i>
-              <span>{{ __('home.hero_feature_4') }}</span>
+              <span><?php echo e(__('home.hero_feature_4')); ?></span>
             </li>
           </ul>
           <div class="flex flex-col sm:flex-row gap-4">
-            <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" class="btn-auth px-8 py-4 rounded-lg font-semibold text-center">
-              {{ __('home.hero_cta_register') }}
+            <a href="<?php echo e(localized_route('register', ['locale' => app()->getLocale()])); ?>" class="btn-auth px-8 py-4 rounded-lg font-semibold text-center">
+              <?php echo e(__('home.hero_cta_register')); ?>
+
             </a>
-            <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="btn-auth px-8 py-4 rounded-lg font-semibold text-center">
-              {{ __('home.hero_cta_login') }}
+            <a href="<?php echo e(localized_route('login', ['locale' => app()->getLocale()])); ?>" class="btn-auth px-8 py-4 rounded-lg font-semibold text-center">
+              <?php echo e(__('home.hero_cta_login')); ?>
+
             </a>
           </div>
           <p class="text-sm text-gray-300 mt-6 flex items-center">
-            <i class="fas fa-lock mr-2"></i> {{ __('home.hero_security_note') }}
+            <i class="fas fa-lock mr-2"></i> <?php echo e(__('home.hero_security_note')); ?>
+
           </p>
           <div class="grid grid-cols-2 gap-4 mt-8 lg:hidden">
             <div class="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4">
-              <p class="text-xs uppercase tracking-[0.2em] text-blue-100 mb-2">{{ __('home.feature_1_title') }}</p>
+              <p class="text-xs uppercase tracking-[0.2em] text-blue-100 mb-2"><?php echo e(__('home.feature_1_title')); ?></p>
               <p class="text-2xl font-bold text-white">AES 256</p>
             </div>
             <div class="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4">
-              <p class="text-xs uppercase tracking-[0.2em] text-blue-100 mb-2">{{ __('home.advantage_4_title') }}</p>
+              <p class="text-xs uppercase tracking-[0.2em] text-blue-100 mb-2"><?php echo e(__('home.advantage_4_title')); ?></p>
               <p class="text-2xl font-bold text-white">24/7</p>
             </div>
             <div class="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 col-span-2">
-              <p class="text-xs uppercase tracking-[0.2em] text-blue-100 mb-2">{{ __('home.advantage_3_title') }}</p>
-              <p class="text-base font-medium text-white">{{ __('home.hero_feature_4') }}</p>
+              <p class="text-xs uppercase tracking-[0.2em] text-blue-100 mb-2"><?php echo e(__('home.advantage_3_title')); ?></p>
+              <p class="text-base font-medium text-white"><?php echo e(__('home.hero_feature_4')); ?></p>
             </div>
           </div>
         </div>
@@ -485,14 +529,15 @@
                     <span class="h-3 w-3 rounded-full bg-emerald-300"></span>
                   </div>
                   <div>
-                    <p class="text-[11px] uppercase tracking-[0.35em] text-slate-400">{{ __('home.dashboard_preview_title') }}</p>
+                    <p class="text-[11px] uppercase tracking-[0.35em] text-slate-400"><?php echo e(__('home.dashboard_preview_title')); ?></p>
                     <p class="text-sm font-semibold text-slate-900">Valtrix Bank Premium</p>
                   </div>
                 </div>
 
                 <div class="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-700">
                   <span class="h-2.5 w-2.5 rounded-full bg-emerald-500 home-dashboard-pulse"></span>
-                  {{ __('home.feature_2_item_2') }}
+                  <?php echo e(__('home.feature_2_item_2')); ?>
+
                 </div>
               </div>
 
@@ -501,14 +546,15 @@
                   <div class="rounded-[1.8rem] border border-white/10 bg-gradient-to-br from-blue-600 via-indigo-600 to-slate-950 p-5 shadow-2xl home-dashboard-sweep">
                     <div class="flex items-center justify-between mb-4">
                       <span class="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-blue-100">
-                        {{ __('home.hero_badge') }}
+                        <?php echo e(__('home.hero_badge')); ?>
+
                       </span>
                       <i class="fas fa-wifi text-blue-100/80"></i>
                     </div>
 
-                    <p class="text-xs uppercase tracking-[0.3em] text-blue-100/70">{{ __('home.dashboard_reception') }}</p>
+                    <p class="text-xs uppercase tracking-[0.3em] text-blue-100/70"><?php echo e(__('home.dashboard_reception')); ?></p>
                     <p class="mt-3 text-4xl font-bold">&euro;284 500</p>
-                    <p class="mt-2 text-sm text-blue-100/80">{{ __('home.dashboard_description') }}</p>
+                    <p class="mt-2 text-sm text-blue-100/80"><?php echo e(__('home.dashboard_description')); ?></p>
 
                     <div class="mt-5 grid grid-cols-[minmax(0,1fr),112px] gap-4 items-end">
                       <div>
@@ -522,7 +568,7 @@
                         </div>
                       </div>
                       <div class="rounded-2xl bg-white/10 px-4 py-3 text-right backdrop-blur-sm">
-                        <p class="text-[11px] uppercase tracking-[0.25em] text-blue-100/60">{{ __('home.dashboard_alerts') }}</p>
+                        <p class="text-[11px] uppercase tracking-[0.25em] text-blue-100/60"><?php echo e(__('home.dashboard_alerts')); ?></p>
                         <p class="mt-1 text-2xl font-bold">0</p>
                       </div>
                     </div>
@@ -530,20 +576,20 @@
 
                   <div class="grid grid-cols-2 gap-3 mt-3">
                     <div class="rounded-[1.4rem] border border-white/10 bg-white/5 p-4">
-                      <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400">{{ __('home.dashboard_transfers_in_progress') }}</p>
+                      <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400"><?php echo e(__('home.dashboard_transfers_in_progress')); ?></p>
                       <p class="mt-2 text-3xl font-bold">3</p>
-                      <p class="mt-1 text-xs text-slate-300">{{ __('home.dashboard_operations') }}</p>
+                      <p class="mt-1 text-xs text-slate-300"><?php echo e(__('home.dashboard_operations')); ?></p>
                     </div>
                     <div class="rounded-[1.4rem] border border-white/10 bg-white/5 p-4">
-                      <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400">{{ __('home.advantage_4_title') }}</p>
+                      <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400"><?php echo e(__('home.advantage_4_title')); ?></p>
                       <p class="mt-2 text-3xl font-bold">24/7</p>
-                      <p class="mt-1 text-xs text-slate-300">{{ __('home.advantage_4_description') }}</p>
+                      <p class="mt-1 text-xs text-slate-300"><?php echo e(__('home.advantage_4_description')); ?></p>
                     </div>
                   </div>
 
                   <div class="mt-3 rounded-[1.6rem] border border-white/10 bg-white/5 p-4">
                     <div class="flex items-center justify-between mb-3">
-                      <p class="text-sm font-semibold text-white">{{ __('home.dashboard_priority_transfer') }}</p>
+                      <p class="text-sm font-semibold text-white"><?php echo e(__('home.dashboard_priority_transfer')); ?></p>
                       <span class="rounded-full border border-orange-300/30 bg-orange-400/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-orange-200">Live</span>
                     </div>
 
@@ -551,22 +597,22 @@
                       <div class="flex items-start gap-3">
                         <span class="mt-1 h-2.5 w-2.5 rounded-full bg-blue-300"></span>
                         <div>
-                          <p class="text-sm font-semibold">{{ __('transactions.step_information') }}</p>
-                          <p class="text-xs text-slate-400">{{ __('home.hero_feature_1') }}</p>
+                          <p class="text-sm font-semibold"><?php echo e(__('transactions.step_information')); ?></p>
+                          <p class="text-xs text-slate-400"><?php echo e(__('home.hero_feature_1')); ?></p>
                         </div>
                       </div>
                       <div class="flex items-start gap-3">
                         <span class="mt-1 h-2.5 w-2.5 rounded-full bg-orange-300 home-dashboard-pulse"></span>
                         <div>
-                          <p class="text-sm font-semibold text-orange-100">{{ __('transactions.step_processing') }}</p>
-                          <p class="text-xs text-slate-300">{{ __('home.dashboard_step') }}</p>
+                          <p class="text-sm font-semibold text-orange-100"><?php echo e(__('transactions.step_processing')); ?></p>
+                          <p class="text-xs text-slate-300"><?php echo e(__('home.dashboard_step')); ?></p>
                         </div>
                       </div>
                       <div class="flex items-start gap-3">
                         <span class="mt-1 h-2.5 w-2.5 rounded-full bg-emerald-300"></span>
                         <div>
-                          <p class="text-sm font-semibold">{{ __('transactions.step_confirmation') }}</p>
-                          <p class="text-xs text-slate-400">{{ __('home.hero_feature_4') }}</p>
+                          <p class="text-sm font-semibold"><?php echo e(__('transactions.step_confirmation')); ?></p>
+                          <p class="text-xs text-slate-400"><?php echo e(__('home.hero_feature_4')); ?></p>
                         </div>
                       </div>
                     </div>
@@ -577,37 +623,39 @@
                   <div class="grid gap-4 mb-4">
                     <div class="grid grid-cols-[minmax(0,1fr),132px] gap-4 items-start">
                       <span class="inline-flex max-w-fit items-center rounded-full border border-orange-100 bg-orange-50 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-orange-600">
-                        {{ __('home.dashboard_priority_transfer') }}
+                        <?php echo e(__('home.dashboard_priority_transfer')); ?>
+
                       </span>
                       <div class="rounded-[1.4rem] bg-slate-950 px-4 py-3 text-white shadow-xl">
-                        <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400">{{ __('home.dashboard_transfers_in_progress') }}</p>
+                        <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400"><?php echo e(__('home.dashboard_transfers_in_progress')); ?></p>
                         <p class="mt-2 text-3xl font-bold">3</p>
-                        <p class="text-sm text-slate-300">{{ __('home.dashboard_operations') }}</p>
+                        <p class="text-sm text-slate-300"><?php echo e(__('home.dashboard_operations')); ?></p>
                       </div>
                     </div>
 
                     <div class="max-w-xl pr-4">
                       <h3 class="flex items-start text-[clamp(2.5rem,3vw,3.65rem)] font-semibold leading-[1.04] tracking-[-0.03em] text-premium">
                         <i class="fas fa-chart-line mr-4 mt-3 text-[1.9rem] text-orange-500"></i>
-                        <span>{{ __('home.dashboard_preview_title') }}</span>
+                        <span><?php echo e(__('home.dashboard_preview_title')); ?></span>
                       </h3>
                       <p class="mt-3 max-w-lg text-[15px] leading-7 text-slate-500">
-                        {{ __('home.dashboard_description') }}
+                        <?php echo e(__('home.dashboard_description')); ?>
+
                       </p>
                     </div>
                   </div>
 
                   <div class="grid grid-cols-3 gap-4 mb-4 text-center">
                     <div class="rounded-[1.35rem] border border-slate-200 bg-white/90 p-4 shadow-sm">
-                      <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400">{{ __('home.dashboard_transfers') }}</p>
+                      <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400"><?php echo e(__('home.dashboard_transfers')); ?></p>
                       <p class="mt-2 text-2xl font-bold text-premium">+32</p>
                     </div>
                     <div class="rounded-[1.35rem] border border-slate-200 bg-white/90 p-4 shadow-sm">
-                      <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400">{{ __('home.dashboard_reception') }}</p>
+                      <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400"><?php echo e(__('home.dashboard_reception')); ?></p>
                       <p class="mt-2 text-2xl font-bold text-emerald-600">+18</p>
                     </div>
                     <div class="rounded-[1.35rem] border border-slate-200 bg-white/90 p-4 shadow-sm">
-                      <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400">{{ __('home.dashboard_alerts') }}</p>
+                      <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400"><?php echo e(__('home.dashboard_alerts')); ?></p>
                       <p class="mt-2 text-2xl font-bold text-red-500">0</p>
                     </div>
                   </div>
@@ -615,11 +663,11 @@
                   <div class="rounded-[1.8rem] bg-slate-950 p-4 text-white shadow-2xl home-dashboard-sweep">
                     <div class="flex items-start justify-between gap-4 mb-3">
                       <div>
-                        <p class="text-xs uppercase tracking-[0.3em] text-orange-300">{{ __('transactions.transfer_progress') }}</p>
-                        <h4 class="mt-2 text-2xl font-semibold">{{ __('home.feature_3_title') }}</h4>
+                        <p class="text-xs uppercase tracking-[0.3em] text-orange-300"><?php echo e(__('transactions.transfer_progress')); ?></p>
+                        <h4 class="mt-2 text-2xl font-semibold"><?php echo e(__('home.feature_3_title')); ?></h4>
                       </div>
                       <div class="text-right">
-                        <p class="text-sm text-slate-400">{{ __('transactions.progress_label') }}</p>
+                        <p class="text-sm text-slate-400"><?php echo e(__('transactions.progress_label')); ?></p>
                         <p class="text-3xl font-bold text-emerald-300">76%</p>
                       </div>
                     </div>
@@ -628,23 +676,23 @@
                       <div class="h-3 rounded-full bg-gradient-to-r from-orange-400 via-amber-300 to-emerald-400" style="width: 76%"></div>
                     </div>
 
-                    <p class="text-sm text-slate-300">{{ __('home.dashboard_step') }}</p>
+                    <p class="text-sm text-slate-300"><?php echo e(__('home.dashboard_step')); ?></p>
 
                     <div class="mt-4 grid grid-cols-3 gap-3">
                       <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
                         <p class="text-xs uppercase tracking-[0.2em] text-slate-500">01</p>
-                        <p class="mt-2 font-semibold">{{ __('transactions.step_information') }}</p>
-                        <p class="mt-2 text-xs text-slate-400">{{ __('home.hero_feature_1') }}</p>
+                        <p class="mt-2 font-semibold"><?php echo e(__('transactions.step_information')); ?></p>
+                        <p class="mt-2 text-xs text-slate-400"><?php echo e(__('home.hero_feature_1')); ?></p>
                       </div>
                       <div class="rounded-2xl border border-orange-300/30 bg-orange-400/10 px-4 py-4 shadow-lg shadow-orange-500/10">
                         <p class="text-xs uppercase tracking-[0.2em] text-orange-200">02</p>
-                        <p class="mt-2 font-semibold">{{ __('transactions.step_processing') }}</p>
-                        <p class="mt-2 text-xs text-slate-300">{{ __('home.hero_feature_2') }}</p>
+                        <p class="mt-2 font-semibold"><?php echo e(__('transactions.step_processing')); ?></p>
+                        <p class="mt-2 text-xs text-slate-300"><?php echo e(__('home.hero_feature_2')); ?></p>
                       </div>
                       <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
                         <p class="text-xs uppercase tracking-[0.2em] text-slate-500">03</p>
-                        <p class="mt-2 font-semibold">{{ __('transactions.step_confirmation') }}</p>
-                        <p class="mt-2 text-xs text-slate-400">{{ __('home.hero_feature_4') }}</p>
+                        <p class="mt-2 font-semibold"><?php echo e(__('transactions.step_confirmation')); ?></p>
+                        <p class="mt-2 text-xs text-slate-400"><?php echo e(__('home.hero_feature_4')); ?></p>
                       </div>
                     </div>
                   </div>
@@ -654,34 +702,34 @@
                       <div class="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-blue-700 shadow-sm">
                         <i class="fas fa-shield-halved"></i>
                       </div>
-                      <p class="text-sm font-semibold text-slate-900">{{ __('home.feature_1_title') }}</p>
-                      <p class="mt-2 text-sm leading-relaxed text-slate-600">{{ __('home.feature_1_item_2') }}</p>
+                      <p class="text-sm font-semibold text-slate-900"><?php echo e(__('home.feature_1_title')); ?></p>
+                      <p class="mt-2 text-sm leading-relaxed text-slate-600"><?php echo e(__('home.feature_1_item_2')); ?></p>
                     </div>
                     <div class="rounded-[1.45rem] border border-emerald-100 bg-emerald-50/80 p-4">
                       <div class="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-emerald-600 shadow-sm">
                         <i class="fas fa-file-lines"></i>
                       </div>
-                      <p class="text-sm font-semibold text-slate-900">{{ __('home.advantage_3_title') }}</p>
-                      <p class="mt-2 text-sm leading-relaxed text-slate-600">{{ __('home.hero_feature_4') }}</p>
+                      <p class="text-sm font-semibold text-slate-900"><?php echo e(__('home.advantage_3_title')); ?></p>
+                      <p class="mt-2 text-sm leading-relaxed text-slate-600"><?php echo e(__('home.hero_feature_4')); ?></p>
                     </div>
                   </div>
 
                   <div class="mt-4 rounded-[1.45rem] border border-slate-200 bg-white/90 p-4 shadow-sm">
                     <div class="mb-3 flex items-center justify-between gap-4">
-                      <p class="text-sm font-semibold text-slate-900">{{ __('home.feature_2_title') }}</p>
+                      <p class="text-sm font-semibold text-slate-900"><?php echo e(__('home.feature_2_title')); ?></p>
                       <span class="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">KYC</span>
                     </div>
                     <div class="space-y-3 text-sm text-slate-600">
                       <div class="flex items-center justify-between gap-4">
-                        <span>{{ __('home.feature_2_item_1') }}</span>
+                        <span><?php echo e(__('home.feature_2_item_1')); ?></span>
                         <i class="fas fa-check text-emerald-500"></i>
                       </div>
                       <div class="flex items-center justify-between gap-4">
-                        <span>{{ __('home.feature_2_item_2') }}</span>
+                        <span><?php echo e(__('home.feature_2_item_2')); ?></span>
                         <i class="fas fa-wave-square text-orange-500"></i>
                       </div>
                       <div class="flex items-center justify-between gap-4">
-                        <span>{{ __('home.advantage_4_description') }}</span>
+                        <span><?php echo e(__('home.advantage_4_description')); ?></span>
                         <i class="fas fa-headset text-blue-600"></i>
                       </div>
                     </div>
@@ -703,10 +751,12 @@
     <!-- Title -->
     <div class="text-center max-w-3xl mx-auto mb-16">
       <h2 class="text-4xl font-extrabold mb-6 text-gray-900 tracking-tight">
-        {{ __('home.features_title') }}
+        <?php echo e(__('home.features_title')); ?>
+
       </h2>
       <p class="text-xl text-gray-600 leading-relaxed">
-        {{ __('home.features_description') }}
+        <?php echo e(__('home.features_description')); ?>
+
       </p>
     </div>
 
@@ -715,20 +765,23 @@
         <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8">
           <div class="max-w-2xl">
             <span class="inline-flex items-center px-4 py-2 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold tracking-[0.25em] uppercase border border-blue-100">
-              {{ __('home.dashboard_preview_title') }}
+              <?php echo e(__('home.dashboard_preview_title')); ?>
+
             </span>
             <h3 class="text-3xl font-bold text-gray-900 mt-4 mb-4">
-              {{ __('home.why_choose_title') }}
+              <?php echo e(__('home.why_choose_title')); ?>
+
             </h3>
             <p class="text-gray-600 text-lg leading-relaxed">
-              {{ __('home.why_choose_description') }}
+              <?php echo e(__('home.why_choose_description')); ?>
+
             </p>
           </div>
 
           <div class="rounded-3xl bg-white border border-slate-200 p-5 shadow-sm max-w-xs">
-            <p class="text-xs uppercase tracking-[0.25em] text-slate-400 mb-2">{{ __('home.stats_satisfaction') }}</p>
+            <p class="text-xs uppercase tracking-[0.25em] text-slate-400 mb-2"><?php echo e(__('home.stats_satisfaction')); ?></p>
             <p class="text-4xl font-bold text-premium mb-2">98%</p>
-            <p class="text-sm text-gray-500 leading-relaxed">{{ __('home.stats_satisfaction_description') }}</p>
+            <p class="text-sm text-gray-500 leading-relaxed"><?php echo e(__('home.stats_satisfaction_description')); ?></p>
           </div>
         </div>
 
@@ -737,27 +790,27 @@
             <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center mb-5">
               <i class="fas fa-shield-alt"></i>
             </div>
-            <h4 class="text-lg font-semibold text-gray-900 mb-3">{{ __('home.feature_1_title') }}</h4>
-            <p class="text-sm text-gray-600 leading-relaxed mb-4">{{ __('home.feature_1_description') }}</p>
-            <p class="text-sm font-medium text-blue-700">{{ __('home.feature_1_item_1') }}</p>
+            <h4 class="text-lg font-semibold text-gray-900 mb-3"><?php echo e(__('home.feature_1_title')); ?></h4>
+            <p class="text-sm text-gray-600 leading-relaxed mb-4"><?php echo e(__('home.feature_1_description')); ?></p>
+            <p class="text-sm font-medium text-blue-700"><?php echo e(__('home.feature_1_item_1')); ?></p>
           </div>
 
           <div class="rounded-3xl bg-white border border-orange-100 p-6 shadow-sm">
             <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center mb-5">
               <i class="fas fa-user-shield"></i>
             </div>
-            <h4 class="text-lg font-semibold text-gray-900 mb-3">{{ __('home.feature_2_title') }}</h4>
-            <p class="text-sm text-gray-600 leading-relaxed mb-4">{{ __('home.feature_2_description') }}</p>
-            <p class="text-sm font-medium text-orange-600">{{ __('home.feature_2_item_2') }}</p>
+            <h4 class="text-lg font-semibold text-gray-900 mb-3"><?php echo e(__('home.feature_2_title')); ?></h4>
+            <p class="text-sm text-gray-600 leading-relaxed mb-4"><?php echo e(__('home.feature_2_description')); ?></p>
+            <p class="text-sm font-medium text-orange-600"><?php echo e(__('home.feature_2_item_2')); ?></p>
           </div>
 
           <div class="rounded-3xl bg-white border border-emerald-100 p-6 shadow-sm">
             <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-5">
               <i class="fas fa-file-lines"></i>
             </div>
-            <h4 class="text-lg font-semibold text-gray-900 mb-3">{{ __('home.feature_3_title') }}</h4>
-            <p class="text-sm text-gray-600 leading-relaxed mb-4">{{ __('home.feature_3_description') }}</p>
-            <p class="text-sm font-medium text-emerald-600">{{ __('home.feature_3_item_3') }}</p>
+            <h4 class="text-lg font-semibold text-gray-900 mb-3"><?php echo e(__('home.feature_3_title')); ?></h4>
+            <p class="text-sm text-gray-600 leading-relaxed mb-4"><?php echo e(__('home.feature_3_description')); ?></p>
+            <p class="text-sm font-medium text-emerald-600"><?php echo e(__('home.feature_3_item_3')); ?></p>
           </div>
         </div>
       </div>
@@ -766,20 +819,22 @@
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(251,146,60,0.28),_transparent_35%),radial-gradient(circle_at_bottom_left,_rgba(59,130,246,0.24),_transparent_35%)]"></div>
         <div class="relative z-10 h-full flex flex-col">
           <span class="inline-flex items-center px-4 py-2 rounded-full bg-white/10 text-orange-200 text-xs font-semibold tracking-[0.25em] uppercase border border-white/10 w-fit">
-            {{ __('home.dashboard_priority_transfer') }}
+            <?php echo e(__('home.dashboard_priority_transfer')); ?>
+
           </span>
 
-          <h3 class="text-3xl font-semibold mt-6 mb-3">{{ __('home.feature_3_title') }}</h3>
+          <h3 class="text-3xl font-semibold mt-6 mb-3"><?php echo e(__('home.feature_3_title')); ?></h3>
           <p class="text-slate-300 leading-relaxed">
-            {{ __('home.dashboard_description') }}
+            <?php echo e(__('home.dashboard_description')); ?>
+
           </p>
 
           <div class="space-y-4 mt-8">
             <div class="rounded-3xl border border-white/10 bg-white/5 px-5 py-5">
               <div class="flex items-center justify-between gap-4">
                 <div>
-                  <p class="text-lg font-semibold">{{ __('transactions.step_information') }}</p>
-                  <p class="text-sm text-slate-300 mt-1">{{ __('home.hero_feature_1') }}</p>
+                  <p class="text-lg font-semibold"><?php echo e(__('transactions.step_information')); ?></p>
+                  <p class="text-sm text-slate-300 mt-1"><?php echo e(__('home.hero_feature_1')); ?></p>
                 </div>
                 <div class="w-11 h-11 rounded-2xl bg-white/10 flex items-center justify-center text-blue-200">
                   <i class="fas fa-user-check"></i>
@@ -790,8 +845,8 @@
             <div class="rounded-3xl border border-orange-300/30 bg-orange-400/10 px-5 py-5 shadow-lg shadow-orange-500/10">
               <div class="flex items-center justify-between gap-4">
                 <div>
-                  <p class="text-lg font-semibold">{{ __('transactions.step_processing') }}</p>
-                  <p class="text-sm text-slate-200 mt-1">{{ __('home.hero_feature_2') }}</p>
+                  <p class="text-lg font-semibold"><?php echo e(__('transactions.step_processing')); ?></p>
+                  <p class="text-sm text-slate-200 mt-1"><?php echo e(__('home.hero_feature_2')); ?></p>
                 </div>
                 <div class="w-11 h-11 rounded-2xl bg-orange-300/20 flex items-center justify-center text-orange-100">
                   <i class="fas fa-spinner"></i>
@@ -802,8 +857,8 @@
             <div class="rounded-3xl border border-white/10 bg-white/5 px-5 py-5">
               <div class="flex items-center justify-between gap-4">
                 <div>
-                  <p class="text-lg font-semibold">{{ __('transactions.step_confirmation') }}</p>
-                  <p class="text-sm text-slate-300 mt-1">{{ __('home.hero_feature_4') }}</p>
+                  <p class="text-lg font-semibold"><?php echo e(__('transactions.step_confirmation')); ?></p>
+                  <p class="text-sm text-slate-300 mt-1"><?php echo e(__('home.hero_feature_4')); ?></p>
                 </div>
                 <div class="w-11 h-11 rounded-2xl bg-white/10 flex items-center justify-center text-emerald-200">
                   <i class="fas fa-circle-check"></i>
@@ -814,13 +869,13 @@
 
           <div class="mt-8 rounded-3xl border border-white/10 bg-white/5 p-5">
             <div class="flex items-center justify-between gap-4 mb-4">
-              <p class="text-sm font-semibold text-white">{{ __('transactions.transfer_progress') }}</p>
+              <p class="text-sm font-semibold text-white"><?php echo e(__('transactions.transfer_progress')); ?></p>
               <p class="text-2xl font-bold text-orange-200">76%</p>
             </div>
             <div class="w-full h-3 rounded-full bg-white/10 overflow-hidden">
               <div class="h-3 rounded-full bg-gradient-to-r from-orange-400 via-amber-300 to-emerald-400" style="width: 76%"></div>
             </div>
-            <p class="text-sm text-slate-300 mt-4">{{ __('home.dashboard_step') }}</p>
+            <p class="text-sm text-slate-300 mt-4"><?php echo e(__('home.dashboard_step')); ?></p>
           </div>
         </div>
       </div>
@@ -832,31 +887,36 @@
       <!-- CARD 1 -->
       <div class="feature-card group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
         <div class="relative h-48 overflow-hidden">
-          <img src="{{ asset('images/256-bit.webp') }}"
+          <img src="<?php echo e(asset('images/256-bit.webp')); ?>"
                class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700">
           <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/40"></div>
         </div>
 
         <div class="p-8">
           <h3 class="text-2xl font-semibold mb-4 text-gray-800">
-            {{ __('home.feature_1_title') }}
+            <?php echo e(__('home.feature_1_title')); ?>
+
           </h3>
           <p class="text-gray-600 mb-6 leading-relaxed">
-            {{ __('home.feature_1_description') }}
+            <?php echo e(__('home.feature_1_description')); ?>
+
           </p>
 
           <ul class="text-gray-600 space-y-3 text-left">
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              {{ __('home.feature_1_item_1') }}
+              <?php echo e(__('home.feature_1_item_1')); ?>
+
             </li>
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              {{ __('home.feature_1_item_2') }}
+              <?php echo e(__('home.feature_1_item_2')); ?>
+
             </li>
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              {{ __('home.feature_1_item_3') }}
+              <?php echo e(__('home.feature_1_item_3')); ?>
+
             </li>
           </ul>
         </div>
@@ -865,31 +925,36 @@
       <!-- CARD 2 -->
       <div class="feature-card group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
         <div class="relative h-48 overflow-hidden">
-          <img src="{{ asset('images/zabra.avif') }}"
+          <img src="<?php echo e(asset('images/zabra.avif')); ?>"
                class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700">
           <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/40"></div>
         </div>
 
         <div class="p-8">
           <h3 class="text-2xl font-semibold mb-4 text-gray-800">
-            {{ __('home.feature_2_title') }}
+            <?php echo e(__('home.feature_2_title')); ?>
+
           </h3>
           <p class="text-gray-600 mb-6 leading-relaxed">
-            {{ __('home.feature_2_description') }}
+            <?php echo e(__('home.feature_2_description')); ?>
+
           </p>
 
           <ul class="text-gray-600 space-y-3 text-left">
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              {{ __('home.feature_2_item_1') }}
+              <?php echo e(__('home.feature_2_item_1')); ?>
+
             </li>
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              {{ __('home.feature_2_item_2') }}
+              <?php echo e(__('home.feature_2_item_2')); ?>
+
             </li>
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              {{ __('home.feature_2_item_3') }}
+              <?php echo e(__('home.feature_2_item_3')); ?>
+
             </li>
           </ul>
         </div>
@@ -905,24 +970,29 @@
 
         <div class="p-8">
           <h3 class="text-2xl font-semibold mb-4 text-gray-800">
-            {{ __('home.feature_3_title') }}
+            <?php echo e(__('home.feature_3_title')); ?>
+
           </h3>
           <p class="text-gray-600 mb-6 leading-relaxed">
-            {{ __('home.feature_3_description') }}
+            <?php echo e(__('home.feature_3_description')); ?>
+
           </p>
 
           <ul class="text-gray-600 space-y-3 text-left">
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              {{ __('home.feature_3_item_1') }}
+              <?php echo e(__('home.feature_3_item_1')); ?>
+
             </li>
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              {{ __('home.feature_3_item_2') }}
+              <?php echo e(__('home.feature_3_item_2')); ?>
+
             </li>
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              {{ __('home.feature_3_item_3') }}
+              <?php echo e(__('home.feature_3_item_3')); ?>
+
             </li>
           </ul>
         </div>
@@ -965,9 +1035,10 @@ document.addEventListener("DOMContentLoaded", () => {
   <section class="py-24 parallax" style="background-image: url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1920&q=80');">
     <div class="gradient-bg bg-opacity-95 py-20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
-        <h2 class="text-4xl font-bold text-center mb-12">{{ __('home.why_choose_title') }}</h2>
+        <h2 class="text-4xl font-bold text-center mb-12"><?php echo e(__('home.why_choose_title')); ?></h2>
         <p class="max-w-3xl mx-auto text-center mb-16 text-xl text-blue-100 leading-relaxed">
-          {{ __('home.accompagne_description') }}
+          <?php echo e(__('home.accompagne_description')); ?>
+
         </p>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
@@ -975,36 +1046,40 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="bg-white bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
               <i class="fas fa-home text-3xl text-yellow-300"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-4">{{ __('home.advantage_1_title') }}</h3>
+            <h3 class="text-xl font-semibold mb-4"><?php echo e(__('home.advantage_1_title')); ?></h3>
             <p class="text-blue-100 leading-relaxed">
-              {{ __('home.advantage_1_description') }}
+              <?php echo e(__('home.advantage_1_description')); ?>
+
             </p>
           </div>
           <div class="text-center p-6">
             <div class="bg-white bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
               <i class="fas fa-clock text-3xl text-green-300"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-4">{{ __('home.advantage_2_title') }}</h3>
+            <h3 class="text-xl font-semibold mb-4"><?php echo e(__('home.advantage_2_title')); ?></h3>
             <p class="text-blue-100 leading-relaxed">
-              {{ __('home.advantage_2_description') }}
+              <?php echo e(__('home.advantage_2_description')); ?>
+
             </p>
           </div>
           <div class="text-center p-6">
             <div class="bg-white bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
               <i class="fas fa-check-circle text-3xl text-purple-300"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-4">{{ __('home.advantage_3_title') }}</h3>
+            <h3 class="text-xl font-semibold mb-4"><?php echo e(__('home.advantage_3_title')); ?></h3>
             <p class="text-blue-100 leading-relaxed">
-              {{ __('home.advantage_3_description') }}
+              <?php echo e(__('home.advantage_3_description')); ?>
+
             </p>
           </div>
           <div class="text-center p-6">
             <div class="bg-white bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
               <i class="fas fa-headset text-3xl text-orange-300"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-4">{{ __('home.advantage_4_title') }}</h3>
+            <h3 class="text-xl font-semibold mb-4"><?php echo e(__('home.advantage_4_title')); ?></h3>
             <p class="text-blue-100 leading-relaxed">
-              {{ __('home.advantage_4_description') }}
+              <?php echo e(__('home.advantage_4_description')); ?>
+
             </p>
           </div>
         </div>
@@ -1019,11 +1094,13 @@ document.addEventListener("DOMContentLoaded", () => {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
       <div class="text-center max-w-3xl mx-auto mb-14">
         <span class="inline-flex items-center px-4 py-2 rounded-full bg-white/10 border border-white/10 text-sm font-semibold tracking-[0.2em] uppercase">
-          {{ __('home.hero_badge') }}
+          <?php echo e(__('home.hero_badge')); ?>
+
         </span>
-        <h2 class="text-4xl md:text-5xl font-bold mt-6 mb-5">{{ __('home.why_choose_title') }}</h2>
+        <h2 class="text-4xl md:text-5xl font-bold mt-6 mb-5"><?php echo e(__('home.why_choose_title')); ?></h2>
         <p class="text-xl text-blue-100 leading-relaxed">
-          {{ __('home.why_choose_description') }}
+          <?php echo e(__('home.why_choose_description')); ?>
+
         </p>
       </div>
 
@@ -1033,12 +1110,14 @@ document.addEventListener("DOMContentLoaded", () => {
             <i class="fas fa-users text-2xl"></i>
           </div>
           <div class="text-6xl font-bold mb-4" id="client-count">0</div>
-          <div class="text-2xl mb-4">{{ __('home.stats_clients') }}</div>
+          <div class="text-2xl mb-4"><?php echo e(__('home.stats_clients')); ?></div>
           <p class="text-blue-100 text-lg leading-relaxed">
-            {{ __('home.stats_clients_description') }}
+            <?php echo e(__('home.stats_clients_description')); ?>
+
           </p>
           <div class="mt-6 pt-6 border-t border-white/10 text-sm text-blue-100">
-            {{ __('home.advantage_1_title') }}
+            <?php echo e(__('home.advantage_1_title')); ?>
+
           </div>
         </div>
 
@@ -1047,12 +1126,14 @@ document.addEventListener("DOMContentLoaded", () => {
             <i class="fas fa-building-columns text-2xl"></i>
           </div>
           <div class="text-6xl font-bold mb-4" id="transaction-volume">0</div>
-          <div class="text-2xl mb-4">{{ __('home.stats_volume') }}</div>
+          <div class="text-2xl mb-4"><?php echo e(__('home.stats_volume')); ?></div>
           <p class="text-blue-100 text-lg leading-relaxed">
-            {{ __('home.stats_volume_description') }}
+            <?php echo e(__('home.stats_volume_description')); ?>
+
           </p>
           <div class="mt-6 pt-6 border-t border-white/10 text-sm text-blue-100">
-            {{ __('home.advantage_2_title') }}
+            <?php echo e(__('home.advantage_2_title')); ?>
+
           </div>
         </div>
 
@@ -1061,12 +1142,14 @@ document.addEventListener("DOMContentLoaded", () => {
             <i class="fas fa-star text-2xl"></i>
           </div>
           <div class="text-6xl font-bold mb-4" id="satisfaction-rate">0%</div>
-          <div class="text-2xl mb-4">{{ __('home.stats_satisfaction') }}</div>
+          <div class="text-2xl mb-4"><?php echo e(__('home.stats_satisfaction')); ?></div>
           <p class="text-blue-100 text-lg leading-relaxed">
-            {{ __('home.stats_satisfaction_description') }}
+            <?php echo e(__('home.stats_satisfaction_description')); ?>
+
           </p>
           <div class="mt-6 pt-6 border-t border-white/10 text-sm text-blue-100">
-            {{ __('home.advantage_3_title') }}
+            <?php echo e(__('home.advantage_3_title')); ?>
+
           </div>
         </div>
       </div>
@@ -1077,9 +1160,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="w-11 h-11 rounded-2xl bg-white/10 flex items-center justify-center text-blue-200">
               <i class="fas fa-shield-alt"></i>
             </div>
-            <h3 class="text-lg font-semibold">{{ __('home.feature_1_title') }}</h3>
+            <h3 class="text-lg font-semibold"><?php echo e(__('home.feature_1_title')); ?></h3>
           </div>
-          <p class="text-blue-100 leading-relaxed">{{ __('home.feature_1_description') }}</p>
+          <p class="text-blue-100 leading-relaxed"><?php echo e(__('home.feature_1_description')); ?></p>
         </div>
 
         <div class="rounded-3xl border border-white/10 bg-slate-900/20 p-6 backdrop-blur-sm">
@@ -1087,9 +1170,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="w-11 h-11 rounded-2xl bg-white/10 flex items-center justify-center text-orange-200">
               <i class="fas fa-chart-line"></i>
             </div>
-            <h3 class="text-lg font-semibold">{{ __('home.dashboard_preview_title') }}</h3>
+            <h3 class="text-lg font-semibold"><?php echo e(__('home.dashboard_preview_title')); ?></h3>
           </div>
-          <p class="text-blue-100 leading-relaxed">{{ __('home.dashboard_description') }}</p>
+          <p class="text-blue-100 leading-relaxed"><?php echo e(__('home.dashboard_description')); ?></p>
         </div>
 
         <div class="rounded-3xl border border-white/10 bg-slate-900/20 p-6 backdrop-blur-sm">
@@ -1097,9 +1180,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="w-11 h-11 rounded-2xl bg-white/10 flex items-center justify-center text-emerald-200">
               <i class="fas fa-award"></i>
             </div>
-            <h3 class="text-lg font-semibold">{{ __('home.cert_2_title') }}</h3>
+            <h3 class="text-lg font-semibold"><?php echo e(__('home.cert_2_title')); ?></h3>
           </div>
-          <p class="text-blue-100 leading-relaxed">{{ __('home.cert_2_description') }}</p>
+          <p class="text-blue-100 leading-relaxed"><?php echo e(__('home.cert_2_description')); ?></p>
         </div>
       </div>
     </div>
@@ -1110,9 +1193,10 @@ document.addEventListener("DOMContentLoaded", () => {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-4xl font-bold mb-6 text-premium">{{ __('home.partners_title') }}</h2>
+        <h2 class="text-4xl font-bold mb-6 text-premium"><?php echo e(__('home.partners_title')); ?></h2>
         <p class="text-xl text-gray-600 leading-relaxed">
-          {{ __('home.partners_description') }}
+          <?php echo e(__('home.partners_description')); ?>
+
         </p>
       </div>
 
@@ -1121,24 +1205,24 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center mb-5">
             <i class="fas fa-shield-alt"></i>
           </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('home.cert_1_title') }}</h3>
-          <p class="text-gray-600 leading-relaxed">{{ __('home.cert_1_description') }}</p>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3"><?php echo e(__('home.cert_1_title')); ?></h3>
+          <p class="text-gray-600 leading-relaxed"><?php echo e(__('home.cert_1_description')); ?></p>
         </div>
 
         <div class="rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
           <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center mb-5">
             <i class="fas fa-award"></i>
           </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('home.cert_2_title') }}</h3>
-          <p class="text-gray-600 leading-relaxed">{{ __('home.cert_2_description') }}</p>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3"><?php echo e(__('home.cert_2_title')); ?></h3>
+          <p class="text-gray-600 leading-relaxed"><?php echo e(__('home.cert_2_description')); ?></p>
         </div>
 
         <div class="rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
           <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-5">
             <i class="fas fa-lock"></i>
           </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('home.cert_3_title') }}</h3>
-          <p class="text-gray-600 leading-relaxed">{{ __('home.cert_3_description') }}</p>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3"><?php echo e(__('home.cert_3_title')); ?></h3>
+          <p class="text-gray-600 leading-relaxed"><?php echo e(__('home.cert_3_description')); ?></p>
         </div>
       </div>
 
@@ -1146,17 +1230,19 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
         <div class="max-w-2xl">
           <span class="inline-flex items-center px-4 py-2 rounded-full bg-white text-orange-600 text-xs font-semibold tracking-[0.25em] uppercase border border-orange-100 shadow-sm">
-            {{ __('home.partners_title') }}
+            <?php echo e(__('home.partners_title')); ?>
+
           </span>
-          <h3 class="text-3xl font-bold text-gray-900 mt-4 mb-3">{{ __('home.certifications_title') }}</h3>
+          <h3 class="text-3xl font-bold text-gray-900 mt-4 mb-3"><?php echo e(__('home.certifications_title')); ?></h3>
           <p class="text-gray-600 leading-relaxed">
-            {{ __('home.collabore_description') }}
+            <?php echo e(__('home.collabore_description')); ?>
+
           </p>
         </div>
 
         <div class="rounded-3xl bg-white border border-slate-200 p-5 shadow-sm max-w-sm">
-          <p class="text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">{{ __('home.partners_note') }}</p>
-          <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.certifications_description') }}</p>
+          <p class="text-xs uppercase tracking-[0.25em] text-slate-400 mb-3"><?php echo e(__('home.partners_note')); ?></p>
+          <p class="text-sm text-gray-600 leading-relaxed"><?php echo e(__('home.certifications_description')); ?></p>
         </div>
       </div>
 
@@ -1164,65 +1250,65 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="partners-marquee flex items-center space-x-16">
 
           <!-- Première série -->
-          <img src="{{ asset('images/MasterCard.png') }}" 
+          <img src="<?php echo e(asset('images/MasterCard.png')); ?>" 
               class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Mastercard">
 
-          <img src="{{ asset('images/Visa.webp') }}" 
+          <img src="<?php echo e(asset('images/Visa.webp')); ?>" 
               class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Visa">
 
-          <img src="{{ asset('images/PayPal.png') }}" 
+          <img src="<?php echo e(asset('images/PayPal.png')); ?>" 
               class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="PayPal">
 
-          <img src="{{ asset('images/Western_Union.png') }}" 
+          <img src="<?php echo e(asset('images/Western_Union.png')); ?>" 
               class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Western Union">
 
-          <img src="{{ asset('images/Stripe.png') }}" 
+          <img src="<?php echo e(asset('images/Stripe.png')); ?>" 
               class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Stripe">
 
-          <img src="{{ asset('images/Revolut.png') }}" 
+          <img src="<?php echo e(asset('images/Revolut.png')); ?>" 
               class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Revolut">
 
-          <img src="{{ asset('images/N26.png') }}" 
+          <img src="<?php echo e(asset('images/N26.png')); ?>" 
               class="h-14 grayscale hover:grayscale-0 transition duration-300" alt="N26">
 
           <!-- Copie pour effet infinie -->
-          <img src="{{ asset('images/MasterCard.png') }}" 
+          <img src="<?php echo e(asset('images/MasterCard.png')); ?>" 
               class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Mastercard">
 
-          <img src="{{ asset('images/Visa.webp') }}" 
+          <img src="<?php echo e(asset('images/Visa.webp')); ?>" 
               class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Visa">
 
-          <img src="{{ asset('images/PayPal.png') }}" 
+          <img src="<?php echo e(asset('images/PayPal.png')); ?>" 
               class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="PayPal">
 
-          <img src="{{ asset('images/Western_Union.png') }}" 
+          <img src="<?php echo e(asset('images/Western_Union.png')); ?>" 
               class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Western Union">
 
-          <img src="{{ asset('images/Stripe.png') }}" 
+          <img src="<?php echo e(asset('images/Stripe.png')); ?>" 
               class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Stripe">
 
-          <img src="{{ asset('images/Revolut.png') }}" 
+          <img src="<?php echo e(asset('images/Revolut.png')); ?>" 
               class="h-16 grayscale hover:grayscale-0 transition duration-300" alt="Revolut">
 
-          <img src="{{ asset('images/N26.png') }}" 
+          <img src="<?php echo e(asset('images/N26.png')); ?>" 
               class="h-14 grayscale hover:grayscale-0 transition duration-300" alt="N26">
         </div>
       </div>
 
       <div class="grid md:grid-cols-3 gap-4 mt-8">
         <div class="rounded-3xl bg-white border border-slate-200 p-5 shadow-sm">
-          <p class="text-sm font-semibold text-gray-900 mb-2">{{ __('home.advantage_2_title') }}</p>
-          <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.advantage_2_description') }}</p>
+          <p class="text-sm font-semibold text-gray-900 mb-2"><?php echo e(__('home.advantage_2_title')); ?></p>
+          <p class="text-sm text-gray-600 leading-relaxed"><?php echo e(__('home.advantage_2_description')); ?></p>
         </div>
 
         <div class="rounded-3xl bg-white border border-slate-200 p-5 shadow-sm">
-          <p class="text-sm font-semibold text-gray-900 mb-2">{{ __('home.advantage_3_title') }}</p>
-          <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.advantage_3_description') }}</p>
+          <p class="text-sm font-semibold text-gray-900 mb-2"><?php echo e(__('home.advantage_3_title')); ?></p>
+          <p class="text-sm text-gray-600 leading-relaxed"><?php echo e(__('home.advantage_3_description')); ?></p>
         </div>
 
         <div class="rounded-3xl bg-white border border-slate-200 p-5 shadow-sm">
-          <p class="text-sm font-semibold text-gray-900 mb-2">{{ __('home.advantage_4_title') }}</p>
-          <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.advantage_4_description') }}</p>
+          <p class="text-sm font-semibold text-gray-900 mb-2"><?php echo e(__('home.advantage_4_title')); ?></p>
+          <p class="text-sm text-gray-600 leading-relaxed"><?php echo e(__('home.advantage_4_description')); ?></p>
         </div>
       </div>
       </div>
@@ -1242,10 +1328,12 @@ document.addEventListener("DOMContentLoaded", () => {
     <!-- Title -->
     <div class="text-center max-w-3xl mx-auto mb-16 fade-up">
       <h2 class="text-4xl font-extrabold mb-6 text-gray-900">
-        {{ __('home.certifications_title') }}
+        <?php echo e(__('home.certifications_title')); ?>
+
       </h2>
       <p class="text-xl text-gray-600 leading-relaxed">
-        {{ __('home.certifications_description') }}
+        <?php echo e(__('home.certifications_description')); ?>
+
       </p>
     </div>
 
@@ -1255,19 +1343,21 @@ document.addEventListener("DOMContentLoaded", () => {
       <!-- CARD 1 -->
       <div class="cert-card bg-white rounded-3xl shadow-lg p-8 text-center transform transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl fade-up">
 
-        <img src="{{ asset('images/certification.png') }}"
+        <img src="<?php echo e(asset('images/certification.png')); ?>"
              class="w-full h-40 object-cover rounded-2xl mb-6">
 
         <div class="flex justify-center mb-6">
           <span class="inline-flex items-center px-5 py-3 rounded-full bg-blue-50 text-blue-600 text-sm font-semibold">
-            <i class="fas fa-shield-alt mr-2"></i>{{ __('home.cert_1_badge') }}
+            <i class="fas fa-shield-alt mr-2"></i><?php echo e(__('home.cert_1_badge')); ?>
+
           </span>
         </div>
 
-        <h3 class="font-bold text-2xl mb-4 text-gray-900">{{ __('home.cert_1_title') }}</h3>
+        <h3 class="font-bold text-2xl mb-4 text-gray-900"><?php echo e(__('home.cert_1_title')); ?></h3>
 
         <p class="text-gray-600 mb-6 leading-relaxed">
-          {{ __('home.cert_1_description') }}
+          <?php echo e(__('home.cert_1_description')); ?>
+
         </p>
 
         <div class="flex items-center justify-center space-x-1 text-yellow-400 text-xl">
@@ -1279,24 +1369,26 @@ document.addEventListener("DOMContentLoaded", () => {
       <!-- CARD 2 -->
       <div class="cert-card bg-white rounded-3xl shadow-lg p-8 text-center transform transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl fade-up">
 
-        <img src="{{ asset('images/services.jpg') }}"
+        <img src="<?php echo e(asset('images/services.jpg')); ?>"
              class="w-full h-40 object-cover rounded-2xl mb-6">
 
         <div class="flex justify-center mb-6">
           <span class="inline-flex items-center px-5 py-3 rounded-full bg-indigo-50 text-indigo-600 text-sm font-semibold">
-            <i class="fas fa-award mr-2"></i>{{ __('home.cert_2_badge') }}
+            <i class="fas fa-award mr-2"></i><?php echo e(__('home.cert_2_badge')); ?>
+
           </span>
         </div>
 
-        <h3 class="font-bold text-2xl mb-4 text-gray-900">{{ __('home.cert_2_title') }}</h3>
+        <h3 class="font-bold text-2xl mb-4 text-gray-900"><?php echo e(__('home.cert_2_title')); ?></h3>
 
         <p class="text-gray-600 mb-6 leading-relaxed">
-          {{ __('home.cert_2_description') }}
+          <?php echo e(__('home.cert_2_description')); ?>
+
         </p>
 
         <div class="flex items-center justify-center space-x-2">
           <i class="fas fa-medal text-yellow-500 text-2xl"></i>
-          <span class="text-sm text-gray-500 font-medium">{{ __('home.cert_2_distinction') }}</span>
+          <span class="text-sm text-gray-500 font-medium"><?php echo e(__('home.cert_2_distinction')); ?></span>
         </div>
 
       </div>
@@ -1309,19 +1401,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <div class="flex justify-center mb-6">
           <span class="inline-flex items-center px-5 py-3 rounded-full bg-purple-50 text-purple-700 text-sm font-semibold">
-            <i class="fas fa-user-shield mr-2"></i>{{ __('home.cert_3_badge') }}
+            <i class="fas fa-user-shield mr-2"></i><?php echo e(__('home.cert_3_badge')); ?>
+
           </span>
         </div>
 
-        <h3 class="font-bold text-2xl mb-4 text-gray-900">{{ __('home.cert_3_title') }}</h3>
+        <h3 class="font-bold text-2xl mb-4 text-gray-900"><?php echo e(__('home.cert_3_title')); ?></h3>
 
         <p class="text-gray-600 mb-6 leading-relaxed">
-          {{ __('home.cert_3_description') }}
+          <?php echo e(__('home.cert_3_description')); ?>
+
         </p>
 
         <div class="flex items-center justify-center space-x-2 text-gray-700">
           <i class="fas fa-lock"></i>
-          <span class="text-sm font-medium">{{ __('home.cert_3_compliance') }}</span>
+          <span class="text-sm font-medium"><?php echo e(__('home.cert_3_compliance')); ?></span>
         </div>
 
       </div>
@@ -1360,7 +1454,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   <!-- Témoignages (Slider) -->
-  @php
+  <?php
     $testimonials = [
       ['id' => 1, 'icon' => 'fas fa-user-tie', 'avatar_bg' => 'bg-blue-100', 'icon_color' => 'text-blue-600', 'badge_bg' => 'bg-blue-50', 'badge_text' => 'text-blue-700', 'border_color' => 'border-blue-100', 'photo' => 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=900&q=80', 'photo_class' => 'object-center'],
       ['id' => 2, 'icon' => 'fas fa-globe', 'avatar_bg' => 'bg-emerald-100', 'icon_color' => 'text-emerald-600', 'badge_bg' => 'bg-emerald-50', 'badge_text' => 'text-emerald-700', 'border_color' => 'border-emerald-100', 'photo' => 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=900&q=80', 'photo_class' => 'object-center'],
@@ -1368,7 +1462,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ['id' => 4, 'icon' => 'fas fa-briefcase', 'avatar_bg' => 'bg-orange-100', 'icon_color' => 'text-orange-600', 'badge_bg' => 'bg-orange-50', 'badge_text' => 'text-orange-700', 'border_color' => 'border-orange-100', 'photo' => 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=900&q=80', 'photo_class' => 'object-top'],
       ['id' => 5, 'icon' => 'fas fa-landmark', 'avatar_bg' => 'bg-slate-200', 'icon_color' => 'text-slate-700', 'badge_bg' => 'bg-slate-100', 'badge_text' => 'text-slate-700', 'border_color' => 'border-slate-200', 'photo' => 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=900&q=80', 'photo_class' => 'object-center'],
     ];
-  @endphp
+  ?>
 
   <section class="py-24 bg-gray-50 relative overflow-hidden">
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.12),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(249,115,22,0.14),_transparent_35%)]"></div>
@@ -1377,75 +1471,79 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="grid xl:grid-cols-[0.82fr,1.18fr] gap-10 items-stretch">
         <div class="rounded-[2rem] bg-slate-950 text-white p-8 lg:p-10 shadow-[0_32px_64px_rgba(15,23,42,0.28)] h-full">
           <span class="inline-flex items-center px-4 py-2 rounded-full bg-white/10 border border-white/10 text-xs font-semibold tracking-[0.25em] uppercase">
-            {{ __('home.testimonials_title') }}
+            <?php echo e(__('home.testimonials_title')); ?>
+
           </span>
-          <h2 class="text-4xl lg:text-5xl font-bold mt-6 mb-5 leading-tight">{{ __('home.testimonials_title') }}</h2>
+          <h2 class="text-4xl lg:text-5xl font-bold mt-6 mb-5 leading-tight"><?php echo e(__('home.testimonials_title')); ?></h2>
           <p class="text-lg text-slate-300 leading-relaxed">
-            {{ __('home.testimonials_description') }}
+            <?php echo e(__('home.testimonials_description')); ?>
+
           </p>
 
           <div class="grid grid-cols-3 gap-3 mt-8">
             <div class="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-              <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">{{ __('home.stats_satisfaction') }}</p>
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2"><?php echo e(__('home.stats_satisfaction')); ?></p>
               <p class="text-2xl font-bold text-white">98%</p>
             </div>
             <div class="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-              <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">{{ __('home.dashboard_transfers') }}</p>
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2"><?php echo e(__('home.dashboard_transfers')); ?></p>
               <p class="text-2xl font-bold text-white">24/7</p>
             </div>
             <div class="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-              <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">{{ __('home.advantage_3_title') }}</p>
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2"><?php echo e(__('home.advantage_3_title')); ?></p>
               <p class="text-2xl font-bold text-white">PDF</p>
             </div>
           </div>
 
           <div class="space-y-4 mt-8">
             <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
-              <p class="text-sm font-semibold text-white mb-2">{{ __('home.feature_3_title') }}</p>
-              <p class="text-sm text-slate-300 leading-relaxed">{{ __('home.feature_3_description') }}</p>
+              <p class="text-sm font-semibold text-white mb-2"><?php echo e(__('home.feature_3_title')); ?></p>
+              <p class="text-sm text-slate-300 leading-relaxed"><?php echo e(__('home.feature_3_description')); ?></p>
             </div>
             <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
-              <p class="text-sm font-semibold text-white mb-2">{{ __('home.advantage_4_title') }}</p>
-              <p class="text-sm text-slate-300 leading-relaxed">{{ __('home.advantage_4_description') }}</p>
+              <p class="text-sm font-semibold text-white mb-2"><?php echo e(__('home.advantage_4_title')); ?></p>
+              <p class="text-sm text-slate-300 leading-relaxed"><?php echo e(__('home.advantage_4_description')); ?></p>
             </div>
           </div>
         </div>
 
         <div id="testimonial-slider" class="relative h-full flex flex-col">
-          @foreach ($testimonials as $testimonial)
-            <div class="testimonial-slide{{ $loop->first ? ' active' : '' }} premium-card rounded-[2rem] p-8 lg:p-10 border border-white/40 shadow-[0_24px_48px_rgba(15,23,42,0.12)] h-full min-h-[480px]">
+          <?php $__currentLoopData = $testimonials; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $testimonial): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <div class="testimonial-slide<?php echo e($loop->first ? ' active' : ''); ?> premium-card rounded-[2rem] p-8 lg:p-10 border border-white/40 shadow-[0_24px_48px_rgba(15,23,42,0.12)] h-full min-h-[480px]">
               <div class="grid xl:grid-cols-[270px,1fr] gap-8 h-full items-stretch">
                 <div class="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-6 flex flex-col justify-between">
                   <div>
                     <div class="relative overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-100 mb-6 shadow-sm">
                       <img
-                        src="{{ $testimonial['photo'] }}"
-                        alt="{{ __('home.testimonial_' . $testimonial['id'] . '_name') }}"
-                        class="aspect-[4/5] w-full object-cover {{ $testimonial['photo_class'] }}"
+                        src="<?php echo e($testimonial['photo']); ?>"
+                        alt="<?php echo e(__('home.testimonial_' . $testimonial['id'] . '_name')); ?>"
+                        class="aspect-[4/5] w-full object-cover <?php echo e($testimonial['photo_class']); ?>"
                         loading="lazy"
                       >
                       <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent"></div>
                       <div class="absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-white/90 shadow-lg">
-                        <i class="{{ $testimonial['icon'] }} {{ $testimonial['icon_color'] }} text-lg"></i>
+                        <i class="<?php echo e($testimonial['icon']); ?> <?php echo e($testimonial['icon_color']); ?> text-lg"></i>
                       </div>
                     </div>
 
                     <div class="flex items-center gap-4 mb-6">
-                      <div class="w-14 h-14 rounded-full {{ $testimonial['avatar_bg'] }} flex items-center justify-center shadow-sm shrink-0">
-                        <i class="{{ $testimonial['icon'] }} {{ $testimonial['icon_color'] }} text-xl"></i>
+                      <div class="w-14 h-14 rounded-full <?php echo e($testimonial['avatar_bg']); ?> flex items-center justify-center shadow-sm shrink-0">
+                        <i class="<?php echo e($testimonial['icon']); ?> <?php echo e($testimonial['icon_color']); ?> text-xl"></i>
                       </div>
                       <div>
-                        <p class="font-bold text-gray-900 text-lg">{{ __('home.testimonial_' . $testimonial['id'] . '_name') }}</p>
-                        <p class="text-sm text-gray-500 leading-relaxed">{{ __('home.testimonial_' . $testimonial['id'] . '_role') }}</p>
+                        <p class="font-bold text-gray-900 text-lg"><?php echo e(__('home.testimonial_' . $testimonial['id'] . '_name')); ?></p>
+                        <p class="text-sm text-gray-500 leading-relaxed"><?php echo e(__('home.testimonial_' . $testimonial['id'] . '_role')); ?></p>
                       </div>
                     </div>
 
                     <div class="flex flex-wrap gap-3">
-                      <span class="inline-flex items-center px-4 py-2 rounded-full border {{ $testimonial['border_color'] }} {{ $testimonial['badge_bg'] }} {{ $testimonial['badge_text'] }} text-sm font-semibold">
-                        {{ __('home.testimonial_' . $testimonial['id'] . '_rating') }}
+                      <span class="inline-flex items-center px-4 py-2 rounded-full border <?php echo e($testimonial['border_color']); ?> <?php echo e($testimonial['badge_bg']); ?> <?php echo e($testimonial['badge_text']); ?> text-sm font-semibold">
+                        <?php echo e(__('home.testimonial_' . $testimonial['id'] . '_rating')); ?>
+
                       </span>
                       <span class="inline-flex items-center px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-sm font-medium">
-                        {{ __('home.feature_3_item_3') }}
+                        <?php echo e(__('home.feature_3_item_3')); ?>
+
                       </span>
                     </div>
                   </div>
@@ -1458,8 +1556,8 @@ document.addEventListener("DOMContentLoaded", () => {
                       <i class="fas fa-star"></i>
                       <i class="fas fa-star"></i>
                     </div>
-                    <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">{{ __('home.dashboard_transfers_in_progress') }}</p>
-                    <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.hero_feature_3') }}</p>
+                    <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2"><?php echo e(__('home.dashboard_transfers_in_progress')); ?></p>
+                    <p class="text-sm text-gray-600 leading-relaxed"><?php echo e(__('home.hero_feature_3')); ?></p>
                   </div>
                 </div>
 
@@ -1471,39 +1569,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     <div class="flex-1">
                       <p class="text-gray-700 text-xl xl:text-[1.35rem] leading-relaxed">
-                        {{ __('home.testimonial_' . $testimonial['id'] . '_text') }}
+                        <?php echo e(__('home.testimonial_' . $testimonial['id'] . '_text')); ?>
+
                       </p>
                     </div>
                   </div>
 
                   <div class="grid sm:grid-cols-2 gap-4 mt-8 xl:mt-10">
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                      <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">{{ __('home.hero_feature_2') }}</p>
-                      <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.dashboard_step') }}</p>
+                      <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2"><?php echo e(__('home.hero_feature_2')); ?></p>
+                      <p class="text-sm text-gray-600 leading-relaxed"><?php echo e(__('home.dashboard_step')); ?></p>
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                      <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">{{ __('home.hero_feature_4') }}</p>
-                      <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.advantage_3_description') }}</p>
+                      <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2"><?php echo e(__('home.hero_feature_4')); ?></p>
+                      <p class="text-sm text-gray-600 leading-relaxed"><?php echo e(__('home.advantage_3_description')); ?></p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          @endforeach
+          <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
           <div class="flex justify-center xl:justify-start items-center flex-wrap gap-4 mt-8 xl:mt-10">
-            @foreach ($testimonials as $testimonial)
-              <button type="button" class="testimonial-dot{{ $loop->first ? ' active' : '' }} bg-transparent p-0" data-index="{{ $loop->index }}" aria-label="Testimonial {{ $loop->iteration }}"></button>
-            @endforeach
+            <?php $__currentLoopData = $testimonials; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $testimonial): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+              <button type="button" class="testimonial-dot<?php echo e($loop->first ? ' active' : ''); ?> bg-transparent p-0" data-index="<?php echo e($loop->index); ?>" aria-label="Testimonial <?php echo e($loop->iteration); ?>"></button>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  @php
+  <?php
     $faqItems = [1, 2, 3, 4, 5, 6];
-  @endphp
+  ?>
 
   <!-- FAQ -->
   <section class="py-24 bg-white relative overflow-hidden">
@@ -1513,11 +1612,13 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="grid xl:grid-cols-[0.88fr,1.12fr] gap-8 items-start">
         <div class="rounded-[2rem] border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-orange-50 p-8 lg:p-10 shadow-sm">
           <span class="inline-flex items-center px-4 py-2 rounded-full bg-white text-orange-600 text-xs font-semibold tracking-[0.25em] uppercase border border-orange-100 shadow-sm">
-            {{ __('home.nav_faq') }}
+            <?php echo e(__('home.nav_faq')); ?>
+
           </span>
-          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mt-6 mb-5 leading-tight">{{ __('home.faq_title') }}</h2>
+          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mt-6 mb-5 leading-tight"><?php echo e(__('home.faq_title')); ?></h2>
           <p class="text-lg text-gray-600 leading-relaxed">
-            {{ __('home.faq_description') }}
+            <?php echo e(__('home.faq_description')); ?>
+
           </p>
 
           <div class="space-y-4 mt-8">
@@ -1526,9 +1627,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="w-11 h-11 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center">
                   <i class="fas fa-shield-alt"></i>
                 </div>
-                <p class="font-semibold text-gray-900">{{ __('home.feature_1_title') }}</p>
+                <p class="font-semibold text-gray-900"><?php echo e(__('home.feature_1_title')); ?></p>
               </div>
-              <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.hero_security_note') }}</p>
+              <p class="text-sm text-gray-600 leading-relaxed"><?php echo e(__('home.hero_security_note')); ?></p>
             </div>
 
             <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -1536,24 +1637,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="w-11 h-11 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center">
                   <i class="fas fa-headset"></i>
                 </div>
-                <p class="font-semibold text-gray-900">{{ __('home.advantage_4_title') }}</p>
+                <p class="font-semibold text-gray-900"><?php echo e(__('home.advantage_4_title')); ?></p>
               </div>
-              <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.advantage_4_description') }}</p>
+              <p class="text-sm text-gray-600 leading-relaxed"><?php echo e(__('home.advantage_4_description')); ?></p>
             </div>
           </div>
         </div>
 
         <div class="space-y-5" id="faq-list">
-          @foreach ($faqItems as $faqIndex)
+          <?php $__currentLoopData = $faqItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $faqIndex): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <div class="faq-item rounded-[1.75rem] border border-slate-200 bg-white shadow-sm">
               <button type="button" class="w-full flex justify-between items-start gap-4 px-6 sm:px-8 py-6 text-left">
                 <div class="flex items-start gap-4 pr-4">
                   <span class="w-11 h-11 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center font-semibold shrink-0">
-                    {{ str_pad((string) $faqIndex, 2, '0', STR_PAD_LEFT) }}
+                    <?php echo e(str_pad((string) $faqIndex, 2, '0', STR_PAD_LEFT)); ?>
+
                   </span>
                   <div>
-                    <p class="font-bold text-lg sm:text-xl text-gray-900 leading-snug">{{ __('home.faq_' . $faqIndex . '_question') }}</p>
-                    <p class="text-gray-500 mt-2">{{ __('home.faq_' . $faqIndex . '_subtitle') }}</p>
+                    <p class="font-bold text-lg sm:text-xl text-gray-900 leading-snug"><?php echo e(__('home.faq_' . $faqIndex . '_question')); ?></p>
+                    <p class="text-gray-500 mt-2"><?php echo e(__('home.faq_' . $faqIndex . '_subtitle')); ?></p>
                   </div>
                 </div>
                 <span class="w-11 h-11 rounded-2xl bg-orange-50 text-orange-500 flex items-center justify-center shrink-0">
@@ -1563,12 +1665,13 @@ document.addEventListener("DOMContentLoaded", () => {
               <div class="faq-answer px-6 sm:px-8 pb-8">
                 <div class="ml-[3.35rem] border-l border-orange-100 pl-5">
                   <p class="text-gray-600 leading-relaxed text-base sm:text-lg">
-                    {{ __('home.faq_' . $faqIndex . '_answer') }}
+                    <?php echo e(__('home.faq_' . $faqIndex . '_answer')); ?>
+
                   </p>
                 </div>
               </div>
             </div>
-          @endforeach
+          <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
       </div>
     </div>
@@ -1582,23 +1685,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
   <div class="max-w-5xl mx-auto px-6 text-center relative z-10 cta-animate">
     <h2 class="text-5xl font-extrabold mb-8 text-gray-900 tracking-tight animate-title">
-      {{ __('home.cta_title') }}
+      <?php echo e(__('home.cta_title')); ?>
+
     </h2>
 
     <p class="text-2xl text-gray-600 mb-10 leading-relaxed animate-text">
-      {{ __('home.cta_description') }}
+      <?php echo e(__('home.cta_description')); ?>
+
     </p>
 
     <!-- BUTTON -->
-    <a href="{{ localized_route('register', ['locale' => app()->getLocale()]) }}" 
+    <a href="<?php echo e(localized_route('register', ['locale' => app()->getLocale()])); ?>" 
        class="cta-button px-14 py-5 rounded-xl text-2xl font-bold inline-block relative overflow-hidden">
-       <span>{{ __('home.cta_button') }}</span>
+       <span><?php echo e(__('home.cta_button')); ?></span>
     </a>
 
     <!-- SECURITY TEXT -->
     <p class="text-gray-500 mt-6 flex items-center justify-center animate-text">
       <i class="fas fa-lock mr-2"></i>
-      {{ __('home.cta_security') }}
+      <?php echo e(__('home.cta_security')); ?>
+
     </p>
   </div>
 </section>
@@ -1700,12 +1806,13 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="grid md:grid-cols-4 gap-10 mb-12">
         <div>
           <div class="flex items-center mb-6">
-            <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center justify-center bg-white/95 p-2 rounded-xl shadow-md ring-1 ring-white/60">
-              <img src='{{ asset("images/Logosite.png") }}' class="w-11 h-11 object-contain" alt="logo Valtrix Bank" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
+            <a href="<?php echo e(localized_route('home', ['locale' => app()->getLocale()])); ?>" class="inline-flex items-center justify-center bg-white/95 p-2 rounded-xl shadow-md ring-1 ring-white/60">
+              <img src='<?php echo e(asset("images/Logosite.png")); ?>' class="w-11 h-11 object-contain" alt="logo Valtrix Bank" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
             </a>
           </div>
           <p class="text-gray-400 mb-4">
-            {{ __('home.footer_description') }}
+            <?php echo e(__('home.footer_description')); ?>
+
           </p>
           <div class="flex space-x-4">
             <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-linkedin text-xl"></i></a>
@@ -1715,32 +1822,32 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         
         <div>
-          <h3 class="text-white font-bold text-lg mb-6">{{ __('home.footer_services') }}</h3>
+          <h3 class="text-white font-bold text-lg mb-6"><?php echo e(__('home.footer_services')); ?></h3>
           <ul class="space-y-3">
-            <li><a href="{{ localized_route('services.comptes-professionnels', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.services_business_accounts') }}</a></li>
-            <li><a href="{{ localized_route('services.virements-internationaux', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.services_international_transfers') }}</a></li>
-            <li><a href="{{ localized_route('services.gestion-tresorerie', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.services_treasury_management') }}</a></li>
-            <li><a href="{{ localized_route('services.cartes-paiement', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.services_payment_cards') }}</a></li>
+            <li><a href="<?php echo e(localized_route('services.comptes-professionnels', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition"><?php echo e(__('home.services_business_accounts')); ?></a></li>
+            <li><a href="<?php echo e(localized_route('services.virements-internationaux', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition"><?php echo e(__('home.services_international_transfers')); ?></a></li>
+            <li><a href="<?php echo e(localized_route('services.gestion-tresorerie', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition"><?php echo e(__('home.services_treasury_management')); ?></a></li>
+            <li><a href="<?php echo e(localized_route('services.cartes-paiement', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition"><?php echo e(__('home.services_payment_cards')); ?></a></li>
           </ul>
         </div>
 
         <div>
-          <h3 class="text-white font-bold text-lg mb-6">{{ __('home.footer_about') }}</h3>
+          <h3 class="text-white font-bold text-lg mb-6"><?php echo e(__('home.footer_about')); ?></h3>
           <ul class="space-y-3">
-            <li><a href="{{ localized_route('about.notre-histoire', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.footer_our_story') }}</a></li>
-            <li><a href="{{ localized_route('about.carrieres', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.footer_careers') }}</a></li>
-            <li><a href="{{ localized_route('about.presse', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.footer_press') }}</a></li>
-            <li><a href="{{ localized_route('about.blog', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.footer_blog') }}</a></li>
+            <li><a href="<?php echo e(localized_route('about.notre-histoire', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition"><?php echo e(__('home.footer_our_story')); ?></a></li>
+            <li><a href="<?php echo e(localized_route('about.carrieres', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition"><?php echo e(__('home.footer_careers')); ?></a></li>
+            <li><a href="<?php echo e(localized_route('about.presse', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition"><?php echo e(__('home.footer_press')); ?></a></li>
+            <li><a href="<?php echo e(localized_route('about.blog', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition"><?php echo e(__('home.footer_blog')); ?></a></li>
           </ul>
         </div>
 
         <div>
-          <h3 class="text-white font-bold text-lg mb-6">{{ __('home.footer_support') }}</h3>
+          <h3 class="text-white font-bold text-lg mb-6"><?php echo e(__('home.footer_support')); ?></h3>
           <ul class="space-y-3">
-            <li><a href="{{ localized_route('support.centre-aide', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.footer_help_center') }}</a></li>
-            <li><a href="{{ localized_route('support.nous-contacter', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.footer_contact_us') }}</a></li>
-            <li><a href="{{ localized_route('support.securite', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.footer_security') }}</a></li>
-            <li><a href="{{ localized_route('support.mentions-legales', ['locale' => app()->getLocale()]) }}" class="text-gray-400 hover:text-white transition">{{ __('home.footer_legal') }}</a></li>
+            <li><a href="<?php echo e(localized_route('support.centre-aide', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition"><?php echo e(__('home.footer_help_center')); ?></a></li>
+            <li><a href="<?php echo e(localized_route('support.nous-contacter', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition"><?php echo e(__('home.footer_contact_us')); ?></a></li>
+            <li><a href="<?php echo e(localized_route('support.securite', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition"><?php echo e(__('home.footer_security')); ?></a></li>
+            <li><a href="<?php echo e(localized_route('support.mentions-legales', ['locale' => app()->getLocale()])); ?>" class="text-gray-400 hover:text-white transition"><?php echo e(__('home.footer_legal')); ?></a></li>
           </ul>
         </div>
       </div>
@@ -1748,9 +1855,10 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="section-divider my-8"></div>
       
       <div class="text-center">
-        <p>&copy; 2025 <span class="text-blue-400 font-semibold">Valtrix Bank</span>. {{ __('home.footer_copyright') }}</p>
+        <p>&copy; 2025 <span class="text-blue-400 font-semibold">Valtrix Bank</span>. <?php echo e(__('home.footer_copyright')); ?></p>
         <p class="text-sm text-gray-500 mt-2">
-          {{ __('home.footer_disclaimer') }}
+          <?php echo e(__('home.footer_disclaimer')); ?>
+
         </p>
       </div>
     </div>
@@ -1869,7 +1977,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
 
-        // Toggle submenu for {{ __('home.footer_services') }} in mobile menu
+        // Toggle submenu for <?php echo e(__('home.footer_services')); ?> in mobile menu
         const servicesButton = mobileMenu.querySelector('.mobile-menu-item.relative.group > button');
         const servicesSubmenu = mobileMenu.querySelector('.mobile-submenu');
         const servicesChevron = servicesButton ? servicesButton.querySelector('svg') : null;
@@ -1958,3 +2066,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+<?php /**PATH C:\xampp\htdocs\cerveau\resources\views/home.blade.php ENDPATH**/ ?>

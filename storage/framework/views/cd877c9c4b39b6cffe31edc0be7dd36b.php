@@ -1,4 +1,4 @@
-<?php if (! $__env->hasRenderedOnce('64e25662-6b9d-4a44-8624-5cd64fb30be6')): $__env->markAsRenderedOnce('64e25662-6b9d-4a44-8624-5cd64fb30be6'); ?>
+<?php if (! $__env->hasRenderedOnce('9a4bc4bd-3a34-4102-b847-293c28467cf0')): $__env->markAsRenderedOnce('9a4bc4bd-3a34-4102-b847-293c28467cf0'); ?>
     <style>
         .chat-premium-shell {
             position: fixed !important;
@@ -81,7 +81,10 @@
             box-shadow:
                 0 40px 90px rgba(15, 23, 42, 0.26),
                 0 0 0 1px rgba(148, 163, 184, 0.12);
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
+            overscroll-behavior-y: contain;
+            -webkit-overflow-scrolling: touch;
             transform: translateY(0.65rem) scale(0.985);
             opacity: 0;
             pointer-events: none;
@@ -102,7 +105,9 @@
         }
 
         .chat-premium-header {
-            position: relative;
+            position: sticky;
+            top: 0;
+            z-index: 2;
             padding: 1.05rem 1.15rem 0.95rem;
             color: #fff;
             background:
@@ -330,6 +335,9 @@
         }
 
         .chat-premium-composer {
+            position: sticky;
+            bottom: 0;
+            z-index: 2;
             padding: 0.95rem;
             border-top: 1px solid rgba(226, 232, 240, 0.9);
             background: rgba(255, 255, 255, 0.96);

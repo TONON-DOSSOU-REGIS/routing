@@ -1,9 +1,6 @@
 @extends('layouts.app')
 
 @push('head')
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
@@ -206,11 +203,11 @@
     @php
         $authUser = auth()->user();
         $dashboardTheme = trim($__env->yieldContent('dashboard_theme')) ?: 'client';
-        $dashboardTitle = trim($__env->yieldContent('dashboard_page_title')) ?: 'Dashboard';
-        $dashboardSubtitle = trim($__env->yieldContent('dashboard_page_subtitle')) ?: '';
-        $dashboardSearchPlaceholder = trim($__env->yieldContent('dashboard_search_placeholder')) ?: 'Rechercher une action, un client ou un mouvement...';
-        $dashboardSectionLabel = trim($__env->yieldContent('dashboard_section_label')) ?: ($dashboardTheme === 'admin' ? 'Pilotage central' : 'Espace premium');
-        $dashboardFooterBrand = trim($__env->yieldContent('dashboard_footer_brand')) ?: ($dashboardTheme === 'admin' ? 'Valtrix Admin' : 'Valtrix Bank');
+        $dashboardTitle = html_entity_decode(trim($__env->yieldContent('dashboard_page_title')) ?: 'Dashboard', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $dashboardSubtitle = html_entity_decode(trim($__env->yieldContent('dashboard_page_subtitle')) ?: '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $dashboardSearchPlaceholder = html_entity_decode(trim($__env->yieldContent('dashboard_search_placeholder')) ?: 'Rechercher une action, un client ou un mouvement...', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $dashboardSectionLabel = html_entity_decode(trim($__env->yieldContent('dashboard_section_label')) ?: ($dashboardTheme === 'admin' ? 'Pilotage central' : 'Espace premium'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $dashboardFooterBrand = html_entity_decode(trim($__env->yieldContent('dashboard_footer_brand')) ?: ($dashboardTheme === 'admin' ? 'Valtrix Admin' : 'Valtrix Bank'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $displayName = $authUser?->name ?? 'Utilisateur';
         $displayEmail = $authUser?->email ?? '';
         $profilePhotoUrl = $authUser?->profile_photo_url;

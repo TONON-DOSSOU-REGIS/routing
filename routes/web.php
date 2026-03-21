@@ -116,15 +116,17 @@ Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(fu
     Route::post('/support/nous-contacter', [ContactController::class, 'store'])->name('support.nous-contacter.store');
     Route::get('/support/contact-thank-you', [ContactController::class, 'thankYou'])->name('support.nous-contacter.thankyou');
 
-    // Authenticated routes (client space only)
-    Route::middleware(['auth', 'twofactor', 'notAdmin'])->group(function () {
+    Route::middleware(['auth'])->group(function () {
         // Two-Factor Authentication
         Route::get('/two-factor/setup', [TwoFactorController::class, 'setup'])->name('twofactor.setup');
         Route::post('/two-factor/enable', [TwoFactorController::class, 'enable'])->name('twofactor.enable');
         Route::post('/two-factor/disable', [TwoFactorController::class, 'disable'])->name('twofactor.disable');
         Route::get('/two-factor/challenge', [TwoFactorController::class, 'challenge'])->name('twofactor.challenge');
         Route::post('/two-factor/verify', [TwoFactorController::class, 'verify'])->name('twofactor.verify');
-        
+    });
+
+    // Authenticated routes (client space only)
+    Route::middleware(['auth', 'twofactor', 'notAdmin'])->group(function () {
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -159,7 +161,7 @@ Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(fu
     });
 
     // Admin routes
-    Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['auth', 'admin', 'twofactor'])->prefix('admin')->name('admin.')->group(function () {
         // Dashboard
         Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
         Route::get('/dashboard-with-chat', [AdminController::class, 'dashboardWithChat'])->name('dashboard-with-chat');

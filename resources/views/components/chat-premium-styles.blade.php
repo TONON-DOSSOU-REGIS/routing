@@ -81,7 +81,10 @@
             box-shadow:
                 0 40px 90px rgba(15, 23, 42, 0.26),
                 0 0 0 1px rgba(148, 163, 184, 0.12);
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
+            overscroll-behavior-y: contain;
+            -webkit-overflow-scrolling: touch;
             transform: translateY(0.65rem) scale(0.985);
             opacity: 0;
             pointer-events: none;
@@ -102,7 +105,9 @@
         }
 
         .chat-premium-header {
-            position: relative;
+            position: sticky;
+            top: 0;
+            z-index: 2;
             padding: 1.05rem 1.15rem 0.95rem;
             color: #fff;
             background:
@@ -330,6 +335,9 @@
         }
 
         .chat-premium-composer {
+            position: sticky;
+            bottom: 0;
+            z-index: 2;
             padding: 0.95rem;
             border-top: 1px solid rgba(226, 232, 240, 0.9);
             background: rgba(255, 255, 255, 0.96);

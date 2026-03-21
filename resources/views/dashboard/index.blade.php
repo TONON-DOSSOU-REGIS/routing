@@ -105,6 +105,10 @@
     </a>
 @endsection
 
+@push('premium_dashboard_head')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+@endpush
+
 @section('dashboard_content')
     @php
         $balanceFormatted = \App\Helpers\CurrencyHelper::format($user->balance, $user->default_currency ?? 'EUR');

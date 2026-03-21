@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\NotificationService;
 use App\Support\Totp;
+use BaconQrCode\Renderer\Color\Rgb;
+use BaconQrCode\Renderer\Image\SvgImageBackEnd;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\RendererStyle\Fill;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -45,6 +52,7 @@ class TwoFactorController extends Controller
     public function setup(Request $request)
     {
         $user = $request->user();
+        $isAdminTwoFactorMandatory = (bool) ($user?->isAdmin() ?? false);
 
         if (!$user->two_factor_secret) {
             $user->two_factor_secret = Totp::generateSecret();
@@ -56,11 +64,15 @@ class TwoFactorController extends Controller
 
         $issuer = config('app.name', 'Valtrix Bank');
         $otpauth = Totp::getOtpAuthUrl($issuer, $user->email, $user->two_factor_secret);
+        $qrSvg = $this->generateTwoFactorQrSvg($otpauth);
 
         return view('auth.two-factor-setup', [
             'user' => $user,
             'otpauth' => $otpauth,
+            'qrSvg' => $qrSvg,
             'backupCodes' => session()->get('two_factor_backup_codes'),
+            'isAdminTwoFactorMandatory' => $isAdminTwoFactorMandatory,
+            'dashboardUrl' => $this->getRoleDashboardPath($user),
         ]);
     }
 
@@ -94,11 +106,17 @@ class TwoFactorController extends Controller
 
     public function disable(Request $request)
     {
+        $user = $request->user();
+        if ($user && $user->isAdmin()) {
+            return redirect()->back()->withErrors([
+                'password' => __('auth.2fa_admin_disable_forbidden'),
+            ]);
+        }
+
         $request->validate([
             'password' => ['required'],
         ]);
 
-        $user = $request->user();
         if (!Hash::check($request->input('password'), $user->password)) {
             return redirect()->back()->withErrors(['password' => __('auth.2fa_password_invalid')]);
         }
@@ -154,6 +172,13 @@ class TwoFactorController extends Controller
         }
 
         $request->session()->put('2fa_passed', true);
+        if ($request->session()->pull('2fa_login_notification_pending', false)) {
+            try {
+                NotificationService::notifyAdminUserLogin($user, $request->ip(), (string) $request->userAgent());
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
         $this->clearInvalidIntendedUrl($request);
 
         $defaultRedirect = $this->getRoleDashboardPath($user);
@@ -214,5 +239,30 @@ class TwoFactorController extends Controller
 
         return $matched;
     }
-}
 
+    private function generateTwoFactorQrSvg(string $otpauth): ?string
+    {
+        try {
+            $renderer = new ImageRenderer(
+                new RendererStyle(
+                    280,
+                    2,
+                    null,
+                    null,
+                    Fill::uniformColor(new Rgb(255, 255, 255), new Rgb(15, 23, 42))
+                ),
+                new SvgImageBackEnd()
+            );
+
+            $writer = new Writer($renderer);
+            $svg = $writer->writeString($otpauth);
+            $svg = preg_replace('/<\?xml.*?\?>\s*/', '', $svg) ?: $svg;
+
+            return str_replace('<svg ', '<svg class="twofactor-qr-svg" ', $svg);
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return null;
+        }
+    }
+}

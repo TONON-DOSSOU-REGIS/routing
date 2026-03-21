@@ -1,4 +1,4 @@
-@extends('layouts.premium-dashboard')
+﻿@extends('layouts.premium-dashboard')
 
 @section('title', 'Administration - Valtrix Bank')
 @section('dashboard_theme', 'admin')
@@ -114,6 +114,10 @@
     </a>
 @endsection
 
+@push('premium_dashboard_head')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+@endpush
+
 @section('dashboard_content')
     @php
         $monthlyTransfersFormatted = \App\Helpers\CurrencyHelper::format($monthlyTransfers, 'EUR');
@@ -214,7 +218,7 @@
                     @empty
                         <div class="rounded-[22px] border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center">
                             <p class="text-sm font-semibold text-slate-900">Aucune validation urgente</p>
-                            <p class="mt-2 text-sm text-slate-500">La file d’attente est vide pour le moment.</p>
+                            <p class="mt-2 text-sm text-slate-500">La file d'attente est vide pour le moment.</p>
                         </div>
                     @endforelse
                 </div>
@@ -242,7 +246,7 @@
                 </span>
             </div>
             <p class="premium-kpi-number mt-4 text-3xl font-semibold text-slate-950">{{ $totalTransactions }}</p>
-            <p class="mt-2 text-sm text-slate-500">Activite consolidee sur l’ensemble du systeme.</p>
+            <p class="mt-2 text-sm text-slate-500">Activite consolidee sur l'ensemble du systeme.</p>
         </article>
 
         <article class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
@@ -367,7 +371,7 @@
                                 {{ ucfirst(str_replace('_', ' ', $transaction->type)) }} #{{ $transaction->id }}
                             </p>
                             <p class="mt-1 truncate text-sm text-slate-500">
-                                {{ $transaction->user?->name ?? 'Client inconnu' }} • {{ $transaction->created_at->format('d/m/Y H:i') }}
+                                {{ $transaction->user?->name ?? 'Client inconnu' }} - {{ $transaction->created_at->format('d/m/Y H:i') }}
                             </p>
                         </div>
                         <div class="flex flex-wrap items-center gap-3 sm:justify-end">
@@ -382,7 +386,7 @@
                 @empty
                     <div class="rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-5 py-10 text-center">
                         <p class="text-lg font-semibold text-slate-900">Aucune transaction recente</p>
-                        <p class="mt-2 text-sm text-slate-500">Le flux operationnel s’affichera ici des qu’un mouvement sera enregistre.</p>
+                        <p class="mt-2 text-sm text-slate-500">Le flux operationnel s'affichera ici des qu'un mouvement sera enregistre.</p>
                     </div>
                 @endforelse
             </div>
@@ -551,3 +555,5 @@
         });
     </script>
 @endpush
+
+
