@@ -7,10 +7,27 @@ use App\Services\NotificationService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Symfony\Component\HttpFoundation\Response;
 
 class LoginController extends Controller
 {
     use AuthenticatesUsers;
+
+    /**
+     * Display the login form with no-cache headers and a fresh CSRF token.
+     */
+    public function showLoginForm(Request $request): Response
+    {
+        if ($request->hasSession()) {
+            $request->session()->regenerateToken();
+        }
+
+        return response()
+            ->view('auth.login')
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', 'Sat, 01 Jan 2000 00:00:00 GMT');
+    }
 
     /**
      * Remove polluted intended URLs (AJAX/API endpoints) to avoid bad post-login redirects.

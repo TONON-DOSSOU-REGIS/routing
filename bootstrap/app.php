@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Session\TokenMismatchException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -36,5 +38,63 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $handleExpiredSession = function ($request) {
+            $supportedLocales = ['en', 'fr', 'de', 'nl', 'es', 'pl', 'it'];
+            $routeLocale = (string) $request->route('locale', '');
+            $sessionLocale = $request->hasSession()
+                ? (string) $request->session()->get('locale', '')
+                : '';
+
+            $locale = in_array($routeLocale, $supportedLocales, true)
+                ? $routeLocale
+                : (in_array($sessionLocale, $supportedLocales, true) ? $sessionLocale : config('app.locale', 'fr'));
+
+            if ($request->hasSession()) {
+                $request->session()->regenerateToken();
+            }
+
+            $input = $request->except([
+                '_token',
+                'password',
+                'password_confirmation',
+            ]);
+
+            if ($request->is('login') || $request->is('*/login')) {
+                return redirect('/' . $locale . '/login')
+                    ->withInput($input)
+                    ->withErrors([
+                        'email' => __('chat.security_session_expired'),
+                    ]);
+            }
+
+            return redirect()->back()
+                ->withInput($input)
+                ->withErrors([
+                    'session' => __('chat.security_session_expired'),
+                ]);
+        };
+
+        $exceptions->render(function (TokenMismatchException $exception, $request) use ($handleExpiredSession) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => __('chat.security_session_expired'),
+                ], 419);
+            }
+
+            return $handleExpiredSession($request);
+        });
+
+        $exceptions->render(function (HttpExceptionInterface $exception, $request) use ($handleExpiredSession) {
+            if ((int) $exception->getStatusCode() !== 419) {
+                return null;
+            }
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => __('chat.security_session_expired'),
+                ], 419);
+            }
+
+            return $handleExpiredSession($request);
+        });
     })->create();

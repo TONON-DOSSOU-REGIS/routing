@@ -197,12 +197,11 @@
         }
 
         @keyframes flashErrorNudge {
-            0% { transform: translateX(0); }
-            20% { transform: translateX(-5px); }
-            40% { transform: translateX(5px); }
-            60% { transform: translateX(-3px); }
-            80% { transform: translateX(3px); }
-            100% { transform: translateX(0); }
+            0% { transform: translateX(0) translateY(0) scale(1); }
+            22% { transform: translateX(-4px) translateY(-1px) scale(1.005); }
+            44% { transform: translateX(4px) translateY(0) scale(1.01); }
+            68% { transform: translateX(-2px) translateY(0) scale(1.003); }
+            100% { transform: translateX(0) translateY(0) scale(1); }
         }
 
         @keyframes flashSuccessPulse {
@@ -222,6 +221,50 @@
 
             50% {
                 transform: translateY(-3px);
+            }
+        }
+
+        @keyframes flashAlertHalo {
+            0%, 100% {
+                opacity: 0.55;
+                transform: scale(0.96);
+            }
+
+            50% {
+                opacity: 0.9;
+                transform: scale(1.04);
+            }
+        }
+
+        @keyframes flashSectionRise {
+            0% {
+                opacity: 0;
+                transform: translateY(12px) scale(0.98);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes flashButtonSheen {
+            0% {
+                transform: translateX(-120%);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 0.36;
+            }
+
+            60% {
+                opacity: 0.16;
+            }
+
+            100% {
+                transform: translateX(140%);
+                opacity: 0;
             }
         }
 
@@ -259,28 +302,42 @@
             --accent: #ef4444;
             --accent-strong: #dc2626;
             --accent-soft: rgba(239, 68, 68, 0.12);
+            --surface-tint: rgba(255, 247, 247, 0.92);
+            --panel-border: rgba(239, 68, 68, 0.18);
+            --panel-surface: rgba(255, 255, 255, 0.84);
+            --panel-soft: rgba(254, 242, 242, 0.76);
+            --badge-bg: rgba(239, 68, 68, 0.1);
+            --badge-text: #dc2626;
+            --button-shadow: rgba(239, 68, 68, 0.24);
             width: min(560px, calc(100vw - 1.5rem));
             max-height: min(88dvh, 760px);
-            border-radius: 1.5rem;
-            padding: clamp(1.15rem, 2.5vw, 2rem);
+            border-radius: 1.7rem;
+            padding: clamp(1.2rem, 2.6vw, 2.15rem);
             text-align: center;
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.94));
-            border: 1px solid rgba(148, 163, 184, 0.28);
-            box-shadow: 0 30px 80px rgba(15, 23, 42, 0.36);
+            background:
+                radial-gradient(circle at 14% 16%, var(--accent-soft), transparent 36%),
+                radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.96), transparent 28%),
+                linear-gradient(160deg, rgba(255, 255, 255, 0.99), var(--surface-tint));
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow:
+                0 34px 95px rgba(15, 23, 42, 0.38),
+                0 0 0 1px rgba(148, 163, 184, 0.14);
             position: relative;
             overflow: auto;
             scrollbar-width: thin;
+            isolation: isolate;
         }
 
         .flash-card::before {
             content: '';
             position: absolute;
-            inset: -80px auto auto -70px;
-            width: 170px;
-            height: 170px;
+            inset: -92px auto auto -84px;
+            width: 210px;
+            height: 210px;
             border-radius: 9999px;
-            background: radial-gradient(circle, var(--accent-soft), transparent 65%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.46), var(--accent-soft), transparent 68%);
             pointer-events: none;
+            filter: blur(3px);
         }
 
         .flash-card--flashin {
@@ -299,32 +356,76 @@
             content: '';
             position: absolute;
             inset: 0 0 auto;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-strong), rgba(255, 255, 255, 0.9));
+        }
+
+        .flash-card--error {
+            --accent: #ef4444;
+            --accent-strong: #dc2626;
+            --accent-soft: rgba(239, 68, 68, 0.14);
+            --surface-tint: rgba(255, 247, 247, 0.92);
+            --panel-border: rgba(239, 68, 68, 0.18);
+            --panel-surface: rgba(255, 255, 255, 0.86);
+            --panel-soft: rgba(254, 242, 242, 0.78);
+            --badge-bg: rgba(239, 68, 68, 0.1);
+            --badge-text: #dc2626;
+            --button-shadow: rgba(239, 68, 68, 0.24);
         }
 
         .flash-card--success {
             --accent: #10b981;
             --accent-strong: #059669;
             --accent-soft: rgba(16, 185, 129, 0.16);
+            --surface-tint: rgba(236, 253, 245, 0.9);
+            --panel-border: rgba(16, 185, 129, 0.18);
+            --panel-surface: rgba(255, 255, 255, 0.84);
+            --panel-soft: rgba(236, 253, 245, 0.7);
+            --badge-bg: rgba(16, 185, 129, 0.1);
+            --badge-text: #047857;
+            --button-shadow: rgba(16, 185, 129, 0.24);
         }
 
         .flash-card--progress {
             --accent: #f97316;
             --accent-strong: #ea580c;
             --accent-soft: rgba(249, 115, 22, 0.16);
+            --surface-tint: rgba(255, 247, 237, 0.9);
+            --panel-border: rgba(249, 115, 22, 0.18);
+            --panel-surface: rgba(255, 255, 255, 0.84);
+            --panel-soft: rgba(255, 247, 237, 0.76);
+            --badge-bg: rgba(249, 115, 22, 0.1);
+            --badge-text: #c2410c;
+            --button-shadow: rgba(249, 115, 22, 0.24);
         }
 
         .flash-icon-container {
-            background: var(--accent-soft);
-            width: 72px;
-            height: 72px;
+            position: relative;
+            background:
+                radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.88), transparent 44%),
+                linear-gradient(145deg, rgba(255, 255, 255, 0.8), var(--panel-soft));
+            width: 82px;
+            height: 82px;
             border-radius: 9999px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1.25rem;
-            box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.25);
+            margin: 0 auto 1.35rem;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.78),
+                inset 0 0 0 1px rgba(148, 163, 184, 0.16),
+                0 22px 45px rgba(15, 23, 42, 0.12);
+            overflow: hidden;
+        }
+
+        .flash-icon-container::after {
+            content: '';
+            position: absolute;
+            inset: 0.4rem;
+            border-radius: inherit;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            opacity: 0.7;
+            animation: flashAlertHalo 2.2s ease-in-out infinite;
         }
 
         .flash-icon-container--animated {
@@ -337,28 +438,36 @@
         }
 
         .flash-title {
-            font-size: 1.25rem;
-            font-weight: 700;
+            font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+            font-weight: 800;
             color: #0f172a;
-            margin-bottom: 0.75rem;
-        }
-
-        .flash-message {
-            color: #475569;
-            font-size: 0.95rem;
-            font-weight: 700;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-            word-break: break-word;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.85rem;
         }
 
         .flash-client-panel {
-            margin-bottom: 1rem;
+            margin-bottom: 1.15rem;
             text-align: left;
-            border-radius: 1rem;
-            border: 1px solid rgba(249, 115, 22, 0.2);
-            background: linear-gradient(135deg, rgba(255, 247, 237, 0.95), rgba(255, 255, 255, 0.95));
-            padding: 0.9rem 1rem;
+            border-radius: 1.25rem;
+            border: 1px solid var(--panel-border);
+            background:
+                radial-gradient(circle at top right, rgba(255, 255, 255, 0.9), transparent 35%),
+                linear-gradient(145deg, var(--panel-soft), rgba(255, 255, 255, 0.95));
+            padding: 1rem 1.05rem;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.86),
+                0 18px 35px rgba(15, 23, 42, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flash-client-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+            opacity: 0.9;
         }
 
         .flash-client-panel.hidden {
@@ -369,16 +478,17 @@
             display: inline-flex;
             align-items: center;
             gap: 0.45rem;
-            font-size: 0.75rem;
-            letter-spacing: 0.02em;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: #c2410c;
-            font-weight: 700;
-            background: rgba(249, 115, 22, 0.12);
-            border: 1px solid rgba(249, 115, 22, 0.16);
+            color: var(--badge-text);
+            font-weight: 800;
+            background: var(--badge-bg);
+            border: 1px solid var(--panel-border);
             border-radius: 9999px;
-            padding: 0.32rem 0.65rem;
-            margin-bottom: 0.75rem;
+            padding: 0.42rem 0.82rem;
+            margin-bottom: 0.85rem;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
         }
 
         .flash-client-grid {
@@ -388,10 +498,11 @@
         }
 
         .flash-client-row {
-            background: rgba(255, 255, 255, 0.72);
-            border: 1px solid rgba(148, 163, 184, 0.24);
-            border-radius: 0.75rem;
-            padding: 0.6rem 0.75rem;
+            background: var(--panel-surface);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 1rem;
+            padding: 0.78rem 0.88rem;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
         }
 
         .flash-client-label {
@@ -407,39 +518,233 @@
         .flash-client-value {
             display: block;
             color: #0f172a;
-            font-size: 0.92rem;
-            font-weight: 700;
+            font-size: 1.02rem;
+            font-weight: 800;
             word-break: break-word;
+        }
+
+        .flash-message-shell {
+            position: relative;
+            margin-bottom: 1.5rem;
+            padding: 1rem 1.1rem 1rem 1.25rem;
+            border-radius: 1.25rem;
+            border: 1px solid var(--panel-border);
+            background:
+                radial-gradient(circle at top right, rgba(255, 255, 255, 0.82), transparent 32%),
+                linear-gradient(145deg, var(--panel-soft), rgba(255, 255, 255, 0.96));
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.84),
+                0 18px 34px rgba(15, 23, 42, 0.08);
+            overflow: hidden;
+        }
+
+        .flash-message-shell::before {
+            content: '';
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+        }
+
+        .flash-message {
+            color: #334155;
+            font-size: 1rem;
+            font-weight: 800;
+            line-height: 1.7;
+            margin: 0;
+            word-break: break-word;
+            letter-spacing: -0.01em;
         }
 
         .flash-button {
             width: 100%;
-            border-radius: 0.9rem;
-            padding: 0.85rem 1rem;
-            font-weight: 600;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            border-radius: 1.1rem;
+            padding: 1rem 1.1rem;
+            font-size: 1rem;
+            font-weight: 800;
             color: #fff;
             background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-            box-shadow: 0 16px 30px rgba(15, 23, 42, 0.18);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow:
+                0 18px 36px var(--button-shadow),
+                0 10px 22px rgba(15, 23, 42, 0.12);
+            transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+            overflow: hidden;
         }
 
         .flash-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 18px 35px rgba(15, 23, 42, 0.24);
+            transform: translateY(-2px);
+            box-shadow:
+                0 22px 42px var(--button-shadow),
+                0 14px 28px rgba(15, 23, 42, 0.16);
         }
 
         .flash-button:focus {
             outline: none;
-            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.2), 0 18px 35px rgba(15, 23, 42, 0.24);
+            box-shadow:
+                0 0 0 4px var(--accent-soft),
+                0 22px 42px var(--button-shadow),
+                0 14px 28px rgba(15, 23, 42, 0.16);
+        }
+
+        .flash-button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, transparent 18%, rgba(255, 255, 255, 0.24) 42%, transparent 70%);
+            transform: translateX(-120%);
+            animation: flashButtonSheen 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .flash-card--error-attention .flash-client-panel,
+        .flash-card--error-attention .flash-message-shell,
+        .flash-card--error-attention .flash-button,
+        .flash-card--success-attention .flash-message-shell,
+        .flash-card--success-attention .flash-button {
+            animation: flashSectionRise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .flash-card--error-attention .flash-client-panel {
+            animation-delay: 0.05s;
+        }
+
+        .flash-card--error-attention .flash-message-shell,
+        .flash-card--success-attention .flash-message-shell {
+            animation-delay: 0.11s;
+        }
+
+        .flash-card--error-attention .flash-button,
+        .flash-card--success-attention .flash-button {
+            animation-delay: 0.17s;
         }
 
         .flash-progress-wrap {
             text-align: left;
             margin: 1.25rem 0 0.75rem;
             padding: 1rem;
-            border-radius: 1rem;
-            background: linear-gradient(135deg, rgba(249, 115, 22, 0.08), rgba(251, 191, 36, 0.08));
-            border: 1px solid rgba(249, 115, 22, 0.16);
+            border-radius: 1.25rem;
+            background:
+                radial-gradient(circle at top left, rgba(255, 237, 213, 0.92), transparent 38%),
+                linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 247, 237, 0.9));
+            border: 1px solid rgba(249, 115, 22, 0.18);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), 0 24px 52px rgba(249, 115, 22, 0.12);
+        }
+
+        .flash-progress-hero {
+            display: grid;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .flash-progress-gauge {
+            --progress: 0;
+            position: relative;
+            width: 126px;
+            height: 126px;
+            margin: 0 auto;
+            border-radius: 9999px;
+            padding: 0.7rem;
+            background: conic-gradient(from -90deg, #f97316 calc(var(--progress) * 1%), rgba(226, 232, 240, 0.92) 0);
+            box-shadow: 0 24px 45px rgba(249, 115, 22, 0.2);
+        }
+
+        .flash-progress-gauge::before,
+        .flash-progress-gauge::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+        .flash-progress-gauge::before {
+            inset: 0.65rem;
+            background:
+                radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.98), rgba(255, 247, 237, 0.96)),
+                linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(255, 247, 237, 0.9));
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 0 0 1px rgba(249, 115, 22, 0.08);
+        }
+
+        .flash-progress-gauge::after {
+            inset: 0.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.32);
+            opacity: 0.75;
+        }
+
+        .flash-progress-gauge-core {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.18rem;
+            text-align: center;
+        }
+
+        .flash-progress-percent {
+            font-size: 1.95rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.04em;
+            line-height: 1;
+        }
+
+        .flash-progress-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: #c2410c;
+        }
+
+        .flash-progress-live::before {
+            content: '';
+            width: 0.48rem;
+            height: 0.48rem;
+            border-radius: 9999px;
+            background: #f97316;
+            box-shadow: 0 0 0 6px rgba(249, 115, 22, 0.14);
+            animation: flashPulseDot 1.6s ease-in-out infinite;
+        }
+
+        .flash-progress-overview {
+            min-width: 0;
+        }
+
+        .flash-progress-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            margin-bottom: 0.85rem;
+            padding: 0.38rem 0.78rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(249, 115, 22, 0.18);
+            background: rgba(255, 255, 255, 0.78);
+            color: #c2410c;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .flash-progress-badge::before {
+            content: '';
+            width: 0.42rem;
+            height: 0.42rem;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, #fb923c, #f97316);
         }
 
         .flash-progress-head {
@@ -447,25 +752,27 @@
             align-items: center;
             justify-content: space-between;
             color: #334155;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 0.65rem;
+            font-size: 0.88rem;
+            font-weight: 700;
+            margin-bottom: 0.7rem;
         }
 
         .flash-progress-track {
             width: 100%;
-            height: 0.7rem;
+            height: 0.9rem;
             border-radius: 9999px;
-            background: rgba(148, 163, 184, 0.35);
+            background: linear-gradient(180deg, rgba(226, 232, 240, 0.95), rgba(203, 213, 225, 0.7));
             overflow: hidden;
+            box-shadow: inset 0 2px 8px rgba(148, 163, 184, 0.28);
         }
 
         .flash-progress-fill {
             width: 0%;
             height: 100%;
             border-radius: inherit;
-            background: linear-gradient(90deg, #f97316, #f59e0b);
-            transition: width 0.45s ease;
+            background: linear-gradient(90deg, #fb923c 0%, #f97316 52%, #f59e0b 100%);
+            box-shadow: 0 8px 24px rgba(249, 115, 22, 0.28);
+            transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .progress-bar {
@@ -480,8 +787,83 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-            animation: shimmer 2s infinite;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.42), transparent);
+            animation: shimmer 1.6s infinite;
+        }
+
+        .flash-progress-stage-points {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 0.4rem;
+            margin-top: 0.9rem;
+        }
+
+        .flash-progress-stage-point {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            min-width: 0;
+            color: #94a3b8;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            transition: color 0.25s ease, transform 0.25s ease;
+        }
+
+        .flash-progress-stage-dot {
+            width: 0.52rem;
+            height: 0.52rem;
+            flex-shrink: 0;
+            border-radius: 9999px;
+            background: rgba(148, 163, 184, 0.4);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+            transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .flash-progress-stage-point.is-active {
+            color: #ea580c;
+            transform: translateY(-1px);
+        }
+
+        .flash-progress-stage-point.is-active .flash-progress-stage-dot {
+            background: linear-gradient(135deg, #fb923c, #f97316);
+            transform: scale(1.1);
+            box-shadow: 0 0 0 5px rgba(249, 115, 22, 0.12);
+        }
+
+        .flash-progress-summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .flash-progress-card {
+            min-width: 0;
+            border-radius: 1rem;
+            padding: 0.82rem 0.9rem;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        }
+
+        .flash-progress-label {
+            display: block;
+            margin-bottom: 0.32rem;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #94a3b8;
+        }
+
+        .flash-progress-value {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #0f172a;
+            word-break: break-word;
         }
 
         @keyframes shimmer {
@@ -489,9 +871,24 @@
             100% { left: 100%; }
         }
 
+        @keyframes flashPulseDot {
+            0%, 100% {
+                transform: scale(0.92);
+                box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
+            }
+            50% {
+                transform: scale(1.12);
+                box-shadow: 0 0 0 8px rgba(249, 115, 22, 0.2);
+            }
+        }
+
         @media (min-width: 520px) {
             .flash-client-grid {
                 grid-template-columns: 1fr 1fr;
+            }
+
+            .flash-progress-hero {
+                grid-template-columns: auto minmax(0, 1fr);
             }
         }
 
@@ -505,6 +902,14 @@
                 max-height: 90dvh;
                 border-radius: 1.1rem;
                 padding: 1.15rem;
+            }
+
+            .flash-progress-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .flash-progress-stage-point {
+                font-size: 0.62rem;
             }
         }
     </style>
@@ -938,18 +1343,53 @@ unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
             </div>
-            <p id="flashMessage" class="flash-message"></p>
+            <div class="flash-message-shell">
+                <p id="flashMessage" class="flash-message"></p>
+            </div>
             <div id="flashProgressWrap" class="flash-progress-wrap hidden" aria-live="polite">
-                <div class="flash-progress-head">
-                    <span><?php echo e(__('transactions.progress_label')); ?></span>
-                    <span id="flashProgressText">0%</span>
+                <div class="flash-progress-hero">
+                    <div id="flashProgressGauge" class="flash-progress-gauge" style="--progress: 0;">
+                        <div class="flash-progress-gauge-core">
+                            <span id="flashProgressPercent" class="flash-progress-percent">0%</span>
+                            <span class="flash-progress-live"><?php echo e(__('dashboard.real_time')); ?></span>
+                        </div>
+                    </div>
+                    <div class="flash-progress-overview">
+                        <span class="flash-progress-badge"><?php echo e(__('transactions.processing_in_progress')); ?></span>
+                        <div class="flash-progress-head">
+                            <span><?php echo e(__('transactions.progress_label')); ?></span>
+                            <span id="flashProgressText">0%</span>
+                        </div>
+                        <div class="flash-progress-track">
+                            <div id="flashProgressBar" class="flash-progress-fill progress-bar"></div>
+                        </div>
+                        <div class="flash-progress-stage-points">
+                            <?php $__currentLoopData = [0, 25, 50, 75, 100]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $milestone): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <div class="flash-progress-stage-point" data-progress-step="<?php echo e($milestone); ?>">
+                                    <span class="flash-progress-stage-dot"></span>
+                                    <span><?php echo e($milestone); ?>%</span>
+                                </div>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </div>
+                    </div>
                 </div>
-                <div class="flash-progress-track">
-                    <div id="flashProgressBar" class="flash-progress-fill progress-bar"></div>
+                <div class="flash-progress-summary">
+                    <div class="flash-progress-card">
+                        <span class="flash-progress-label"><?php echo e(__('transactions.transfer_amount')); ?></span>
+                        <span id="flashProgressAmount" class="flash-progress-value">0.00 <?php echo e($currencyCode); ?></span>
+                    </div>
+                    <div class="flash-progress-card">
+                        <span class="flash-progress-label"><?php echo e(__('transactions.recipient_name')); ?></span>
+                        <span id="flashProgressRecipient" class="flash-progress-value"><?php echo e(__('transactions.not_available')); ?></span>
+                    </div>
+                    <div class="flash-progress-card">
+                        <span class="flash-progress-label"><?php echo e(__('transactions.recipient_iban')); ?></span>
+                        <span id="flashProgressIban" class="flash-progress-value"><?php echo e(__('transactions.not_available')); ?></span>
+                    </div>
                 </div>
             </div>
             <button id="closeFlash" class="flash-button">
-                <i class="fas fa-check mr-2"></i><?php echo e(__('transactions.understood')); ?>
+                <i class="fas fa-check"></i><?php echo e(__('transactions.understood')); ?>
 
             </button>
         </div>
@@ -971,6 +1411,12 @@ unset($__errorArgs, $__bag); ?>
             const flashProgressWrap = document.getElementById('flashProgressWrap');
             const flashProgressBar = document.getElementById('flashProgressBar');
             const flashProgressText = document.getElementById('flashProgressText');
+            const flashProgressGauge = document.getElementById('flashProgressGauge');
+            const flashProgressPercent = document.getElementById('flashProgressPercent');
+            const flashProgressAmount = document.getElementById('flashProgressAmount');
+            const flashProgressRecipient = document.getElementById('flashProgressRecipient');
+            const flashProgressIban = document.getElementById('flashProgressIban');
+            const flashProgressSteps = Array.from(document.querySelectorAll('[data-progress-step]'));
             const flashClientPanel = document.getElementById('flashClientPanel');
             const flashClientName = document.getElementById('flashClientName');
             const flashClientIban = document.getElementById('flashClientIban');
@@ -987,6 +1433,8 @@ unset($__errorArgs, $__bag); ?>
             let progressMode = false;
             let audioContext = null;
             let soundUnlocked = false;
+            let displayedProgress = 0;
+            let progressAnimationFrame = null;
             let transferClientSnapshot = {
                 name: '',
                 iban: ''
@@ -1025,6 +1473,7 @@ unset($__errorArgs, $__bag); ?>
                     ? recipientNameInput.value.trim()
                     : '<?php echo e(__('transactions.not_available')); ?>';
                 summaryIban.textContent = formatIban(recipientIbanInput ? recipientIbanInput.value : '');
+                updateProgressSnapshot();
             }
 
             function buildClientSnapshot() {
@@ -1048,6 +1497,25 @@ unset($__errorArgs, $__bag); ?>
                 flashClientIban.textContent = source.iban || '<?php echo e(__('transactions.not_available')); ?>';
             }
 
+            function updateProgressSnapshot() {
+                const amountInput = document.getElementById('amount');
+                const source = transferClientSnapshot && (transferClientSnapshot.name || transferClientSnapshot.iban)
+                    ? transferClientSnapshot
+                    : buildClientSnapshot();
+
+                if (flashProgressAmount) {
+                    flashProgressAmount.textContent = formatAmount(amountInput ? amountInput.value : 0);
+                }
+
+                if (flashProgressRecipient) {
+                    flashProgressRecipient.textContent = source.name || '<?php echo e(__('transactions.not_available')); ?>';
+                }
+
+                if (flashProgressIban) {
+                    flashProgressIban.textContent = source.iban || '<?php echo e(__('transactions.not_available')); ?>';
+                }
+            }
+
             function updateSnapshotFromServer(data) {
                 if (!data || typeof data !== 'object') {
                     return;
@@ -1064,6 +1532,8 @@ unset($__errorArgs, $__bag); ?>
                     name: serverName || transferClientSnapshot.name || '<?php echo e(__('transactions.not_available')); ?>',
                     iban: serverIban ? formatIban(serverIban) : (transferClientSnapshot.iban || '<?php echo e(__('transactions.not_available')); ?>'),
                 };
+
+                updateProgressSnapshot();
             }
 
             function resolveInterruptionMessage(rawMessage) {
@@ -1136,9 +1606,70 @@ unset($__errorArgs, $__bag); ?>
                 unlockAudio();
             }, { once: true });
 
-            function setProgress(progress) {
-                flashProgressBar.style.width = progress + '%';
-                flashProgressText.textContent = progress + '%';
+            function stopProgressAnimation() {
+                if (progressAnimationFrame) {
+                    cancelAnimationFrame(progressAnimationFrame);
+                    progressAnimationFrame = null;
+                }
+            }
+
+            function renderProgress(progress) {
+                const safeProgress = Math.max(0, Math.min(100, Number(progress) || 0));
+                const roundedProgress = Math.round(safeProgress);
+
+                flashProgressBar.style.width = safeProgress.toFixed(2) + '%';
+                flashProgressText.textContent = roundedProgress + '%';
+
+                if (flashProgressPercent) {
+                    flashProgressPercent.textContent = roundedProgress + '%';
+                }
+
+                if (flashProgressGauge) {
+                    flashProgressGauge.style.setProperty('--progress', safeProgress.toFixed(2));
+                }
+
+                flashProgressSteps.forEach(function (stepNode) {
+                    const step = Number(stepNode.getAttribute('data-progress-step') || 0);
+                    stepNode.classList.toggle('is-active', roundedProgress >= step);
+                });
+            }
+
+            function setProgress(progress, options = {}) {
+                const { immediate = false } = options;
+                const target = Math.max(0, Math.min(100, Number(progress) || 0));
+
+                if (immediate || target <= displayedProgress) {
+                    stopProgressAnimation();
+                    displayedProgress = target;
+                    renderProgress(target);
+                    return;
+                }
+
+                stopProgressAnimation();
+
+                const start = displayedProgress;
+                const delta = target - start;
+                const duration = Math.min(680, Math.max(220, delta * 90));
+                const startTime = performance.now();
+
+                function animate(now) {
+                    const elapsed = now - startTime;
+                    const ratio = Math.min(1, elapsed / duration);
+                    const easedRatio = 1 - Math.pow(1 - ratio, 3);
+                    displayedProgress = start + (delta * easedRatio);
+                    renderProgress(displayedProgress);
+
+                    if (ratio < 1) {
+                        progressAnimationFrame = requestAnimationFrame(animate);
+                        return;
+                    }
+
+                    displayedProgress = target;
+                    renderProgress(target);
+                    progressAnimationFrame = null;
+                }
+
+                progressAnimationFrame = requestAnimationFrame(animate);
             }
 
             function openOverlay() {
@@ -1166,6 +1697,8 @@ unset($__errorArgs, $__bag); ?>
 
             function showProgressFlash() {
                 progressMode = true;
+                updateProgressSnapshot();
+                setProgress(0, { immediate: true });
                 flashIcon.classList.remove('icon-visible');
                 flashIcon.className = 'flash-icon fas fa-spinner fa-spin icon-fade-transition';
                 flashIconContainer.className = 'flash-icon-container';
@@ -1192,6 +1725,7 @@ unset($__errorArgs, $__bag); ?>
 
             function showMessage(message, type) {
                 progressMode = false;
+                stopProgressAnimation();
                 flashMsg.textContent = message;
                 flashProgressWrap.classList.add('hidden');
                 closeFlash.classList.remove('hidden');
@@ -1247,7 +1781,7 @@ unset($__errorArgs, $__bag); ?>
                     const data = await res.json();
 
                     updateSnapshotFromServer(data);
-                    setProgress(data.progress);
+                    setProgress(data.progress, { immediate: data.status !== 'pending' });
 
                     if (data.status === 'on_hold') {
                         ticking = false;
@@ -1259,7 +1793,7 @@ unset($__errorArgs, $__bag); ?>
                     if (data.status === 'success') {
                         ticking = false;
                         resetStartButton();
-                        setProgress(100);
+                        setProgress(100, { immediate: true });
                         showMessage('<?php echo e(__('transactions.transfer_success_message')); ?>', 'success');
 
                         setTimeout(function () {
@@ -1268,7 +1802,7 @@ unset($__errorArgs, $__bag); ?>
                         return;
                     }
 
-                    setTimeout(tick, 500);
+                    setTimeout(tick, 320);
                 } catch (error) {
                     ticking = false;
                     resetStartButton();
@@ -1301,7 +1835,6 @@ unset($__errorArgs, $__bag); ?>
                     if (res.ok) {
                         txId = data.tx_id;
                         ticking = true;
-                        setProgress(0);
                         showProgressFlash();
                         startBtn.disabled = true;
                         startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><?php echo e(__('transactions.processing_in_progress')); ?>';

@@ -216,8 +216,8 @@ class NotificationService
                     'user_agent' => $userAgent,
                     'action' => 'login',
                 ],
-                'blue',
-                'fa-sign-in-alt'
+                'green',
+                'fa-user-check'
             );
         }
     }

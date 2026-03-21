@@ -24,6 +24,96 @@ class ChatController extends Controller
         return "chat:user:typing:{$senderId}:{$receiverId}";
     }
 
+    private function findPrimaryAdmin(): ?User
+    {
+        return User::query()
+            ->where('role', 'admin')
+            ->orderBy('id')
+            ->first();
+    }
+
+    private function resolveChatPartner(?User $currentUser, $requestedUserId = null): ?User
+    {
+        if (!$currentUser) {
+            return null;
+        }
+
+        if ($currentUser->isAdmin()) {
+            $targetUserId = (int) $requestedUserId;
+            if ($targetUserId <= 0) {
+                return null;
+            }
+
+            $targetUser = User::find($targetUserId);
+
+            return $targetUser && !$targetUser->isAdmin()
+                ? $targetUser
+                : null;
+        }
+
+        $admin = $this->findPrimaryAdmin();
+
+        return $admin && (int) $admin->id !== (int) $currentUser->id
+            ? $admin
+            : null;
+    }
+
+    private function formatUserDisplayName(?User $user): string
+    {
+        if (!$user) {
+            return 'Utilisateur';
+        }
+
+        $fullName = trim(implode(' ', array_filter([
+            (string) ($user->first_name ?? ''),
+            (string) ($user->last_name ?? ''),
+        ])));
+
+        if ($fullName !== '') {
+            return $fullName;
+        }
+
+        return (string) ($user->email ?? 'Utilisateur');
+    }
+
+    private function formatChatMessage(ChatMessage $message): array
+    {
+        $message->loadMissing(['sender', 'receiver']);
+
+        return [
+            'id' => (int) $message->id,
+            'sender_id' => (int) $message->sender_id,
+            'receiver_id' => (int) $message->receiver_id,
+            'message' => (string) ($message->message ?? ''),
+            'is_read' => (bool) $message->is_read,
+            'attachment_path' => $message->attachment_path,
+            'attachment_url' => $message->attachment_url,
+            'attachment_name' => $message->attachment_name,
+            'attachment_type' => $message->attachment_type,
+            'attachment_size' => $message->attachment_size,
+            'formatted_attachment_size' => $message->formatted_size,
+            'is_image_attachment' => $message->isImage(),
+            'created_at' => $message->created_at ? $message->created_at->toISOString() : null,
+            'updated_at' => $message->updated_at ? $message->updated_at->toISOString() : null,
+            'sender_display_name' => $this->formatUserDisplayName($message->sender),
+            'receiver_display_name' => $this->formatUserDisplayName($message->receiver),
+            'sender' => $message->sender ? [
+                'id' => (int) $message->sender->id,
+                'first_name' => (string) ($message->sender->first_name ?? ''),
+                'last_name' => (string) ($message->sender->last_name ?? ''),
+                'email' => (string) ($message->sender->email ?? ''),
+                'display_name' => $this->formatUserDisplayName($message->sender),
+            ] : null,
+            'receiver' => $message->receiver ? [
+                'id' => (int) $message->receiver->id,
+                'first_name' => (string) ($message->receiver->first_name ?? ''),
+                'last_name' => (string) ($message->receiver->last_name ?? ''),
+                'email' => (string) ($message->receiver->email ?? ''),
+                'display_name' => $this->formatUserDisplayName($message->receiver),
+            ] : null,
+        ];
+    }
+
     private function touchUserPresence(?int $userId = null): void
     {
         $resolvedUserId = (int) ($userId ?? Auth::id());
@@ -166,11 +256,20 @@ class ChatController extends Controller
     public function sendMessage(Request $request)
     {
         Log::info('ChatController@sendMessage called with data:', $request->all());
-        $this->touchUserPresence(Auth::id());
+        $currentUser = Auth::user();
+        $currentUserId = (int) ($currentUser?->id ?? 0);
+        $this->touchUserPresence($currentUserId);
+
+        if (!$currentUser || $currentUserId <= 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated',
+            ], 401);
+        }
 
         $request->validate([
             'message' => 'nullable|string|max:1000',
-            'receiver_id' => 'nullable|exists:users,id',
+            'receiver_id' => 'nullable|integer|exists:users,id',
             'attachment' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx,txt,zip',
         ]);
 
@@ -181,27 +280,40 @@ class ChatController extends Controller
             ], 422);
         }
 
-        $receiverId = $request->receiver_id;
+        $receiver = $this->resolveChatPartner($currentUser, $request->receiver_id);
 
-        if (!$receiverId) {
-            $admin = User::where('role', 'admin')->first();
-            $receiverId = $admin ? $admin->id : null;
+        if (!$receiver) {
+            return response()->json([
+                'success' => false,
+                'message' => $currentUser->isAdmin()
+                    ? 'Invalid receiver selected'
+                    : 'No admin found',
+            ], 422);
+        }
+
+        $receiverId = (int) $receiver->id;
+
+        if ($receiverId === $currentUserId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid receiver selected',
+            ], 422);
         }
 
         if ($receiverId) {
             try {
-                Cache::forget($this->typingCacheKey((int) Auth::id(), (int) $receiverId));
+                Cache::forget($this->typingCacheKey($currentUserId, $receiverId));
             } catch (\Throwable $e) {
                 Log::warning('Unable to clear typing cache on message send', [
-                    'sender_id' => (int) Auth::id(),
-                    'receiver_id' => (int) $receiverId,
+                    'sender_id' => $currentUserId,
+                    'receiver_id' => $receiverId,
                     'error' => $e->getMessage(),
                 ]);
             }
         }
 
         $messageData = [
-            'sender_id' => Auth::id(),
+            'sender_id' => $currentUserId,
             'receiver_id' => $receiverId,
             'message' => $request->message ?? '',
             'is_read' => false,
@@ -225,14 +337,13 @@ class ChatController extends Controller
 
         Log::info('Chat message created:', $message->toArray());
 
-        $sender = Auth::user();
-        if ($sender && !$sender->isAdmin()) {
+        if (!$currentUser->isAdmin()) {
             try {
-                NotificationService::notifyAdminUserMessage($sender, $message);
+                NotificationService::notifyAdminUserMessage($currentUser, $message);
             } catch (\Exception $e) {
                 Log::error('Failed to notify admins of user message', [
                     'message_id' => $message->id,
-                    'sender_id' => $sender->id,
+                    'sender_id' => $currentUser->id,
                     'error' => $e->getMessage(),
                 ]);
             }
@@ -240,7 +351,7 @@ class ChatController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => $message->load(['sender', 'receiver']),
+            'message' => $this->formatChatMessage($message),
         ]);
     }
 
@@ -271,19 +382,23 @@ class ChatController extends Controller
         }
 
         // If userId not specified, get messages with admin
-        if (!$userId) {
-            $admin = User::where('role', 'admin')->first();
-            $userId = $admin ? $admin->id : null;
-            Log::info('No userId specified, using admin', ['admin_id' => $userId]);
-        }
+        $chatPartner = $this->resolveChatPartner($currentUser, $userId);
 
-        if (!$userId) {
-            Log::error('No admin found in system');
+        if (!$chatPartner) {
+            Log::error('Unable to resolve chat partner', [
+                'current_user_id' => $currentUserId,
+                'requested_user_id' => $userId,
+            ]);
+
             return response()->json([
                 'success' => false,
-                'message' => 'No admin found',
+                'message' => $currentUser && $currentUser->isAdmin()
+                    ? 'Invalid chat partner'
+                    : 'No admin found',
             ], 404);
         }
+
+        $userId = (int) $chatPartner->id;
 
         $messages = ChatMessage::where(function($query) use ($currentUserId, $userId) {
                 $query->where(function($q) use ($currentUserId, $userId) {
@@ -305,33 +420,7 @@ class ChatController extends Controller
         ]);
 
         // Transform messages to ensure proper format
-        $formattedMessages = $messages->map(function($message) {
-            return [
-                'id' => $message->id,
-                'sender_id' => $message->sender_id,
-                'receiver_id' => $message->receiver_id,
-                'message' => $message->message,
-                'is_read' => $message->is_read,
-                'attachment_path' => $message->attachment_path,
-                'attachment_name' => $message->attachment_name,
-                'attachment_type' => $message->attachment_type,
-                'attachment_size' => $message->attachment_size,
-                'created_at' => $message->created_at ? $message->created_at->toISOString() : null,
-                'updated_at' => $message->updated_at ? $message->updated_at->toISOString() : null,
-                'sender' => $message->sender ? [
-                    'id' => $message->sender->id,
-                    'first_name' => $message->sender->first_name,
-                    'last_name' => $message->sender->last_name,
-                    'email' => $message->sender->email,
-                ] : null,
-                'receiver' => $message->receiver ? [
-                    'id' => $message->receiver->id,
-                    'first_name' => $message->receiver->first_name,
-                    'last_name' => $message->receiver->last_name,
-                    'email' => $message->receiver->email,
-                ] : null,
-            ];
-        });
+        $formattedMessages = $messages->map(fn (ChatMessage $message) => $this->formatChatMessage($message));
 
         Log::info('Formatted messages', ['sample' => $formattedMessages->take(1)]);
 
@@ -344,23 +433,28 @@ class ChatController extends Controller
         $responsePayload = [
             'success' => true,
             'messages' => $formattedMessages,
+            'chat_partner' => [
+                'id' => (int) $chatPartner->id,
+                'first_name' => (string) ($chatPartner->first_name ?? ''),
+                'last_name' => (string) ($chatPartner->last_name ?? ''),
+                'email' => (string) ($chatPartner->email ?? ''),
+                'role' => (string) ($chatPartner->role ?? 'user'),
+                'display_name' => $this->formatUserDisplayName($chatPartner),
+            ],
         ];
 
-        // Include live presence for admin chat header refresh when viewing a conversation.
-        if ($currentUser && $currentUser->isAdmin() && $userId) {
-            $presence = $this->getUsersPresence([(int) $userId])[(int) $userId] ?? [
-                'is_online' => false,
-                'is_connected' => false,
-                'presence_status' => 'disconnected',
-                'last_activity_at' => null,
-            ];
+        $presence = $this->getUsersPresence([(int) $userId])[(int) $userId] ?? [
+            'is_online' => false,
+            'is_connected' => false,
+            'presence_status' => 'disconnected',
+            'last_activity_at' => null,
+        ];
 
-            $responsePayload['user_presence'] = array_merge(
-                ['user_id' => (int) $userId],
-                $presence
-            );
-            $responsePayload['user_typing'] = $this->isUserTypingTo((int) $userId, (int) $currentUserId);
-        }
+        $responsePayload['user_presence'] = array_merge(
+            ['user_id' => (int) $userId],
+            $presence
+        );
+        $responsePayload['user_typing'] = $this->isUserTypingTo((int) $userId, (int) $currentUserId);
 
         return response()->json($responsePayload);
     }
@@ -396,6 +490,9 @@ class ChatController extends Controller
         }
 
         $users = $query
+            ->when($search === '', function ($builder) {
+                $builder->orderByDesc('created_at');
+            })
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->limit(200)
@@ -448,92 +545,107 @@ class ChatController extends Controller
     private function getAdminConversations()
     {
         $adminId = Auth::id();
-        
-        // Get all users who have sent messages to admin or received messages from admin
-        $userIds = ChatMessage::where('sender_id', $adminId)
-            ->orWhere('receiver_id', $adminId)
-            ->get()
-            ->map(function($message) use ($adminId) {
-                return $message->sender_id == $adminId ? $message->receiver_id : $message->sender_id;
-            })
-            ->unique()
-            ->filter()
-            ->values();
 
-        $presenceByUserId = $this->getUsersPresence(
-            $userIds->map(fn ($id) => (int) $id)->all()
-        );
+        $users = User::query()
+            ->where('role', '!=', 'admin')
+            ->orderByDesc('created_at')
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get(['id', 'first_name', 'last_name', 'email', 'role', 'created_at']);
 
-        $conversations = [];
-        
-        foreach ($userIds as $userId) {
-            $user = User::find($userId);
-            
-            // Skip if user not found or is admin
-            if (!$user || $user->isAdmin()) {
-                continue;
-            }
-            
-            // Get last message between admin and this user
-            $lastMessage = ChatMessage::where(function($query) use ($adminId, $userId) {
-                    $query->where(function($q) use ($adminId, $userId) {
+        $userIds = $users->pluck('id')->map(fn ($id) => (int) $id)->values();
+        $presenceByUserId = $this->getUsersPresence($userIds->all());
+
+        $messages = $userIds->isEmpty()
+            ? collect()
+            : ChatMessage::query()
+                ->where(function ($query) use ($adminId, $userIds) {
+                    $query->where(function ($q) use ($adminId, $userIds) {
                         $q->where('sender_id', $adminId)
-                          ->where('receiver_id', $userId);
-                    })->orWhere(function($q) use ($adminId, $userId) {
-                        $q->where('sender_id', $userId)
-                          ->where('receiver_id', $adminId);
+                            ->whereIn('receiver_id', $userIds);
+                    })->orWhere(function ($q) use ($adminId, $userIds) {
+                        $q->whereIn('sender_id', $userIds)
+                            ->where('receiver_id', $adminId);
                     });
                 })
                 ->with(['sender', 'receiver'])
                 ->latest()
-                ->first();
-            
-            $unreadCount = ChatMessage::where('sender_id', $userId)
+                ->get();
+
+        $lastMessageByUserId = [];
+        foreach ($messages as $message) {
+            $counterpartId = (int) ($message->sender_id === $adminId ? $message->receiver_id : $message->sender_id);
+            if ($counterpartId > 0 && !isset($lastMessageByUserId[$counterpartId])) {
+                $lastMessageByUserId[$counterpartId] = $message;
+            }
+        }
+
+        $unreadByUserId = $userIds->isEmpty()
+            ? collect()
+            : ChatMessage::query()
                 ->where('receiver_id', $adminId)
                 ->where('is_read', false)
-                ->count();
+                ->whereIn('sender_id', $userIds)
+                ->selectRaw('sender_id, COUNT(*) as unread_count')
+                ->groupBy('sender_id')
+                ->pluck('unread_count', 'sender_id');
 
-            $presence = $presenceByUserId[$user->id] ?? [
+        $conversations = $users->map(function (User $user) use ($presenceByUserId, $lastMessageByUserId, $unreadByUserId) {
+            $presence = $presenceByUserId[(int) $user->id] ?? [
                 'is_online' => false,
                 'is_connected' => false,
                 'presence_status' => 'disconnected',
                 'last_activity_at' => null,
             ];
 
-            // Ensure user data is properly formatted
-            $conversations[] = [
+            $lastMessage = $lastMessageByUserId[(int) $user->id] ?? null;
+
+            return [
                 'user' => [
-                    'id' => $user->id,
-                    'first_name' => $user->first_name ?? '',
-                    'last_name' => $user->last_name ?? '',
-                    'email' => $user->email ?? '',
-                    'role' => $user->role ?? 'user',
-                    'is_online' => $presence['is_online'],
-                    'is_connected' => $presence['is_connected'],
-                    'presence_status' => $presence['presence_status'],
+                    'id' => (int) $user->id,
+                    'first_name' => (string) ($user->first_name ?? ''),
+                    'last_name' => (string) ($user->last_name ?? ''),
+                    'email' => (string) ($user->email ?? ''),
+                    'role' => (string) ($user->role ?? 'user'),
+                    'is_online' => (bool) $presence['is_online'],
+                    'is_connected' => (bool) $presence['is_connected'],
+                    'presence_status' => (string) $presence['presence_status'],
                     'last_activity_at' => $presence['last_activity_at'],
                 ],
                 'last_message' => $lastMessage ? [
-                    'id' => $lastMessage->id,
-                    'message' => $lastMessage->message ?? '',
-                    'created_at' => $lastMessage->created_at->toISOString(),
-                    'sender_id' => $lastMessage->sender_id,
-                    'receiver_id' => $lastMessage->receiver_id,
+                    'id' => (int) $lastMessage->id,
+                    'message' => (string) ($lastMessage->message ?? ''),
+                    'attachment_name' => $lastMessage->attachment_name,
+                    'attachment_type' => $lastMessage->attachment_type,
+                    'created_at' => $lastMessage->created_at?->toISOString(),
+                    'sender_id' => (int) $lastMessage->sender_id,
+                    'receiver_id' => (int) $lastMessage->receiver_id,
                 ] : null,
-                'unread_count' => $unreadCount,
+                'unread_count' => (int) ($unreadByUserId[$user->id] ?? 0),
+                'sort_created_at' => $user->created_at?->toISOString(),
             ];
-        }
-        
-        // Sort by last message time
-        usort($conversations, function($a, $b) {
-            $timeA = $a['last_message'] ? $a['last_message']['created_at'] : null;
-            $timeB = $b['last_message'] ? $b['last_message']['created_at'] : null;
-            
-            if (!$timeA) return 1;
-            if (!$timeB) return -1;
-            
-            return strcmp($timeB, $timeA);
-        });
+        })->sort(function (array $a, array $b) {
+            $timeA = $a['last_message']['created_at'] ?? null;
+            $timeB = $b['last_message']['created_at'] ?? null;
+
+            if ($timeA && $timeB) {
+                return strcmp($timeB, $timeA);
+            }
+
+            if ($timeA) {
+                return -1;
+            }
+
+            if ($timeB) {
+                return 1;
+            }
+
+            return strcmp((string) ($b['sort_created_at'] ?? ''), (string) ($a['sort_created_at'] ?? ''));
+        })->values()->map(function (array $conversation) {
+            unset($conversation['sort_created_at']);
+
+            return $conversation;
+        })->all();
 
         return response()->json([
             'success' => true,
@@ -563,10 +675,27 @@ class ChatController extends Controller
      */
     public function markAsRead(Request $request, $userId)
     {
-        $this->touchUserPresence(Auth::id());
+        $currentUser = Auth::user();
+        $currentUserId = (int) ($currentUser?->id ?? 0);
+        $this->touchUserPresence($currentUserId);
 
-        ChatMessage::where('receiver_id', Auth::id())
-            ->where('sender_id', $userId)
+        if (!$currentUser || $currentUserId <= 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated',
+            ], 401);
+        }
+
+        $chatPartner = $this->resolveChatPartner($currentUser, $userId);
+        if (!$chatPartner) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid chat partner',
+            ], 404);
+        }
+
+        ChatMessage::where('receiver_id', $currentUserId)
+            ->where('sender_id', (int) $chatPartner->id)
             ->where('is_read', false)
             ->update(['is_read' => true]);
 
@@ -580,30 +709,24 @@ class ChatController extends Controller
      */
     public function setTyping(Request $request)
     {
-        $this->touchUserPresence(Auth::id());
+        $currentUser = Auth::user();
+        $senderId = (int) ($currentUser?->id ?? 0);
+        $this->touchUserPresence($senderId);
 
         $validated = $request->validate([
             'receiver_id' => 'nullable|integer|exists:users,id',
             'is_typing' => 'required|boolean',
         ]);
 
-        $sender = Auth::user();
-        $senderId = (int) ($sender?->id ?? 0);
-        $receiverId = (int) ($validated['receiver_id'] ?? 0);
-
-        if ($senderId <= 0) {
+        if ($senderId <= 0 || !$currentUser) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthenticated',
             ], 401);
         }
 
-        if ($receiverId <= 0) {
-            if ($sender && !$sender->isAdmin()) {
-                $admin = User::where('role', 'admin')->first();
-                $receiverId = $admin ? (int) $admin->id : 0;
-            }
-        }
+        $receiver = $this->resolveChatPartner($currentUser, $validated['receiver_id'] ?? null);
+        $receiverId = (int) ($receiver?->id ?? 0);
 
         if ($receiverId <= 0 || $receiverId === $senderId) {
             return response()->json([

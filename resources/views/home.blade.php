@@ -412,43 +412,129 @@
           <p class="text-sm text-gray-300 mt-6 flex items-center">
             <i class="fas fa-lock mr-2"></i> {{ __('home.hero_security_note') }}
           </p>
+          <div class="grid grid-cols-2 gap-4 mt-8 lg:hidden">
+            <div class="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-blue-100 mb-2">{{ __('home.feature_1_title') }}</p>
+              <p class="text-2xl font-bold text-white">AES 256</p>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-blue-100 mb-2">{{ __('home.advantage_4_title') }}</p>
+              <p class="text-2xl font-bold text-white">24/7</p>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 col-span-2">
+              <p class="text-xs uppercase tracking-[0.2em] text-blue-100 mb-2">{{ __('home.advantage_3_title') }}</p>
+              <p class="text-base font-medium text-white">{{ __('home.hero_feature_4') }}</p>
+            </div>
+          </div>
         </div>
 
         <div class="hidden lg:block">
-          <div class="premium-card rounded-2xl p-8">
-            <h3 class="text-2xl font-semibold mb-6 flex items-center text-premium">
-              <i class="fas fa-chart-line mr-3"></i>
-              {{ __('home.dashboard_preview_title') }}
-            </h3>
-            <div class="space-y-6 text-gray-700">
-              <div class="flex justify-between items-center border-b pb-4">
-                <span class="font-medium">{{ __('home.dashboard_transfers_in_progress') }}</span>
-                <span class="font-bold text-premium">3 {{ __('home.dashboard_operations') }}</span>
-              </div>
-              <div class="mt-6">
-                <p class="mb-3 text-sm uppercase tracking-wide text-gray-500">{{ __('home.dashboard_priority_transfer') }}</p>
-                <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                  <div class="bg-gradient-to-r from-green-500 to-blue-600 h-3 w-3/4 rounded-full"></div>
+          <div class="premium-card rounded-[2rem] p-8 xl:p-9 relative overflow-hidden">
+            <div class="absolute -top-16 -right-10 w-40 h-40 rounded-full bg-blue-100 opacity-70 blur-3xl"></div>
+            <div class="absolute -bottom-20 -left-8 w-44 h-44 rounded-full bg-orange-100 opacity-70 blur-3xl"></div>
+
+            <div class="relative z-10">
+              <div class="flex items-start justify-between gap-4 mb-8">
+                <div>
+                  <span class="inline-flex items-center px-4 py-2 rounded-full bg-orange-50 text-orange-600 text-xs font-semibold tracking-[0.25em] uppercase border border-orange-100">
+                    {{-- Valtrix Bank Premium --}}
+                  </span>
+                  <h3 class="text-3xl font-semibold mt-4 text-premium flex items-center">
+                    <i class="fas fa-chart-line mr-3"></i>
+                    {{ __('home.dashboard_preview_title') }}
+                  </h3>
+                  <p class="text-sm text-gray-500 mt-3 max-w-md leading-relaxed">
+                    {{ __('home.dashboard_description') }}
+                  </p>
                 </div>
-                <p class="text-sm text-gray-500 mt-2">{{ __('home.dashboard_step') }}</p>
+
+                <div class="rounded-2xl bg-slate-900 text-white px-4 py-3 shadow-lg min-w-[138px]">
+                  <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400 mb-2">{{ __('home.dashboard_transfers_in_progress') }}</p>
+                  <p class="text-3xl font-bold">3</p>
+                  <p class="text-sm text-slate-300">{{ __('home.dashboard_operations') }}</p>
+                </div>
               </div>
+
+              <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="rounded-2xl border border-blue-100 bg-blue-50/80 p-5">
+                  <div class="w-11 h-11 rounded-2xl bg-white text-blue-700 flex items-center justify-center shadow-sm mb-4">
+                    <i class="fas fa-shield-halved"></i>
+                  </div>
+                  <p class="text-sm font-semibold text-gray-900 mb-2">{{ __('home.feature_1_title') }}</p>
+                  <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.feature_1_item_2') }}</p>
+                </div>
+
+                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/80 p-5">
+                  <div class="w-11 h-11 rounded-2xl bg-white text-emerald-600 flex items-center justify-center shadow-sm mb-4">
+                    <i class="fas fa-file-lines"></i>
+                  </div>
+                  <p class="text-sm font-semibold text-gray-900 mb-2">{{ __('home.advantage_3_title') }}</p>
+                  <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.hero_feature_4') }}</p>
+                </div>
+              </div>
+
+              <div class="rounded-[1.75rem] bg-slate-950 text-white p-6 shadow-2xl">
+                <div class="flex items-start justify-between gap-4 mb-5">
+                  <div>
+                    <p class="text-xs uppercase tracking-[0.3em] text-orange-300 mb-2">{{ __('home.dashboard_priority_transfer') }}</p>
+                    <h4 class="text-2xl font-semibold">{{ __('home.feature_3_title') }}</h4>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-sm text-slate-400">{{ __('transactions.progress_label') }}</p>
+                    <p class="text-3xl font-bold text-emerald-300">76%</p>
+                  </div>
+                </div>
+
+                <div class="w-full h-3 rounded-full bg-white/10 overflow-hidden mb-4">
+                  <div class="h-3 rounded-full bg-gradient-to-r from-orange-400 via-amber-300 to-emerald-400" style="width: 76%"></div>
+                </div>
+
+                <p class="text-sm text-slate-300 mb-5">{{ __('home.dashboard_step') }}</p>
+
+                <div class="grid grid-cols-3 gap-3">
+                  <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                    <p class="text-xs uppercase tracking-[0.2em] text-slate-500 mb-2">01</p>
+                    <p class="font-semibold">{{ __('transactions.step_information') }}</p>
+                    <p class="text-xs text-slate-400 mt-2">{{ __('home.hero_feature_1') }}</p>
+                  </div>
+                  <div class="rounded-2xl border border-orange-300/30 bg-orange-400/10 px-4 py-4 shadow-lg shadow-orange-500/10">
+                    <p class="text-xs uppercase tracking-[0.2em] text-orange-200 mb-2">02</p>
+                    <p class="font-semibold">{{ __('transactions.step_processing') }}</p>
+                    <p class="text-xs text-slate-300 mt-2">{{ __('home.hero_feature_2') }}</p>
+                  </div>
+                  <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                    <p class="text-xs uppercase tracking-[0.2em] text-slate-500 mb-2">03</p>
+                    <p class="font-semibold">{{ __('transactions.step_confirmation') }}</p>
+                    <p class="text-xs text-slate-400 mt-2">{{ __('home.hero_feature_4') }}</p>
+                  </div>
+                </div>
+              </div>
+
               <div class="grid grid-cols-3 gap-4 mt-6 text-center">
-                <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
-                  <p class="text-gray-600 mb-2">{{ __('home.dashboard_transfers') }}</p>
-                  <p class="font-bold text-premium text-xl">+32</p>
+                <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+                  <p class="text-gray-500 mb-2 text-sm">{{ __('home.dashboard_transfers') }}</p>
+                  <p class="font-bold text-premium text-2xl">+32</p>
                 </div>
-                <div class="bg-green-50 rounded-xl p-4 border border-green-100">
-                  <p class="text-gray-600 mb-2">{{ __('home.dashboard_reception') }}</p>
-                  <p class="font-bold text-green-600 text-xl">+18</p>
+                <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+                  <p class="text-gray-500 mb-2 text-sm">{{ __('home.dashboard_reception') }}</p>
+                  <p class="font-bold text-emerald-600 text-2xl">+18</p>
                 </div>
-                <div class="bg-red-50 rounded-xl p-4 border border-red-100">
-                  <p class="text-gray-600 mb-2">{{ __('home.dashboard_alerts') }}</p>
-                  <p class="font-bold text-red-500 text-xl">0</p>
+                <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+                  <p class="text-gray-500 mb-2 text-sm">{{ __('home.dashboard_alerts') }}</p>
+                  <p class="font-bold text-red-500 text-2xl">0</p>
                 </div>
               </div>
-              <p class="text-sm text-gray-500 mt-4">
-                {{ __('home.dashboard_description') }}
-              </p>
+
+              <div class="grid grid-cols-2 gap-4 mt-6">
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <p class="text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">{{ __('home.feature_2_title') }}</p>
+                  <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.feature_2_description') }}</p>
+                </div>
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <p class="text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">{{ __('home.advantage_4_title') }}</p>
+                  <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.advantage_4_description') }}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -469,6 +555,122 @@
       <p class="text-xl text-gray-600 leading-relaxed">
         {{ __('home.features_description') }}
       </p>
+    </div>
+
+    <div class="grid xl:grid-cols-[1.35fr,0.9fr] gap-8 mb-16 items-stretch">
+      <div class="rounded-[2rem] border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-blue-50 p-8 lg:p-10 shadow-sm">
+        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8">
+          <div class="max-w-2xl">
+            <span class="inline-flex items-center px-4 py-2 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold tracking-[0.25em] uppercase border border-blue-100">
+              {{ __('home.dashboard_preview_title') }}
+            </span>
+            <h3 class="text-3xl font-bold text-gray-900 mt-4 mb-4">
+              {{ __('home.why_choose_title') }}
+            </h3>
+            <p class="text-gray-600 text-lg leading-relaxed">
+              {{ __('home.why_choose_description') }}
+            </p>
+          </div>
+
+          <div class="rounded-3xl bg-white border border-slate-200 p-5 shadow-sm max-w-xs">
+            <p class="text-xs uppercase tracking-[0.25em] text-slate-400 mb-2">{{ __('home.stats_satisfaction') }}</p>
+            <p class="text-4xl font-bold text-premium mb-2">98%</p>
+            <p class="text-sm text-gray-500 leading-relaxed">{{ __('home.stats_satisfaction_description') }}</p>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-4">
+          <div class="rounded-3xl bg-white border border-blue-100 p-6 shadow-sm">
+            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center mb-5">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h4 class="text-lg font-semibold text-gray-900 mb-3">{{ __('home.feature_1_title') }}</h4>
+            <p class="text-sm text-gray-600 leading-relaxed mb-4">{{ __('home.feature_1_description') }}</p>
+            <p class="text-sm font-medium text-blue-700">{{ __('home.feature_1_item_1') }}</p>
+          </div>
+
+          <div class="rounded-3xl bg-white border border-orange-100 p-6 shadow-sm">
+            <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center mb-5">
+              <i class="fas fa-user-shield"></i>
+            </div>
+            <h4 class="text-lg font-semibold text-gray-900 mb-3">{{ __('home.feature_2_title') }}</h4>
+            <p class="text-sm text-gray-600 leading-relaxed mb-4">{{ __('home.feature_2_description') }}</p>
+            <p class="text-sm font-medium text-orange-600">{{ __('home.feature_2_item_2') }}</p>
+          </div>
+
+          <div class="rounded-3xl bg-white border border-emerald-100 p-6 shadow-sm">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-5">
+              <i class="fas fa-file-lines"></i>
+            </div>
+            <h4 class="text-lg font-semibold text-gray-900 mb-3">{{ __('home.feature_3_title') }}</h4>
+            <p class="text-sm text-gray-600 leading-relaxed mb-4">{{ __('home.feature_3_description') }}</p>
+            <p class="text-sm font-medium text-emerald-600">{{ __('home.feature_3_item_3') }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative overflow-hidden rounded-[2rem] bg-slate-950 p-8 lg:p-10 text-white shadow-[0_30px_60px_rgba(15,23,42,0.28)]">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(251,146,60,0.28),_transparent_35%),radial-gradient(circle_at_bottom_left,_rgba(59,130,246,0.24),_transparent_35%)]"></div>
+        <div class="relative z-10 h-full flex flex-col">
+          <span class="inline-flex items-center px-4 py-2 rounded-full bg-white/10 text-orange-200 text-xs font-semibold tracking-[0.25em] uppercase border border-white/10 w-fit">
+            {{ __('home.dashboard_priority_transfer') }}
+          </span>
+
+          <h3 class="text-3xl font-semibold mt-6 mb-3">{{ __('home.feature_3_title') }}</h3>
+          <p class="text-slate-300 leading-relaxed">
+            {{ __('home.dashboard_description') }}
+          </p>
+
+          <div class="space-y-4 mt-8">
+            <div class="rounded-3xl border border-white/10 bg-white/5 px-5 py-5">
+              <div class="flex items-center justify-between gap-4">
+                <div>
+                  <p class="text-lg font-semibold">{{ __('transactions.step_information') }}</p>
+                  <p class="text-sm text-slate-300 mt-1">{{ __('home.hero_feature_1') }}</p>
+                </div>
+                <div class="w-11 h-11 rounded-2xl bg-white/10 flex items-center justify-center text-blue-200">
+                  <i class="fas fa-user-check"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="rounded-3xl border border-orange-300/30 bg-orange-400/10 px-5 py-5 shadow-lg shadow-orange-500/10">
+              <div class="flex items-center justify-between gap-4">
+                <div>
+                  <p class="text-lg font-semibold">{{ __('transactions.step_processing') }}</p>
+                  <p class="text-sm text-slate-200 mt-1">{{ __('home.hero_feature_2') }}</p>
+                </div>
+                <div class="w-11 h-11 rounded-2xl bg-orange-300/20 flex items-center justify-center text-orange-100">
+                  <i class="fas fa-spinner"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="rounded-3xl border border-white/10 bg-white/5 px-5 py-5">
+              <div class="flex items-center justify-between gap-4">
+                <div>
+                  <p class="text-lg font-semibold">{{ __('transactions.step_confirmation') }}</p>
+                  <p class="text-sm text-slate-300 mt-1">{{ __('home.hero_feature_4') }}</p>
+                </div>
+                <div class="w-11 h-11 rounded-2xl bg-white/10 flex items-center justify-center text-emerald-200">
+                  <i class="fas fa-circle-check"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8 rounded-3xl border border-white/10 bg-white/5 p-5">
+            <div class="flex items-center justify-between gap-4 mb-4">
+              <p class="text-sm font-semibold text-white">{{ __('transactions.transfer_progress') }}</p>
+              <p class="text-2xl font-bold text-orange-200">76%</p>
+            </div>
+            <div class="w-full h-3 rounded-full bg-white/10 overflow-hidden">
+              <div class="h-3 rounded-full bg-gradient-to-r from-orange-400 via-amber-300 to-emerald-400" style="width: 76%"></div>
+            </div>
+            <p class="text-sm text-slate-300 mt-4">{{ __('home.dashboard_step') }}</p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Cards -->
@@ -534,7 +736,7 @@
             </li>
             <li class="flex items-start">
               <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-              Contrôle manuel possible par l'administrateur
+              {{ __('home.feature_2_item_3') }}
             </li>
           </ul>
         </div>
@@ -658,29 +860,93 @@ document.addEventListener("DOMContentLoaded", () => {
   </section>
 
   <!-- Stats -->
-  <section class="py-24 gradient-bg text-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-3 gap-12 text-center">
-        <div class="transform hover:scale-105 transition duration-300 p-6">
+  <section class="py-24 gradient-bg text-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(251,146,60,0.18),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(255,255,255,0.12),_transparent_40%)]"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center max-w-3xl mx-auto mb-14">
+        <span class="inline-flex items-center px-4 py-2 rounded-full bg-white/10 border border-white/10 text-sm font-semibold tracking-[0.2em] uppercase">
+          {{ __('home.hero_badge') }}
+        </span>
+        <h2 class="text-4xl md:text-5xl font-bold mt-6 mb-5">{{ __('home.why_choose_title') }}</h2>
+        <p class="text-xl text-blue-100 leading-relaxed">
+          {{ __('home.why_choose_description') }}
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 text-center">
+        <div class="rounded-[2rem] border border-white/10 bg-white/10 backdrop-blur-sm p-8 shadow-xl">
+          <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mx-auto mb-6 text-orange-200">
+            <i class="fas fa-users text-2xl"></i>
+          </div>
           <div class="text-6xl font-bold mb-4" id="client-count">0</div>
           <div class="text-2xl mb-4">{{ __('home.stats_clients') }}</div>
           <p class="text-blue-100 text-lg leading-relaxed">
             {{ __('home.stats_clients_description') }}
           </p>
+          <div class="mt-6 pt-6 border-t border-white/10 text-sm text-blue-100">
+            {{ __('home.advantage_1_title') }}
+          </div>
         </div>
-        <div class="transform hover:scale-105 transition duration-300 p-6">
+
+        <div class="rounded-[2rem] border border-white/10 bg-white/10 backdrop-blur-sm p-8 shadow-xl">
+          <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mx-auto mb-6 text-emerald-200">
+            <i class="fas fa-building-columns text-2xl"></i>
+          </div>
           <div class="text-6xl font-bold mb-4" id="transaction-volume">0</div>
           <div class="text-2xl mb-4">{{ __('home.stats_volume') }}</div>
           <p class="text-blue-100 text-lg leading-relaxed">
             {{ __('home.stats_volume_description') }}
           </p>
+          <div class="mt-6 pt-6 border-t border-white/10 text-sm text-blue-100">
+            {{ __('home.advantage_2_title') }}
+          </div>
         </div>
-        <div class="transform hover:scale-105 transition duration-300 p-6">
+
+        <div class="rounded-[2rem] border border-white/10 bg-white/10 backdrop-blur-sm p-8 shadow-xl">
+          <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mx-auto mb-6 text-yellow-200">
+            <i class="fas fa-star text-2xl"></i>
+          </div>
           <div class="text-6xl font-bold mb-4" id="satisfaction-rate">0%</div>
           <div class="text-2xl mb-4">{{ __('home.stats_satisfaction') }}</div>
           <p class="text-blue-100 text-lg leading-relaxed">
             {{ __('home.stats_satisfaction_description') }}
           </p>
+          <div class="mt-6 pt-6 border-t border-white/10 text-sm text-blue-100">
+            {{ __('home.advantage_3_title') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-6 mt-10">
+        <div class="rounded-3xl border border-white/10 bg-slate-900/20 p-6 backdrop-blur-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-11 h-11 rounded-2xl bg-white/10 flex items-center justify-center text-blue-200">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 class="text-lg font-semibold">{{ __('home.feature_1_title') }}</h3>
+          </div>
+          <p class="text-blue-100 leading-relaxed">{{ __('home.feature_1_description') }}</p>
+        </div>
+
+        <div class="rounded-3xl border border-white/10 bg-slate-900/20 p-6 backdrop-blur-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-11 h-11 rounded-2xl bg-white/10 flex items-center justify-center text-orange-200">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 class="text-lg font-semibold">{{ __('home.dashboard_preview_title') }}</h3>
+          </div>
+          <p class="text-blue-100 leading-relaxed">{{ __('home.dashboard_description') }}</p>
+        </div>
+
+        <div class="rounded-3xl border border-white/10 bg-slate-900/20 p-6 backdrop-blur-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-11 h-11 rounded-2xl bg-white/10 flex items-center justify-center text-emerald-200">
+              <i class="fas fa-award"></i>
+            </div>
+            <h3 class="text-lg font-semibold">{{ __('home.cert_2_title') }}</h3>
+          </div>
+          <p class="text-blue-100 leading-relaxed">{{ __('home.cert_2_description') }}</p>
         </div>
       </div>
     </div>
@@ -693,11 +959,55 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="text-center max-w-3xl mx-auto mb-16">
         <h2 class="text-4xl font-bold mb-6 text-premium">{{ __('home.partners_title') }}</h2>
         <p class="text-xl text-gray-600 leading-relaxed">
-          {{ __('home.collabore_description') }}
+          {{ __('home.partners_description') }}
         </p>
       </div>
 
-      <div class="overflow-hidden py-6">
+      <div class="grid lg:grid-cols-3 gap-6 mb-12">
+        <div class="rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
+          <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center mb-5">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('home.cert_1_title') }}</h3>
+          <p class="text-gray-600 leading-relaxed">{{ __('home.cert_1_description') }}</p>
+        </div>
+
+        <div class="rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
+          <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center mb-5">
+            <i class="fas fa-award"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('home.cert_2_title') }}</h3>
+          <p class="text-gray-600 leading-relaxed">{{ __('home.cert_2_description') }}</p>
+        </div>
+
+        <div class="rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-5">
+            <i class="fas fa-lock"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('home.cert_3_title') }}</h3>
+          <p class="text-gray-600 leading-relaxed">{{ __('home.cert_3_description') }}</p>
+        </div>
+      </div>
+
+      <div class="rounded-[2rem] border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-orange-50 p-8 lg:p-10 shadow-sm">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
+        <div class="max-w-2xl">
+          <span class="inline-flex items-center px-4 py-2 rounded-full bg-white text-orange-600 text-xs font-semibold tracking-[0.25em] uppercase border border-orange-100 shadow-sm">
+            {{ __('home.partners_title') }}
+          </span>
+          <h3 class="text-3xl font-bold text-gray-900 mt-4 mb-3">{{ __('home.certifications_title') }}</h3>
+          <p class="text-gray-600 leading-relaxed">
+            {{ __('home.collabore_description') }}
+          </p>
+        </div>
+
+        <div class="rounded-3xl bg-white border border-slate-200 p-5 shadow-sm max-w-sm">
+          <p class="text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">{{ __('home.partners_note') }}</p>
+          <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.certifications_description') }}</p>
+        </div>
+      </div>
+
+      <div class="overflow-hidden py-6 border-y border-slate-200/80">
         <div class="partners-marquee flex items-center space-x-16">
 
           <!-- Première série -->
@@ -746,9 +1056,23 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       </div>
 
-      <p class="text-center text-gray-500 mt-10">
-        {{ __('home.partners_note') }}
-      </p>
+      <div class="grid md:grid-cols-3 gap-4 mt-8">
+        <div class="rounded-3xl bg-white border border-slate-200 p-5 shadow-sm">
+          <p class="text-sm font-semibold text-gray-900 mb-2">{{ __('home.advantage_2_title') }}</p>
+          <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.advantage_2_description') }}</p>
+        </div>
+
+        <div class="rounded-3xl bg-white border border-slate-200 p-5 shadow-sm">
+          <p class="text-sm font-semibold text-gray-900 mb-2">{{ __('home.advantage_3_title') }}</p>
+          <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.advantage_3_description') }}</p>
+        </div>
+
+        <div class="rounded-3xl bg-white border border-slate-200 p-5 shadow-sm">
+          <p class="text-sm font-semibold text-gray-900 mb-2">{{ __('home.advantage_4_title') }}</p>
+          <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.advantage_4_description') }}</p>
+        </div>
+      </div>
+      </div>
 
     </div>
   </section>
@@ -883,170 +1207,215 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   <!-- Témoignages (Slider) -->
-  <section class="py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-4xl font-bold mb-6 text-premium">{{ __('home.testimonials_title') }}</h2>
-        <p class="text-xl text-gray-600 leading-relaxed">
-          {{ __('home.testimonials_description') }}
-        </p>
-      </div>
+  @php
+    $testimonials = [
+      ['id' => 1, 'icon' => 'fas fa-user-tie', 'avatar_bg' => 'bg-blue-100', 'icon_color' => 'text-blue-600', 'badge_bg' => 'bg-blue-50', 'badge_text' => 'text-blue-700', 'border_color' => 'border-blue-100', 'photo' => 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=900&q=80', 'photo_class' => 'object-center'],
+      ['id' => 2, 'icon' => 'fas fa-globe', 'avatar_bg' => 'bg-emerald-100', 'icon_color' => 'text-emerald-600', 'badge_bg' => 'bg-emerald-50', 'badge_text' => 'text-emerald-700', 'border_color' => 'border-emerald-100', 'photo' => 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=900&q=80', 'photo_class' => 'object-center'],
+      ['id' => 3, 'icon' => 'fas fa-building', 'avatar_bg' => 'bg-purple-100', 'icon_color' => 'text-purple-600', 'badge_bg' => 'bg-purple-50', 'badge_text' => 'text-purple-700', 'border_color' => 'border-purple-100', 'photo' => 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80', 'photo_class' => 'object-center'],
+      ['id' => 4, 'icon' => 'fas fa-briefcase', 'avatar_bg' => 'bg-orange-100', 'icon_color' => 'text-orange-600', 'badge_bg' => 'bg-orange-50', 'badge_text' => 'text-orange-700', 'border_color' => 'border-orange-100', 'photo' => 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=900&q=80', 'photo_class' => 'object-top'],
+      ['id' => 5, 'icon' => 'fas fa-landmark', 'avatar_bg' => 'bg-slate-200', 'icon_color' => 'text-slate-700', 'badge_bg' => 'bg-slate-100', 'badge_text' => 'text-slate-700', 'border_color' => 'border-slate-200', 'photo' => 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=900&q=80', 'photo_class' => 'object-center'],
+    ];
+  @endphp
 
-      <div class="max-w-5xl mx-auto">
-        <div id="testimonial-slider" class="relative">
-          <!-- Slide 1 -->
-          <div class="testimonial-slide active premium-card rounded-3xl p-10">
-            <div class="flex flex-col md:flex-row items-start md:items-center md:space-x-8">
-              <div class="flex items-center space-x-4 mb-6 md:mb-0">
-                <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
-                  <i class="fas fa-user text-premium text-2xl"></i>
-                </div>
-                <div>
-                  <p class="font-bold text-gray-800 text-lg">{{ __('home.testimonial_1_name') }}</p>
-                  <p class="text-sm text-gray-500">{{ __('home.testimonial_1_role') }}</p>
-                </div>
-              </div>
-              <div class="flex-1">
-                <p class="text-gray-600 mb-4 text-lg leading-relaxed">
-                  {{ __('home.testimonial_1_text') }}
-                </p>
-                <div class="flex items-center space-x-2 text-yellow-400 text-lg">
-                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                  <span class="text-gray-500 text-sm ml-2">{{ __('home.testimonial_1_rating') }}</span>
-                </div>
-              </div>
+  <section class="py-24 bg-gray-50 relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.12),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(249,115,22,0.14),_transparent_35%)]"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid xl:grid-cols-[0.82fr,1.18fr] gap-10 items-stretch">
+        <div class="rounded-[2rem] bg-slate-950 text-white p-8 lg:p-10 shadow-[0_32px_64px_rgba(15,23,42,0.28)] h-full">
+          <span class="inline-flex items-center px-4 py-2 rounded-full bg-white/10 border border-white/10 text-xs font-semibold tracking-[0.25em] uppercase">
+            {{ __('home.testimonials_title') }}
+          </span>
+          <h2 class="text-4xl lg:text-5xl font-bold mt-6 mb-5 leading-tight">{{ __('home.testimonials_title') }}</h2>
+          <p class="text-lg text-slate-300 leading-relaxed">
+            {{ __('home.testimonials_description') }}
+          </p>
+
+          <div class="grid grid-cols-3 gap-3 mt-8">
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">{{ __('home.stats_satisfaction') }}</p>
+              <p class="text-2xl font-bold text-white">98%</p>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">{{ __('home.dashboard_transfers') }}</p>
+              <p class="text-2xl font-bold text-white">24/7</p>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">{{ __('home.advantage_3_title') }}</p>
+              <p class="text-2xl font-bold text-white">PDF</p>
             </div>
           </div>
 
-          <!-- Slide 2 -->
-          <div class="testimonial-slide premium-card rounded-3xl p-10">
-            <div class="flex flex-col md:flex-row items-start md:items-center md:space-x-8">
-              <div class="flex items-center space-x-4 mb-6 md:mb-0">
-                <div class="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center">
-                  <i class="fas fa-user-tie text-emerald-600 text-2xl"></i>
+          <div class="space-y-4 mt-8">
+            <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
+              <p class="text-sm font-semibold text-white mb-2">{{ __('home.feature_3_title') }}</p>
+              <p class="text-sm text-slate-300 leading-relaxed">{{ __('home.feature_3_description') }}</p>
+            </div>
+            <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
+              <p class="text-sm font-semibold text-white mb-2">{{ __('home.advantage_4_title') }}</p>
+              <p class="text-sm text-slate-300 leading-relaxed">{{ __('home.advantage_4_description') }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="testimonial-slider" class="relative h-full flex flex-col">
+          @foreach ($testimonials as $testimonial)
+            <div class="testimonial-slide{{ $loop->first ? ' active' : '' }} premium-card rounded-[2rem] p-8 lg:p-10 border border-white/40 shadow-[0_24px_48px_rgba(15,23,42,0.12)] h-full min-h-[480px]">
+              <div class="grid xl:grid-cols-[270px,1fr] gap-8 h-full items-stretch">
+                <div class="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-6 flex flex-col justify-between">
+                  <div>
+                    <div class="relative overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-100 mb-6 shadow-sm">
+                      <img
+                        src="{{ $testimonial['photo'] }}"
+                        alt="{{ __('home.testimonial_' . $testimonial['id'] . '_name') }}"
+                        class="aspect-[4/5] w-full object-cover {{ $testimonial['photo_class'] }}"
+                        loading="lazy"
+                      >
+                      <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent"></div>
+                      <div class="absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-white/90 shadow-lg">
+                        <i class="{{ $testimonial['icon'] }} {{ $testimonial['icon_color'] }} text-lg"></i>
+                      </div>
+                    </div>
+
+                    <div class="flex items-center gap-4 mb-6">
+                      <div class="w-14 h-14 rounded-full {{ $testimonial['avatar_bg'] }} flex items-center justify-center shadow-sm shrink-0">
+                        <i class="{{ $testimonial['icon'] }} {{ $testimonial['icon_color'] }} text-xl"></i>
+                      </div>
+                      <div>
+                        <p class="font-bold text-gray-900 text-lg">{{ __('home.testimonial_' . $testimonial['id'] . '_name') }}</p>
+                        <p class="text-sm text-gray-500 leading-relaxed">{{ __('home.testimonial_' . $testimonial['id'] . '_role') }}</p>
+                      </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-3">
+                      <span class="inline-flex items-center px-4 py-2 rounded-full border {{ $testimonial['border_color'] }} {{ $testimonial['badge_bg'] }} {{ $testimonial['badge_text'] }} text-sm font-semibold">
+                        {{ __('home.testimonial_' . $testimonial['id'] . '_rating') }}
+                      </span>
+                      <span class="inline-flex items-center px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-sm font-medium">
+                        {{ __('home.feature_3_item_3') }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="rounded-2xl bg-white border border-slate-200 p-5 mt-6 xl:mt-8">
+                    <div class="flex items-center gap-2 text-yellow-400 text-sm mb-3">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">{{ __('home.dashboard_transfers_in_progress') }}</p>
+                    <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.hero_feature_3') }}</p>
+                  </div>
                 </div>
-                <div>
-                  <p class="font-bold text-gray-800 text-lg">{{ __('home.testimonial_2_name') }}</p>
-                  <p class="text-sm text-gray-500">{{ __('home.testimonial_2_role') }}</p>
-                </div>
-              </div>
-              <div class="flex-1">
-                <p class="text-gray-600 mb-4 text-lg leading-relaxed">
-                  {{ __('home.testimonial_2_text') }}
-                </p>
-                <div class="flex items-center space-x-2 text-yellow-400 text-lg">
-                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                  <span class="text-gray-500 text-sm ml-2">{{ __('home.testimonial_2_rating') }}</span>
+
+                <div class="flex flex-col justify-between h-full">
+                  <div class="flex items-start gap-5">
+                    <div class="hidden xl:flex w-14 h-14 rounded-2xl bg-orange-50 text-orange-500 items-center justify-center shrink-0">
+                      <i class="fas fa-quote-left text-2xl"></i>
+                    </div>
+
+                    <div class="flex-1">
+                      <p class="text-gray-700 text-xl xl:text-[1.35rem] leading-relaxed">
+                        {{ __('home.testimonial_' . $testimonial['id'] . '_text') }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="grid sm:grid-cols-2 gap-4 mt-8 xl:mt-10">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                      <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">{{ __('home.hero_feature_2') }}</p>
+                      <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.dashboard_step') }}</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                      <p class="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">{{ __('home.hero_feature_4') }}</p>
+                      <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.advantage_3_description') }}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          @endforeach
 
-          <!-- Slide 3 -->
-          <div class="testimonial-slide premium-card rounded-3xl p-10">
-            <div class="flex flex-col md:flex-row items-start md:items-center md:space-x-8">
-              <div class="flex items-center space-x-4 mb-6 md:mb-0">
-                <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center">
-                  <i class="fas fa-user-circle text-purple-600 text-2xl"></i>
-                </div>
-                <div>
-                  <p class="font-bold text-gray-800 text-lg">{{ __('home.testimonial_3_name') }}</p>
-                  <p class="text-sm text-gray-500">{{ __('home.testimonial_3_role') }}</p>
-                </div>
-              </div>
-              <div class="flex-1">
-                <p class="text-gray-600 mb-4 text-lg leading-relaxed">
-                  {{ __('home.testimonial_3_text') }}
-                </p>
-                <div class="flex items-center space-x-2 text-yellow-400 text-lg">
-                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                  <span class="text-gray-500 text-sm ml-2">{{ __('home.testimonial_3_rating') }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Dots -->
-          <div class="flex justify-center items-center space-x-4 mt-10">
-            <span class="testimonial-dot active" data-index="0"></span>
-            <span class="testimonial-dot" data-index="1"></span>
-            <span class="testimonial-dot" data-index="2"></span>
+          <div class="flex justify-center xl:justify-start items-center flex-wrap gap-4 mt-8 xl:mt-10">
+            @foreach ($testimonials as $testimonial)
+              <button type="button" class="testimonial-dot{{ $loop->first ? ' active' : '' }} bg-transparent p-0" data-index="{{ $loop->index }}" aria-label="Testimonial {{ $loop->iteration }}"></button>
+            @endforeach
           </div>
         </div>
       </div>
     </div>
   </section>
 
+  @php
+    $faqItems = [1, 2, 3, 4, 5, 6];
+  @endphp
+
   <!-- FAQ -->
-  <section class="py-24 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-4xl font-bold mb-6 text-premium">{{ __('home.faq_title') }}</h2>
-        <p class="text-xl text-gray-600 leading-relaxed">
-          {{ __('home.faq_description') }}
-        </p>
-      </div>
+  <section class="py-24 bg-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(59,130,246,0.10),_transparent_28%),radial-gradient(circle_at_bottom_left,_rgba(249,115,22,0.10),_transparent_32%)]"></div>
 
-      <div class="max-w-4xl mx-auto space-y-6" id="faq-list">
-        <!-- FAQ Item -->
-        <div class="faq-item">
-          <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
-            <div>
-              <p class="font-bold text-xl text-gray-800">{{ __('home.faq_1_question') }}</p>
-              <p class="text-gray-500 mt-2">{{ __('home.faq_1_subtitle') }}</p>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid xl:grid-cols-[0.88fr,1.12fr] gap-8 items-start">
+        <div class="rounded-[2rem] border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-orange-50 p-8 lg:p-10 shadow-sm">
+          <span class="inline-flex items-center px-4 py-2 rounded-full bg-white text-orange-600 text-xs font-semibold tracking-[0.25em] uppercase border border-orange-100 shadow-sm">
+            {{ __('home.nav_faq') }}
+          </span>
+          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mt-6 mb-5 leading-tight">{{ __('home.faq_title') }}</h2>
+          <p class="text-lg text-gray-600 leading-relaxed">
+            {{ __('home.faq_description') }}
+          </p>
+
+          <div class="space-y-4 mt-8">
+            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-11 h-11 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center">
+                  <i class="fas fa-shield-alt"></i>
+                </div>
+                <p class="font-semibold text-gray-900">{{ __('home.feature_1_title') }}</p>
+              </div>
+              <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.hero_security_note') }}</p>
             </div>
-            <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
-          </button>
-          <div class="faq-answer px-8 pb-6">
-            <p class="text-gray-600 leading-relaxed">
-              {{ __('home.faq_1_answer') }}
-            </p>
+
+            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-11 h-11 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center">
+                  <i class="fas fa-headset"></i>
+                </div>
+                <p class="font-semibold text-gray-900">{{ __('home.advantage_4_title') }}</p>
+              </div>
+              <p class="text-sm text-gray-600 leading-relaxed">{{ __('home.advantage_4_description') }}</p>
+            </div>
           </div>
         </div>
 
-        <div class="faq-item">
-          <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
-            <div>
-              <p class="font-bold text-xl text-gray-800">{{ __('home.faq_2_question') }}</p>
-              <p class="text-gray-500 mt-2">{{ __('home.faq_2_subtitle') }}</p>
+        <div class="space-y-5" id="faq-list">
+          @foreach ($faqItems as $faqIndex)
+            <div class="faq-item rounded-[1.75rem] border border-slate-200 bg-white shadow-sm">
+              <button type="button" class="w-full flex justify-between items-start gap-4 px-6 sm:px-8 py-6 text-left">
+                <div class="flex items-start gap-4 pr-4">
+                  <span class="w-11 h-11 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center font-semibold shrink-0">
+                    {{ str_pad((string) $faqIndex, 2, '0', STR_PAD_LEFT) }}
+                  </span>
+                  <div>
+                    <p class="font-bold text-lg sm:text-xl text-gray-900 leading-snug">{{ __('home.faq_' . $faqIndex . '_question') }}</p>
+                    <p class="text-gray-500 mt-2">{{ __('home.faq_' . $faqIndex . '_subtitle') }}</p>
+                  </div>
+                </div>
+                <span class="w-11 h-11 rounded-2xl bg-orange-50 text-orange-500 flex items-center justify-center shrink-0">
+                  <i class="fas fa-chevron-down text-lg"></i>
+                </span>
+              </button>
+              <div class="faq-answer px-6 sm:px-8 pb-8">
+                <div class="ml-[3.35rem] border-l border-orange-100 pl-5">
+                  <p class="text-gray-600 leading-relaxed text-base sm:text-lg">
+                    {{ __('home.faq_' . $faqIndex . '_answer') }}
+                  </p>
+                </div>
+              </div>
             </div>
-            <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
-          </button>
-          <div class="faq-answer px-8 pb-6">
-            <p class="text-gray-600 leading-relaxed">
-              {{ __('home.faq_2_answer') }}
-            </p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
-            <div>
-              <p class="font-bold text-xl text-gray-800">{{ __('home.faq_3_question') }}</p>
-              <p class="text-gray-500 mt-2">{{ __('home.faq_3_subtitle') }}</p>
-            </div>
-            <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
-          </button>
-          <div class="faq-answer px-8 pb-6">
-            <p class="text-gray-600 leading-relaxed">
-              {{ __('home.faq_3_answer') }}
-            </p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button type="button" class="w-full flex justify-between items-center px-8 py-6 text-left">
-            <div>
-              <p class="font-bold text-xl text-gray-800">{{ __('home.faq_4_question') }}</p>
-              <p class="text-gray-500 mt-2">{{ __('home.faq_4_subtitle') }}</p>
-            </div>
-            <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
-          </button>
-          <div class="faq-answer px-8 pb-6">
-            <p class="text-gray-600 leading-relaxed">
-              {{ __('home.faq_4_answer') }}
-            </p>
-          </div>
+          @endforeach
         </div>
       </div>
     </div>
@@ -1436,10 +1805,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
-
-
-
-
-
-
-

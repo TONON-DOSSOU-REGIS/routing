@@ -1,873 +1,667 @@
-
 <?php
     $adminChatV2I18n = [
         'loadingError' => __('admin_chat.loading_error'),
+        'loadingMessages' => __('admin_chat.loading_messages'),
         'noConversations' => __('admin_chat.no_conversations'),
         'noMessages' => __('admin_chat.no_messages'),
         'loadingMessagesError' => __('admin_chat.loading_messages_error'),
         'connectionError' => __('admin_chat.connection_error'),
         'startConversation' => __('admin_chat.start_conversation'),
+        'messagesWillAppear' => __('admin_chat.messages_will_appear'),
         'userFallback' => __('admin_chat.user_fallback'),
         'online' => __('admin_chat.online'),
         'connected' => __('admin_chat.connected'),
         'disconnected' => __('admin_chat.disconnected'),
         'typing' => __('admin_chat.typing'),
         'selectUser' => __('admin_chat.select_user'),
+        'recipientHint' => __('admin_chat.recipient_hint'),
+        'recentConversations' => __('admin_chat.recent_conversations'),
+        'selectedRecipient' => __('admin_chat.selected_recipient'),
+        'changeRecipient' => __('admin_chat.change_recipient'),
+        'recipientRequired' => __('admin_chat.recipient_required'),
         'selectUserPlaceholder' => __('admin_chat.select_user_placeholder'),
         'noUsersAvailable' => __('admin_chat.no_users_available'),
-        'onlinePrefix' => __('admin_chat.online_prefix'),
+        'replyPlaceholder' => __('admin_chat.reply_placeholder'),
+        'loadingConversations' => __('admin_chat.loading_conversations'),
+        'attachFile' => __('chat.attach_file'),
+        'fileLabel' => __('chat.file_label'),
+        'download' => __('chat.download'),
+        'imageAlt' => __('chat.image_preview_alt'),
     ];
 ?>
-<div id="admin-chat-widget-v2" class="fixed bottom-4 right-4 z-50">
-    
-    <span id="admin-unread-badge-v2" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">0</span>
-    
-    
-    <button 
-        id="admin-chat-toggle-v2" 
-        class="bg-purple-600 hover:bg-purple-700 text-white rounded-full p-4 shadow-lg transition-all duration-300 flex items-center justify-center relative"
-        onclick="toggleAdminChatV2()"
-    >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+<?php echo $__env->make('components.chat-premium-styles', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+
+<div id="admin-chat-widget-v2" class="chat-premium-shell fixed bottom-[calc(env(safe-area-inset-bottom,0px)+1rem)] right-4 z-[72]" style="--chat-accent:#7c3aed; --chat-accent-strong:#5b21b6;">
+    <div id="admin-chat-backdrop-v2" class="chat-premium-backdrop hidden"></div>
+    <span id="admin-unread-badge-v2" class="pointer-events-none absolute -right-1 -top-1 z-[1] hidden min-w-[1.5rem] rounded-full bg-rose-500 px-1.5 py-1 text-center text-[11px] font-bold leading-none text-white shadow-lg shadow-rose-900/20">0</span>
+
+    <button type="button" id="admin-chat-toggle-v2" class="chat-premium-launcher" aria-controls="admin-chat-window-v2" aria-expanded="false">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
         </svg>
     </button>
 
-    
-    <div
-        id="admin-chat-window-v2"
-        class="hidden absolute bottom-16 right-0 w-[min(24rem,calc(100vw-1.5rem))] sm:w-96 bg-white rounded-lg shadow-2xl overflow-hidden flex flex-col"
-        style="height: min(70vh, 600px);"
-    >
-        
-        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 flex justify-between items-center">
-            <div>
-                <h3 class="font-bold"><?php echo e(__('admin_chat.title')); ?></h3>
-                <p class="text-xs opacity-90"><?php echo e(__('admin_chat.subtitle')); ?></p>
-            </div>
-            <button onclick="toggleAdminChatV2()" class="text-white hover:text-gray-200">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-        </div>
-
-        
-        <div id="admin-chat-view-v2" class="flex flex-col flex-1 min-h-0">
-            
-            <div id="conversations-list-v2" class="flex-1 overflow-y-auto bg-gray-50">
-                <div class="p-3 border-b bg-white">
-                    <label for="admin-user-search-v2" class="block text-xs font-semibold text-gray-600 mb-2">
-                        <?php echo e(__('admin_chat.select_user')); ?>
-
-                    </label>
-                    <input
-                        type="text"
-                        id="admin-user-search-v2"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                        placeholder="<?php echo e(__('admin_chat.select_user_placeholder')); ?>"
-                        oninput="handleAdminUserSearchV2()"
-                    >
-                    <div id="admin-user-picker-list-v2" class="mt-2 max-h-36 overflow-y-auto space-y-1"></div>
-                </div>
-                <div id="conversations-items-v2">
-                    <div class="text-center text-gray-500 text-sm py-4">
-                        <i class="fas fa-spinner fa-spin"></i> <?php echo e(__('admin_chat.loading_conversations')); ?>
-
-                    </div>
-                </div>
-            </div>
-
-            
-            <div id="individual-chat-v2" class="hidden flex flex-1 flex-col min-h-0">
-                <div class="bg-gray-100 p-3 flex items-center border-b">
-                    <button onclick="backToConversationsV2()" class="mr-3 text-gray-600 hover:text-gray-800">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                        </svg>
-                    </button>
-                    <div>
-                        <div id="current-user-name-v2" class="font-semibold text-gray-800"></div>
-                        <div id="current-user-email-v2" class="text-xs text-gray-500"></div>
-                        <div id="current-user-status-v2" class="text-[11px] font-medium"></div>
-                        <div id="current-user-typing-v2" class="hidden text-[11px] font-medium text-purple-600"></div>
-                    </div>
-                </div>
-                
-                <div id="chat-messages-container-v2" class="p-4 flex-1 min-h-[160px] overflow-y-auto bg-white">
-                    <!-- Messages will be loaded here -->
-                </div>
-                
-                
-                <div id="admin-file-preview-v2" class="hidden px-4 py-2 bg-gray-100 border-t">
-                    <div class="flex items-center justify-between bg-white p-2 rounded">
-                        <div class="flex items-center space-x-2">
-                            <i class="fas fa-file text-blue-600"></i>
-                            <span id="admin-file-name-v2" class="text-sm text-gray-700"></span>
-                            <span id="admin-file-size-v2" class="text-xs text-gray-500"></span>
+    <section id="admin-chat-window-v2" class="chat-premium-window chat-premium-window--admin fixed inset-x-0 bottom-0 top-0 hidden sm:absolute sm:inset-auto sm:bottom-20 sm:right-0" aria-hidden="true">
+        <header class="chat-premium-header shrink-0">
+            <div class="flex items-start justify-between gap-3">
+                <div class="flex min-w-0 items-start gap-3">
+                    <span class="chat-premium-avatar">AD</span>
+                    <div class="min-w-0">
+                        <div class="chat-premium-badge">
+                            <span class="chat-premium-status-dot is-online"></span>
+                            <span><?php echo e(__('admin_chat.online')); ?></span>
                         </div>
-                        <button onclick="removeAdminFileV2()" class="text-red-500 hover:text-red-700">
-                            <i class="fas fa-times"></i>
+                        <h3 class="mt-3 truncate text-lg font-semibold"><?php echo e(__('admin_chat.title')); ?></h3>
+                        <p class="mt-1 text-sm leading-5 text-white/80 sm:truncate"><?php echo e(__('admin_chat.subtitle')); ?></p>
+                    </div>
+                </div>
+                <button type="button" id="admin-chat-close-v2" class="chat-premium-close" aria-label="Close">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <div class="chat-premium-body flex min-h-0 flex-1 flex-col">
+            <div id="admin-list-view-v2" class="flex min-h-0 flex-1 flex-col">
+                <div class="shrink-0 border-b border-slate-200/70 bg-white/80 px-4 py-4 sm:px-5">
+                    <div class="mb-3">
+                        <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500"><?php echo e(__('admin_chat.select_user')); ?></p>
+                        <h4 class="mt-2 text-sm font-semibold text-slate-900"><?php echo e(__('admin_chat.title')); ?></h4>
+                        <p class="mt-1 text-xs leading-5 text-slate-500"><?php echo e(__('admin_chat.recipient_hint')); ?></p>
+                    </div>
+                    <label for="admin-user-search-v2" class="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-slate-500"><?php echo e(__('admin_chat.select_user')); ?></label>
+                    <input id="admin-user-search-v2" type="text" class="chat-premium-search" placeholder="<?php echo e(__('admin_chat.select_user_placeholder')); ?>">
+                    <div id="admin-user-picker-list-v2" class="chat-premium-scroll mt-3 max-h-36 space-y-2 sm:max-h-44"></div>
+                </div>
+                <div id="conversations-items-v2" class="chat-premium-scroll min-h-0 flex-1 px-4 py-4 sm:px-5">
+                    <div class="chat-premium-empty">
+                        <span class="chat-premium-empty-icon">
+                            <svg class="h-8 w-8 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                        </span>
+                        <p class="text-sm font-semibold text-slate-800"><?php echo e(__('admin_chat.loading_conversations')); ?></p>
+                        <p class="text-xs text-slate-500"><?php echo e(__('admin_chat.recipient_hint')); ?></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="admin-thread-view-v2" class="hidden min-h-0 flex-1 flex-col">
+                <div class="shrink-0 border-b border-slate-200/70 bg-white/85 px-4 py-4 sm:px-5">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                        <div class="flex min-w-0 items-start gap-3">
+                            <button type="button" id="admin-back-button-v2" class="chat-premium-icon-button mt-0.5 h-10 w-10 rounded-full">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="flex min-w-0 items-start gap-3">
+                                <span id="thread-avatar-v2" class="chat-premium-avatar bg-slate-100 text-slate-700">CL</span>
+                                <div class="min-w-0">
+                                    <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400"><?php echo e(__('admin_chat.selected_recipient')); ?></p>
+                                    <div class="mt-1 flex flex-wrap items-center gap-2">
+                                        <p id="thread-name-v2" class="truncate text-sm font-semibold text-slate-900"></p>
+                                        <span id="thread-status-dot-v2" class="chat-premium-status-dot is-disconnected"></span>
+                                    </div>
+                                    <p id="thread-email-v2" class="break-all text-xs text-slate-500 sm:truncate"></p>
+                                    <p id="thread-status-v2" class="mt-1 text-xs font-medium text-slate-500"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="admin-change-user-v2" class="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 shadow-sm transition hover:border-slate-300 hover:text-slate-900 sm:w-auto">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h12m0 0L13 4m3 3l-3 3M20 17H8m0 0l3-3m-3 3l3 3"></path>
+                            </svg>
+                            <span><?php echo e(__('admin_chat.change_recipient')); ?></span>
                         </button>
                     </div>
                 </div>
 
-                <div class="p-4 bg-white border-t shrink-0">
-                    <form id="admin-chat-form-v2" enctype="multipart/form-data">
-                        <div class="flex gap-2 items-end">
-                            
-                            <input type="file" id="admin-file-input-v2" class="hidden" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip" onchange="handleAdminFileSelectV2(event)">
+                <div id="chat-messages-container-v2" class="chat-premium-scroll min-h-0 flex-1 px-4 py-4 sm:px-5"></div>
 
-                            
-                            <button
-                                type="button"
-                                onclick="document.getElementById('admin-file-input-v2').click()"
-                                class="bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg px-3 py-2 transition-colors"
-                                title="Joindre un fichier"
-                            >
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                                </svg>
-                            </button>
+                <div id="admin-thread-typing-wrap-v2" class="hidden px-4 pb-3 sm:px-5">
+                    <div class="chat-premium-typing">
+                        <span class="chat-premium-typing-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+                        <span id="admin-thread-typing-text-v2" class="text-xs font-medium"><?php echo e(__('admin_chat.typing')); ?></span>
+                    </div>
+                </div>
 
-                            
-                            <input
-                                type="text"
-                                id="admin-chat-input-v2"
-                                placeholder="<?php echo e(__('admin_chat.reply_placeholder')); ?>"
-                                class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                onkeypress="if(event.key === 'Enter') { event.preventDefault(); sendAdminMessageV2(); }"
-                            >
-
-                            
-                            <button
-                                type="button"
-                                onclick="sendAdminMessageV2()"
-                                class="bg-purple-600 hover:bg-purple-700 text-white rounded-lg px-4 py-2 transition-colors"
-                            >
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                                </svg>
-                            </button>
+                <div class="chat-premium-composer shrink-0">
+                    <div id="admin-file-preview-v2" class="chat-premium-file-chip hidden">
+                        <div class="flex min-w-0 items-center gap-3">
+                            <span class="chat-premium-file-icon"><i class="fas fa-paperclip text-sm"></i></span>
+                            <div class="min-w-0">
+                                <p id="admin-file-name-v2" class="truncate text-sm font-semibold text-slate-900"></p>
+                                <p id="admin-file-size-v2" class="text-xs text-slate-500"></p>
+                            </div>
                         </div>
-                    </form>
+                        <button type="button" id="admin-remove-file-v2" class="text-sm font-semibold text-rose-600">X</button>
+                    </div>
+
+                    <div class="chat-premium-composer-row">
+                        <input type="file" id="admin-file-input-v2" class="hidden" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip">
+                        <button type="button" id="admin-file-trigger-v2" class="chat-premium-icon-button" aria-label="<?php echo e(__('chat.attach_file')); ?>">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                            </svg>
+                        </button>
+                        <textarea id="admin-chat-input-v2" rows="1" class="chat-premium-input" placeholder="<?php echo e(__('admin_chat.reply_placeholder')); ?>"></textarea>
+                        <button type="button" id="admin-send-button-v2" class="chat-premium-send" aria-label="Send">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <p id="admin-chat-feedback-v2" class="mt-3 hidden text-xs font-medium"></p>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+</div>
+
+<div id="admin-chat-image-modal-v2" class="chat-premium-image-modal">
+    <button type="button" id="admin-chat-image-close-v2" class="absolute right-4 top-4 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-sm font-semibold text-white">X</button>
+    <a id="admin-chat-image-download-v2" class="absolute left-4 top-4 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-sm font-semibold text-white" download><?php echo e(__('chat.download')); ?></a>
+    <img id="admin-chat-image-full-v2" src="" alt="<?php echo e(__('chat.image_preview_alt')); ?>" class="chat-premium-image-view">
 </div>
 
 <script>
-// Admin Chat Widget V2 - Isolated namespace
-(function() {
-    let adminChatIntervalV2 = null;
-    let currentChatUserIdV2 = null;
-    let selectedAdminFileV2 = null;
-    let currentChatUserNameV2 = '';
-    let currentChatUserEmailV2 = '';
-    let adminUserSearchTimerV2 = null;
-    const currentAdminId = <?php echo e(auth()->id()); ?>;
-    const adminChatLocale = document.documentElement.lang || '<?php echo e(app()->getLocale()); ?>';
-    const adminChatI18n = <?php echo json_encode($adminChatV2I18n, 15, 512) ?>;
-    const presenceLabelsV2 = {
-        online: adminChatI18n.online,
-        connected: adminChatI18n.connected,
-        disconnected: adminChatI18n.disconnected,
+(() => {
+    if (window.ValtrixAdminChatMounted) return;
+    window.ValtrixAdminChatMounted = true;
+    const i18n = <?php echo json_encode($adminChatV2I18n, 15, 512) ?>;
+    const adminId = <?php echo e(auth()->id()); ?>;
+    const locale = document.documentElement.lang || '<?php echo e(app()->getLocale()); ?>';
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    const el = {
+        toggle: document.getElementById('admin-chat-toggle-v2'),
+        window: document.getElementById('admin-chat-window-v2'),
+        close: document.getElementById('admin-chat-close-v2'),
+        backdrop: document.getElementById('admin-chat-backdrop-v2'),
+        badge: document.getElementById('admin-unread-badge-v2'),
+        search: document.getElementById('admin-user-search-v2'),
+        picker: document.getElementById('admin-user-picker-list-v2'),
+        conversations: document.getElementById('conversations-items-v2'),
+        listView: document.getElementById('admin-list-view-v2'),
+        threadView: document.getElementById('admin-thread-view-v2'),
+        back: document.getElementById('admin-back-button-v2'),
+        changeUser: document.getElementById('admin-change-user-v2'),
+        threadName: document.getElementById('thread-name-v2'),
+        threadEmail: document.getElementById('thread-email-v2'),
+        threadStatus: document.getElementById('thread-status-v2'),
+        threadStatusDot: document.getElementById('thread-status-dot-v2'),
+        threadAvatar: document.getElementById('thread-avatar-v2'),
+        messages: document.getElementById('chat-messages-container-v2'),
+        typingWrap: document.getElementById('admin-thread-typing-wrap-v2'),
+        typingText: document.getElementById('admin-thread-typing-text-v2'),
+        input: document.getElementById('admin-chat-input-v2'),
+        send: document.getElementById('admin-send-button-v2'),
+        fileInput: document.getElementById('admin-file-input-v2'),
+        fileTrigger: document.getElementById('admin-file-trigger-v2'),
+        filePreview: document.getElementById('admin-file-preview-v2'),
+        fileName: document.getElementById('admin-file-name-v2'),
+        fileSize: document.getElementById('admin-file-size-v2'),
+        removeFile: document.getElementById('admin-remove-file-v2'),
+        feedback: document.getElementById('admin-chat-feedback-v2'),
+        imageModal: document.getElementById('admin-chat-image-modal-v2'),
+        imageClose: document.getElementById('admin-chat-image-close-v2'),
+        imageDownload: document.getElementById('admin-chat-image-download-v2'),
+        imageFull: document.getElementById('admin-chat-image-full-v2'),
+    };
+    const state = {
+        open: false,
+        activeUser: null,
+        loadingList: false,
+        loadingThread: false,
+        sending: false,
+        listPoll: null,
+        threadPoll: null,
+        unreadPoll: null,
+        searchTimer: null,
+        typingTimer: null,
+        feedbackTimer: null,
+        lastPing: 0,
+        sig: '',
+        file: null,
     };
 
-    function normalizePresenceStatusV2(status) {
-        return ['online', 'connected', 'disconnected'].includes(status) ? status : 'disconnected';
+    const esc = (v) => { const d = document.createElement('div'); d.textContent = v ?? ''; return d.innerHTML; };
+    const time = (v) => { try { return v ? new Date(v).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }) : ''; } catch { return ''; } };
+    const size = (v) => { let b = Number(v || 0), u = ['B', 'KB', 'MB', 'GB'], i = 0; while (b >= 1024 && i < u.length - 1) { b /= 1024; i += 1; } return b ? `${b.toFixed(b >= 10 || i === 0 ? 0 : 1)} ${u[i]}` : ''; };
+    const initials = (v) => String(v || '').trim().split(/\s+/).filter(Boolean).slice(0, 2).map((p) => p[0].toUpperCase()).join('') || 'CL';
+    const presence = (v) => ['online', 'connected'].includes(v) ? v : 'disconnected';
+    const presenceLabel = (v) => v === 'online' ? i18n.online : (v === 'connected' ? i18n.connected : i18n.disconnected);
+
+    function resizeInput() {
+        el.input.style.height = '0px';
+        el.input.style.height = `${Math.min(el.input.scrollHeight, 120)}px`;
     }
 
-    function getPresenceStatusV2(user) {
-        if (user && user.presence_status) {
-            return normalizePresenceStatusV2(user.presence_status);
-        }
-        if (user && user.is_online) {
-            return 'online';
-        }
-        if (user && user.is_connected) {
-            return 'connected';
-        }
-        return 'disconnected';
+    function syncComposerState() {
+        const hasRecipient = Boolean(state.activeUser);
+        const disabled = !hasRecipient || state.sending;
+        el.input.disabled = disabled;
+        el.send.disabled = disabled;
+        el.fileTrigger.disabled = disabled;
+        el.input.placeholder = hasRecipient ? i18n.replyPlaceholder : i18n.recipientRequired;
     }
 
-    function getPresenceDotClassV2(status) {
-        switch (status) {
-            case 'online':
-                return 'bg-green-500';
-            case 'connected':
-                return 'bg-amber-500';
-            default:
-                return 'bg-gray-400';
-        }
-    }
-
-    function getPresenceTextClassV2(status) {
-        switch (status) {
-            case 'online':
-                return 'text-green-600';
-            case 'connected':
-                return 'text-amber-600';
-            default:
-                return 'text-gray-500';
-        }
-    }
-
-    function renderPresenceBadgeV2(status) {
-        const safeStatus = normalizePresenceStatusV2(status);
-        const label = presenceLabelsV2[safeStatus];
-        const textClass = getPresenceTextClassV2(safeStatus);
-        return `<span class="inline-flex items-center text-[11px] font-medium ${textClass}">${escapeHtmlV2(label)}</span>`;
-    }
-
-    function getUserDisplayNameV2(firstName, lastName) {
-        const label = `${firstName || ''} ${lastName || ''}`.trim();
-        return label !== '' ? label : adminChatI18n.userFallback;
-    }
-
-    function getPrefixedNameV2(name, status) {
-        const normalized = normalizePresenceStatusV2(status);
-        if (normalized === 'online' || normalized === 'connected') {
-            return `${adminChatI18n.onlinePrefix} ${name}`;
-        }
-        return name;
-    }
-
-    function setCurrentUserPresenceV2(status) {
-        const statusElement = document.getElementById('current-user-status-v2');
-        if (!statusElement) return;
-        const safeStatus = normalizePresenceStatusV2(status);
-        statusElement.textContent = presenceLabelsV2[safeStatus];
-        statusElement.className = `text-[11px] font-medium ${getPresenceTextClassV2(safeStatus)}`;
-    }
-
-    function updateCurrentUserHeaderV2(status) {
-        const nameElement = document.getElementById('current-user-name-v2');
-        const emailElement = document.getElementById('current-user-email-v2');
-        const safeStatus = normalizePresenceStatusV2(status);
-        if (nameElement) {
-            nameElement.textContent = getPrefixedNameV2(
-                currentChatUserNameV2 || adminChatI18n.userFallback,
-                safeStatus
-            );
-        }
-        if (emailElement) {
-            emailElement.textContent = currentChatUserEmailV2 || '';
-        }
-        setCurrentUserPresenceV2(safeStatus);
-    }
-
-    function setTypingIndicatorV2(isTyping) {
-        const typingElement = document.getElementById('current-user-typing-v2');
-        if (!typingElement) return;
-
-        if (isTyping) {
-            typingElement.textContent = adminChatI18n.typing;
-            typingElement.classList.remove('hidden');
+    function setFeedback(message = '', tone = 'neutral') {
+        clearTimeout(state.feedbackTimer);
+        if (!message) {
+            el.feedback.className = 'mt-3 hidden text-xs font-medium';
+            el.feedback.textContent = '';
             return;
         }
-
-        typingElement.classList.add('hidden');
+        el.feedback.className = `mt-3 text-xs font-medium ${tone === 'error' ? 'text-rose-600' : 'text-slate-500'}`;
+        el.feedback.textContent = message;
+        state.feedbackTimer = setTimeout(() => setFeedback(''), 5000);
     }
 
-    window.toggleAdminChatV2 = function() {
-        const chatWindow = document.getElementById('admin-chat-window-v2');
-        const isHidden = chatWindow.classList.contains('hidden');
-        
-        chatWindow.classList.toggle('hidden');
-        
-        if (isHidden) {
-            loadAdminUsersV2();
-            loadConversationsV2();
-            adminChatIntervalV2 = setInterval(loadConversationsV2, 5000);
-        } else {
-            if (adminChatIntervalV2) {
-                clearInterval(adminChatIntervalV2);
-                adminChatIntervalV2 = null;
-            }
-            backToConversationsV2(false);
-        }
-    };
+    function userName(user) {
+        const label = [user?.first_name || '', user?.last_name || ''].join(' ').trim();
+        return label || user?.display_name || i18n.userFallback;
+    }
 
-    function loadConversationsV2() {
-        fetch('<?php echo e(route("chat.messages")); ?>', {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json',
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.conversations) {
-                displayConversationsV2(data.conversations);
-                updateAdminUnreadCountV2();
-                const searchInput = document.getElementById('admin-user-search-v2');
-                const searchTerm = searchInput ? searchInput.value.trim() : '';
-                loadAdminUsersV2(searchTerm);
-            }
-        })
-        .catch(error => {
-            console.error('[ChatV2] Error loading conversations:', error);
-            const container = document.getElementById('conversations-items-v2');
-            container.innerHTML = `
-                <div class="text-center text-red-500 py-8">
-                    <i class="fas fa-exclamation-triangle text-4xl mb-3"></i>
-                    <p>${adminChatI18n.loadingError}</p>
-                </div>
-            `;
+    function setThreadUser(user, userPresence) {
+        const name = userName(user);
+        const safe = presence(userPresence?.presence_status || user?.presence_status);
+        state.activeUser = { id: Number(user?.id), name, email: user?.email || '', presence: safe };
+        el.threadName.textContent = name;
+        el.threadEmail.textContent = user?.email || '';
+        el.threadStatus.textContent = presenceLabel(safe);
+        el.threadStatusDot.className = `chat-premium-status-dot is-${safe}`;
+        el.threadAvatar.textContent = initials(name);
+    }
+
+    function setTyping(show) {
+        if (show && state.activeUser) {
+            el.typingText.textContent = `${state.activeUser.name} - ${i18n.typing}`;
+            el.typingWrap.classList.remove('hidden');
+            return;
+        }
+        el.typingWrap.classList.add('hidden');
+    }
+
+    function listState(title, subtitle = '') {
+        el.conversations.innerHTML = `<div class="space-y-3"><div class="flex items-center justify-between gap-3 px-1"><p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">${esc(i18n.recentConversations)}</p></div><div class="chat-premium-empty"><span class="chat-premium-empty-icon"><svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg></span><div class="space-y-2"><p class="text-sm font-semibold text-slate-800">${esc(title)}</p>${subtitle ? `<p class="text-xs text-slate-500">${esc(subtitle)}</p>` : ''}</div></div></div>`;
+    }
+
+    function threadState(title, subtitle = '') {
+        el.messages.innerHTML = `<div class="chat-premium-empty"><span class="chat-premium-empty-icon"><svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg></span><div class="space-y-2"><p class="text-sm font-semibold text-slate-800">${esc(title)}</p>${subtitle ? `<p class="text-xs text-slate-500">${esc(subtitle)}</p>` : ''}</div></div>`;
+    }
+
+    function attachmentHtml(msg, outgoing) {
+        if (!msg.attachment_path) return '';
+        const url = msg.attachment_url || `/storage/${msg.attachment_path}`;
+        const name = msg.attachment_name || i18n.fileLabel;
+        const fsize = msg.formatted_attachment_size || size(msg.attachment_size);
+        if (msg.is_image_attachment || (msg.attachment_type || '').startsWith('image/')) {
+            return `<button type="button" class="chat-premium-attachment w-full overflow-hidden text-left" data-admin-chat-image="${esc(url)}"><img src="${esc(url)}" alt="${esc(name)}" class="chat-premium-image"></button>`;
+        }
+        return `<a href="${esc(url)}" target="_blank" rel="noopener" class="chat-premium-attachment chat-premium-file"><span class="chat-premium-file-icon"><i class="fas fa-file-alt text-sm"></i></span><span class="min-w-0 flex-1"><span class="block truncate text-sm font-semibold">${esc(name)}</span><span class="mt-1 block text-xs ${outgoing ? 'text-white/75' : 'text-slate-500'}">${esc(fsize)}</span></span></a>`;
+    }
+
+    function messageHtml(msg) {
+        const outgoing = Number(msg.sender_id) === Number(adminId);
+        const name = outgoing ? 'Admin' : (msg.sender?.display_name || msg.sender_display_name || state.activeUser?.name || i18n.userFallback);
+        return `<div class="chat-premium-message-row ${outgoing ? 'chat-premium-message-row--outgoing' : ''}">${outgoing ? '' : `<span class="chat-premium-avatar bg-white text-slate-700">${esc(initials(name))}</span>`}<div class="chat-premium-message-bubble">${msg.message ? `<p class="text-sm whitespace-pre-wrap break-words leading-6">${esc(msg.message)}</p>` : ''}${attachmentHtml(msg, outgoing)}<div class="chat-premium-meta"><span>${esc(name)}</span><span>&middot;</span><span>${esc(time(msg.created_at))}</span></div></div></div>`;
+    }
+
+    function renderThread(messages) {
+        if (!Array.isArray(messages) || !messages.length) {
+            state.sig = '';
+            threadState(i18n.noMessages, i18n.startConversation);
+            return;
+        }
+        const sig = messages.map((m) => `${m.id}:${m.updated_at || m.created_at || ''}`).join('|');
+        const stick = el.messages.scrollHeight - el.messages.scrollTop - el.messages.clientHeight < 72;
+        if (sig === state.sig) {
+            if (stick) el.messages.scrollTop = el.messages.scrollHeight;
+            return;
+        }
+        state.sig = sig;
+        el.messages.innerHTML = `<div class="space-y-4">${messages.map(messageHtml).join('')}</div>`;
+        el.messages.scrollTop = el.messages.scrollHeight;
+    }
+
+    function userCard(user, preview = '', unread = 0) {
+        const safe = presence(user?.presence_status);
+        const label = userName(user);
+        return `<button type="button" class="chat-premium-user-item" data-user-id="${Number(user.id)}" data-user-name="${esc(label)}" data-user-email="${esc(user.email || '')}" data-user-presence="${safe}"><div class="flex items-start gap-3"><span class="chat-premium-avatar bg-slate-100 text-slate-700">${esc(initials(label))}</span><div class="min-w-0 flex-1"><div class="flex items-center justify-between gap-2"><p class="truncate text-sm font-semibold text-slate-900">${esc(label)}</p>${unread > 0 ? `<span class="rounded-full bg-rose-500 px-2 py-0.5 text-[11px] font-bold text-white">${unread}</span>` : ''}</div><p class="mt-1 truncate text-xs text-slate-500">${esc(user.email || '')}</p><div class="mt-2 flex items-center gap-2"><span class="chat-premium-status-dot is-${safe}"></span><span class="text-xs font-medium text-slate-500">${esc(presenceLabel(safe))}</span></div>${preview ? `<p class="mt-2 truncate text-xs text-slate-500">${esc(preview)}</p>` : ''}</div></div></button>`;
+    }
+
+    function bindUserCards(scope) {
+        scope.querySelectorAll('[data-user-id]').forEach((button) => {
+            button.addEventListener('click', () => openThread({
+                id: Number(button.getAttribute('data-user-id')),
+                first_name: button.getAttribute('data-user-name'),
+                last_name: '',
+                email: button.getAttribute('data-user-email'),
+                presence_status: button.getAttribute('data-user-presence'),
+                display_name: button.getAttribute('data-user-name'),
+            }));
         });
     }
 
-    function renderAdminUserPickerV2(users) {
-        const listContainer = document.getElementById('admin-user-picker-list-v2');
-        if (!listContainer) return;
-
-        if (!users || users.length === 0) {
-            listContainer.innerHTML = `
-                <div class="text-xs text-gray-500 py-2 px-2">${escapeHtmlV2(adminChatI18n.noUsersAvailable)}</div>
-            `;
-            return;
-        }
-
-        listContainer.innerHTML = '';
-
-        users.forEach((user) => {
-            if (!user || !user.id) return;
-            const presenceStatus = getPresenceStatusV2(user);
-            const displayName = getUserDisplayNameV2(user.first_name, user.last_name);
-            const prefixedName = getPrefixedNameV2(displayName, presenceStatus);
-            const unreadCount = Number(user.unread_count || 0);
-
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'w-full text-left rounded-lg border border-gray-200 bg-white px-3 py-2 hover:border-purple-300 hover:bg-purple-50 transition';
-            button.onclick = () => openChatV2(user.id, displayName, user.email || '', presenceStatus);
-            button.innerHTML = `
-                <div class="flex items-center justify-between gap-2">
-                    <div class="min-w-0">
-                        <div class="text-sm font-semibold text-gray-800 truncate">${escapeHtmlV2(prefixedName)}</div>
-                        <div class="text-xs text-gray-500 truncate">${escapeHtmlV2(user.email || '')}</div>
-                    </div>
-                    ${unreadCount > 0 ? `<span class="shrink-0 bg-red-500 text-white text-[10px] font-bold rounded-full px-2 py-0.5">${unreadCount}</span>` : ''}
-                </div>
-            `;
-            listContainer.appendChild(button);
-        });
-    }
-
-    function loadAdminUsersV2(searchTerm = '') {
-        const query = typeof searchTerm === 'string' ? searchTerm.trim() : '';
-        const url = query === ''
-            ? '<?php echo e(route("chat.users")); ?>'
-            : `<?php echo e(route("chat.users")); ?>?q=${encodeURIComponent(query)}`;
-
-        fetch(url, {
+    async function json(url, options = {}) {
+        const response = await fetch(url, {
+            credentials: 'same-origin',
+            ...options,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': 'application/json',
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && Array.isArray(data.users)) {
-                renderAdminUserPickerV2(data.users);
+                ...(options.headers || {}),
+            },
+        });
+        const text = await response.text();
+        let data = null;
+        try { data = text ? JSON.parse(text) : {}; } catch {}
+        return { response, data };
+    }
+
+    async function loadUsers(search = '') {
+        const url = search ? `<?php echo e(route("chat.users")); ?>?q=${encodeURIComponent(search)}` : '<?php echo e(route("chat.users")); ?>';
+        try {
+            const { response, data } = await json(url);
+            if (!response.ok || !data || !data.success || !Array.isArray(data.users) || !data.users.length) {
+                el.picker.innerHTML = `<div class="rounded-2xl border border-dashed border-slate-200 px-4 py-4 text-center text-xs text-slate-500">${esc(i18n.noUsersAvailable)}</div>`;
                 return;
             }
-            renderAdminUserPickerV2([]);
-        })
-        .catch(error => {
-            console.error('[ChatV2] Error loading users for picker:', error);
-            renderAdminUserPickerV2([]);
-        });
+            el.picker.innerHTML = `<div class="chat-premium-user-list">${data.users.map((user) => userCard(user, i18n.messagesWillAppear, Number(user.unread_count || 0))).join('')}</div>`;
+            bindUserCards(el.picker);
+        } catch {
+            el.picker.innerHTML = `<div class="rounded-2xl border border-dashed border-slate-200 px-4 py-4 text-center text-xs text-slate-500">${esc(i18n.noUsersAvailable)}</div>`;
+        }
     }
 
-    window.handleAdminUserSearchV2 = function() {
-        if (adminUserSearchTimerV2) {
-            clearTimeout(adminUserSearchTimerV2);
-        }
-
-        adminUserSearchTimerV2 = setTimeout(() => {
-            const input = document.getElementById('admin-user-search-v2');
-            const searchTerm = input ? input.value : '';
-            loadAdminUsersV2(searchTerm);
-        }, 250);
-    };
-
-    function displayConversationsV2(conversations) {
-        const container = document.getElementById('conversations-items-v2');
-        
-        if (!conversations || conversations.length === 0) {
-            container.innerHTML = `
-                <div class="text-center text-gray-500 py-8">
-                    <i class="fas fa-inbox text-4xl mb-3"></i>
-                    <p>${adminChatI18n.noConversations}</p>
-                </div>
-            `;
-            return;
-        }
-        
-        container.innerHTML = '';
-        
-        conversations.forEach(conv => {
-            if (!conv || !conv.user) return;
-            
-            const user = conv.user;
-            const lastMsg = conv.last_message;
-            const unreadCount = conv.unread_count || 0;
-            
-            const firstName = user.first_name || '';
-            const lastName = user.last_name || '';
-            const email = user.email || '';
-            const userId = user.id;
-            const presenceStatus = getPresenceStatusV2(user);
-            const displayName = getUserDisplayNameV2(firstName, lastName);
-            const prefixedName = getPrefixedNameV2(displayName, presenceStatus);
-            
-            if (!userId) return;
-            
-            const convDiv = document.createElement('div');
-            convDiv.className = 'p-4 border-b hover:bg-gray-100 cursor-pointer transition-colors';
-            convDiv.onclick = () => openChatV2(userId, displayName, email, presenceStatus);
-            
-            const time = lastMsg && lastMsg.created_at ? new Date(lastMsg.created_at).toLocaleTimeString(adminChatLocale, { hour: '2-digit', minute: '2-digit' }) : '';
-            const messageText = lastMsg && lastMsg.message ? lastMsg.message : adminChatI18n.noMessages;
-            const preview = messageText.length > 50 ? messageText.substring(0, 50) + '...' : messageText;
-            const presenceDot = `<div class="w-2 h-2 rounded-full ml-2 ${getPresenceDotClassV2(presenceStatus)}" title="${escapeHtmlV2(presenceLabelsV2[presenceStatus])}"></div>`;
-            const presenceBadge = renderPresenceBadgeV2(presenceStatus);
-
-            convDiv.innerHTML = `
-                <div class="flex items-start justify-between">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-1">
-                            <div class="flex items-center">
-                                <div class="font-semibold text-gray-800">${escapeHtmlV2(prefixedName)}</div>
-                                ${presenceDot}
-                            </div>
-                            ${unreadCount > 0 ? `<span class="bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">${unreadCount}</span>` : ''}
-                        </div>
-                        <div class="text-xs text-gray-500 mb-1">${escapeHtmlV2(email)}</div>
-                        <div class="mb-1">${presenceBadge}</div>
-                        <div class="text-sm text-gray-600 truncate">${escapeHtmlV2(preview)}</div>
-                    </div>
-                    ${time ? `<div class="text-xs text-gray-400 ml-2">${time}</div>` : ''}
-                </div>
-            `;
-            
-            container.appendChild(convDiv);
-        });
-    }
-
-    function openChatV2(userId, userName, userEmail, presenceStatus = 'disconnected') {
-        if (!userId) return;
-        
-        currentChatUserIdV2 = userId;
-        currentChatUserNameV2 = userName || adminChatI18n.userFallback;
-        currentChatUserEmailV2 = userEmail || '';
-        
-        updateCurrentUserHeaderV2(presenceStatus);
-        setTypingIndicatorV2(false);
-        
-        const conversationsList = document.getElementById('conversations-list-v2');
-        const individualChat = document.getElementById('individual-chat-v2');
-        
-        if (conversationsList) conversationsList.classList.add('hidden');
-        if (individualChat) individualChat.classList.remove('hidden');
-        
-        loadChatWithUserV2(userId);
-        
-        if (adminChatIntervalV2) {
-            clearInterval(adminChatIntervalV2);
-        }
-        adminChatIntervalV2 = setInterval(() => loadChatWithUserV2(userId), 3000);
-    }
-
-    window.backToConversationsV2 = function(shouldResumePolling = true) {
-        currentChatUserIdV2 = null;
-        currentChatUserNameV2 = '';
-        currentChatUserEmailV2 = '';
-        document.getElementById('conversations-list-v2').classList.remove('hidden');
-        document.getElementById('individual-chat-v2').classList.add('hidden');
-        setTypingIndicatorV2(false);
-        
-        if (adminChatIntervalV2) {
-            clearInterval(adminChatIntervalV2);
-        }
-        if (shouldResumePolling) {
-            loadAdminUsersV2();
-            loadConversationsV2();
-            adminChatIntervalV2 = setInterval(loadConversationsV2, 5000);
-        }
-    };
-
-    function loadChatWithUserV2(userId) {
-        if (!userId) {
-            console.error('[ChatV2] No userId provided to loadChatWithUserV2');
-            return;
-        }
-        
-        console.log('[ChatV2] Loading chat with user:', userId);
-        
-        fetch('<?php echo e(route("chat.messages")); ?>/' + userId, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json',
+    async function loadConversations() {
+        if (state.loadingList || state.activeUser) return;
+        state.loadingList = true;
+        try {
+            const { response, data } = await json('<?php echo e(route("chat.messages")); ?>');
+            if (!response.ok || !data || !data.success) {
+                listState(i18n.loadingError, data?.message || i18n.connectionError);
+                return;
             }
-        })
-        .then(response => {
-            console.log('[ChatV2] Response status:', response.status);
-            return response.json();
-        })
-        .then(data => {
-            console.log('[ChatV2] Response data:', data);
-            
-            if (data.success) {
-                if (data.user_presence) {
-                    updateCurrentUserHeaderV2(getPresenceStatusV2(data.user_presence));
-                }
-                setTypingIndicatorV2(Boolean(data.user_typing));
+            if (!Array.isArray(data.conversations) || !data.conversations.length) {
+                listState(i18n.noConversations, i18n.recipientHint);
+                return;
+            }
+            const activeConversations = data.conversations.filter((conv) => Boolean(conv.last_message));
+            const availableClients = data.conversations.filter((conv) => !conv.last_message);
+            const sections = [];
 
-                if (data.messages && Array.isArray(data.messages)) {
-                    console.log('[ChatV2] Messages count:', data.messages.length);
-                    displayChatMessagesV2(data.messages);
-                } else {
-                    console.warn('[ChatV2] No messages array in response');
-                    displayChatMessagesV2([]);
-                }
+            if (activeConversations.length) {
+                sections.push(`<div class="space-y-3"><div class="flex items-center justify-between gap-3 px-1"><p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">${esc(i18n.recentConversations)}</p></div><div class="chat-premium-user-list">${activeConversations.map((conv) => userCard(conv.user, conv.last_message?.message || conv.last_message?.attachment_name || i18n.noMessages, Number(conv.unread_count || 0))).join('')}</div></div>`);
+            }
+
+            if (availableClients.length) {
+                sections.push(`<div class="space-y-3"><div class="flex items-center justify-between gap-3 px-1"><p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">${esc(i18n.selectUser)}</p></div><div class="chat-premium-user-list">${availableClients.map((conv) => userCard(conv.user, i18n.messagesWillAppear, Number(conv.unread_count || 0))).join('')}</div></div>`);
+            }
+
+            el.conversations.innerHTML = `<div class="space-y-4">${sections.join('')}</div>`;
+            bindUserCards(el.conversations);
+            unreadCount();
+        } catch (error) {
+            listState(i18n.loadingError, error.message || i18n.connectionError);
+        } finally {
+            state.loadingList = false;
+        }
+    }
+
+    async function loadThread() {
+        if (!state.activeUser || state.loadingThread) return;
+        state.loadingThread = true;
+        try {
+            const { response, data } = await json(`<?php echo e(route("chat.messages")); ?>/${state.activeUser.id}`);
+            if (!response.ok || !data || !data.success) {
+                threadState(i18n.loadingMessagesError, data?.message || i18n.connectionError);
+                return;
+            }
+            setThreadUser(data.chat_partner || state.activeUser, data.user_presence || state.activeUser);
+            setTyping(Boolean(data.user_typing));
+            renderThread(data.messages || []);
+            el.badge.classList.add('hidden');
+        } catch (error) {
+            threadState(i18n.loadingMessagesError, error.message || i18n.connectionError);
+        } finally {
+            state.loadingThread = false;
+        }
+    }
+
+    async function unreadCount() {
+        if (state.open && state.activeUser) {
+            el.badge.classList.add('hidden');
+            return;
+        }
+        try {
+            const { response, data } = await json('<?php echo e(route("chat.unread-count")); ?>');
+            if (!response.ok || !data || !data.success) return;
+            const count = Number(data.count || 0);
+            if (count > 0) {
+                el.badge.textContent = count > 99 ? '99+' : `${count}`;
+                el.badge.classList.remove('hidden');
             } else {
-                console.error('[ChatV2] API returned success=false');
-                setTypingIndicatorV2(false);
-                const container = document.getElementById('chat-messages-container-v2');
-                if (container) {
-                    container.innerHTML = `
-                        <div class="text-center text-red-500 py-8">
-                            <i class="fas fa-exclamation-triangle text-4xl mb-3"></i>
-                            <p>${adminChatI18n.loadingMessagesError}</p>
-                        </div>
-                    `;
-                }
+                el.badge.classList.add('hidden');
             }
-        })
-        .catch(error => {
-            console.error('[ChatV2] Error loading chat:', error);
-            setTypingIndicatorV2(false);
-            const container = document.getElementById('chat-messages-container-v2');
-            if (container) {
-                container.innerHTML = `
-                    <div class="text-center text-red-500 py-8">
-                        <i class="fas fa-exclamation-triangle text-4xl mb-3"></i>
-                        <p>${adminChatI18n.connectionError}</p>
-                        <p class="text-xs mt-2">${error.message}</p>
-                    </div>
-                `;
-            }
-        });
+        } catch {}
     }
 
-    function displayChatMessagesV2(messages) {
-        console.log('[ChatV2] displayChatMessagesV2 called with:', messages);
-        
-        const container = document.getElementById('chat-messages-container-v2');
-        
-        if (!container) {
-            console.error('[ChatV2] Container not found: chat-messages-container-v2');
+    async function sendTyping(isTyping) {
+        if (!csrfToken || !state.activeUser) return;
+        const now = Date.now();
+        if (isTyping && now - state.lastPing < 1800) return;
+        state.lastPing = isTyping ? now : 0;
+        try {
+            await json('<?php echo e(route("chat.typing")); ?>', {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ receiver_id: state.activeUser.id, is_typing: Boolean(isTyping) }),
+            });
+        } catch {}
+    }
+
+    function clearFile() {
+        state.file = null;
+        el.fileInput.value = '';
+        el.filePreview.classList.add('hidden');
+        el.fileName.textContent = '';
+        el.fileSize.textContent = '';
+    }
+
+    async function sendMessage() {
+        const message = el.input.value.trim();
+        if (!state.activeUser) {
+            setFeedback(i18n.recipientRequired, 'error');
             return;
         }
-        
-        if (!messages || !Array.isArray(messages) || messages.length === 0) {
-            console.log('[ChatV2] No messages to display');
-            container.innerHTML = `
-                <div class="text-center text-gray-500 py-8">
-                    <i class="fas fa-comments text-4xl mb-3"></i>
-                    <p>${adminChatI18n.noMessages}</p>
-                    <p class="text-xs mt-2">${adminChatI18n.startConversation}</p>
-                </div>
-            `;
+        if (state.sending || (!message && !state.file)) return;
+        if (!csrfToken) {
+            setFeedback(i18n.connectionError, 'error');
             return;
         }
-        
-        console.log('[ChatV2] Displaying', messages.length, 'messages');
-        container.innerHTML = '';
-        
-        messages.forEach((msg, index) => {
-            if (!msg) {
-                console.warn('[ChatV2] Skipping null message at index', index);
-                return;
+        state.sending = true;
+        syncComposerState();
+        clearTimeout(state.typingTimer);
+        sendTyping(false);
+        const body = new FormData();
+        body.append('receiver_id', state.activeUser.id);
+        if (message) body.append('message', message);
+        if (state.file) body.append('attachment', state.file);
+        try {
+            const { response, data } = await json('<?php echo e(route("chat.send")); ?>', {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrfToken },
+                body,
+            });
+            if (response.ok && data && data.success) {
+                el.input.value = '';
+                resizeInput();
+                clearFile();
+                state.sig = '';
+                setFeedback('');
+                await loadThread();
+            } else if (response.status === 422) {
+                setFeedback(data?.message || i18n.connectionError, 'error');
+            } else {
+                setFeedback(i18n.connectionError, 'error');
             }
-            
-            console.log('[ChatV2] Processing message:', msg);
-            
-            const isAdmin = msg.sender_id === currentAdminId;
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `flex items-start mb-4 ${isAdmin ? 'justify-end' : ''}`;
-            
-            const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString(adminChatLocale, { hour: '2-digit', minute: '2-digit' }) : '';
-            const messageText = msg.message || '';
-            
-            // Handle attachments if present
-            let attachmentHtml = '';
-            if (msg.attachment_path) {
-                const attachmentUrl = msg.attachment_url || `<?php echo e(url('/storage')); ?>/${msg.attachment_path}`;
-                const attachmentName = msg.attachment_name || 'Fichier';
-                
-                if (msg.attachment_type && msg.attachment_type.startsWith('image/')) {
-                    attachmentHtml = `
-                        <div class="mt-2">
-                            <button type="button" class="block focus:outline-none" data-chat-image="${attachmentUrl}">
-                                <img src="${attachmentUrl}" alt="${escapeHtmlV2(attachmentName)}" class="max-w-full rounded-lg cursor-zoom-in" style="max-height: 200px;">
-                            </button>
-                        </div>
-                    `;
-                } else {
-                    attachmentHtml = `
-                        <div class="mt-2">
-                            <a href="${attachmentUrl}" target="_blank" class="flex items-center text-sm ${isAdmin ? 'text-white/90 hover:text-white' : 'text-blue-600 hover:text-blue-800'}">
-                                <i class="fas fa-paperclip mr-2"></i>
-                                ${escapeHtmlV2(attachmentName)}
-                            </a>
-                        </div>
-                    `;
-                }
-            }
-            
-            messageDiv.innerHTML = `
-                <div class="${isAdmin ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-800'} rounded-lg p-3 max-w-xs">
-                    ${messageText ? `<p class="text-sm whitespace-pre-wrap">${escapeHtmlV2(messageText)}</p>` : ''}
-                    ${attachmentHtml}
-                    <span class="text-xs ${isAdmin ? 'opacity-75' : 'text-gray-500'} mt-1 block">
-                        ${time}
-                    </span>
-                </div>
-            `;
-            container.appendChild(messageDiv);
-        });
-        
-        // Scroll to bottom
-        container.scrollTop = container.scrollHeight;
-        console.log('[ChatV2] Messages displayed successfully');
+        } catch {
+            setFeedback(i18n.connectionError, 'error');
+        } finally {
+            state.sending = false;
+            syncComposerState();
+            el.input.focus();
+        }
     }
 
-    let adminChatImageStateV2 = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
-
-    function clampAdminChatImageV2(value, min, max) {
-        return Math.min(max, Math.max(min, value));
+    function startListPolling() {
+        stopListPolling();
+        state.listPoll = setInterval(() => {
+            loadUsers(el.search.value.trim());
+            loadConversations();
+        }, 6000);
     }
 
-    function applyAdminChatImageTransformV2() {
-        const image = document.getElementById('admin-chat-image-full-v2');
-        const modal = document.getElementById('admin-chat-image-modal-v2');
-        if (!image || !modal) return;
-        const modalRect = modal.getBoundingClientRect();
-        const displayWidth = image.naturalWidth * adminChatImageStateV2.scale;
-        const displayHeight = image.naturalHeight * adminChatImageStateV2.scale;
-        const maxX = Math.max(0, (displayWidth - modalRect.width) / 2);
-        const maxY = Math.max(0, (displayHeight - modalRect.height) / 2);
-        adminChatImageStateV2.x = clampAdminChatImageV2(adminChatImageStateV2.x, -maxX, maxX);
-        adminChatImageStateV2.y = clampAdminChatImageV2(adminChatImageStateV2.y, -maxY, maxY);
-        image.style.transform = `translate(${adminChatImageStateV2.x}px, ${adminChatImageStateV2.y}px) scale(${adminChatImageStateV2.scale})`;
+    function stopListPolling() {
+        if (state.listPoll) clearInterval(state.listPoll);
+        state.listPoll = null;
     }
 
-    function openAdminChatImageV2(src) {
-        const modal = document.getElementById('admin-chat-image-modal-v2');
-        const image = document.getElementById('admin-chat-image-full-v2');
-        const download = document.getElementById('admin-chat-image-download-v2');
-        if (!modal || !image) return;
-        image.src = src;
-        if (download) download.href = src;
-        adminChatImageStateV2 = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
-        applyAdminChatImageTransformV2();
-        modal.classList.remove('hidden');
+    function startThreadPolling() {
+        stopThreadPolling();
+        state.threadPoll = setInterval(loadThread, 3200);
     }
 
-    function closeAdminChatImageV2() {
-        const modal = document.getElementById('admin-chat-image-modal-v2');
-        const image = document.getElementById('admin-chat-image-full-v2');
-        const download = document.getElementById('admin-chat-image-download-v2');
-        if (!modal || !image) return;
-        image.src = '';
-        if (download) download.removeAttribute('href');
-        modal.classList.add('hidden');
+    function stopThreadPolling() {
+        if (state.threadPoll) clearInterval(state.threadPoll);
+        state.threadPoll = null;
     }
 
-    function resetAdminChatImageV2() {
-        adminChatImageStateV2 = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0 };
-        applyAdminChatImageTransformV2();
+    function lockBody(locked) {
+        if (window.innerWidth < 640) document.body.classList.toggle('overflow-hidden', locked);
+        if (!locked && !el.imageModal.classList.contains('is-open')) document.body.classList.remove('overflow-hidden');
     }
 
-    document.getElementById('chat-messages-container-v2')?.addEventListener('click', function (event) {
-        const target = event.target.closest('[data-chat-image]');
-        if (!target) return;
-        openAdminChatImageV2(target.getAttribute('data-chat-image'));
+    function openThread(user) {
+        state.sig = '';
+        stopListPolling();
+        clearFile();
+        setFeedback('');
+        el.badge.classList.add('hidden');
+        el.listView.classList.add('hidden');
+        el.threadView.classList.remove('hidden');
+        setThreadUser(user, user);
+        syncComposerState();
+        threadState(i18n.loadingMessages, i18n.startConversation);
+        startThreadPolling();
+        loadThread();
+        setTimeout(() => el.input.focus(), 100);
+    }
+
+    function backToList() {
+        state.sig = '';
+        stopThreadPolling();
+        setTyping(false);
+        sendTyping(false);
+        clearFile();
+        setFeedback('');
+        state.activeUser = null;
+        syncComposerState();
+        el.threadView.classList.add('hidden');
+        el.listView.classList.remove('hidden');
+        loadUsers(el.search.value.trim());
+        loadConversations();
+        startListPolling();
+        setTimeout(() => el.search.focus(), 80);
+    }
+
+    function setOpen(open) {
+        state.open = Boolean(open);
+        el.toggle.setAttribute('aria-expanded', state.open ? 'true' : 'false');
+        el.window.setAttribute('aria-hidden', state.open ? 'false' : 'true');
+        el.window.classList.toggle('hidden', !state.open);
+        el.window.classList.toggle('is-open', state.open);
+        el.backdrop.classList.toggle('hidden', !state.open);
+        el.backdrop.classList.toggle('is-open', state.open);
+        lockBody(state.open);
+        if (!state.open) {
+            stopListPolling();
+            stopThreadPolling();
+            sendTyping(false);
+            syncComposerState();
+            return;
+        }
+        if (state.activeUser) {
+            startThreadPolling();
+            loadThread();
+        } else {
+            loadUsers(el.search.value.trim());
+            loadConversations();
+            startListPolling();
+        }
+        unreadCount();
+    }
+
+    function toggle(force) { setOpen(typeof force === 'boolean' ? force : !state.open); }
+    function openImage(src) { if (!src) return; el.imageFull.src = src; el.imageDownload.href = src; el.imageModal.classList.add('is-open'); document.body.classList.add('overflow-hidden'); }
+    function closeImage() { el.imageModal.classList.remove('is-open'); el.imageFull.src = ''; el.imageDownload.removeAttribute('href'); if (!state.open || window.innerWidth >= 640) document.body.classList.remove('overflow-hidden'); }
+
+    el.toggle.addEventListener('click', () => toggle());
+    el.close.addEventListener('click', () => toggle(false));
+    el.backdrop.addEventListener('click', () => toggle(false));
+    el.back.addEventListener('click', backToList);
+    el.changeUser.addEventListener('click', backToList);
+    el.search.addEventListener('input', () => {
+        clearTimeout(state.searchTimer);
+        state.searchTimer = setTimeout(() => loadUsers(el.search.value.trim()), 220);
+    });
+    el.fileTrigger.addEventListener('click', () => el.fileInput.click());
+    el.fileInput.addEventListener('change', (event) => {
+        state.file = event.target.files?.[0] || null;
+        if (!state.file) { clearFile(); return; }
+        el.fileName.textContent = state.file.name;
+        el.fileSize.textContent = size(state.file.size);
+        el.filePreview.classList.remove('hidden');
+    });
+    el.removeFile.addEventListener('click', clearFile);
+    el.send.addEventListener('click', sendMessage);
+    el.input.addEventListener('input', () => {
+        resizeInput();
+        sendTyping(true);
+        clearTimeout(state.typingTimer);
+        state.typingTimer = setTimeout(() => sendTyping(false), 1800);
+    });
+    el.input.addEventListener('blur', () => sendTyping(false));
+    el.input.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+    el.messages.addEventListener('click', (event) => {
+        const trigger = event.target.closest('[data-admin-chat-image]');
+        if (trigger) openImage(trigger.getAttribute('data-admin-chat-image'));
+    });
+    el.imageClose.addEventListener('click', closeImage);
+    el.imageModal.addEventListener('click', (event) => { if (event.target === el.imageModal) closeImage(); });
+    document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        if (el.imageModal.classList.contains('is-open')) { closeImage(); return; }
+        if (!state.open) return;
+        if (state.activeUser) { backToList(); return; }
+        toggle(false);
     });
 
-    const adminChatImageV2 = document.getElementById('admin-chat-image-full-v2');
-    const adminChatModalV2 = document.getElementById('admin-chat-image-modal-v2');
-    if (adminChatImageV2 && adminChatModalV2) {
-        adminChatImageV2.addEventListener('wheel', function (event) {
-            event.preventDefault();
-            const delta = event.deltaY < 0 ? 1.1 : 0.9;
-            adminChatImageStateV2.scale = Math.min(4, Math.max(1, adminChatImageStateV2.scale * delta));
-            applyAdminChatImageTransformV2();
-        });
-        adminChatImageV2.addEventListener('mousedown', function (event) {
-            adminChatImageStateV2.dragging = true;
-            adminChatImageStateV2.startX = event.clientX - adminChatImageStateV2.x;
-            adminChatImageStateV2.startY = event.clientY - adminChatImageStateV2.y;
-            adminChatImageV2.style.cursor = 'grabbing';
-        });
-        adminChatModalV2.addEventListener('mousemove', function (event) {
-            if (!adminChatImageStateV2.dragging) return;
-            adminChatImageStateV2.x = event.clientX - adminChatImageStateV2.startX;
-            adminChatImageStateV2.y = event.clientY - adminChatImageStateV2.startY;
-            applyAdminChatImageTransformV2();
-        });
-        adminChatModalV2.addEventListener('mouseup', function () {
-            adminChatImageStateV2.dragging = false;
-            adminChatImageV2.style.cursor = 'grab';
-        });
-        adminChatModalV2.addEventListener('mouseleave', function () {
-            adminChatImageStateV2.dragging = false;
-            adminChatImageV2.style.cursor = 'grab';
-        });
-        adminChatImageV2.addEventListener('load', function () {
-            applyAdminChatImageTransformV2();
-        });
-    }
-
-    window.sendAdminMessageV2 = function() {
-        if (!currentChatUserIdV2) return;
-
-        const input = document.getElementById('admin-chat-input-v2');
-        const message = input.value.trim();
-
-        // Allow sending if there's either a message or a file
-        if (message === '' && !selectedAdminFileV2) return;
-
-        input.disabled = true;
-
-        // Prepare request data
-        let requestData;
-        let headers = {
-            'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
-            'Accept': 'application/json',
-        };
-
-        if (selectedAdminFileV2) {
-            // Use FormData for file uploads
-            requestData = new FormData();
-            requestData.append('receiver_id', currentChatUserIdV2);
-            if (message) {
-                requestData.append('message', message);
-            }
-            requestData.append('attachment', selectedAdminFileV2);
-        } else {
-            // Use JSON for text-only messages
-            headers['Content-Type'] = 'application/json';
-            requestData = JSON.stringify({
-                message: message,
-                receiver_id: currentChatUserIdV2
-            });
-        }
-
-        fetch('<?php echo e(route("chat.send")); ?>', {
-            method: 'POST',
-            headers: headers,
-            body: requestData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                input.value = '';
-                removeAdminFileV2(); // Clear file selection
-                loadChatWithUserV2(currentChatUserIdV2);
-            }
-        })
-        .catch(error => console.error('[ChatV2] Error sending message:', error))
-        .finally(() => {
-            input.disabled = false;
-            input.focus();
-        });
-    };
-
-    function updateAdminUnreadCountV2() {
-        fetch('<?php echo e(route("chat.unread-count")); ?>', {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json',
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const badge = document.getElementById('admin-unread-badge-v2');
-                if (data.count > 0) {
-                    badge.textContent = data.count;
-                    badge.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
-                }
-            }
-        })
-        .catch(error => console.error('[ChatV2] Error updating unread count:', error));
-    }
-
-    window.handleAdminFileSelectV2 = function(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        // Check file size (max 10MB)
-        if (file.size > 10 * 1024 * 1024) {
-            alert('Le fichier est trop volumineux. Taille maximale: 10MB');
-            event.target.value = '';
-            return;
-        }
-
-        selectedAdminFileV2 = file;
-
-        // Show file preview
-        const preview = document.getElementById('admin-file-preview-v2');
-        const fileName = document.getElementById('admin-file-name-v2');
-        const fileSize = document.getElementById('admin-file-size-v2');
-
-        fileName.textContent = file.name;
-        fileSize.textContent = formatFileSizeV2(file.size);
-        preview.classList.remove('hidden');
-    };
-
-    window.removeAdminFileV2 = function() {
-        selectedAdminFileV2 = null;
-        document.getElementById('admin-file-input-v2').value = '';
-        document.getElementById('admin-file-preview-v2').classList.add('hidden');
-    };
-
-    function formatFileSizeV2(bytes) {
-        if (bytes === 0) return '0 B';
-        const k = 1024;
-        const sizes = ['B', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
-    }
-
-    function escapeHtmlV2(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    // Update unread count every 10 seconds
-    setInterval(updateAdminUnreadCountV2, 10000);
-    updateAdminUnreadCountV2();
-
-    window.openAdminChatImageV2 = openAdminChatImageV2;
-    window.closeAdminChatImageV2 = closeAdminChatImageV2;
-    window.resetAdminChatImageV2 = resetAdminChatImageV2;
+    resizeInput();
+    syncComposerState();
+    state.unreadPoll = setInterval(unreadCount, 12000);
+    unreadCount();
+    window.toggleAdminChatV2 = toggle;
 })();
 </script>
-
-<div id="admin-chat-image-modal-v2" class="hidden fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4">
-    <button type="button" class="absolute top-4 right-4 text-white text-2xl" onclick="closeAdminChatImageV2()">×</button>
-    <a id="admin-chat-image-download-v2" class="absolute top-4 left-4 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" download>Tlcharger</a>
-    <button type="button" class="absolute top-4 left-32 text-white text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded" onclick="resetAdminChatImageV2()">Rinitialiser</button>
-    <img id="admin-chat-image-full-v2" src="" alt="<?php echo e(__('chat.image_preview_alt')); ?>" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl cursor-grab" style="transform: translate(0,0) scale(1);">
-</div>
 <?php /**PATH C:\xampp\htdocs\cerveau\resources\views\components\admin-chat-widget-v2.blade.php ENDPATH**/ ?>

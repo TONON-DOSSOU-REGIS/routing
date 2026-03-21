@@ -61,7 +61,7 @@ unset($__defined_vars, $__key, $__value); ?>
 
     <div
         data-notification-dropdown
-        class="fixed inset-x-3 bottom-3 top-[calc(env(safe-area-inset-top,0px)+4.75rem)] z-[9998] hidden flex-col overflow-hidden rounded-[28px] border border-slate-200 bg-white/95 shadow-2xl ring-1 ring-black/5 backdrop-blur md:absolute md:bottom-auto md:left-auto md:right-0 md:top-full md:mt-3 md:max-h-[min(70vh,42rem)] md:w-[26rem] md:max-w-[min(26rem,calc(100vw-2rem))] md:rounded-2xl"
+        class="fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom,0px)+0.75rem)] top-[calc(env(safe-area-inset-top,0px)+4.75rem)] z-[9998] hidden min-h-0 flex-col overflow-hidden rounded-[28px] border border-slate-200 bg-white/95 shadow-2xl ring-1 ring-black/5 backdrop-blur md:absolute md:bottom-auto md:left-auto md:right-0 md:top-full md:mt-3 md:max-h-[min(70vh,42rem)] md:w-[26rem] md:max-w-[min(26rem,calc(100vw-2rem))] md:rounded-2xl"
         role="dialog"
         aria-modal="true"
         aria-hidden="true"
@@ -81,7 +81,7 @@ unset($__defined_vars, $__key, $__value); ?>
             </button>
         </div>
 
-        <div data-notification-list class="notification-list flex-1 overflow-y-auto divide-y divide-slate-100 overscroll-contain">
+        <div data-notification-list class="notification-list min-h-0 flex-1 overflow-y-auto divide-y divide-slate-100 overscroll-contain">
             <div class="p-5 text-center text-slate-500">
                 <i class="fas fa-spinner fa-spin text-xl"></i>
                 <p class="mt-3 text-sm"><?php echo e(__('notifications.loading_short')); ?></p>
@@ -145,6 +145,11 @@ document.addEventListener('DOMContentLoaded', function () {
         let notificationOutputNode = null;
         let notificationMasterGain = null;
         let unreadTimer = null;
+        let speechTimer = null;
+        let hasLoadedNotifications = false;
+        let isLoadingNotifications = false;
+        let pendingNotificationsRefresh = false;
+        let notificationsRequestId = 0;
         const unreadPollingIntervalMs = isAdmin ? 3000 : 10000;
         const notificationSoundProfile = isAdmin
             ? { notes: [740, 932, 1175], step: 0.085, duration: 0.35, bodyGain: 0.26, shimmerGain: 0.18, masterGain: 1.34 }
@@ -176,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
             setPageScrollLock(next);
 
             if (next && shouldLoad) {
-                loadNotifications();
+                loadNotifications({ background: hasLoadedNotifications });
             }
         }
 
@@ -219,9 +224,9 @@ document.addEventListener('DOMContentLoaded', function () {
             return audioContext;
         }
 
-        function ensureNotificationOutput(ctx) {
+        function ensureNotificationOutput(ctx, profile = notificationSoundProfile) {
             if (notificationOutputNode && notificationMasterGain) {
-                notificationMasterGain.gain.value = notificationSoundProfile.masterGain;
+                notificationMasterGain.gain.value = profile.masterGain;
                 return notificationOutputNode;
             }
 
@@ -233,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function () {
             compressor.release.setValueAtTime(0.2, ctx.currentTime);
 
             notificationMasterGain = ctx.createGain();
-            notificationMasterGain.gain.value = notificationSoundProfile.masterGain;
+            notificationMasterGain.gain.value = profile.masterGain;
 
             compressor.connect(notificationMasterGain);
             notificationMasterGain.connect(ctx.destination);
@@ -248,7 +253,20 @@ document.addEventListener('DOMContentLoaded', function () {
             ensureAudioContext();
         }
 
-        function getIcon(type) {
+        function normalizeIcon(icon) {
+            if (!icon) {
+                return '';
+            }
+
+            return icon.includes(' ') ? icon : `fas ${icon}`;
+        }
+
+        function getIcon(notification) {
+            if (notification?.icon) {
+                return normalizeIcon(notification.icon);
+            }
+
+            const type = notification?.type;
             const icons = {
                 transaction: 'fas fa-exchange-alt',
                 message: 'fas fa-envelope',
@@ -260,7 +278,22 @@ document.addEventListener('DOMContentLoaded', function () {
             return icons[type] || 'fas fa-bell';
         }
 
-        function getIconColor(type) {
+        function getIconColor(notification) {
+            const explicitColors = {
+                green: 'bg-emerald-500',
+                blue: 'bg-blue-500',
+                red: 'bg-rose-500',
+                gray: 'bg-slate-500',
+                purple: 'bg-violet-500',
+                amber: 'bg-amber-500',
+                orange: 'bg-orange-500',
+            };
+
+            if (notification?.color && explicitColors[notification.color]) {
+                return explicitColors[notification.color];
+            }
+
+            const type = notification?.type;
             const colors = {
                 transaction: 'bg-green-500',
                 message: 'bg-blue-500',
@@ -332,8 +365,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         data-notification-id="${notification.id}"
                     >
                         <span class="flex items-start gap-3">
-                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${getIconColor(notification.type)}">
-                                <i class="${getIcon(notification.type)} text-sm text-white"></i>
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${getIconColor(notification)}">
+                                <i class="${getIcon(notification)} text-sm text-white"></i>
                             </span>
                             <span class="min-w-0 flex-1">
                                 <span class="flex items-start justify-between gap-3">
@@ -367,13 +400,25 @@ document.addEventListener('DOMContentLoaded', function () {
             })
                 .then(() => {
                     updateUnreadCount({ silent: true });
-                    loadNotifications();
+                    loadNotifications({ background: true });
                 })
                 .catch((error) => console.error('Error marking as read:', error));
         }
 
-        function loadNotifications() {
-            renderLoadingState();
+        function loadNotifications(options = {}) {
+            const { background = false } = options;
+
+            if (isLoadingNotifications) {
+                pendingNotificationsRefresh = true;
+                return;
+            }
+
+            isLoadingNotifications = true;
+            const requestId = ++notificationsRequestId;
+
+            if (!background && !hasLoadedNotifications) {
+                renderLoadingState();
+            }
 
             fetch(`/${resolveLocale()}/notifications/recent`, {
                 headers: {
@@ -384,15 +429,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.success) {
+                        hasLoadedNotifications = true;
                         renderNotifications(data.notifications);
                         return;
                     }
 
-                    renderErrorState();
+                    if (!background || !hasLoadedNotifications) {
+                        renderErrorState();
+                    }
                 })
                 .catch((error) => {
                     console.error('Error loading notifications:', error);
-                    renderErrorState();
+                    if (!background || !hasLoadedNotifications) {
+                        renderErrorState();
+                    }
+                })
+                .finally(() => {
+                    if (requestId !== notificationsRequestId) {
+                        return;
+                    }
+
+                    isLoadingNotifications = false;
+
+                    if (pendingNotificationsRefresh) {
+                        pendingNotificationsRefresh = false;
+                        loadNotifications({ background: true });
+                    }
                 });
         }
 
@@ -442,7 +504,121 @@ document.addEventListener('DOMContentLoaded', function () {
             oscillator.stop(startTime + duration);
         }
 
-        function playNotificationSound() {
+        function isAdminLoginNotification(notification) {
+            return Boolean(
+                isAdmin
+                && notification
+                && notification.type === 'account'
+                && normalizeIcon(notification.icon).includes('fa-user-check')
+            );
+        }
+
+        function resolveSoundProfile(notification = null) {
+            if (isAdminLoginNotification(notification)) {
+                return {
+                    notes: [622, 784, 1047, 1245],
+                    step: 0.07,
+                    duration: 0.31,
+                    bodyGain: 0.29,
+                    shimmerGain: 0.2,
+                    masterGain: 1.4,
+                };
+            }
+
+            return notificationSoundProfile;
+        }
+
+        function resolveSpeechLang() {
+            const locale = String(resolveLocale() || fallbackLocale || 'en').toLowerCase();
+            const normalized = locale.split('-')[0];
+            const languageMap = {
+                fr: 'fr-FR',
+                en: 'en-US',
+                de: 'de-DE',
+                nl: 'nl-NL',
+                es: 'es-ES',
+                it: 'it-IT',
+                pl: 'pl-PL',
+            };
+
+            return languageMap[normalized] || 'en-US';
+        }
+
+        function resolveAnnouncementText(notification) {
+            if (!isAdminLoginNotification(notification)) {
+                return '';
+            }
+
+            const message = String(notification?.message || '').trim();
+            const firstSentence = message.match(/^[^.?!]+[.?!]?/);
+            return firstSentence ? firstSentence[0].trim() : '';
+        }
+
+        function resolveSpeechVoice(lang) {
+            if (!('speechSynthesis' in window)) {
+                return null;
+            }
+
+            const voices = window.speechSynthesis.getVoices();
+
+            if (!Array.isArray(voices) || voices.length === 0) {
+                return null;
+            }
+
+            const langPrefix = lang.split('-')[0].toLowerCase();
+
+            return voices.find((voice) => voice.lang === lang)
+                || voices.find((voice) => String(voice.lang || '').toLowerCase().startsWith(langPrefix))
+                || null;
+        }
+
+        function speakNotificationAnnouncement(notification = null) {
+            if (!soundEnabled || !isAdminLoginNotification(notification)) {
+                return;
+            }
+
+            if (!('speechSynthesis' in window) || typeof window.SpeechSynthesisUtterance === 'undefined') {
+                return;
+            }
+
+            const announcement = resolveAnnouncementText(notification);
+
+            if (!announcement) {
+                return;
+            }
+
+            const lang = resolveSpeechLang();
+
+            if (speechTimer) {
+                clearTimeout(speechTimer);
+            }
+
+            window.speechSynthesis.cancel();
+
+            speechTimer = window.setTimeout(function () {
+                try {
+                    const utterance = new window.SpeechSynthesisUtterance(announcement);
+                    const voice = resolveSpeechVoice(lang);
+
+                    utterance.lang = lang;
+                    utterance.rate = 0.96;
+                    utterance.pitch = 1;
+                    utterance.volume = 1;
+
+                    if (voice) {
+                        utterance.voice = voice;
+                    }
+
+                    window.speechSynthesis.speak(utterance);
+                } catch (error) {
+                    // Ignore speech synthesis errors.
+                } finally {
+                    speechTimer = null;
+                }
+            }, 220);
+        }
+
+        function playNotificationSound(notification = null) {
             if (!soundEnabled) {
                 return;
             }
@@ -455,8 +631,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 const startTime = ctx.currentTime + 0.01;
-                const p = notificationSoundProfile;
-                const outputNode = ensureNotificationOutput(ctx);
+                const p = resolveSoundProfile(notification);
+                const outputNode = ensureNotificationOutput(ctx, p);
 
                 p.notes.forEach((note, index) => {
                     const toneStart = startTime + (index * p.step);
@@ -478,7 +654,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     updateUnreadCount();
 
                     if (isOpen) {
-                        loadNotifications();
+                        loadNotifications({ background: true });
                     }
                 }
             }, unreadPollingIntervalMs);
@@ -556,7 +732,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
                 .then(() => {
                     updateUnreadCount({ silent: true });
-                    loadNotifications();
+                    loadNotifications({ background: true });
                 })
                 .catch((error) => console.error('Error marking all as read:', error));
         });
@@ -569,10 +745,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         updateUnreadCount({ silent: true });
 
                         if (isOpen) {
-                            loadNotifications();
+                            loadNotifications({ background: true });
                         }
 
-                        playNotificationSound();
+                        playNotificationSound(payload);
+                        speakNotificationAnnouncement(payload);
                         window.dispatchEvent(new CustomEvent('notification.created', { detail: payload }));
                     });
             } catch (error) {
@@ -585,7 +762,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 updateUnreadCount({ silent: true });
 
                 if (isOpen) {
-                    loadNotifications();
+                    loadNotifications({ background: true });
                 }
 
                 startUnreadPolling();
@@ -609,6 +786,11 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 
 .notification-list {
+    min-height: 0;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
     scrollbar-width: thin;
     scrollbar-color: #cbd5e1 transparent;
 }

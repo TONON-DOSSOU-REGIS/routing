@@ -105,7 +105,7 @@ class TransactionController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        $increment = 1;
+        $increment = $this->calculateProgressIncrement((int) $tx->progress, $stopPercentage);
         $p = min(100, (int) $tx->progress + $increment);
 
         if ($tx->status === 'pending') {
@@ -231,6 +231,17 @@ class TransactionController extends Controller
             'recipient_bic' => $tx->recipient_bic,
             'bank_name' => $tx->bank_name,
         ]);
+    }
+
+    private function calculateProgressIncrement(int $currentProgress, int $stopPercentage): int
+    {
+        $targetProgress = $stopPercentage > 0 && $stopPercentage < 100
+            ? $stopPercentage
+            : 100;
+
+        $remaining = max(0, $targetProgress - $currentProgress);
+
+        return $remaining > 0 ? 1 : 0;
     }
 
     private function sendTransferCompletionEmailOnce(Transaction $transaction): void

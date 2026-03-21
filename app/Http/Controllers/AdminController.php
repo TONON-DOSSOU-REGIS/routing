@@ -254,7 +254,11 @@ class AdminController extends Controller
                 'reason' => $request->reason,
                 'status' => 'success',
                 'progress' => 100,
-                'meta' => ['currency' => $request->currency],
+                'meta' => [
+                    'currency' => $request->currency,
+                    'source' => 'admin_manual_deposit',
+                    'silent_for_user' => true,
+                ],
             ]);
         });
 
@@ -265,27 +269,6 @@ class AdminController extends Controller
             'currency' => $request->currency,
         ]);
 
-        // Notify user of deposit
-        try {
-            $user = User::findOrFail($request->user_id);
-            $transaction = Transaction::where('user_id', $user->id)
-                                     ->where('type', 'deposit')
-                                     ->latest()
-                                     ->first();
-            
-            if ($transaction) {
-                // Send in-app notification
-                NotificationService::notifyDeposit($user, $transaction);
-                
-                // Send email notification
-                Mail::to($user->email)->send(new \App\Mail\DepositNotificationMail($user, $transaction));
-            }
-        } catch (\Exception $e) {
-            Log::error('Failed to notify user of deposit', [
-                'user_id' => $request->user_id,
-                'error' => $e->getMessage(),
-            ]);
-        }
 
         $message = 'Dépôt effectué avec succès. La devise par défaut de l\'utilisateur a été mise à jour.';
 

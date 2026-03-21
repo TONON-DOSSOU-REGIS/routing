@@ -51,6 +51,16 @@
         .premium-sidebar {
             background: rgba(255, 255, 255, 0.98);
             border-right: 1px solid rgba(15, 23, 42, 0.06);
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-y: contain;
+            touch-action: pan-y;
+        }
+
+        @media (max-width: 1023px) {
+            .premium-sidebar {
+                height: 100dvh;
+                padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+            }
         }
 
         @media (min-width: 1024px) {
@@ -95,6 +105,16 @@
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
             box-shadow: var(--shadow-card);
+        }
+
+        /* Shared dashboard chrome should stay flat and simple. */
+        .premium-dashboard-body .premium-shell,
+        .premium-dashboard-body .premium-sidebar,
+        .premium-dashboard-body .premium-nav-item,
+        .premium-dashboard-body .premium-search,
+        .premium-dashboard-body .premium-panel,
+        .premium-dashboard-body .premium-gradient-card {
+            border-radius: 0 !important;
         }
 
         .premium-card-hover {
@@ -201,14 +221,14 @@
             <div class="absolute bottom-[-5rem] left-[36%] h-72 w-72 rounded-full bg-amber-200/20 blur-3xl"></div>
         </div>
 
-        <div class="relative z-10 p-4 lg:p-6">
-            <div class="premium-shell mx-auto flex min-h-[calc(100vh-2rem)] max-w-[1800px] overflow-hidden rounded-[32px] premium-fade-in">
+        <div class="relative z-10">
+            <div class="premium-shell flex min-h-screen w-full overflow-hidden premium-fade-in">
                 <aside
                     id="premium-dashboard-sidebar"
-                    class="premium-sidebar premium-scroll fixed inset-y-2 left-2 z-30 w-[290px] max-w-[calc(100vw-1rem)] -translate-x-[calc(100%+1rem)] overflow-y-auto rounded-[28px] p-6 shadow-2xl transition-transform duration-300 ease-out lg:static lg:inset-auto lg:z-auto lg:w-[290px] lg:max-w-none lg:translate-x-0 lg:rounded-none lg:shadow-none"
+                    class="premium-sidebar premium-scroll fixed inset-y-0 left-0 z-30 w-[290px] max-w-[85vw] -translate-x-full overflow-y-auto p-6 shadow-2xl transition-transform duration-300 ease-out lg:static lg:inset-auto lg:z-auto lg:h-auto lg:w-[290px] lg:max-w-none lg:translate-x-0 lg:shadow-none"
                     aria-hidden="true"
                 >
-                    <div class="flex h-full flex-col gap-8">
+                    <div class="flex min-h-full flex-col gap-8">
                         <div class="flex items-center gap-4">
                             <a href="<?php echo e(localized_route('home')); ?>" class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-200/70">
                                 <img src="<?php echo e(asset('images/Logosite.png')); ?>" alt="Valtrix Bank" class="h-10 w-10 object-contain">
@@ -383,7 +403,7 @@
 
             const setSidebarState = (isOpen) => {
                 if (window.innerWidth >= 1024) {
-                    sidebar.classList.remove('-translate-x-[calc(100%+1rem)]');
+                    sidebar.classList.remove('-translate-x-full');
                     backdrop.classList.add('pointer-events-none', 'opacity-0');
                     dashboardBody.classList.remove('is-sidebar-open');
                     html.classList.remove('overflow-hidden');
@@ -392,7 +412,7 @@
                     return;
                 }
 
-                sidebar.classList.toggle('-translate-x-[calc(100%+1rem)]', !isOpen);
+                sidebar.classList.toggle('-translate-x-full', !isOpen);
                 backdrop.classList.toggle('pointer-events-none', !isOpen);
                 backdrop.classList.toggle('opacity-0', !isOpen);
                 dashboardBody.classList.toggle('is-sidebar-open', isOpen);
