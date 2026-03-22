@@ -38,6 +38,9 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         },
+        "exclude-from-classmap": [
+            "vendor/league/flysystem/src/Local/"
+        ],
         "files": [
             "app/Helpers/RouteHelper.php"
         ]
