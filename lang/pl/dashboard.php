@@ -76,6 +76,8 @@ return [
     'secure_session' => 'Bezpieczna sesja',
     'immediate_summary' => 'Szybki przeglad',
     'hero_summary' => 'Kokpit pokazuje to, co najwazniejsze: dostepne saldo, tempo operacji, oczekujace sprawy i priorytety.',
+    'loan_amount_title' => 'Kwota pozyczki',
+    'loan_amount_description' => 'Panel pokazuje teraz wylacznie dostepna kwote pozyczki, aby uniknac pomylek z innymi wartosciami finansowymi.',
     'primary_card' => 'Karta glowna',
     'expires' => 'Wazna do :date',
     'virtual_card_active' => 'Wirtualna karta aktywna',

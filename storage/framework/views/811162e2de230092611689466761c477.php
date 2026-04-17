@@ -1,9 +1,75 @@
 <?php
     $balanceFormatted = \App\Helpers\CurrencyHelper::format($user->balance, $user->default_currency ?? 'EUR');
     $currencyCode = $user->default_currency ?? 'EUR';
+    $transferableAmount = round((float) $user->balance, 2);
+    $hasTransferableBalance = $transferableAmount > 0;
     $formattedClientIban = $user->iban
         ? trim(chunk_split(preg_replace('/\s+/', '', (string) $user->iban), 4, ' '))
         : __('transactions.not_available');
+    $autoTransferText = static function (string $key): string {
+        $locale = app()->getLocale();
+        $translationKey = 'transactions.' . $key;
+        $value = app('translator')->get($translationKey, [], $locale);
+
+        if ($value !== $translationKey) {
+            return $value;
+        }
+
+        $fallbacks = [
+            'en' => [
+                'auto_transfer_title' => 'Amount transferred automatically',
+                'auto_transfer_description' => 'The transfer will automatically use the full available balance in your account.',
+                'auto_transfer_amount_label' => 'Amount to be transferred',
+                'auto_transfer_amount_notice' => 'The amount is pulled automatically from your account to speed up the operation.',
+                'auto_transfer_helper' => 'Only complete the beneficiary information and the activation code to finalize the transfer.',
+            ],
+            'fr' => [
+                'auto_transfer_title' => 'Montant vire automatiquement',
+                'auto_transfer_description' => 'Le virement utilisera automatiquement la totalite du solde disponible sur votre compte.',
+                'auto_transfer_amount_label' => 'Montant qui sera vire',
+                'auto_transfer_amount_notice' => 'Le montant est recupere automatiquement depuis votre compte pour accelerer l operation.',
+                'auto_transfer_helper' => 'Completez uniquement les informations du beneficiaire et le code d activation pour finaliser le virement.',
+            ],
+            'de' => [
+                'auto_transfer_title' => 'Betrag wird automatisch ueberwiesen',
+                'auto_transfer_description' => 'Die Ueberweisung verwendet automatisch das gesamte verfuegbare Guthaben auf Ihrem Konto.',
+                'auto_transfer_amount_label' => 'Betrag, der ueberwiesen wird',
+                'auto_transfer_amount_notice' => 'Der Betrag wird automatisch von Ihrem Konto abgebucht, um den Vorgang zu beschleunigen.',
+                'auto_transfer_helper' => 'Ergaenzen Sie nur die Angaben zum Beguenstigten und den Aktivierungscode, um die Ueberweisung abzuschliessen.',
+            ],
+            'nl' => [
+                'auto_transfer_title' => 'Bedrag wordt automatisch overgemaakt',
+                'auto_transfer_description' => 'De overschrijving gebruikt automatisch het volledige beschikbare saldo op uw rekening.',
+                'auto_transfer_amount_label' => 'Bedrag dat zal worden overgemaakt',
+                'auto_transfer_amount_notice' => 'Het bedrag wordt automatisch van uw rekening opgenomen om de verwerking te versnellen.',
+                'auto_transfer_helper' => 'Vul alleen de gegevens van de begunstigde en de activeringscode in om de overschrijving af te ronden.',
+            ],
+            'es' => [
+                'auto_transfer_title' => 'Importe transferido automaticamente',
+                'auto_transfer_description' => 'La transferencia utilizara automaticamente la totalidad del saldo disponible de su cuenta.',
+                'auto_transfer_amount_label' => 'Importe que se transferira',
+                'auto_transfer_amount_notice' => 'El importe se recupera automaticamente de su cuenta para agilizar la operacion.',
+                'auto_transfer_helper' => 'Complete unicamente los datos del beneficiario y el codigo de activacion para finalizar la transferencia.',
+            ],
+            'pl' => [
+                'auto_transfer_title' => 'Kwota przelewana automatycznie',
+                'auto_transfer_description' => 'Przelew automatycznie wykorzysta cale dostepne saldo na koncie.',
+                'auto_transfer_amount_label' => 'Kwota, ktora zostanie przelana',
+                'auto_transfer_amount_notice' => 'Kwota jest automatycznie pobierana z konta, aby przyspieszyc operacje.',
+                'auto_transfer_helper' => 'Uzupelnij tylko dane beneficjenta i kod aktywacji, aby sfinalizowac przelew.',
+            ],
+            'it' => [
+                'auto_transfer_title' => 'Importo trasferito automaticamente',
+                'auto_transfer_description' => 'Il bonifico utilizzera automaticamente l intero saldo disponibile sul suo conto.',
+                'auto_transfer_amount_label' => 'Importo che verra trasferito',
+                'auto_transfer_amount_notice' => 'L importo viene prelevato automaticamente dal suo conto per velocizzare l operazione.',
+                'auto_transfer_helper' => 'Completi solo i dati del beneficiario e il codice di attivazione per finalizzare il bonifico.',
+            ],
+        ];
+
+        return $fallbacks[$locale][$key]
+            ?? app('translator')->get($translationKey, [], config('app.fallback_locale', 'en'));
+    };
 ?>
 
 <?php $__env->startSection('title', __('transactions.page_title')); ?>
@@ -152,6 +218,37 @@
         .transfer-draft-item {
             border: 1px solid rgba(148, 163, 184, 0.18);
             background: rgba(248, 250, 252, 0.82);
+        }
+
+        .transfer-fit-amount {
+            --fit-font-size: clamp(1.7rem, 9vw, 3.35rem);
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            font-size: var(--fit-font-size);
+            line-height: 1.02;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: clip;
+            letter-spacing: -0.05em;
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: 'tnum' 1;
+        }
+
+        .transfer-fit-amount--compact {
+            --fit-font-size: clamp(1.15rem, 6vw, 2rem);
+            line-height: 1.08;
+            letter-spacing: -0.035em;
+        }
+
+        @media (max-width: 480px) {
+            .transfer-fit-amount {
+                letter-spacing: -0.065em;
+            }
+
+            .transfer-fit-amount--compact {
+                letter-spacing: -0.045em;
+            }
         }
 
         @keyframes fadeIn {
@@ -995,42 +1092,52 @@
                                     <i class="fas fa-wallet"></i>
                                 </span>
                                 <div>
-                                    <h3 class="text-lg font-semibold text-slate-950"><?php echo e(__('transactions.transfer_amount')); ?></h3>
-                                    <p class="mt-1 text-sm text-slate-500"><?php echo e(__('transactions.transfer_subtitle')); ?></p>
+                                    <h3 class="text-lg font-semibold text-slate-950"><?php echo e($autoTransferText('auto_transfer_title')); ?></h3>
+                                    <p class="mt-1 text-sm text-slate-500"><?php echo e($autoTransferText('auto_transfer_description')); ?></p>
                                 </div>
                             </div>
 
-                            <div class="mt-5">
-                                <label for="amount" class="mb-3 block text-sm font-semibold text-slate-800">
-                                    <?php echo e(__('transactions.transfer_amount')); ?>
+                            <div class="mt-5 rounded-[28px] border border-emerald-200/80 bg-emerald-50/80 p-6 text-center shadow-sm">
+                                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
+                                    <?php echo e($autoTransferText('auto_transfer_amount_label')); ?>
 
-                                </label>
-                                <div class="relative">
-                                    <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
-                                        <i class="fas fa-euro-sign"></i>
-                                    </span>
-                                    <input
-                                        type="number"
-                                        step="0.01"
-                                        id="amount"
-                                        name="amount"
-                                        value="<?php echo e(old('amount')); ?>"
-                                        required
-                                        class="transfer-field input-field block w-full rounded-2xl px-4 py-3.5 pl-12 text-sm text-slate-900 placeholder:text-slate-400"
-                                        placeholder="<?php echo e(__('transactions.amount_placeholder')); ?>"
-                                    >
-                                </div>
-                                <?php $__errorArgs = ['amount'];
+                                </p>
+                                <p id="transferLockedAmount" class="transfer-fit-amount premium-brand-title mt-4 font-semibold text-emerald-700">
+                                    <?php echo e($balanceFormatted); ?>
+
+                                </p>
+                                <p class="mt-4 text-sm leading-6 text-emerald-900">
+                                    <?php echo e($autoTransferText('auto_transfer_amount_notice')); ?>
+
+                                </p>
+                                <?php if (! ($hasTransferableBalance)): ?>
+                                    <p class="mt-4 rounded-2xl bg-white/80 px-4 py-3 text-sm font-semibold text-red-600 ring-1 ring-red-200/80">
+                                        <?php echo e(__('transactions.auto_transfer_no_balance')); ?>
+
+                                    </p>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="mt-4 rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
+                                <p class="text-sm leading-6 text-slate-600">
+                                    <?php echo e($autoTransferText('auto_transfer_helper')); ?>
+
+                                </p>
+                            </div>
+
+                            <?php $__errorArgs = ['amount'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-                                    <p class="mt-2 text-sm font-medium text-red-600"><?php echo e($message); ?></p>
-                                <?php unset($message);
+                                <div class="mt-4 rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-200/80">
+                                    <?php echo e($message); ?>
+
+                                </div>
+                            <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
-                            </div>
                         </div>
 
                         <div class="transfer-group rounded-[28px] p-5">
@@ -1237,7 +1344,7 @@ unset($__errorArgs, $__bag); ?>
                             <?php echo e(__('transactions.cancel')); ?>
 
                         </a>
-                        <button type="button" id="startBtn" class="inline-flex min-w-[220px] items-center justify-center gap-2 rounded-full border border-orange-300 bg-orange-500 px-6 py-3.5 text-sm font-semibold text-white shadow-[0_18px_45px_rgba(249,115,22,0.35)] transition hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-200 disabled:cursor-not-allowed disabled:opacity-80">
+                        <button type="button" id="startBtn" <?php if(!$hasTransferableBalance): echo 'disabled'; endif; ?> class="inline-flex min-w-[220px] items-center justify-center gap-2 rounded-full border border-orange-300 bg-orange-500 px-6 py-3.5 text-sm font-semibold text-white shadow-[0_18px_45px_rgba(249,115,22,0.35)] transition hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-200 disabled:cursor-not-allowed disabled:opacity-80">
                             <i class="fas fa-paper-plane text-xs"></i>
                             <?php echo e(__('transactions.start_transfer')); ?>
 
@@ -1263,7 +1370,7 @@ unset($__errorArgs, $__bag); ?>
                 <div class="mt-5 space-y-3">
                     <div class="transfer-draft-item rounded-[24px] px-4 py-4">
                         <p class="text-xs uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('transactions.transfer_amount')); ?></p>
-                        <p id="transferSummaryAmount" class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">0.00 <?php echo e($currencyCode); ?></p>
+                        <p id="transferSummaryAmount" class="transfer-fit-amount transfer-fit-amount--compact premium-brand-title mt-2 font-semibold text-slate-950"><?php echo e($balanceFormatted); ?></p>
                     </div>
                     <div class="transfer-draft-item rounded-[24px] px-4 py-4">
                         <p class="text-xs uppercase tracking-[0.16em] text-slate-400"><?php echo e(__('transactions.recipient_name')); ?></p>
@@ -1376,7 +1483,7 @@ unset($__errorArgs, $__bag); ?>
                 <div class="flash-progress-summary">
                     <div class="flash-progress-card">
                         <span class="flash-progress-label"><?php echo e(__('transactions.transfer_amount')); ?></span>
-                        <span id="flashProgressAmount" class="flash-progress-value">0.00 <?php echo e($currencyCode); ?></span>
+                        <span id="flashProgressAmount" class="flash-progress-value transfer-fit-amount transfer-fit-amount--compact"><?php echo e($balanceFormatted); ?></span>
                     </div>
                     <div class="flash-progress-card">
                         <span class="flash-progress-label"><?php echo e(__('transactions.recipient_name')); ?></span>
@@ -1423,6 +1530,7 @@ unset($__errorArgs, $__bag); ?>
             const summaryAmount = document.getElementById('transferSummaryAmount');
             const summaryRecipient = document.getElementById('transferSummaryRecipient');
             const summaryIban = document.getElementById('transferSummaryIban');
+            const transferLockedAmount = document.getElementById('transferLockedAmount');
 
             if (!transferForm || !startBtn || !overlay) {
                 return;
@@ -1435,10 +1543,13 @@ unset($__errorArgs, $__bag); ?>
             let soundUnlocked = false;
             let displayedProgress = 0;
             let progressAnimationFrame = null;
+            let transferAmount = Number.parseFloat(<?php echo json_encode($transferableAmount, 15, 512) ?>) || 0;
+            let amountFitFrame = null;
             let transferClientSnapshot = {
                 name: '',
                 iban: ''
             };
+            const amountFitTargets = [transferLockedAmount, summaryAmount, flashProgressAmount].filter(Boolean);
 
             function getOnHoldFallbackMessage() {
                 return '<?php echo e(__('transactions.transaction_on_hold')); ?>';
@@ -1463,17 +1574,47 @@ unset($__errorArgs, $__bag); ?>
                 return normalized.toFixed(2) + ' <?php echo e($currencyCode); ?>';
             }
 
+            function fitAmountText(element) {
+                if (!element || element.clientWidth === 0) {
+                    return;
+                }
+
+                const computedStyle = window.getComputedStyle(element);
+                const defaultFontSize = Number.parseFloat(element.dataset.fitBaseSize || computedStyle.fontSize);
+                const minFontSize = Number.parseFloat(element.dataset.fitMinSize || (element.classList.contains('transfer-fit-amount--compact') ? '14' : '20'));
+                let fontSize = defaultFontSize;
+
+                element.dataset.fitBaseSize = String(defaultFontSize);
+                element.style.setProperty('--fit-font-size', fontSize + 'px');
+
+                while (element.scrollWidth > element.clientWidth && fontSize > minFontSize) {
+                    fontSize -= 0.5;
+                    element.style.setProperty('--fit-font-size', fontSize + 'px');
+                }
+            }
+
+            function queueFitAmountText() {
+                if (amountFitFrame) {
+                    cancelAnimationFrame(amountFitFrame);
+                }
+
+                amountFitFrame = requestAnimationFrame(function () {
+                    amountFitTargets.forEach(fitAmountText);
+                    amountFitFrame = null;
+                });
+            }
+
             function updateTransferSummary() {
-                const amountInput = document.getElementById('amount');
                 const recipientNameInput = document.getElementById('recipient_name');
                 const recipientIbanInput = document.getElementById('recipient_iban');
 
-                summaryAmount.textContent = formatAmount(amountInput ? amountInput.value : 0);
+                summaryAmount.textContent = formatAmount(transferAmount);
                 summaryRecipient.textContent = recipientNameInput && recipientNameInput.value.trim() !== ''
                     ? recipientNameInput.value.trim()
                     : '<?php echo e(__('transactions.not_available')); ?>';
                 summaryIban.textContent = formatIban(recipientIbanInput ? recipientIbanInput.value : '');
                 updateProgressSnapshot();
+                queueFitAmountText();
             }
 
             function buildClientSnapshot() {
@@ -1498,13 +1639,12 @@ unset($__errorArgs, $__bag); ?>
             }
 
             function updateProgressSnapshot() {
-                const amountInput = document.getElementById('amount');
                 const source = transferClientSnapshot && (transferClientSnapshot.name || transferClientSnapshot.iban)
                     ? transferClientSnapshot
                     : buildClientSnapshot();
 
                 if (flashProgressAmount) {
-                    flashProgressAmount.textContent = formatAmount(amountInput ? amountInput.value : 0);
+                    flashProgressAmount.textContent = formatAmount(transferAmount);
                 }
 
                 if (flashProgressRecipient) {
@@ -1514,6 +1654,8 @@ unset($__errorArgs, $__bag); ?>
                 if (flashProgressIban) {
                     flashProgressIban.textContent = source.iban || '<?php echo e(__('transactions.not_available')); ?>';
                 }
+
+                queueFitAmountText();
             }
 
             function updateSnapshotFromServer(data) {
@@ -1712,6 +1854,7 @@ unset($__errorArgs, $__bag); ?>
                 closeFlash.classList.add('hidden');
                 openOverlay();
                 triggerFlashCardAnimation('progress');
+                queueFitAmountText();
 
                 setTimeout(function () {
                     flashIcon.classList.add('icon-visible');
@@ -1834,6 +1977,23 @@ unset($__errorArgs, $__bag); ?>
 
                     if (res.ok) {
                         txId = data.tx_id;
+                        if (data.amount !== undefined) {
+                            transferAmount = Number.parseFloat(data.amount) || transferAmount;
+                        }
+
+                        const formattedAmount = data.formatted_amount || formatAmount(transferAmount);
+                        summaryAmount.textContent = formattedAmount;
+
+                        if (flashProgressAmount) {
+                            flashProgressAmount.textContent = formattedAmount;
+                        }
+
+                        if (transferLockedAmount) {
+                            transferLockedAmount.textContent = formattedAmount;
+                        }
+
+                        queueFitAmountText();
+
                         ticking = true;
                         showProgressFlash();
                         startBtn.disabled = true;
@@ -1880,6 +2040,26 @@ unset($__errorArgs, $__bag); ?>
                     updateTransferSummary();
                 });
             });
+
+            if ('ResizeObserver' in window) {
+                const amountResizeObserver = new ResizeObserver(function () {
+                    queueFitAmountText();
+                });
+
+                amountFitTargets.forEach(function (element) {
+                    if (element && element.parentElement) {
+                        amountResizeObserver.observe(element.parentElement);
+                    }
+                });
+            } else {
+                window.addEventListener('resize', queueFitAmountText);
+            }
+
+            if (document.fonts && document.fonts.ready && typeof document.fonts.ready.then === 'function') {
+                document.fonts.ready.then(function () {
+                    queueFitAmountText();
+                });
+            }
 
             updateTransferSummary();
         });

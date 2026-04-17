@@ -1,13 +1,13 @@
-﻿@extends('layouts.premium-dashboard')
+@extends('layouts.premium-dashboard')
 
 @section('title', 'Administration - Valtrix Bank')
 @section('dashboard_theme', 'admin')
-@section('dashboard_page_title', 'Dashboard administrateur')
+@section('dashboard_page_title', 'Tableau de bord administrateur')
 @section('dashboard_page_subtitle', 'Un poste de pilotage premium pour suivre les utilisateurs, les transactions, les validations et les actions critiques sans friction.')
-@section('dashboard_section_label', 'Control room')
-@section('dashboard_search_placeholder', 'Rechercher un client, une transaction, une operation ou un statut...')
+@section('dashboard_section_label', 'Pilotage admin')
+@section('dashboard_search_placeholder', 'Rechercher un client, une transaction, une opération ou un statut...')
 @section('dashboard_brand_title', 'Valtrix Admin')
-@section('dashboard_brand_subtitle', 'Control center')
+@section('dashboard_brand_subtitle', 'Centre de contrôle')
 @section('sidebar_primary_title', 'Navigation')
 
 @section('sidebar_primary')
@@ -15,7 +15,7 @@
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-blue-700 shadow-sm ring-1 ring-slate-200">
             <i class="fas fa-chart-line"></i>
         </span>
-        <span>Dashboard</span>
+        <span>Tableau de bord</span>
     </a>
     <a href="{{ localized_route('admin.users') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
@@ -33,17 +33,17 @@
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
             <i class="fas fa-plus-circle"></i>
         </span>
-        <span>Depot</span>
+        <span>Dépôt</span>
     </a>
 @endsection
 
-@section('sidebar_secondary_title', 'Operations')
+@section('sidebar_secondary_title', 'Opérations')
 @section('sidebar_secondary')
     <a href="{{ localized_route('admin.settings') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
             <i class="fas fa-gear"></i>
         </span>
-        <span>Parametres</span>
+        <span>Paramètres</span>
     </a>
     <a href="{{ localized_route('admin.export.pdf') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
@@ -61,7 +61,7 @@
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
             <i class="fas fa-arrow-left"></i>
         </span>
-        <span>Retour site</span>
+        <span>Retour au site</span>
     </a>
     <form method="POST" action="{{ localized_route('logout') }}">
         @csrf
@@ -69,7 +69,7 @@
             <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
                 <i class="fas fa-right-from-bracket"></i>
             </span>
-            <span>Deconnexion</span>
+            <span>Déconnexion</span>
         </button>
     </form>
 @endsection
@@ -80,7 +80,7 @@
             <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white/65">Governance</p>
             <h3 class="mt-3 premium-brand-title text-xl font-semibold">Couverture active</h3>
             <p class="mt-2 text-sm leading-6 text-white/78">
-                {{ $activeUsersRate }}% du parc client est actif. Les files prioritaires et le chat admin restent accessibles depuis ce centre de pilotage.
+                {{ $activeUsersRate }}% du parc client est actif. Les files prioritaires et le chat admin restent accèssibles depuis ce centre de pilotage.
             </p>
             <div class="mt-5 grid grid-cols-2 gap-3">
                 <div class="rounded-2xl bg-white/10 px-4 py-3">
@@ -99,14 +99,14 @@
 @section('topbar_actions')
     <div class="hidden items-center gap-2 rounded-full bg-white/85 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 ring-1 ring-slate-200 md:inline-flex">
         <span class="h-2.5 w-2.5 rounded-full bg-blue-500"></span>
-        Monitoring actif
+        Supervision active
     </div>
 @endsection
 
 @section('dashboard_header_actions')
     <a href="{{ localized_route('admin.deposit') }}" class="inline-flex items-center gap-2 rounded-full bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-800">
         <i class="fas fa-plus text-xs"></i>
-        Nouveau depot
+        Nouveau dépôt
     </a>
     <a href="{{ localized_route('admin.export.excel') }}" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
         <i class="fas fa-file-export text-xs"></i>
@@ -131,12 +131,12 @@
             <div class="relative z-10">
                 <div class="flex min-w-0 flex-col gap-6 lg:items-start 2xl:flex-row 2xl:justify-between">
                     <div class="min-w-0 max-w-2xl">
-                        <p class="text-sm uppercase tracking-[0.22em] text-white/65">Vue executive</p>
+                        <p class="text-sm uppercase tracking-[0.22em] text-white/65">Vue exécutive</p>
                         <h2 class="mt-4 premium-page-title text-3xl font-semibold tracking-[-0.05em] sm:text-4xl">
-                            {{ $totalUsers }} clients supervises
+                            {{ $totalUsers }} clients supervisés
                         </h2>
                         <p class="mt-3 max-w-xl text-sm leading-6 text-white/78">
-                            Votre back office premium centralise les flux, les validations et les alertes critiques pour accelerer les decisions operatoires.
+                            Votre back office premium centralise les flux, les validations et les alertes critiques pour accélérer les décisions opérationnelles.
                         </p>
                     </div>
 
@@ -144,12 +144,12 @@
                         <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
                             <p class="text-xs uppercase tracking-[0.18em] text-white/60">Alertes admin</p>
                             <p class="mt-2 text-lg font-semibold">{{ $unreadNotificationsCount }}</p>
-                            <p class="mt-1 text-xs text-white/70">Notifications non lues dans le centre de controle.</p>
+                            <p class="mt-1 text-xs text-white/70">Notifications non lues dans le centre de contrôle.</p>
                         </div>
                         <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
                             <p class="text-xs uppercase tracking-[0.18em] text-white/60">Messages entrants</p>
                             <p class="mt-2 text-lg font-semibold">{{ $chatUnreadCount }}</p>
-                            <p class="mt-1 text-xs text-white/70">Conversations client en attente de reponse.</p>
+                            <p class="mt-1 text-xs text-white/70">Conversations client en attente de réponse.</p>
                         </div>
                     </div>
                 </div>
@@ -160,11 +160,11 @@
                         <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $monthlyTransfersFormatted }}</p>
                     </div>
                     <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">Depots 30 jours</p>
+                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">Dépôts 30 jours</p>
                         <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $monthlyDepositsFormatted }}</p>
                     </div>
                     <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">Succes transactions</p>
+                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">Succès transactions</p>
                         <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $transactionSuccessRate }}%</p>
                     </div>
                 </div>
@@ -174,11 +174,11 @@
         <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-5">
             <div class="flex items-start justify-between gap-3">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Priorites</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Priorités</p>
                     <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">File critique</h2>
                 </div>
                 <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-                    {{ $pendingUsersCount + $pendingTransactionsCount }} elements
+                    {{ $pendingUsersCount + $pendingTransactionsCount }} éléments
                 </span>
             </div>
 
@@ -187,7 +187,7 @@
                     <div class="flex items-center justify-between gap-3">
                         <div>
                             <p class="text-sm font-semibold text-slate-900">Utilisateurs en attente</p>
-                            <p class="mt-1 text-sm text-slate-500">Validation admin necessaire pour activer les comptes.</p>
+                            <p class="mt-1 text-sm text-slate-500">Validation admin nécessaire pour activer les comptes.</p>
                         </div>
                         <span class="premium-brand-title text-3xl font-semibold text-slate-900">{{ $pendingUsersCount }}</span>
                     </div>
@@ -196,8 +196,8 @@
                 <div class="rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
                     <div class="flex items-center justify-between gap-3">
                         <div>
-                            <p class="text-sm font-semibold text-slate-900">Transactions a surveiller</p>
-                            <p class="mt-1 text-sm text-slate-500">Operations en attente ou mises en hold.</p>
+                            <p class="text-sm font-semibold text-slate-900">Transactions à surveiller</p>
+                            <p class="mt-1 text-sm text-slate-500">Opérations en attente ou mises en attente.</p>
                         </div>
                         <span class="premium-brand-title text-3xl font-semibold text-slate-900">{{ $pendingTransactionsCount }}</span>
                     </div>
@@ -246,7 +246,7 @@
                 </span>
             </div>
             <p class="premium-kpi-number mt-4 text-3xl font-semibold text-slate-950">{{ $totalTransactions }}</p>
-            <p class="mt-2 text-sm text-slate-500">Activite consolidee sur l'ensemble du systeme.</p>
+            <p class="mt-2 text-sm text-slate-500">Activité consolidée sur l'ensemble du système.</p>
         </article>
 
         <article class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
@@ -262,7 +262,7 @@
 
         <article class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
             <div class="flex items-center justify-between">
-                <span class="text-sm font-semibold text-slate-500">Total depots</span>
+                <span class="text-sm font-semibold text-slate-500">Total dépôts</span>
                 <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
                     <i class="fas fa-coins"></i>
                 </span>
@@ -288,7 +288,7 @@
                 <div class="min-w-0 space-y-4">
                     <div class="rounded-[22px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
                         <p class="text-sm font-semibold text-slate-900">Actifs</p>
-                        <p class="mt-2 text-sm leading-6 text-slate-500">Clients pleinement operationnels sur la plateforme.</p>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">Clients pleinement opérationnels sur la plateforme.</p>
                     </div>
                     <div class="rounded-[22px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
                         <p class="text-sm font-semibold text-slate-900">Pending</p>
@@ -386,7 +386,7 @@
                 @empty
                     <div class="rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-5 py-10 text-center">
                         <p class="text-lg font-semibold text-slate-900">Aucune transaction recente</p>
-                        <p class="mt-2 text-sm text-slate-500">Le flux operationnel s'affichera ici des qu'un mouvement sera enregistre.</p>
+                        <p class="mt-2 text-sm text-slate-500">Le flux opérationnel s'affichera ici des qu'un mouvement sera enregistre.</p>
                     </div>
                 @endforelse
             </div>
@@ -422,7 +422,7 @@
                                 <i class="fas fa-circle-plus"></i>
                             </span>
                             <div>
-                                <p class="text-sm font-semibold text-slate-900">Effectuer un depot</p>
+                                <p class="text-sm font-semibold text-slate-900">Effectuer un dépôt</p>
                                 <p class="text-sm text-slate-500">Injecter un mouvement crediteur en quelques clics.</p>
                             </div>
                         </div>
@@ -459,7 +459,7 @@
     @php
         $adminStatusChartLabels = ['Active', 'Pending', 'Suspendus'];
         $adminStatusChartValues = [$activeUsers, $pendingUsersCount, $suspendedUsersCount];
-        $adminVolumeChartLabels = ['Depots 30j', 'Virements 30j'];
+        $adminVolumeChartLabels = ['Dépôts 30j', 'Virements 30j'];
         $adminVolumeChartValues = [round((float) $monthlyDeposits, 2), round((float) $monthlyTransfers, 2)];
     @endphp
     <script>

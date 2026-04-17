@@ -76,6 +76,8 @@ return [
     'secure_session' => 'Sesion segura',
     'immediate_summary' => 'Resumen inmediato',
     'hero_summary' => 'Su cockpit muestra lo esencial: saldo disponible, ritmo de actividad, operaciones pendientes y prioridades de seguimiento.',
+    'loan_amount_title' => 'Importe del prestamo',
+    'loan_amount_description' => 'Su panel destaca unicamente el importe del prestamo disponible para evitar cualquier confusion con otras cifras financieras.',
     'primary_card' => 'Tarjeta principal',
     'expires' => 'Vence :date',
     'virtual_card_active' => 'Tarjeta virtual activa',

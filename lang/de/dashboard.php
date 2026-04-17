@@ -76,6 +76,8 @@ return [
     'secure_session' => 'Sichere Sitzung',
     'immediate_summary' => 'Sofortuebersicht',
     'hero_summary' => 'Ihr Cockpit zeigt das Wesentliche: verfuegbarer Saldo, Aktivitaetsrhythmus, offene Vorgaenge und Prioritaeten.',
+    'loan_amount_title' => 'Darlehensbetrag',
+    'loan_amount_description' => 'Ihr Dashboard hebt nur noch den verfuegbaren Darlehensbetrag hervor, um Verwechslungen mit anderen Finanzzahlen zu vermeiden.',
     'primary_card' => 'Hauptkarte',
     'expires' => 'Gueltig bis :date',
     'virtual_card_active' => 'Virtuelle Karte aktiv',

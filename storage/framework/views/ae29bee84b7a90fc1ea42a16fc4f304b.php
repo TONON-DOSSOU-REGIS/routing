@@ -1,5 +1,5 @@
 <?php $__env->startSection('title', __('auth.login_page_title')); ?>
-<?php $__env->startSection('auth_nav_subtitle', 'Client access'); ?>
+<?php $__env->startSection('auth_nav_subtitle', 'Accès client'); ?>
 
 <?php $__env->startSection('auth_nav_actions'); ?>
     <a href="<?php echo e(localized_route('register', ['locale' => app()->getLocale()])); ?>" class="auth-link-btn inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm hover:border-slate-300 hover:bg-slate-50">
@@ -17,7 +17,7 @@
 <?php $__env->startSection('auth_hero'); ?>
     <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 ring-1 ring-white/10">
         <span class="h-2.5 w-2.5 rounded-full bg-orange-400"></span>
-        Secure Access
+        Accès sécurisé
     </span>
 
     <h1 class="auth-heading mt-6 text-4xl font-semibold tracking-[-0.05em] text-white sm:text-5xl">
@@ -48,7 +48,7 @@
         <div class="auth-stat-card">
             <p><?php echo e(__('auth.login_feature_security')); ?></p>
             <div class="mt-3 text-lg font-semibold text-white">24/7</div>
-            <p class="mt-2 text-sm leading-6 text-white/74">Surveillance continue et acces securise a vos espaces sensibles.</p>
+            <p class="mt-2 text-sm leading-6 text-white/74">Surveillance continue et accès securise a vos espaces sensibles.</p>
         </div>
         <div class="auth-stat-card">
             <p><?php echo e(__('auth.login_feature_notifications')); ?></p>
@@ -58,7 +58,7 @@
         <div class="auth-stat-card">
             <p><?php echo e(__('auth.login_feature_analytics')); ?></p>
             <div class="mt-3 text-lg font-semibold text-white">Premium</div>
-            <p class="mt-2 text-sm leading-6 text-white/74">Retrouvez la meme qualite d interface que sur votre dashboard client.</p>
+            <p class="mt-2 text-sm leading-6 text-white/74">Retrouvez le même niveau de qualité d'interface que sur votre tableau de bord client.</p>
         </div>
     </div>
 <?php $__env->stopSection(); ?>
@@ -72,13 +72,13 @@
 
     <div class="flex items-start justify-between gap-4">
         <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Client access</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Accès client</p>
             <h2 class="auth-heading mt-2 text-3xl font-semibold tracking-[-0.04em] text-slate-950"><?php echo e(__('auth.login_title')); ?></h2>
             <p class="mt-2 text-sm leading-6 text-slate-500"><?php echo e(__('auth.login_subtitle')); ?></p>
         </div>
         <span class="inline-flex items-center gap-2 rounded-full bg-orange-50 px-3 py-2 text-xs font-semibold text-orange-700 ring-1 ring-orange-200/80">
             <i class="fas fa-lock text-[11px]"></i>
-            Bank-grade
+            Niveau bancaire
         </span>
     </div>
 
@@ -172,7 +172,7 @@
             </label>
             <div class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-500">
                 <i class="fas fa-shield-halved text-[11px]"></i>
-                Espace securise
+                Espace sécurisé
             </div>
         </div>
 
@@ -189,7 +189,7 @@
 
     <div class="mt-6 rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
         <p class="text-sm font-semibold text-slate-900"><?php echo e(__('auth.no_account')); ?></p>
-        <p class="mt-2 text-sm leading-6 text-slate-500">L ouverture de compte profite maintenant du meme niveau de finition premium que votre espace connecte.</p>
+        <p class="mt-2 text-sm leading-6 text-slate-500">L'ouverture de compte bénéficie désormais du même niveau de finition premium que votre espace connecté.</p>
         <a href="<?php echo e(localized_route('register', ['locale' => app()->getLocale()])); ?>" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-orange-700 transition hover:text-orange-800">
             <?php echo e(__('auth.register_link')); ?>
 

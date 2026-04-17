@@ -17,7 +17,7 @@ return [
     'edit' => 'Modifier',
     'create' => 'Créer',
     'update' => 'Mettre à jour',
-    'submit' => 'Soumettre',
+    'submit' => 'Valider',
     'search' => 'Rechercher',
     'filter' => 'Filtrer',
     'export' => 'Exporter',

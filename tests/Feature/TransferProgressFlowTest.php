@@ -12,6 +12,13 @@ class TransferProgressFlowTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->withoutMiddleware();
+    }
+
     public function test_progress_starts_and_increments_by_one_after_start(): void
     {
         $user = User::factory()->create([
@@ -30,6 +37,7 @@ class TransferProgressFlowTest extends TestCase
         $transactionId = (int) $startResponse->json('tx_id');
         $transaction = Transaction::findOrFail($transactionId);
 
+        $this->assertSame(5000.0, (float) $transaction->amount);
         $this->assertSame(0, (int) $transaction->progress);
         $this->assertSame('pending', $transaction->status);
 
@@ -127,7 +135,6 @@ class TransferProgressFlowTest extends TestCase
     private function validTransferPayload(): array
     {
         return [
-            'amount' => 100,
             'recipient_name' => 'Jean Dupont',
             'recipient_iban' => 'FR7630006000011234567890189',
             'recipient_bic' => 'AGRIFRPP',
@@ -137,4 +144,3 @@ class TransferProgressFlowTest extends TestCase
         ];
     }
 }
-

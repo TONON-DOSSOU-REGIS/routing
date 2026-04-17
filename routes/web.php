@@ -180,7 +180,7 @@ Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(fu
         Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('users.edit');
         Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
         Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('users.delete');
-        Route::post('/users/{user}/reset-password', [AdminController::class, 'resetPassword'])->name('users.reset-password');
+        Route::match(['POST', 'PATCH'], '/users/{user}/reset-password', [AdminController::class, 'resetPassword'])->name('users.reset-password');
         Route::post('/users/{user}/approve', [AdminController::class, 'approveUser'])->name('users.approve');
 
         // Transactions management

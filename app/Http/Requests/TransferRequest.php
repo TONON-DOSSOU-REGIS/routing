@@ -6,6 +6,13 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class TransferRequest extends FormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'amount' => $this->currentBalance(),
+        ]);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -21,8 +28,21 @@ class TransferRequest extends FormRequest
      */
     public function rules(): array
     {
+        $balance = $this->currentBalance();
+
         return [
-            'amount' => 'required|numeric|min:0.01|max:' . auth()->user()->balance,
+            'amount' => [
+                'bail',
+                'required',
+                'numeric',
+                function (string $attribute, mixed $value, \Closure $fail) use ($balance) {
+                    if ($balance <= 0) {
+                        $fail('Aucun solde disponible pour effectuer ce virement.');
+                    }
+                },
+                'min:0.01',
+                'max:' . $balance,
+            ],
             'recipient_name' => 'required|string|max:255',
             'recipient_iban' => 'required|string|regex:/^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}$/',
             'recipient_bic' => 'required|string|regex:/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/',
@@ -57,5 +77,17 @@ class TransferRequest extends FormRequest
             }
         });
     }
-}
 
+    private function currentBalance(): float
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return 0.0;
+        }
+
+        $freshUser = $user->fresh();
+
+        return round((float) ($freshUser?->balance ?? $user->balance ?? 0), 2);
+    }
+}

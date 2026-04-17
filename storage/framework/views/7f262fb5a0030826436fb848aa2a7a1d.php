@@ -254,7 +254,7 @@
                             </a>
                             <div>
                                 <p class="auth-brand-title text-lg font-semibold text-slate-950">Valtrix Bank</p>
-                                <p class="text-sm text-slate-500"><?php echo $__env->yieldContent('auth_nav_subtitle', 'Secure client access'); ?></p>
+                                <p class="text-sm text-slate-500"><?php echo $__env->yieldContent('auth_nav_subtitle', 'Accès client sécurisé'); ?></p>
                             </div>
                         </div>
 

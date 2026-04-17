@@ -4,11 +4,11 @@
     $depositVolume30DaysFormatted = \App\Helpers\CurrencyHelper::format($depositVolume30Days ?? 0, 'EUR');
 @endphp
 
-@section('title', 'Depot manuel - Valtrix Bank Admin')
+@section('title', 'Dépôt manuel - Valtrix Bank Admin')
 @section('admin_nav_active', 'deposit')
-@section('dashboard_page_title', 'Depot manuel')
-@section('dashboard_page_subtitle', 'Creditez un compte client depuis une interface premium, avec apercu instantane et verification avant execution.')
-@section('dashboard_section_label', 'Credit operations')
+@section('dashboard_page_title', 'Dépôt manuel')
+@section('dashboard_page_subtitle', 'Créditez un compte client depuis une interface premium, avec apercu instantané et vérification avant exécution.')
+@section('dashboard_section_label', 'Credit opérations')
 
 @section('dashboard_header_actions')
     <a href="{{ localized_route('admin.users') }}" class="inline-flex items-center gap-2 rounded-full bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-800">
@@ -17,7 +17,7 @@
     </a>
     <a href="{{ localized_route('admin.settings') }}" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
         <i class="fas fa-sliders text-xs"></i>
-        Parametres
+        Paramètres
     </a>
 @endsection
 
@@ -33,10 +33,10 @@
 @section('dashboard_content')
     <section class="premium-gradient-card premium-grid-glow relative overflow-hidden rounded-[30px] p-6 sm:p-7">
         <div class="relative z-10 grid gap-3 sm:grid-cols-2 2xl:grid-cols-4">
-            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">Clients eligibles</p><p class="admin-kpi premium-kpi-number mt-2 font-semibold">{{ $users->count() }}</p></div>
-            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">Depots aujourd hui</p><p class="admin-kpi premium-kpi-number mt-2 font-semibold">{{ $depositsTodayCount }}</p></div>
+            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">Clients éligibles</p><p class="admin-kpi premium-kpi-number mt-2 font-semibold">{{ $users->count() }}</p></div>
+            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">Dépôts aujourd'hui</p><p class="admin-kpi premium-kpi-number mt-2 font-semibold">{{ $depositsTodayCount }}</p></div>
             <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">Volume 30 jours</p><p class="admin-kpi premium-kpi-number mt-2 font-semibold">{{ $depositVolume30DaysFormatted }}</p></div>
-            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">Depots recents</p><p class="admin-kpi premium-kpi-number mt-2 font-semibold">{{ $recentDeposits->count() }}</p></div>
+            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">Dépôts recents</p><p class="admin-kpi premium-kpi-number mt-2 font-semibold">{{ $recentDeposits->count() }}</p></div>
         </div>
     </section>
 
@@ -61,11 +61,11 @@
         <section class="admin-surface rounded-[30px] p-5 sm:p-6">
             <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-5">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Operation</p>
-                    <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">Crediter un compte</h2>
-                    <p class="mt-2 text-sm leading-6 text-slate-500">Selectionnez un client, la devise, le montant et un motif si besoin.</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Opération</p>
+                    <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">Créditer un compte</h2>
+                    <p class="mt-2 text-sm leading-6 text-slate-500">Sélectionnez un client, la devise, le montant et un motif si besoin.</p>
                 </div>
-                <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">Execution manuelle</span>
+                <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">Exécution manuelle</span>
             </div>
 
             <form method="POST" action="{{ localized_route('admin.deposit.store') }}" class="mt-6 space-y-6">
@@ -107,22 +107,22 @@
                 </div>
 
                 <div class="rounded-[24px] bg-blue-50 px-4 py-4 ring-1 ring-blue-200/70">
-                    <p class="text-xs font-semibold uppercase tracking-[0.16em] text-blue-700">Apercu</p>
-                    <p id="preview-text" class="mt-2 text-sm font-medium text-blue-900">Selectionnez un utilisateur, un montant et une devise pour voir l apercu.</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.16em] text-blue-700">Aperçu</p>
+                    <p id="preview-text" class="mt-2 text-sm font-medium text-blue-900">Sélectionnez un utilisateur, un montant et une devise pour voir l apercu.</p>
                     <p id="new-balance" class="mt-2 hidden text-sm text-blue-700">Nouveau solde : <span id="new-balance-amount" class="font-semibold"></span> <span id="new-balance-symbol">EUR</span></p>
                 </div>
 
                 <div class="rounded-[24px] bg-amber-50 px-4 py-4 ring-1 ring-amber-200/80">
                     <p class="text-sm font-semibold text-amber-900">Confirmation requise</p>
-                    <p class="mt-2 text-sm leading-6 text-amber-700">Le compte sera credite immediatement et le client recevra une notification. Cette action doit etre lancee avec certitude.</p>
+                    <p class="mt-2 text-sm leading-6 text-amber-700">Le compte sera credite immediatement et le client recevra une notification. Cette action doit être lancée avec certitude.</p>
                 </div>
 
                 <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
                     <a href="{{ localized_route('admin.dashboard') }}" class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50">
                         <i class="fas fa-arrow-left text-xs"></i> Retour
                     </a>
-                    <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-full bg-blue-700 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-800" onclick="return confirm('Confirmer ce depot manuel ?')">
-                        <i class="fas fa-plus-circle text-xs"></i> Effectuer le depot
+                    <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-full bg-blue-700 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-800" onclick="return confirm('Confirmer ce dépôt manuel ?')">
+                        <i class="fas fa-plus-circle text-xs"></i> Effectuer le dépôt
                     </button>
                 </div>
             </form>
@@ -131,7 +131,7 @@
         <aside class="space-y-6">
             <section class="admin-surface rounded-[30px] p-5">
                 <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Historique</p>
-                <h3 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">Depots recents</h3>
+                <h3 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">Dépôts recents</h3>
                 <div class="mt-5 space-y-3">
                     @forelse($recentDeposits as $deposit)
                         <div class="rounded-[22px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
@@ -139,15 +139,15 @@
                                 <div class="min-w-0">
                                     <p class="text-sm font-semibold text-slate-900">{{ $deposit->user?->first_name }} {{ $deposit->user?->last_name }}</p>
                                     <p class="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">{{ $deposit->created_at->format('d/m/Y H:i') }}</p>
-                                    <p class="mt-2 text-sm text-slate-500">{{ $deposit->reason ?: 'Depot manuel' }}</p>
+                                    <p class="mt-2 text-sm text-slate-500">{{ $deposit->reason ?: 'Dépôt manuel' }}</p>
                                 </div>
                                 <span class="text-sm font-semibold text-emerald-700">+{{ number_format($deposit->amount, 2, ',', ' ') }} EUR</span>
                             </div>
                         </div>
                     @empty
                         <div class="rounded-[22px] border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center">
-                            <p class="text-sm font-semibold text-slate-900">Aucun depot recent</p>
-                            <p class="mt-2 text-sm text-slate-500">Les derniers credits manuels apparaitront ici.</p>
+                            <p class="text-sm font-semibold text-slate-900">Aucun dépôt recent</p>
+                            <p class="mt-2 text-sm text-slate-500">Les derniers crédits manuels apparaîtront ici.</p>
                         </div>
                     @endforelse
                 </div>
@@ -180,7 +180,7 @@
             const updatePreview = () => {
                 const option = userSelect.options[userSelect.selectedIndex];
                 if (!userSelect.value || !amountInput.value || !currencySelect.value || !option) {
-                    previewText.textContent = 'Selectionnez un utilisateur, un montant et une devise pour voir l apercu.';
+                    previewText.textContent = 'Sélectionnez un utilisateur, un montant et une devise pour voir l apercu.';
                     balanceDisplay.classList.add('hidden');
                     newBalance.classList.add('hidden');
                     return;
@@ -191,7 +191,7 @@
                 const amount = Number(amountInput.value || 0);
                 const label = option.text.split(' - ')[0];
 
-                previewText.textContent = `Depot de ${amount.toFixed(2)} ${symbol} sur le compte de ${label}.`;
+                previewText.textContent = `Dépôt de ${amount.toFixed(2)} ${symbol} sur le compte de ${label}.`;
                 currentBalance.textContent = balance.toFixed(2);
                 balanceSymbol.textContent = symbol;
                 newBalanceAmount.textContent = (balance + amount).toFixed(2);

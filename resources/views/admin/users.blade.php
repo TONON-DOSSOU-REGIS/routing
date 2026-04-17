@@ -3,8 +3,8 @@
 @section('title', 'Utilisateurs - Valtrix Bank Admin')
 @section('admin_nav_active', 'users')
 @section('dashboard_page_title', 'Gestion des utilisateurs')
-@section('dashboard_page_subtitle', 'Supervisez les comptes, les roles, les statuts et les actions d administration depuis une vue premium unifiee.')
-@section('dashboard_section_label', 'User control')
+@section('dashboard_page_subtitle', 'Supervisez les comptes, les rôles, les statuts et les actions d'administration depuis une vue premium unifiée.')
+@section('dashboard_section_label', 'Gestion des comptes')
 
 @section('dashboard_header_actions')
     <a href="{{ localized_route('admin.users.create') }}" class="inline-flex items-center gap-2 rounded-full bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-800">
@@ -13,7 +13,7 @@
     </a>
     <a href="{{ localized_route('admin.deposit') }}" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
         <i class="fas fa-plus-circle text-xs"></i>
-        Depot
+        Dépôt
     </a>
 @endsection
 
@@ -32,7 +32,7 @@
         <div class="relative z-10 grid gap-3 sm:grid-cols-2 2xl:grid-cols-4">
             <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">Total utilisateurs</p><p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $totalUsers }}</p></div>
             <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">Actifs</p><p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $activeUsers }}</p></div>
-            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">Pending</p><p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $pendingUsersCount }}</p></div>
+            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">En attente</p><p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $pendingUsersCount }}</p></div>
             <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">Suspendus</p><p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $suspendedUsersCount }}</p></div>
         </div>
     </section>
@@ -52,8 +52,8 @@
         <div class="rounded-[26px] border border-blue-200 bg-blue-50 px-5 py-4">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <p class="text-sm font-semibold text-blue-900">Lien de connexion genere</p>
-                    <p class="mt-1 text-sm text-blue-700">Client : {{ session('login_link_user') }} @if(session('login_link_expires_at')) - Valide jusqu au {{ session('login_link_expires_at') }} @endif</p>
+                    <p class="text-sm font-semibold text-blue-900">Lien de connexion généré</p>
+                    <p class="mt-1 text-sm text-blue-700">Client : {{ session('login_link_user') }} @if(session('login_link_expires_at')) - Valide jusqu'au {{ session('login_link_expires_at') }} @endif</p>
                 </div>
                 <a href="{{ session('login_link') }}" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm ring-1 ring-blue-200/80">
                     <i class="fas fa-arrow-up-right-from-square text-xs"></i> Ouvrir
@@ -70,21 +70,21 @@
         <div class="flex flex-col gap-4 border-b border-slate-200/70 pb-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
                 <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Exploration</p>
-                <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">Comptes clients et admins</h2>
-                <p class="mt-2 text-sm leading-6 text-slate-500">{{ $users->total() }} resultat(s) pour la vue courante.</p>
+                <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">Comptes clients et administrateurs</h2>
+                <p class="mt-2 text-sm leading-6 text-slate-500">{{ $users->total() }} résultat(s) pour la vue courante.</p>
             </div>
 
             <form method="GET" class="grid gap-3 md:grid-cols-[minmax(220px,1.5fr)_180px_180px]">
-                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Nom, email, telephone..." class="admin-field rounded-2xl px-4 py-3 text-sm text-slate-700">
+                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Nom, email, téléphone..." class="admin-field rounded-2xl px-4 py-3 text-sm text-slate-700">
                 <select name="role" id="role" class="admin-field rounded-2xl px-4 py-3 text-sm text-slate-700">
-                    <option value="">Tous les roles</option>
+                    <option value="">Tous les rôles</option>
                     <option value="user" {{ request('role') == 'user' ? 'selected' : '' }}>Client</option>
                     <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Administrateur</option>
                 </select>
                 <select name="status" id="status" class="admin-field rounded-2xl px-4 py-3 text-sm text-slate-700">
                     <option value="">Tous les statuts</option>
                     <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Actif</option>
-                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>En attente</option>
                     <option value="suspended" {{ request('status') == 'suspended' ? 'selected' : '' }}>Suspendu</option>
                 </select>
             </form>
@@ -97,7 +97,7 @@
                         <tr>
                             <th class="px-4 py-4 text-left font-semibold uppercase tracking-[0.16em] text-slate-400">Utilisateur</th>
                             <th class="px-4 py-4 text-left font-semibold uppercase tracking-[0.16em] text-slate-400">Contact</th>
-                            <th class="px-4 py-4 text-left font-semibold uppercase tracking-[0.16em] text-slate-400">Role</th>
+                            <th class="px-4 py-4 text-left font-semibold uppercase tracking-[0.16em] text-slate-400">Rôle</th>
                             <th class="px-4 py-4 text-left font-semibold uppercase tracking-[0.16em] text-slate-400">Solde</th>
                             <th class="px-4 py-4 text-left font-semibold uppercase tracking-[0.16em] text-slate-400">Statut</th>
                             <th class="px-4 py-4 text-left font-semibold uppercase tracking-[0.16em] text-slate-400">Inscription</th>
@@ -124,7 +124,7 @@
                                 </td>
                                 <td class="px-4 py-4">
                                     <p class="font-medium text-slate-900">{{ $user->email }}</p>
-                                    <p class="mt-1 text-sm text-slate-500">{{ $user->phone ?: 'Non renseigne' }}</p>
+                                    <p class="mt-1 text-sm text-slate-500">{{ $user->phone ?: 'Non renseigné' }}</p>
                                 </td>
                                 <td class="px-4 py-4"><span class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold {{ $user->role === 'admin' ? 'bg-violet-50 text-violet-700 ring-1 ring-violet-200/80' : 'bg-blue-50 text-blue-700 ring-1 ring-blue-200/80' }}"><i class="fas fa-{{ $user->role === 'admin' ? 'crown' : 'user' }} text-[11px]"></i>{{ ucfirst($user->role) }}</span></td>
                                 <td class="px-4 py-4 font-semibold text-slate-900">{{ number_format($user->balance, 2, ',', ' ') }} EUR</td>
@@ -141,7 +141,7 @@
                                 <td class="px-4 py-4 text-slate-600">{{ $user->created_at->format('d/m/Y H:i') }}</td>
                                 <td class="px-4 py-4">
                                     <div class="flex flex-wrap gap-2">
-                                        <a href="{{ localized_route('admin.users.edit', $user) }}" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"><i class="fas fa-edit text-[11px]"></i> Editer</a>
+                                        <a href="{{ localized_route('admin.users.edit', $user) }}" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"><i class="fas fa-edit text-[11px]"></i> Éditer</a>
                                         @if($user->role === 'user' && $user->status === 'active')
                                             <form method="POST" action="{{ localized_route('admin.users.login-link', $user) }}" class="inline">@csrf<button type="submit" class="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 ring-1 ring-blue-200/80"><i class="fas fa-link text-[11px]"></i> Lien</button></form>
                                         @endif
@@ -152,7 +152,7 @@
                                             <form method="POST" action="{{ localized_route('admin.users.toggle', $user) }}" class="inline">@csrf<button type="submit" class="inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold {{ $user->status === 'active' ? 'bg-rose-50 text-rose-700 ring-1 ring-rose-200/80' : 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200/80' }}" onclick="return confirm('Confirmer ce changement de statut ?')"><i class="fas fa-{{ $user->status === 'active' ? 'ban' : 'check' }} text-[11px]"></i>{{ $user->status === 'active' ? 'Suspendre' : 'Activer' }}</button></form>
                                         @endif
                                         @if($user->status !== 'pending')
-                                            <form method="POST" action="{{ localized_route('admin.users.delete', $user) }}" class="inline">@csrf @method('DELETE')<button type="submit" class="inline-flex items-center gap-2 rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-white shadow-sm" onclick="return confirm('Supprimer cet utilisateur ? Cette action est irreversible.')"><i class="fas fa-trash text-[11px]"></i> Supprimer</button></form>
+                                            <form method="POST" action="{{ localized_route('admin.users.delete', $user) }}" class="inline">@csrf @method('DELETE')<button type="submit" class="inline-flex items-center gap-2 rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-white shadow-sm" onclick="return confirm('Supprimer cet utilisateur ? Cette action est irréversible.')"><i class="fas fa-trash text-[11px]"></i> Supprimer</button></form>
                                         @endif
                                         @if($user->id === auth()->id())
                                             <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-500"><i class="fas fa-user-circle text-[11px]"></i> Vous</span>
@@ -161,7 +161,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="7" class="px-5 py-12 text-center"><p class="text-lg font-semibold text-slate-900">Aucun utilisateur trouve</p><p class="mt-2 text-sm text-slate-500">Aucun compte ne correspond aux filtres actifs.</p></td></tr>
+                            <tr><td colspan="7" class="px-5 py-12 text-center"><p class="text-lg font-semibold text-slate-900">Aucun utilisateur trouvé</p><p class="mt-2 text-sm text-slate-500">Aucun compte ne correspond aux filtres actifs.</p></td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -170,7 +170,7 @@
 
         @if($users->hasPages())
             <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <p class="text-sm text-slate-500">Affichage de {{ $users->firstItem() }} a {{ $users->lastItem() }} sur {{ $users->total() }} utilisateurs</p>
+                <p class="text-sm text-slate-500">Affichage de {{ $users->firstItem() }} à {{ $users->lastItem() }} sur {{ $users->total() }} utilisateurs</p>
                 <div>{{ $users->links('vendor.pagination.tailwind') }}</div>
             </div>
         @endif

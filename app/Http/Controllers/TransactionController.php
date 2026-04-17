@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CurrencyHelper;
 use App\Http\Requests\TransferRequest;
 use App\Mail\TransferConfirmationMail;
 use App\Models\Setting;
@@ -29,11 +30,12 @@ class TransactionController extends Controller
 
     public function start(TransferRequest $request)
     {
-        $user = auth()->user();
+        $user = User::query()->findOrFail(auth()->id());
+        $amount = round((float) $user->balance, 2);
 
         $transaction = Transaction::create([
             'user_id' => $user->id,
-            'amount' => $request->amount,
+            'amount' => $amount,
             'type' => 'transfer',
             'recipient_name' => $request->recipient_name,
             'recipient_iban' => $request->recipient_iban,
@@ -58,7 +60,11 @@ class TransactionController extends Controller
             }
         }
 
-        return response()->json(['tx_id' => $transaction->id]);
+        return response()->json([
+            'tx_id' => $transaction->id,
+            'amount' => $transaction->amount,
+            'formatted_amount' => CurrencyHelper::format($transaction->amount, $user->default_currency ?? 'EUR'),
+        ]);
     }
 
     public function progress(Request $request)

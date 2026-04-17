@@ -28,7 +28,7 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'phone' => $this->faker->phoneNumber(),
             'address' => $this->faker->address(),
-            // Removed country, city, date_of_birth, id_type, id_number fields
+            // Keep only the identity fields still required by the current schema.
             'iban' => $this->faker->iban('FR'),
             'bic' => $this->faker->swiftBicNumber(),
             'role' => 'user',
@@ -37,7 +37,7 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'activation_code' => $this->faker->optional()->word(),
             'date_of_birth' => $this->faker->date('Y-m-d', '2000-01-01'),
-            'id_type' => 'passport',
+            'id_type' => 'Passport',
             'id_number' => $this->faker->unique()->regexify('[A-Z0-9]{10}'),
         ];
     }
@@ -54,4 +54,3 @@ class UserFactory extends Factory
         });
     }
 }
-

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -19,23 +18,9 @@ class DashboardController extends Controller
         $user = auth()->user()->loadMissing('creditCard');
         $transactions = $user->transactions()->latest()->take(6)->get();
 
-        $transactionsLast30Days = $user->transactions()
-            ->where('created_at', '>=', now()->subDays(30))
-            ->get();
-
-        $incomingLast30Days = (float) $transactionsLast30Days
-            ->where('type', 'deposit')
-            ->sum('amount');
-
-        $outgoingLast30Days = (float) $transactionsLast30Days
-            ->whereIn('type', ['withdrawal', 'transfer'])
-            ->sum('amount');
-
         $pendingOperationsCount = $user->transactions()
             ->whereIn('status', ['pending', 'on_hold'])
             ->count();
-
-        $transactionsLast30DaysCount = $transactionsLast30Days->count();
 
         $unreadNotificationsCount = $user->unreadNotifications()->count();
 
@@ -63,9 +48,6 @@ class DashboardController extends Controller
         return view('dashboard.index', compact(
             'user',
             'transactions',
-            'incomingLast30Days',
-            'outgoingLast30Days',
-            'transactionsLast30DaysCount',
             'pendingOperationsCount',
             'unreadNotificationsCount',
             'profileCompletion',

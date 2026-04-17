@@ -76,6 +76,8 @@ return [
     'secure_session' => 'Beveiligde sessie',
     'immediate_summary' => 'Direct overzicht',
     'hero_summary' => 'Uw cockpit toont het belangrijkste: beschikbaar saldo, ritme van bewegingen, lopende operaties en prioriteiten.',
+    'loan_amount_title' => 'Leningbedrag',
+    'loan_amount_description' => 'Uw dashboard toont alleen nog het beschikbare leningbedrag om verwarring met andere financiele cijfers te voorkomen.',
     'primary_card' => 'Hoofdkaart',
     'expires' => 'Vervalt :date',
     'virtual_card_active' => 'Virtuele kaart actief',

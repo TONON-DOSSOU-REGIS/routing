@@ -1,4 +1,4 @@
-<?php if (! $__env->hasRenderedOnce('eb31b6cd-d42c-4c95-b095-692e273496de')): $__env->markAsRenderedOnce('eb31b6cd-d42c-4c95-b095-692e273496de'); ?>
+<?php if (! $__env->hasRenderedOnce('6e32211a-35ec-45f8-8123-37b56f09d44a')): $__env->markAsRenderedOnce('6e32211a-35ec-45f8-8123-37b56f09d44a'); ?>
     <style>
         .chat-premium-shell {
             position: fixed !important;

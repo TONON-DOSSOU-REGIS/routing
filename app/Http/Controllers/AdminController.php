@@ -107,7 +107,7 @@ class AdminController extends Controller
     {
         $request->validate([
             'stop_percentage' => 'required|integer|between:0,100',
-            'stop_message' => 'required|string|max:255',
+            'stop_message' => 'required|string',
             'target_user_id' => 'nullable|exists:users,id',
             'is_global' => 'required|boolean',
         ]);
@@ -504,7 +504,17 @@ class AdminController extends Controller
     public function editUser($locale, User $user)
     {
         $countries = config('countries');
-        return view('admin.users.edit', compact('user', 'countries'));
+        $user->loadMissing('creditCard')->loadCount([
+            'transactions',
+            'transactions as pending_transactions_count' => function ($query) {
+                $query->whereIn('status', ['pending', 'on_hold']);
+            },
+        ]);
+
+        return view('admin.users.edit', array_merge(
+            compact('user', 'countries'),
+            $this->getAdminShellData()
+        ));
     }
 
     public function updateUser(Request $request, $locale, User $user)
@@ -512,13 +522,30 @@ class AdminController extends Controller
         // Handle French decimal format (comma) for balance
         $request->merge(['balance' => str_replace(',', '.', $request->balance)]);
 
+        $normalizedIdType = match ((string) $request->input('type_piece')) {
+            'Passeport' => 'Passport',
+            default => $request->input('type_piece'),
+        };
+        $request->merge(['type_piece' => $normalizedIdType]);
+
+        $resolvedIdType = match ((string) ($request->input('type_piece') ?: $user->id_type ?: 'Passport')) {
+            'passport', 'Passeport' => 'Passport',
+            'CNI', 'Passport', 'Permis' => $request->input('type_piece') ?: $user->id_type ?: 'Passport',
+            default => 'Passport',
+        };
+
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'phone' => 'nullable|string|max:20',
+            'date_naissance' => 'nullable|date|before:today',
             'role' => 'required|in:user,admin',
             'adresse' => 'nullable|string|max:255',
+            'ville' => 'nullable|string|max:255',
+            'pays' => 'nullable|string|max:255',
+            'type_piece' => 'nullable|in:CNI,Passport,Permis',
+            'numero_piece' => 'nullable|string|max:50|unique:users,id_number,' . $user->id,
             'iban' => 'nullable|string|max:34',
             'bic' => 'nullable|string|max:11',
             'activation_code' => 'nullable|string|max:255',
@@ -540,6 +567,11 @@ class AdminController extends Controller
             'phone' => $request->phone,
             'role' => $request->role,
             'address' => $request->adresse,
+            'country' => $request->has('pays') ? $request->pays : $user->country,
+            'city' => $request->has('ville') ? $request->ville : $user->city,
+            'date_of_birth' => $request->has('date_naissance') ? $request->date_naissance : $user->date_of_birth,
+            'id_type' => $resolvedIdType,
+            'id_number' => $request->has('numero_piece') ? $request->numero_piece : $user->id_number,
             'iban' => $request->iban,
             'bic' => $request->bic,
             'activation_code' => $request->activation_code,

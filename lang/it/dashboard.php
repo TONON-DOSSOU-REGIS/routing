@@ -76,6 +76,8 @@ return [
     'secure_session' => 'Sessione sicura',
     'immediate_summary' => 'Sintesi immediata',
     'hero_summary' => "Il tuo cockpit mostra l'essenziale: saldo disponibile, ritmo dei movimenti, operazioni in attesa e priorita da seguire.",
+    'loan_amount_title' => 'Importo del prestito',
+    'loan_amount_description' => 'La dashboard mette in evidenza solo l importo del prestito disponibile per evitare qualsiasi confusione con altri valori finanziari.',
     'primary_card' => 'Carta principale',
     'expires' => 'Scade :date',
     'virtual_card_active' => 'Carta virtuale attiva',

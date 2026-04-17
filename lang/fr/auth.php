@@ -184,7 +184,7 @@ return [
     '2fa_admin_disable_forbidden' => 'L’authentification à deux facteurs ne peut pas être désactivée pour un compte administrateur.',
     'register_error_title' => 'Erreurs d\'inscription',
     'forgot_password_page_title' => 'Recuperation du mot de passe - Valtrix Bank',
-    'forgot_password_title' => 'Recuperez votre acces',
+    'forgot_password_title' => 'Récupérez votre accès',
     'forgot_password_subtitle' => 'Saisissez votre adresse email pour recevoir un lien de reinitialisation securise.',
-    'reset_password_subtitle' => 'Choisissez un nouveau mot de passe pour proteger votre acces client.',
+    'reset_password_subtitle' => 'Choisissez un nouveau mot de passe pour protéger votre accès client.',
 ];
