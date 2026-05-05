@@ -165,7 +165,8 @@
                 </div>
                 <div>
                     <label for="phone" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('auth.phone') }}</label>
-                    <input id="phone" name="phone" type="text" value="{{ old('phone') }}" placeholder="{{ __('auth.phone_placeholder') }}" class="auth-input w-full rounded-2xl px-4 py-3 text-sm text-slate-700">
+                    <input id="phone" name="phone" type="text" value="{{ old('phone') }}" placeholder="{{ __('auth.phone_placeholder') }}" autocomplete="tel" inputmode="tel" class="auth-input w-full rounded-2xl px-4 py-3 text-sm text-slate-700">
+                    <p class="mt-2 text-xs text-slate-500">{{ __('auth.phone_help') }}</p>
                 </div>
                 <div class="sm:col-span-2">
                     <label for="address" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('auth.address') }}</label>

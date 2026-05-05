@@ -26,7 +26,7 @@ class UserFactory extends Factory
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail(),
-            'phone' => $this->faker->phoneNumber(),
+            'phone' => null,
             'address' => $this->faker->address(),
             // Keep only the identity fields still required by the current schema.
             'iban' => $this->faker->iban('FR'),

@@ -2,7 +2,7 @@
 
 @section('title', 'Créer un utilisateur - Valtrix Bank Admin')
 @section('admin_nav_active', 'users-create')
-@section('dashboard_page_title', 'Création d'utilisateur')
+@section('dashboard_page_title', "Création d'utilisateur")
 @section('dashboard_page_subtitle', 'Créez un nouveau client ou administrateur avec une fiche complète, claire et professionnelle.')
 @section('dashboard_section_label', 'Création de comptes')
 
@@ -64,7 +64,7 @@
                         <div><label for="first_name" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Prénom *</label><input type="text" name="first_name" id="first_name" value="{{ old('first_name') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="Jean" required></div>
                         <div><label for="last_name" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Nom *</label><input type="text" name="last_name" id="last_name" value="{{ old('last_name') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="Dupont" required></div>
                         <div><label for="email" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Email *</label><input type="email" name="email" id="email" value="{{ old('email') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="jean.dupont@email.com" required></div>
-                        <div><label for="phone" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Téléphone</label><input type="tel" name="phone" id="phone" value="{{ old('phone') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="+33 6 12 34 56 78"></div>
+                        <div><label for="phone" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Téléphone</label><input type="tel" name="phone" id="phone" value="{{ old('phone') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="+33612345678" autocomplete="tel" inputmode="tel"><p class="mt-2 text-sm text-slate-500">Format international uniquement : + indicatif pays + numero.</p></div>
                         <div><label for="date_naissance" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Date de naissance</label><input type="date" name="date_naissance" id="date_naissance" value="{{ old('date_naissance') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700"></div>
                         <div><label for="role" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Rôle *</label><select name="role" id="role" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" required><option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>Client</option><option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrateur</option></select></div>
                         <div class="md:col-span-2"><label for="profile_photo" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Photo du client</label><input type="file" name="profile_photo" id="profile_photo" accept="image/png,image/jpeg,image/webp" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700"><p class="mt-2 text-sm text-slate-500">Formats acceptés : JPG, PNG, WebP (2 Mo max).</p></div>
@@ -145,8 +145,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             const password = document.getElementById('password');
             const strengthBar = document.getElementById('password-strength-bar');
-            const phone = document.getElementById('phone');
-
             password?.addEventListener('input', function () {
                 let score = 0;
                 if (this.value.length >= 8) score += 25;
@@ -156,13 +154,6 @@
 
                 strengthBar.style.width = `${score}%`;
                 strengthBar.className = `h-2 rounded-full transition-all ${score < 50 ? 'bg-rose-500' : (score < 75 ? 'bg-amber-500' : 'bg-emerald-500')}`;
-            });
-
-            phone?.addEventListener('input', function (event) {
-                let value = event.target.value.replace(/\D/g, '');
-                if (value.startsWith('33')) value = value.replace(/^33/, '0');
-                if (value.length > 0) value = value.match(/.{1,2}/g).join(' ');
-                event.target.value = value;
             });
         });
     </script>

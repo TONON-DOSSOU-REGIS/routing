@@ -55,6 +55,8 @@ return [
     'email_address_placeholder' => 'example@mail.com',
     'phone' => 'Telefoon',
     'phone_placeholder' => '+33 6 45 78 90 12',
+    'phone_help' => 'Internationaal formaat: +landcode + nummer.',
+    'phone_international_format' => 'Voer een telefoonnummer in internationaal formaat in: +landcode + nummer.',
     'address' => 'Adres',
     'address_placeholder' => 'Victor Hugostraat 12 in Parijs',
     'country' => 'Land',

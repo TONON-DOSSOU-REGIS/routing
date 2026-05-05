@@ -9,17 +9,21 @@ use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Services\NotificationService;
+use App\Services\TwilioSmsService;
 use App\Services\TransactionReceiptService;
+use App\Support\PhoneNumber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class TransactionController extends Controller
 {
-    public function __construct(private TransactionReceiptService $transactionReceiptService)
-    {
-    }
+    public function __construct(
+        private TransactionReceiptService $transactionReceiptService,
+        private TwilioSmsService $twilioSmsService,
+    ) {}
 
     public function create()
     {
@@ -141,6 +145,7 @@ class TransactionController extends Controller
 
                 // Send email automatically once when transfer reaches exactly 100%.
                 $this->sendTransferCompletionEmailOnce($tx);
+                $this->sendTransferCompletionSmsOnce($tx);
 
                 if ($justCompleted) {
                     // Notify user of successful transfer
@@ -226,6 +231,7 @@ class TransactionController extends Controller
         if ($tx->status === 'success' && (int) $tx->progress === 100) {
             $tx->loadMissing('user');
             $this->sendTransferCompletionEmailOnce($tx);
+            $this->sendTransferCompletionSmsOnce($tx);
         }
 
         return response()->json([
@@ -313,6 +319,168 @@ class TransactionController extends Controller
                 $lockedTx->save();
             });
         }
+    }
+
+    private function sendTransferCompletionSmsOnce(Transaction $transaction): void
+    {
+        if ($transaction->type !== 'transfer' || $transaction->status !== 'success' || (int) $transaction->progress !== 100) {
+            return;
+        }
+
+        $transactionId = $transaction->id;
+
+        $decision = DB::transaction(function () use ($transactionId) {
+            $lockedTx = Transaction::with('user')->whereKey($transactionId)->lockForUpdate()->first();
+
+            if (!$lockedTx || $lockedTx->type !== 'transfer' || $lockedTx->status !== 'success' || (int) $lockedTx->progress !== 100) {
+                return ['action' => 'noop'];
+            }
+
+            $meta = is_array($lockedTx->meta) ? $lockedTx->meta : [];
+
+            if (($meta['transfer_completion_sms_sent'] ?? false) === true) {
+                return ['action' => 'noop'];
+            }
+
+            if (isset($meta['transfer_completion_sms_skipped_reason'])) {
+                return ['action' => 'noop'];
+            }
+
+            $user = $lockedTx->user;
+            if (!$user) {
+                return ['action' => 'noop'];
+            }
+
+            $rawPhone = $user->phone;
+            if (!filled($rawPhone)) {
+                $meta['transfer_completion_sms_skipped_reason'] = 'missing_phone';
+                $meta['transfer_completion_sms_skipped_at'] = now()->toDateTimeString();
+                $lockedTx->meta = $meta;
+                $lockedTx->save();
+
+                return [
+                    'action' => 'skipped',
+                    'reason' => 'missing_phone',
+                    'user_id' => $user->id,
+                ];
+            }
+
+            $sanitizedPhone = PhoneNumber::sanitize($rawPhone);
+            if (!PhoneNumber::isValid($sanitizedPhone)) {
+                $meta['transfer_completion_sms_skipped_reason'] = 'invalid_phone';
+                $meta['transfer_completion_sms_skipped_at'] = now()->toDateTimeString();
+                $lockedTx->meta = $meta;
+                $lockedTx->save();
+
+                return [
+                    'action' => 'skipped',
+                    'reason' => 'invalid_phone',
+                    'user_id' => $user->id,
+                ];
+            }
+
+            $meta['transfer_completion_sms_sent'] = true;
+            $meta['transfer_completion_sms_sent_at'] = now()->toDateTimeString();
+            unset($meta['transfer_completion_sms_skipped_reason'], $meta['transfer_completion_sms_skipped_at']);
+
+            $lockedTx->meta = $meta;
+            $lockedTx->save();
+
+            return [
+                'action' => 'send',
+                'phone' => $sanitizedPhone,
+                'user_id' => $user->id,
+            ];
+        });
+
+        if (($decision['action'] ?? 'noop') === 'skipped') {
+            Log::warning('Transfer completion SMS skipped', [
+                'transaction_id' => $transactionId,
+                'user_id' => $decision['user_id'] ?? null,
+                'reason' => $decision['reason'] ?? 'unknown',
+            ]);
+
+            return;
+        }
+
+        if (($decision['action'] ?? 'noop') !== 'send') {
+            return;
+        }
+
+        $smsTransaction = Transaction::with('user')->find($transactionId);
+        if (!$smsTransaction || !$smsTransaction->user) {
+            return;
+        }
+
+        try {
+            $result = $this->twilioSmsService->send(
+                $decision['phone'],
+                $this->buildTransferCompletionSmsBody($smsTransaction)
+            );
+
+            Log::info('Transfer completion SMS sent', [
+                'transaction_id' => $transactionId,
+                'user_id' => $smsTransaction->user->id,
+                'twilio_sid' => $result['sid'] ?? null,
+                'status' => $result['status'] ?? null,
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Failed to send transfer completion SMS', [
+                'transaction_id' => $transactionId,
+                'user_id' => $smsTransaction->user->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            DB::transaction(function () use ($transactionId) {
+                $lockedTx = Transaction::whereKey($transactionId)->lockForUpdate()->first();
+
+                if (!$lockedTx) {
+                    return;
+                }
+
+                $meta = is_array($lockedTx->meta) ? $lockedTx->meta : [];
+                $meta['transfer_completion_sms_sent'] = false;
+                unset($meta['transfer_completion_sms_sent_at']);
+
+                $lockedTx->meta = $meta;
+                $lockedTx->save();
+            });
+        }
+    }
+
+    private function buildTransferCompletionSmsBody(Transaction $transaction): string
+    {
+        $user = $transaction->user;
+        $replace = [
+            'id' => $transaction->id,
+            'amount' => CurrencyHelper::format($transaction->amount, $user->default_currency ?? 'EUR'),
+        ];
+        $key = 'transactions.transfer_completion_sms_body';
+        $userLocale = $this->localeFor($user);
+
+        $message = Lang::get($key, $replace, $userLocale);
+        if ($message !== $key) {
+            return $message;
+        }
+
+        $appLocale = config('app.locale', 'fr');
+        $message = Lang::get($key, $replace, $appLocale);
+        if ($message !== $key) {
+            return $message;
+        }
+
+        return sprintf(
+            'Transfer #%d confirmed. Amount: %s. Your official receipt was also sent by email.',
+            $transaction->id,
+            $replace['amount']
+        );
+    }
+
+    private function localeFor(User $user): string
+    {
+        $locale = trim((string) ($user->locale ?? ''));
+
+        return $locale !== '' ? $locale : config('app.locale', 'fr');
     }
 
     public function history(Request $request)

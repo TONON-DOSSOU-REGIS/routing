@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Support\PhoneNumber;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -29,11 +30,13 @@ class RegisterController extends Controller
 
     protected function validator(array $data)
     {
+        $data['phone'] = PhoneNumber::sanitize($data['phone'] ?? null);
+
         return Validator::make($data, [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'phone' => $this->phoneRules(),
             'address' => ['nullable', 'string', 'max:255'],
             'country' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:255'],
@@ -43,6 +46,8 @@ class RegisterController extends Controller
             'iban' => ['nullable', 'string', 'max:34'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'terms' => ['required', 'accepted'],
+        ], [
+            'phone.max' => __('auth.phone_international_format'),
         ]);
     }
 
@@ -52,7 +57,7 @@ class RegisterController extends Controller
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
-            'phone' => $data['phone'] ?? null,
+            'phone' => PhoneNumber::normalize($data['phone'] ?? null),
             'address' => $data['address'] ?? null,
             'country' => $data['country'] ?? null,
             'city' => $data['city'] ?? null,
@@ -90,5 +95,22 @@ class RegisterController extends Controller
         // For active users, continue with normal flow
         return redirect($this->redirectTo());
     }
-}
 
+    private function phoneRules(): array
+    {
+        return [
+            'nullable',
+            'string',
+            'max:20',
+            static function (string $attribute, mixed $value, \Closure $fail): void {
+                if ($value === null || $value === '') {
+                    return;
+                }
+
+                if (!PhoneNumber::isValid($value)) {
+                    $fail(__('auth.phone_international_format'));
+                }
+            },
+        ];
+    }
+}

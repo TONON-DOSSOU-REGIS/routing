@@ -13,9 +13,9 @@ return new class extends Migration
     public function up(): void
     {
         // First, check if columns already exist
-        $columns = DB::select("SHOW COLUMNS FROM transactions LIKE 'refunded_at'");
+        $hasRefundedColumns = Schema::hasColumn('transactions', 'refunded_at');
         
-        if (empty($columns)) {
+        if (!$hasRefundedColumns) {
             // Add columns for refund tracking
             Schema::table('transactions', function (Blueprint $table) {
                 $table->timestamp('refunded_at')->nullable()->after('updated_at');
@@ -25,22 +25,28 @@ return new class extends Migration
         }
         
         // Check if foreign key exists before adding
-        $foreignKeys = DB::select("
-            SELECT CONSTRAINT_NAME 
-            FROM information_schema.KEY_COLUMN_USAGE 
-            WHERE TABLE_SCHEMA = DATABASE() 
-            AND TABLE_NAME = 'transactions' 
-            AND CONSTRAINT_NAME = 'transactions_refunded_by_foreign'
-        ");
-        
-        if (empty($foreignKeys)) {
+        if ($this->usesMySql()) {
+            $foreignKeys = DB::select("
+                SELECT CONSTRAINT_NAME 
+                FROM information_schema.KEY_COLUMN_USAGE 
+                WHERE TABLE_SCHEMA = DATABASE() 
+                AND TABLE_NAME = 'transactions' 
+                AND CONSTRAINT_NAME = 'transactions_refunded_by_foreign'
+            ");
+        } else {
+            $foreignKeys = [['CONSTRAINT_NAME' => 'sqlite_skip']];
+        }
+
+        if (empty($foreignKeys) && Schema::hasColumn('transactions', 'refunded_by')) {
             Schema::table('transactions', function (Blueprint $table) {
                 $table->foreign('refunded_by')->references('id')->on('users')->onDelete('set null');
             });
         }
         
         // Update enum to include 'refunded' status
-        DB::statement("ALTER TABLE transactions MODIFY COLUMN status ENUM('pending', 'success', 'on_hold', 'failed', 'refunded') NOT NULL DEFAULT 'pending'");
+        if ($this->usesMySql()) {
+            DB::statement("ALTER TABLE transactions MODIFY COLUMN status ENUM('pending', 'success', 'on_hold', 'failed', 'refunded') NOT NULL DEFAULT 'pending'");
+        }
     }
 
     /**
@@ -52,13 +58,15 @@ return new class extends Migration
         DB::statement("UPDATE transactions SET status = 'failed' WHERE status = 'refunded'");
 
         // Check if foreign key exists before dropping
-        $foreignKeys = DB::select("
-            SELECT CONSTRAINT_NAME
-            FROM information_schema.KEY_COLUMN_USAGE
-            WHERE TABLE_SCHEMA = DATABASE()
-            AND TABLE_NAME = 'transactions'
-            AND CONSTRAINT_NAME = 'transactions_refunded_by_foreign'
-        ");
+        $foreignKeys = $this->usesMySql()
+            ? DB::select("
+                SELECT CONSTRAINT_NAME
+                FROM information_schema.KEY_COLUMN_USAGE
+                WHERE TABLE_SCHEMA = DATABASE()
+                AND TABLE_NAME = 'transactions'
+                AND CONSTRAINT_NAME = 'transactions_refunded_by_foreign'
+            ")
+            : [];
 
         if (!empty($foreignKeys)) {
             Schema::table('transactions', function (Blueprint $table) {
@@ -67,16 +75,22 @@ return new class extends Migration
         }
 
         // Check if columns exist before dropping
-        $columns = DB::select("SHOW COLUMNS FROM transactions LIKE 'refunded_at'");
+        $hasRefundedColumns = Schema::hasColumn('transactions', 'refunded_at');
 
-        if (!empty($columns)) {
+        if ($hasRefundedColumns) {
             Schema::table('transactions', function (Blueprint $table) {
                 $table->dropColumn(['refunded_at', 'refunded_by', 'refund_reason']);
             });
         }
 
         // Revert status enum to original
-        DB::statement("ALTER TABLE transactions MODIFY COLUMN status ENUM('pending', 'success', 'on_hold', 'failed') NOT NULL DEFAULT 'pending'");
+        if ($this->usesMySql()) {
+            DB::statement("ALTER TABLE transactions MODIFY COLUMN status ENUM('pending', 'success', 'on_hold', 'failed') NOT NULL DEFAULT 'pending'");
+        }
+    }
+
+    private function usesMySql(): bool
+    {
+        return DB::getDriverName() === 'mysql';
     }
 };
-

@@ -3,7 +3,7 @@
 @section('title', 'Utilisateurs - Valtrix Bank Admin')
 @section('admin_nav_active', 'users')
 @section('dashboard_page_title', 'Gestion des utilisateurs')
-@section('dashboard_page_subtitle', 'Supervisez les comptes, les rôles, les statuts et les actions d'administration depuis une vue premium unifiée.')
+@section('dashboard_page_subtitle', "Supervisez les comptes, les rôles, les statuts et les actions d'administration depuis une vue premium unifiée.")
 @section('dashboard_section_label', 'Gestion des comptes')
 
 @section('dashboard_header_actions')

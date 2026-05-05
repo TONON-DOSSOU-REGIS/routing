@@ -55,6 +55,8 @@ return [
     'email_address_placeholder' => 'esempio@mail.com',
     'phone' => 'Telefono',
     'phone_placeholder' => '+33 6 45 78 90 12',
+    'phone_help' => 'Formato internazionale: +prefisso paese + numero.',
+    'phone_international_format' => 'Inserisci un numero di telefono nel formato internazionale: +prefisso paese + numero.',
     'address' => 'Indirizzo',
     'address_placeholder' => '12 rue Victor Hugo, Parigi',
     'country' => 'Paese',

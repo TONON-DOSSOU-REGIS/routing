@@ -12,8 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // For MySQL, modify enum type by using raw SQL
-        DB::statement("ALTER TABLE users MODIFY COLUMN status ENUM('active', 'suspended', 'pending') NOT NULL DEFAULT 'pending'");
+        if ($this->usesMySql()) {
+            // For MySQL, modify enum type by using raw SQL.
+            DB::statement("ALTER TABLE users MODIFY COLUMN status ENUM('active', 'suspended', 'pending') NOT NULL DEFAULT 'pending'");
+        }
     }
 
     /**
@@ -21,8 +23,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Revert enum change to original enum without 'pending'
-        DB::statement("ALTER TABLE users MODIFY COLUMN status ENUM('active', 'suspended') NOT NULL DEFAULT 'active'");
+        if ($this->usesMySql()) {
+            // Revert enum change to original enum without 'pending'.
+            DB::statement("ALTER TABLE users MODIFY COLUMN status ENUM('active', 'suspended') NOT NULL DEFAULT 'active'");
+        }
+    }
+
+    private function usesMySql(): bool
+    {
+        return DB::getDriverName() === 'mysql';
     }
 };
-

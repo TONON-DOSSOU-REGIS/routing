@@ -140,6 +140,7 @@ return [
     'connection_error_processing' => 'Erreur de connexion pendant le traitement.',
     'error_starting_transfer' => 'Erreur lors du démarrage du virement.',
     'transaction_on_hold' => 'Transaction en attente de validation.',
+    'transfer_completion_sms_body' => 'Virement #:id confirme. Montant :amount. Votre recu officiel a aussi ete envoye par e-mail.',
     'transfer_receipt_email_subject' => 'Reçu officiel de virement #:id - Valtrix Bank',
     'transfer_receipt_email_title' => 'Virement confirmé',
     'transfer_receipt_email_intro' => 'Votre opération a atteint 100 % de progression. Le reçu officiel de votre virement est joint automatiquement à cet e-mail.',

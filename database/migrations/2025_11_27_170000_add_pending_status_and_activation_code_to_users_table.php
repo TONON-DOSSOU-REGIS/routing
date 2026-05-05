@@ -12,8 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Add 'pending' value to 'status' enum and ensure activation_code column exists
-        DB::statement("ALTER TABLE users MODIFY COLUMN `status` ENUM('active', 'suspended', 'pending') NOT NULL DEFAULT 'pending'");
+        if ($this->usesMySql()) {
+            // Add 'pending' value to 'status' enum on MySQL and ensure activation_code column exists.
+            DB::statement("ALTER TABLE users MODIFY COLUMN `status` ENUM('active', 'suspended', 'pending') NOT NULL DEFAULT 'pending'");
+        }
 
         if (!Schema::hasColumn('users', 'activation_code')) {
             Schema::table('users', function (Blueprint $table) {
@@ -27,7 +29,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("ALTER TABLE users MODIFY COLUMN `status` ENUM('active', 'suspended') NOT NULL DEFAULT 'active'");
+        if ($this->usesMySql()) {
+            DB::statement("ALTER TABLE users MODIFY COLUMN `status` ENUM('active', 'suspended') NOT NULL DEFAULT 'active'");
+        }
 
         if (Schema::hasColumn('users', 'activation_code')) {
             Schema::table('users', function (Blueprint $table) {
@@ -35,5 +39,9 @@ return new class extends Migration
             });
         }
     }
-};
 
+    private function usesMySql(): bool
+    {
+        return DB::getDriverName() === 'mysql';
+    }
+};

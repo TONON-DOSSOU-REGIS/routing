@@ -21,6 +21,7 @@ use App\Mail\UserRegistrationNotification;
 use App\Mail\UserApprovedNotification;
 use App\Mail\TransactionRefundedMail;
 use App\Services\NotificationService;
+use App\Support\PhoneNumber;
 
 class AdminController extends Controller
 {
@@ -406,18 +407,33 @@ class AdminController extends Controller
 
     public function storeUser(Request $request)
     {
+        $this->normalizePhoneInput($request);
+        $normalizedIdType = match ((string) $request->input('type_piece')) {
+            'Passeport' => 'Passport',
+            'passport' => 'Passport',
+            default => $request->input('type_piece'),
+        };
+        $request->merge(['type_piece' => $normalizedIdType]);
+
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
-            'phone' => 'nullable|string|max:20',
+            'phone' => $this->phoneRules(),
             'role' => 'required|in:user,admin',
             'adresse' => 'nullable|string|max:255',
+            'ville' => 'required|string|max:255',
+            'pays' => 'required|string|max:255',
+            'date_naissance' => 'required|date|before:today',
+            'type_piece' => 'required|in:CNI,Passport,Permis',
+            'numero_piece' => 'required|string|max:50|unique:users,id_number',
             'iban' => 'nullable|string|max:34',
             'bic' => 'nullable|string|max:11',
             'activation_code' => 'nullable|string|max:255',
             'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ], [
+            'phone.max' => __('auth.phone_international_format'),
         ]);
 
         $profilePhotoPath = null;
@@ -433,6 +449,11 @@ class AdminController extends Controller
             'phone' => $request->phone,
             'role' => $request->role,
             'address' => $request->adresse,
+            'country' => $request->pays,
+            'city' => $request->ville,
+            'date_of_birth' => $request->date_naissance,
+            'id_type' => $request->type_piece,
+            'id_number' => $request->numero_piece,
             'iban' => $request->iban,
             'bic' => $request->bic,
             'activation_code' => $request->activation_code,
@@ -521,6 +542,7 @@ class AdminController extends Controller
     {
         // Handle French decimal format (comma) for balance
         $request->merge(['balance' => str_replace(',', '.', $request->balance)]);
+        $this->normalizePhoneInput($request);
 
         $normalizedIdType = match ((string) $request->input('type_piece')) {
             'Passeport' => 'Passport',
@@ -538,7 +560,7 @@ class AdminController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:20',
+            'phone' => $this->phoneRules(),
             'date_naissance' => 'nullable|date|before:today',
             'role' => 'required|in:user,admin',
             'adresse' => 'nullable|string|max:255',
@@ -558,6 +580,8 @@ class AdminController extends Controller
             'expiry_date' => 'nullable|date_format:Y-m-d',
             'card_visible_to_user' => 'nullable|boolean',
             'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ], [
+            'phone.max' => __('auth.phone_international_format'),
         ]);
 
         $updateData = [
@@ -826,5 +850,29 @@ class AdminController extends Controller
         ]);
 
         return back()->with('status', 'Remboursement effectué avec succès ! Le montant de ' . number_format($transaction->amount, 2, ',', ' ') . ' € a été recrédité sur le compte du client ' . $transaction->user->first_name . ' ' . $transaction->user->last_name . '.');
+    }
+    private function normalizePhoneInput(Request $request): void
+    {
+        $request->merge([
+            'phone' => PhoneNumber::sanitize($request->input('phone')),
+        ]);
+    }
+
+    private function phoneRules(): array
+    {
+        return [
+            'nullable',
+            'string',
+            'max:20',
+            static function (string $attribute, mixed $value, \Closure $fail): void {
+                if ($value === null || $value === '') {
+                    return;
+                }
+
+                if (!PhoneNumber::isValid($value)) {
+                    $fail(__('auth.phone_international_format'));
+                }
+            },
+        ];
     }
 }

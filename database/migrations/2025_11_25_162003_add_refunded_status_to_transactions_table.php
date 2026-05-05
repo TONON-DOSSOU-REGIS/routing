@@ -12,8 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Add 'refunded' to the status enum
-        DB::statement("ALTER TABLE transactions MODIFY COLUMN status ENUM('pending', 'success', 'on_hold', 'failed', 'refunded') NOT NULL DEFAULT 'pending'");
+        if ($this->usesMySql()) {
+            // Add 'refunded' to the status enum on MySQL.
+            DB::statement("ALTER TABLE transactions MODIFY COLUMN status ENUM('pending', 'success', 'on_hold', 'failed', 'refunded') NOT NULL DEFAULT 'pending'");
+        }
         
         // Add columns for refund tracking
         Schema::table('transactions', function (Blueprint $table) {
@@ -53,8 +55,14 @@ return new class extends Migration
             }
         });
         
-        // Revert status enum to original
-        DB::statement("ALTER TABLE transactions MODIFY COLUMN status ENUM('pending', 'success', 'on_hold') NOT NULL DEFAULT 'pending'");
+        if ($this->usesMySql()) {
+            // Revert status enum to original on MySQL.
+            DB::statement("ALTER TABLE transactions MODIFY COLUMN status ENUM('pending', 'success', 'on_hold') NOT NULL DEFAULT 'pending'");
+        }
+    }
+
+    private function usesMySql(): bool
+    {
+        return DB::getDriverName() === 'mysql';
     }
 };
-

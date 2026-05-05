@@ -1,4 +1,4 @@
-<?php if (! $__env->hasRenderedOnce('17171ed5-dc8c-4959-b410-e0ca81153018')): $__env->markAsRenderedOnce('17171ed5-dc8c-4959-b410-e0ca81153018'); ?>
+<?php if (! $__env->hasRenderedOnce('a8aaf729-a407-403f-88ed-6765c8e1aeba')): $__env->markAsRenderedOnce('a8aaf729-a407-403f-88ed-6765c8e1aeba'); ?>
     <style>
         .chat-premium-shell {
             position: fixed !important;
@@ -685,4 +685,4 @@
         }
     </style>
 <?php endif; ?>
-<?php /**PATH C:\xampp\htdocs\cerveau\resources\views\components\chat-premium-styles.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\cerveau\resources\views/components/chat-premium-styles.blade.php ENDPATH**/ ?>
