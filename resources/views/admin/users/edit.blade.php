@@ -1,4 +1,4 @@
-@extends('layouts.admin-premium')
+﻿@extends('layouts.admin-premium')
 
 @php
     $creditCard = $user->creditCard;
@@ -20,7 +20,7 @@
     };
 @endphp
 
-@section('title', 'Modifier un utilisateur - Valtrix Bank Admin')
+@section('title', 'Modifier un utilisateur - Zuider Bank S.A Admin')
 @section('admin_nav_active', 'users')
 @section('dashboard_page_title', 'Édition utilisateur')
 @section('dashboard_page_subtitle', 'Une fiche client premium, plus claire et plus professionnelle, alignee sur le reste de l admin.')

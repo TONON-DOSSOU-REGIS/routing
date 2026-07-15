@@ -1,6 +1,6 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
-@section('title', 'Administration - Valtrix Bank')
+@section('title', 'Administration - Zuider Bank S.A')
 
 @push('head')
     @vite(['resources/css/app.css'])
@@ -140,10 +140,10 @@
                     <div class="flex items-center">
                         <div class="flex items-center space-x-4">
                             <div class="gradient-vip-gold p-3 rounded-2xl pulse-vip border-gold">
-                                <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center justify-center bg-white/95 p-2 rounded-xl shadow-md ring-1 ring-white/60"><img src='{{ asset("images/Logosite.png") }}' class="w-11 h-11 object-contain" alt="logo Valtrix Bank" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
+                                <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center justify-center bg-white/95 p-2 rounded-xl shadow-md ring-1 ring-white/60"><img src='{{ asset("images/Logosite.png") }}' class="w-11 h-11 object-contain" alt="logo Zuider Bank S.A" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                             </div>
                             <div>
-                                <a href="{{ localized_route('admin.dashboard') }}" class="text-2xl font-bold font-cinzel text-gradient-gold hover:scale-105 transition-transform duration-300" aria-label="Valtrix Bank"><span class="sr-only">Valtrix Bank</span></a>
+                                <a href="{{ localized_route('admin.dashboard') }}" class="text-2xl font-bold font-cinzel text-gradient-gold hover:scale-105 transition-transform duration-300" aria-label="Zuider Bank S.A"><span class="sr-only">Zuider Bank S.A</span></a>
                                 <div class="text-xs text-gradient-platinum font-medium -mt-1">Administration VIP</div>
                             </div>
                         </div>

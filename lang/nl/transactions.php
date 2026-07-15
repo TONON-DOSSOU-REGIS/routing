@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 
 return [
-    'page_title' => 'Nieuwe overdracht - Valtrix Bank',
+    'page_title' => 'Nieuwe overdracht - Zuider Bank S.A',
     'new_transfer' => 'Nieuwe overdracht',
     'dashboard' => 'Scorebord',
     'logout' => 'Afmelden',
@@ -64,7 +64,7 @@ return [
     'invalid_activation_code' => 'Voer een geldige activeringscode in.',
     'transfer_pending' => 'Overdracht in afwachting van de veiligheidscontrole.',
     'connection_error' => 'Verbindingsfout tijdens het verwerken.',
-    'history_page_title' => 'Transactiegeschiedenis - Valtrix Bank',
+    'history_page_title' => 'Transactiegeschiedenis - Zuider Bank S.A',
     'history_title' => 'Transactiegeschiedenis',
     'history_subtitle' => 'Bekijk al uw financiële transacties',
     'history_overview' => 'Overzicht van uw financiële transacties',
@@ -107,7 +107,7 @@ return [
     'progress_label' => 'Voortgang',
     'operation_sucess' => 'Succesvolle werking',
     'status_refunded' => 'Terugbetaald',
-    'receipt_page_title' => 'Transactiebon - Valtrix Bank',
+    'receipt_page_title' => 'Transactiebon - Zuider Bank S.A',
     'receipt_title' => 'Bon',
     'receipt_brand_tag' => 'Beveiligd Banksysteem',
     'receipt_generated_at' => 'Gegenereerd op :date',
@@ -140,7 +140,7 @@ return [
     'error_starting_transfer' => 'Fout bij het starten van de overschrijving.',
     'transaction_on_hold' => 'Transactie wacht op validatie.',
     'not_available' => 'N/B',
-    'transfer_receipt_email_subject' => 'Officieel overschrijvingsbewijs #:id - Valtrix Bank',
+    'transfer_receipt_email_subject' => 'Officieel overschrijvingsbewijs #:id - Zuider Bank S.A',
     'transfer_receipt_email_title' => 'Overschrijving bevestigd',
     'transfer_receipt_email_intro' => 'Uw transactie heeft 100% voortgang bereikt. Het officiele ontvangstbewijs van uw overschrijving is automatisch aan deze e-mail toegevoegd.',
     'transfer_receipt_email_greeting' => 'Hallo :name,',
@@ -152,7 +152,7 @@ return [
     'transfer_receipt_email_attachment_text' => 'Het professionele ontvangstbewijs van uw overschrijving is automatisch aan deze e-mail toegevoegd voor archivering, afdruk of boekhouding.',
     'transfer_receipt_email_history_cta' => 'Mijn geschiedenis bekijken',
     'transfer_receipt_email_receipt_cta' => 'Ontvangstbewijs online bekijken',
-    'transfer_receipt_email_footer_intro' => 'Deze e-mail werd automatisch door Valtrix Bank verzonden nadat uw overschrijving volledig was voltooid.',
+    'transfer_receipt_email_footer_intro' => 'Deze e-mail werd automatisch door Zuider Bank S.A verzonden nadat uw overschrijving volledig was voltooid.',
     'transfer_receipt_email_footer_support' => 'Voor vragen over deze transactie blijft ons team beschikbaar via uw beveiligde klantenzone.',
-    'transfer_receipt_email_footer_notice' => 'Antwoord niet rechtstreeks op deze e-mail. � :year Valtrix Bank. Alle rechten voorbehouden.',
+    'transfer_receipt_email_footer_notice' => 'Antwoord niet rechtstreeks op deze e-mail. � :year Zuider Bank S.A. Alle rechten voorbehouden.',
 ];

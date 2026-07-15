@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ __('auth.pending_approval_title') ?? 'Pending Approval' }}</title>
+  @include('partials.seo')
   <meta name="csrf-token" content="{{ csrf_token() }}">
   @vite(['resources/css/app.css'])
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
@@ -43,7 +43,7 @@
       <div class="flex justify-between h-16">
         <div class="flex items-center space-x-2">
           <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
-          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-xl font-semibold text-slate-800 hover:text-blue-700 transition"><span class="sr-only">Valtrix Bank</span></a>
+          <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-xl font-semibold text-slate-800 hover:text-blue-700 transition"><span class="sr-only">Zuider Bank S.A</span></a>
         </div>
         <div class="flex items-center space-x-4">
           @include('components.language-selector')
@@ -119,7 +119,7 @@
   <!-- Footer -->
   <footer class="mt-auto text-center text-slate-200 py-6 bg-black/40 backdrop-blur-sm">
     <div class="max-w-7xl mx-auto px-4">
-      <p>&copy; {{ date('Y') }} <span class="text-blue-300 font-semibold">Valtrix Bank</span>. {{ __('auth.footer_copyright') }}</p>
+      <p>&copy; {{ date('Y') }} <span class="text-blue-300 font-semibold">Zuider Bank S.A</span>. {{ __('auth.footer_copyright') }}</p>
       <div class="mt-2 flex justify-center space-x-4 text-sm">
         <a href="#" class="hover:text-blue-300 transition">{{ __('auth.footer_privacy') }}</a>
         <a href="#" class="hover:text-blue-300 transition">{{ __('auth.footer_terms') }}</a>
@@ -129,7 +129,6 @@
   </footer>
 </body>
 </html>
-
 
 
 

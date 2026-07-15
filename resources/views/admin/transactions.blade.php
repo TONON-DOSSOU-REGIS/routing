@@ -1,4 +1,4 @@
-@extends('layouts.admin-premium')
+﻿@extends('layouts.admin-premium')
 
 @php
     $filteredTransactionsVolumeFormatted = \App\Helpers\CurrencyHelper::format($filteredTransactionsVolume ?? 0, 'EUR');
@@ -12,7 +12,7 @@
     ])->filter(fn ($value) => filled($value))->count();
 @endphp
 
-@section('title', 'Pilotage des transactions - Valtrix Bank Admin')
+@section('title', 'Pilotage des transactions - Zuider Bank S.A Admin')
 @section('admin_nav_active', 'transactions')
 @section('dashboard_page_title', 'Gestion des transactions')
 @section('dashboard_page_subtitle', 'Supervisez les virements, dépôts, retraits et remboursements depuis une interface premium alignée sur le centre de contrôle admin.')

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Réinitialisation de mot de passe - Valtrix Bank</title>
+    <title>Réinitialisation de mot de passe - Zuider Bank S.A</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     @include('partials.favicon')
     <style>
@@ -385,7 +385,7 @@
                     <i class="fas fa-building-columns"></i>
                 </div>
             </div>
-            <h1>Valtrix Bank</h1>
+            <h1>Zuider Bank S.A</h1>
             <h2>Réinitialisation de votre mot de passe</h2>
         </div>
 
@@ -441,13 +441,13 @@
             <div class="support">
                 <p>Si vous n'avez pas demandé cette réinitialisation ou si vous avez des questions,</p>
                 <p>contactez immédiatement notre support :</p>
-                <a href="mailto:support@valtrixbank.com" class="support-contact">support@valtrixbank.com</a>
+                <a href="mailto:support@zuiderbank.com" class="support-contact">support@zuiderbank.com</a>
             </div>
 
             <!-- Signature -->
             <div class="closing">
                 <div class="signature">Cordialement,</div>
-                <div class="team">L'équipe Valtrix Bank</div>
+                <div class="team">L'équipe Zuider Bank S.A</div>
             </div>
         </div>
 
@@ -456,7 +456,7 @@
             <p>Cet email a été envoyé automatiquement. Ne pas répondre à cet email.</p>
             <p>Pour votre sécurité, ne transférez jamais cet email à qui que ce soit.</p>
             <div class="copyright">
-                &copy; 2025 Valtrix Bank. Tous droits réservés.<br>
+                &copy; 2025 Zuider Bank S.A. Tous droits réservés.<br>
                 Votre sécurité est notre priorité.
             </div>
         </div>
@@ -466,5 +466,4 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
 </body>
 </html>
-
 

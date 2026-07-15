@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ __('about.our_story_title') }} - Valtrix Bank</title>
+    @include('partials.seo')
     @vite(['resources/css/app.css'])
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -48,7 +48,7 @@
                     <div class="bg-white p-2 rounded-lg">
                         <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                     </div>
-                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">Valtrix Bank</span></a>
+                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">Zuider Bank S.A</span></a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
@@ -91,7 +91,7 @@
     <section class="py-24 bg-white">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-4xl font-bold mb-6 text-premium">L'évolution de Valtrix Bank</h2>
+                <h2 class="text-4xl font-bold mb-6 text-premium">L'évolution de Zuider Bank S.A</h2>
                 <p class="text-xl text-gray-600 leading-relaxed">
                     Découvrez les moments clés qui ont façonné notre entreprise.
                 </p>
@@ -109,9 +109,9 @@
                                 </div>
                             </div>
                             <div class="flex-1">
-                                <h3 class="text-2xl font-bold mb-3 text-premium">Naissance de Valtrix Bank</h3>
+                                <h3 class="text-2xl font-bold mb-3 text-premium">Naissance de Zuider Bank S.A</h3>
                                 <p class="text-gray-600 leading-relaxed mb-4">
-                                    Création de Valtrix Bank par une équipe d'experts en finance et technologie.
+                                    Création de Zuider Bank S.A par une équipe d'experts en finance et technologie.
                                     Notre vision : simplifier la gestion bancaire des entreprises grâce au numérique.
                                 </p>
                                 <div class="flex items-center text-sm text-gray-500">
@@ -260,7 +260,7 @@
                             <div class="flex-1">
                                 <h3 class="text-2xl font-bold mb-3 text-premium">Aujourd'hui : Excellence continue</h3>
                                 <p class="text-gray-600 leading-relaxed mb-4">
-                                    Valtrix Bank continue d'innover pour offrir la meilleure expérience bancaire digitale
+                                    Zuider Bank S.A continue d'innover pour offrir la meilleure expérience bancaire digitale
                                     aux professionnels. Notre engagement : sécurité, simplicité et performance.
                                 </p>
                                 <div class="flex items-center text-sm text-blue-600 font-semibold">
@@ -333,7 +333,7 @@
     <section class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-4xl font-bold mb-6 text-premium">L'équipe Valtrix Bank</h2>
+                <h2 class="text-4xl font-bold mb-6 text-premium">L'équipe Zuider Bank S.A</h2>
                 <p class="text-xl text-gray-600 leading-relaxed">
                     Des experts passionnés qui travaillent chaque jour pour révolutionner la banque professionnelle.
                 </p>
@@ -379,7 +379,7 @@
     <!-- CTA -->
     <section class="py-24 bg-gradient-to-r from-blue-900 to-blue-800 text-white">
         <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold mb-6">Rejoignez l'aventure Valtrix Bank</h2>
+            <h2 class="text-4xl font-bold mb-6">Rejoignez l'aventure Zuider Bank S.A</h2>
             <p class="text-xl mb-8 text-blue-100 leading-relaxed">
                 Découvrez pourquoi des milliers d'entreprises nous font confiance pour leur gestion bancaire quotidienne.
             </p>
@@ -393,7 +393,7 @@
     <footer class="bg-gray-900 text-gray-400 py-12">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center">
-                <p>&copy; 2025 <span class="text-blue-400 font-semibold">Valtrix Bank</span>. {{ __('about.footer_rights') }}</p>
+                <p>&copy; 2025 <span class="text-blue-400 font-semibold">Zuider Bank S.A</span>. {{ __('about.footer_rights') }}</p>
             </div>
         </div>
     </footer>
@@ -408,7 +408,6 @@
 
 </body>
 </html>
-
 
 
 

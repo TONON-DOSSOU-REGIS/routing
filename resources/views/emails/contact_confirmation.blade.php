@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmation de contact - Valtrix Bank</title>
+    <title>Confirmation de contact - Zuider Bank S.A</title>
     @include('partials.favicon')
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -275,7 +275,7 @@
     <div class="email-container">
         <!-- En-tête -->
         <div class="header">
-            <div class="logo">Valtrix Bank</div>
+            <div class="logo">Zuider Bank S.A</div>
             <div class="logo-subtitle">Votre partenaire financier de confiance</div>
         </div>
         
@@ -346,7 +346,7 @@
             
             <p style="color: #64748b; margin-top: 30px;">
                 Cordialement,<br>
-                <strong>L'équipe Valtrix Bank</strong>
+                <strong>L'équipe Zuider Bank S.A</strong>
             </p>
         </div>
         
@@ -379,7 +379,7 @@
             </div>
             
             <p class="copyright">
-                © 2023 Valtrix Bank. Tous droits réservés.<br>
+                © 2023 Zuider Bank S.A. Tous droits réservés.<br>
                 Cet email a été envoyé à {{ $contact->email }}
             </p>
         </div>

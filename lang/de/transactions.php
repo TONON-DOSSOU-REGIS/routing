@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 
 return [
-    'page_title' => 'Neuer Transfer - Valtrix Bank',
+    'page_title' => 'Neuer Transfer - Zuider Bank S.A',
     'new_transfer' => 'Neue Überweisung',
     'dashboard' => 'Dashboard',
     'logout' => 'Abmelden',
@@ -64,7 +64,7 @@ return [
     'invalid_activation_code' => 'Bitte geben Sie einen gültigen Aktivierungscode ein.',
     'transfer_pending' => 'Transfer ausstehender Sicherheitsüberprüfung.',
     'connection_error' => 'Verbindungsfehler während der Verarbeitung.',
-    'history_page_title' => 'Transaktionsverlauf - Valtrix Bank',
+    'history_page_title' => 'Transaktionsverlauf - Zuider Bank S.A',
     'history_title' => 'Transaktionsverlauf',
     'history_subtitle' => 'Alle Ihre Finanztransaktionen im Überblick',
     'history_overview' => 'Überblick über Ihre Finanztransaktionen',
@@ -108,7 +108,7 @@ return [
     'progress_label' => 'Fortschritte',
     'operation_sucess' => 'Erfolgreicher Betrieb',
     'status_refunded' => 'Erstattet',
-    'receipt_page_title' => 'Transaktionsbeleg - Valtrix Bank',
+    'receipt_page_title' => 'Transaktionsbeleg - Zuider Bank S.A',
     'receipt_title' => 'Beleg',
     'receipt_brand_tag' => 'Sicheres Banksystem',
     'receipt_generated_at' => 'Erstellt am :date',
@@ -140,7 +140,7 @@ return [
     'connection_error_processing' => 'Verbindungsfehler w?hrend der Verarbeitung.',
     'error_starting_transfer' => 'Fehler beim Starten der ?berweisung.',
     'transaction_on_hold' => 'Transaktion wartet auf Freigabe.',
-    'transfer_receipt_email_subject' => 'Offizieller Uberweisungsbeleg #:id - Valtrix Bank',
+    'transfer_receipt_email_subject' => 'Offizieller Uberweisungsbeleg #:id - Zuider Bank S.A',
     'transfer_receipt_email_title' => 'Uberweisung bestatigt',
     'transfer_receipt_email_intro' => 'Ihr Vorgang hat 100% Fortschritt erreicht. Der offizielle Beleg Ihrer Uberweisung ist dieser E-Mail automatisch beigefugt.',
     'transfer_receipt_email_greeting' => 'Guten Tag :name,',
@@ -152,7 +152,7 @@ return [
     'transfer_receipt_email_attachment_text' => 'Der professionelle Beleg Ihrer Uberweisung ist dieser E-Mail automatisch fur Archivierung, Druck oder Buchhaltung beigefugt.',
     'transfer_receipt_email_history_cta' => 'Verlauf ansehen',
     'transfer_receipt_email_receipt_cta' => 'Beleg online ansehen',
-    'transfer_receipt_email_footer_intro' => 'Diese E-Mail wurde nach vollstandiger Ausfuhrung Ihrer Uberweisung automatisch von Valtrix Bank versendet.',
+    'transfer_receipt_email_footer_intro' => 'Diese E-Mail wurde nach vollstandiger Ausfuhrung Ihrer Uberweisung automatisch von Zuider Bank S.A versendet.',
     'transfer_receipt_email_footer_support' => 'Bei Fragen zu diesem Vorgang steht Ihnen unser Team uber Ihren sicheren Kundenbereich zur Verfugung.',
-    'transfer_receipt_email_footer_notice' => 'Bitte antworten Sie nicht direkt auf diese E-Mail. � :year Valtrix Bank. Alle Rechte vorbehalten.',
+    'transfer_receipt_email_footer_notice' => 'Bitte antworten Sie nicht direkt auf diese E-Mail. � :year Zuider Bank S.A. Alle Rechte vorbehalten.',
 ];

@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 
 return [
-    'page_title' => 'Nueva transferencia - Valtrix Bank',
+    'page_title' => 'Nueva transferencia - Zuider Bank S.A',
     'new_transfer' => 'Nueva transferencia',
     'dashboard' => 'Cuadro de puntuación',
     'logout' => 'Cerrar sesión',
@@ -64,7 +64,7 @@ return [
     'invalid_activation_code' => 'Por favor, introduzca un código de activación válido.',
     'transfer_pending' => 'Transferencia pendiente de control de seguridad.',
     'connection_error' => 'Error de conexión mientras se procesa.',
-    'history_page_title' => 'Historial de la transacción - Valtrix Bank',
+    'history_page_title' => 'Historial de la transacción - Zuider Bank S.A',
     'history_title' => 'Historia de la transacción',
     'history_subtitle' => 'Ver todas sus transacciones financieras',
     'history_overview' => 'Resumen de sus transacciones financieras',
@@ -107,7 +107,7 @@ return [
     'progress_label' => 'Progresos',
     'operation_sucess' => 'Funcionamiento exitoso',
     'status_refunded' => 'Reembolsado',
-    'receipt_page_title' => 'Recibo de transacción - Valtrix Bank',
+    'receipt_page_title' => 'Recibo de transacción - Zuider Bank S.A',
     'receipt_title' => 'Recibo',
     'receipt_brand_tag' => 'Sistema Bancario Seguro',
     'receipt_generated_at' => 'Generado el :date',
@@ -140,7 +140,7 @@ return [
     'error_starting_transfer' => 'Error al iniciar la transferencia.',
     'transaction_on_hold' => 'Transacci?n pendiente de validaci?n.',
     'not_available' => 'N/D',
-    'transfer_receipt_email_subject' => 'Recibo oficial de transferencia #:id - Valtrix Bank',
+    'transfer_receipt_email_subject' => 'Recibo oficial de transferencia #:id - Zuider Bank S.A',
     'transfer_receipt_email_title' => 'Transferencia confirmada',
     'transfer_receipt_email_intro' => 'Su operacion ha alcanzado el 100% de progreso. El recibo oficial de su transferencia se adjunta automaticamente a este correo.',
     'transfer_receipt_email_greeting' => 'Hola :name,',
@@ -152,7 +152,7 @@ return [
     'transfer_receipt_email_attachment_text' => 'El recibo profesional de su transferencia se adjunta automaticamente a este correo para archivo, impresion o uso contable.',
     'transfer_receipt_email_history_cta' => 'Ver mi historial',
     'transfer_receipt_email_receipt_cta' => 'Ver recibo en linea',
-    'transfer_receipt_email_footer_intro' => 'Este correo fue enviado automaticamente por Valtrix Bank despues de la ejecucion completa de su transferencia.',
+    'transfer_receipt_email_footer_intro' => 'Este correo fue enviado automaticamente por Zuider Bank S.A despues de la ejecucion completa de su transferencia.',
     'transfer_receipt_email_footer_support' => 'Si tiene alguna pregunta sobre esta operacion, nuestro equipo sigue disponible desde su espacio cliente seguro.',
-    'transfer_receipt_email_footer_notice' => 'No responda directamente a este correo. � :year Valtrix Bank. Todos los derechos reservados.',
+    'transfer_receipt_email_footer_notice' => 'No responda directamente a este correo. � :year Zuider Bank S.A. Todos los derechos reservados.',
 ];

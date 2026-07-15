@@ -9,7 +9,10 @@ $languages = [
     'pl' => ['name' => 'Polski', 'flag' => 'pl', 'code' => 'PL'],
     'it' => ['name' => 'Italiano', 'flag' => 'it', 'code' => 'IT'],
 ];
-$currentLanguage = $languages[$currentLocale] ?? $languages['fr'];
+$availableLocales = config('app.available_locales', array_keys($languages));
+$languages = array_intersect_key($languages, array_flip($availableLocales));
+$fallbackLocale = array_key_first($languages) ?: 'fr';
+$currentLanguage = $languages[$currentLocale] ?? $languages[$fallbackLocale];
 $uniqueId = 'lang-selector-' . uniqid();
 $localePattern = implode('|', array_keys($languages));
 $currentPath = request()->getPathInfo();
@@ -282,4 +285,3 @@ document.addEventListener('click', function(event) {
     }
 });
 </script>
-

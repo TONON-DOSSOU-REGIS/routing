@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Mail;
 
@@ -31,7 +31,7 @@ class PasswordResetMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Votre mot de passe a été réinitialisé - Valtrix Bank',
+            subject: 'Votre mot de passe a été réinitialisé - Zuider Bank S.A',
         );
     }
 

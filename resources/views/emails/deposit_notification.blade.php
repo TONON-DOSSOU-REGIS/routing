@@ -204,9 +204,9 @@
         </div>
         
         <div class="footer">
-            <p><strong>Cerveau Banking</strong></p>
+            <p><strong>Zuider Bank S.A</strong></p>
             <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
-            <p>© {{ date('Y') }} Cerveau Banking. Tous droits réservés.</p>
+            <p>© {{ date('Y') }} Zuider Bank S.A. Tous droits réservés.</p>
         </div>
     </div>
 </body>

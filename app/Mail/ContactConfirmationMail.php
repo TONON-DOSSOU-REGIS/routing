@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Mail;
 
@@ -32,7 +32,7 @@ class ContactConfirmationMail extends Mailable implements ShouldQueue
         // Explicitly assign contact to variable for compact to work
         $contact = $this->contact;
 
-        return $this->subject('Confirmation de réception - Valtrix Bank')
+        return $this->subject('Confirmation de réception - Zuider Bank S.A')
                     ->view('emails.contact_confirmation')
                     ->with(compact('contact'));
     }

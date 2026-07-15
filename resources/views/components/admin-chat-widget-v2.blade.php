@@ -170,8 +170,8 @@
 
 <script>
 (() => {
-    if (window.ValtrixAdminChatMounted) return;
-    window.ValtrixAdminChatMounted = true;
+    if (window.ZuiderAdminChatMounted) return;
+    window.ZuiderAdminChatMounted = true;
     const i18n = @json($adminChatV2I18n);
     const adminId = {{ auth()->id() }};
     const locale = document.documentElement.lang || '{{ app()->getLocale() }}';

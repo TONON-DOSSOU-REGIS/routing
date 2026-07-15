@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'support_title' => 'SG BANK Support',
+    'support_title' => 'Zuider Bank S.A Support',
     'support_subtitle' => 'Wir sind für Sie da',
     'client_support_title' => 'Kundensupport',
     'client_support_subtitle' => 'Chatten Sie mit unserem Team',
@@ -11,7 +11,7 @@ return [
     'attach_file' => 'Datei anhängen',
     'file_too_large' => 'Die Datei ist zu groß. Maximale Größe: :size',
     'greeting' => 'Hallo! Wie kann ich Ihnen heute helfen?',
-    'support_label' => 'SG BANK Support',
+    'support_label' => 'Zuider Bank S.A Support',
     'support_short' => 'Support',
     'you_label' => 'Sie',
     'send_error' => 'Fehler beim Senden der Nachricht',

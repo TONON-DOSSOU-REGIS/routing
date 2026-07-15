@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 
 return [
-    'page_title' => 'Powiadomienia - Valtrix Bank',
+    'page_title' => 'Powiadomienia - Zuider Bank S.A',
     'title' => 'Powiadomienia',
     'subtitle' => 'Zarzadzaj alertami, akceptacjami i wiadomosciami konta z poziomu centrum premium.',
     'mark_all_read' => 'Oznacz wszystkie jako przeczytane',

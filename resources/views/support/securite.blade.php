@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ __('support.security_page_title') }}</title>
+    @include('partials.seo')
     @vite(['resources/css/app.css'])
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -27,7 +27,7 @@
                     <div class="bg-white p-2 rounded-lg">
                         <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt=""></a>
                     </div>
-                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">Valtrix Bank</span></a>
+                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">Zuider Bank S.A</span></a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
@@ -102,7 +102,7 @@
     </section>
 
     <footer class="bg-gray-900 text-gray-400 py-12">
-        <div class="max-w-7xl mx-auto px-6"><div class="text-center"><p>&copy; 2025 <span class="text-blue-400 font-semibold">Valtrix Bank</span>. {{ __('support.all_rights_reserved') }}</p></div></div>
+        <div class="max-w-7xl mx-auto px-6"><div class="text-center"><p>&copy; 2025 <span class="text-blue-400 font-semibold">Zuider Bank S.A</span>. {{ __('support.all_rights_reserved') }}</p></div></div>
     </footer>
 
     <script>

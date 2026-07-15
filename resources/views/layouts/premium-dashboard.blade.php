@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @push('head')
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -207,7 +207,7 @@
         $dashboardSubtitle = html_entity_decode(trim($__env->yieldContent('dashboard_page_subtitle')) ?: '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $dashboardSearchPlaceholder = html_entity_decode(trim($__env->yieldContent('dashboard_search_placeholder')) ?: 'Rechercher une action, un client ou un mouvement...', ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $dashboardSectionLabel = html_entity_decode(trim($__env->yieldContent('dashboard_section_label')) ?: ($dashboardTheme === 'admin' ? 'Pilotage central' : 'Espace premium'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        $dashboardFooterBrand = html_entity_decode(trim($__env->yieldContent('dashboard_footer_brand')) ?: ($dashboardTheme === 'admin' ? 'Valtrix Admin' : 'Valtrix Bank'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $dashboardFooterBrand = html_entity_decode(trim($__env->yieldContent('dashboard_footer_brand')) ?: ($dashboardTheme === 'admin' ? 'Zuider Admin' : 'Zuider Bank S.A'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $displayName = $authUser?->name ?? 'Utilisateur';
         $displayEmail = $authUser?->email ?? '';
         $profilePhotoUrl = $authUser?->profile_photo_url;
@@ -230,11 +230,11 @@
                     <div class="flex min-h-full flex-col gap-8">
                         <div class="flex items-center gap-4">
                             <a href="{{ localized_route('home') }}" class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-200/70">
-                                <img src="{{ asset('images/Logosite.png') }}" alt="Valtrix Bank" class="h-10 w-10 object-contain">
+                                <img src="{{ asset('images/Logosite.png') }}" alt="Zuider Bank S.A" class="h-10 w-10 object-contain">
                             </a>
                             <div>
                                 <p class="premium-brand-title text-lg font-semibold text-slate-900">
-                                    @yield('dashboard_brand_title', 'Valtrix Bank')
+                                    @yield('dashboard_brand_title', 'Zuider Bank S.A')
                                 </p>
                                 <p class="text-sm text-slate-500">
                                     @yield('dashboard_brand_subtitle', $dashboardTheme === 'admin' ? 'Back office premium' : 'Client banking suite')

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ __('about.press_title') }} - Valtrix Bank</title>
+    @include('partials.seo')
     @vite(['resources/css/app.css'])
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -29,7 +29,7 @@
                     <div class="bg-white p-2 rounded-lg">
                         <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                     </div>
-                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">Valtrix Bank</span></a>
+                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">Zuider Bank S.A</span></a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
@@ -74,7 +74,7 @@
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <h2 class="text-4xl font-bold mb-6 text-premium">Dernières actualités</h2>
                 <p class="text-xl text-gray-600 leading-relaxed">
-                    Restez informé des dernières évolutions de Valtrix Bank et de l'écosystème fintech.
+                    Restez informé des dernières évolutions de Zuider Bank S.A et de l'écosystème fintech.
                 </p>
             </div>
 
@@ -89,7 +89,7 @@
                             <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">Communiqué</span>
                             <span class="text-gray-500 text-sm ml-3">15 novembre 2024</span>
                         </div>
-                        <h3 class="text-xl font-bold mb-3 text-premium">Valtrix Bank lève 50 millions d'euros</h3>
+                        <h3 class="text-xl font-bold mb-3 text-premium">Zuider Bank S.A lève 50 millions d'euros</h3>
                         <p class="text-gray-600 mb-4 leading-relaxed">
                             Annonce d'une levée de fonds majeure pour accélérer l'expansion internationale et développer de nouvelles fonctionnalités.
                         </p>
@@ -109,7 +109,7 @@
                         </div>
                         <h3 class="text-xl font-bold mb-3 text-premium">Prix Fintech Innovation 2024</h3>
                         <p class="text-gray-600 mb-4 leading-relaxed">
-                            Valtrix Bank récompensée pour son système de surveillance anti-fraude par intelligence artificielle.
+                            Zuider Bank S.A récompensée pour son système de surveillance anti-fraude par intelligence artificielle.
                         </p>
                         <a href="#" class="text-blue-600 hover:text-blue-800 font-semibold">Lire la suite →</a>
                     </div>
@@ -151,7 +151,7 @@
                     <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-image text-blue-600 text-2xl"></i>
                     </div>
-                    <h3 class="font-semibold mb-2 text-premium">Logo Valtrix Bank</h3>
+                    <h3 class="font-semibold mb-2 text-premium">Logo Zuider Bank S.A</h3>
                     <p class="text-gray-600 text-sm mb-4">Pack complet des logos en haute résolution</p>
                     <button class="btn-premium px-4 py-2 rounded-lg font-semibold text-sm">
                         Télécharger
@@ -163,7 +163,7 @@
                         <i class="fas fa-file-pdf text-green-600 text-2xl"></i>
                     </div>
                     <h3 class="font-semibold mb-2 text-premium">Fiche entreprise</h3>
-                    <p class="text-gray-600 text-sm mb-4">Présentation complète de Valtrix Bank</p>
+                    <p class="text-gray-600 text-sm mb-4">Présentation complète de Zuider Bank S.A</p>
                     <button class="btn-premium px-4 py-2 rounded-lg font-semibold text-sm">
                         Télécharger
                     </button>
@@ -215,7 +215,7 @@
                             </div>
                             <div class="flex items-center space-x-3">
                                 <i class="fas fa-envelope text-blue-600"></i>
-                                <a href="mailto:presse@valtrixbank.fr" class="text-blue-600 hover:text-blue-800">presse@valtrixbank.fr</a>
+                                <a href="mailto:presse@zuiderbank.com" class="text-blue-600 hover:text-blue-800">presse@zuiderbank.com</a>
                             </div>
                             <div class="flex items-center space-x-3">
                                 <i class="fas fa-phone text-blue-600"></i>
@@ -249,7 +249,7 @@
     <footer class="bg-gray-900 text-gray-400 py-12">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center">
-                <p>&copy; 2025 <span class="text-blue-400 font-semibold">Valtrix Bank</span>. {{ __('about.footer_rights') }}</p>
+                <p>&copy; 2025 <span class="text-blue-400 font-semibold">Zuider Bank S.A</span>. {{ __('about.footer_rights') }}</p>
             </div>
         </div>
     </footer>
@@ -264,8 +264,6 @@
 
 </body>
 </html>
-
-
 
 
 

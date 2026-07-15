@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Remboursement de virement - Valtrix Bank</title>
+    <title>Remboursement de virement - Zuider Bank S.A</title>
     @include('partials.favicon')
     <style>
         body {
@@ -104,7 +104,7 @@
         
         <p>Bonjour <strong>{{ $transaction->user->first_name }} {{ $transaction->user->last_name }}</strong>,</p>
         
-        <p>Nous vous informons que votre virement a été remboursé sur votre compte Valtrix Bank.</p>
+        <p>Nous vous informons que votre virement a été remboursé sur votre compte Zuider Bank S.A.</p>
         
         <div class="info-box">
             <h3 style="margin-top: 0; color: #10b981;">📋 Détails du remboursement</h3>
@@ -163,7 +163,7 @@
     
     <div class="footer">
         <p>Merci de votre confiance !</p>
-        <p>© {{ date('Y') }} Valtrix Bank. Tous droits réservés.</p>
+        <p>© {{ date('Y') }} Zuider Bank S.A. Tous droits réservés.</p>
     </div>
 </body>
 </html>

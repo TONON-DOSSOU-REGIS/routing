@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Mail;
 
@@ -34,7 +34,7 @@ class UserRegistrationNotification extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Nouvelle inscription en attente de validation - Valtrix Bank',
+            subject: 'Nouvelle inscription en attente de validation - Zuider Bank S.A',
         );
     }
 

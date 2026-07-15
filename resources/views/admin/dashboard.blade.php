@@ -1,12 +1,12 @@
-@extends('layouts.premium-dashboard')
+﻿@extends('layouts.premium-dashboard')
 
-@section('title', 'Administration - Valtrix Bank')
+@section('title', 'Administration - Zuider Bank S.A')
 @section('dashboard_theme', 'admin')
 @section('dashboard_page_title', 'Tableau de bord administrateur')
 @section('dashboard_page_subtitle', 'Un poste de pilotage premium pour suivre les utilisateurs, les transactions, les validations et les actions critiques sans friction.')
 @section('dashboard_section_label', 'Pilotage admin')
 @section('dashboard_search_placeholder', 'Rechercher un client, une transaction, une opération ou un statut...')
-@section('dashboard_brand_title', 'Valtrix Admin')
+@section('dashboard_brand_title', 'Zuider Admin')
 @section('dashboard_brand_subtitle', 'Centre de contrôle')
 @section('sidebar_primary_title', 'Navigation')
 

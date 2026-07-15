@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 
 return [
-    'page_title' => 'Nowy transfer - Valtrix Bank',
+    'page_title' => 'Nowy transfer - Zuider Bank S.A',
     'new_transfer' => 'Nowy transfer',
     'dashboard' => 'Tabela wyników',
     'logout' => 'Wylogowanie',
@@ -64,7 +64,7 @@ return [
     'invalid_activation_code' => 'Proszę podać poprawny kod aktywacji.',
     'transfer_pending' => 'Przenieść do czasu kontroli bezpieczeństwa.',
     'connection_error' => 'Błąd połączenia podczas przetwarzania.',
-    'history_page_title' => 'Historia transakcji - Valtrix Bank',
+    'history_page_title' => 'Historia transakcji - Zuider Bank S.A',
     'history_title' => 'Historia transakcji',
     'history_subtitle' => 'Wyświetl wszystkie transakcje finansowe',
     'history_overview' => 'Przegląd transakcji finansowych',
@@ -107,7 +107,7 @@ return [
     'progress_label' => 'Postępy',
     'operation_sucess' => 'Udane działanie',
     'status_refunded' => 'Zwrócono',
-    'receipt_page_title' => 'Potwierdzenie transakcji - Valtrix Bank',
+    'receipt_page_title' => 'Potwierdzenie transakcji - Zuider Bank S.A',
     'receipt_title' => 'Potwierdzenie',
     'receipt_brand_tag' => 'Bezpieczny System Bankowy',
     'receipt_generated_at' => 'Wygenerowano: :date',
@@ -140,7 +140,7 @@ return [
     'error_starting_transfer' => 'B??d podczas uruchamiania przelewu.',
     'transaction_on_hold' => 'Transakcja oczekuje na weryfikacj?.',
     'not_available' => 'N/D',
-    'transfer_receipt_email_subject' => 'Oficjalne potwierdzenie przelewu #:id - Valtrix Bank',
+    'transfer_receipt_email_subject' => 'Oficjalne potwierdzenie przelewu #:id - Zuider Bank S.A',
     'transfer_receipt_email_title' => 'Przelew potwierdzony',
     'transfer_receipt_email_intro' => 'Panska lub Panstwa operacja osiagnela 100% postepu. Oficjalne potwierdzenie przelewu zostalo automatycznie dolaczone do tej wiadomosci email.',
     'transfer_receipt_email_greeting' => 'Dzien dobry :name,',
@@ -152,7 +152,7 @@ return [
     'transfer_receipt_email_attachment_text' => 'Profesjonalne potwierdzenie przelewu zostalo automatycznie dolaczone do tej wiadomosci email do archiwizacji, wydruku lub rozliczen ksiegowych.',
     'transfer_receipt_email_history_cta' => 'Zobacz moja historie',
     'transfer_receipt_email_receipt_cta' => 'Zobacz potwierdzenie online',
-    'transfer_receipt_email_footer_intro' => 'Ta wiadomosc zostala wyslana automatycznie przez Valtrix Bank po calkowitej realizacji przelewu.',
+    'transfer_receipt_email_footer_intro' => 'Ta wiadomosc zostala wyslana automatycznie przez Zuider Bank S.A po calkowitej realizacji przelewu.',
     'transfer_receipt_email_footer_support' => 'W razie pytan dotyczacych tej operacji nasz zespol pozostaje do dyspozycji w bezpiecznej strefie klienta.',
-    'transfer_receipt_email_footer_notice' => 'Prosze nie odpowiadac bezposrednio na ta wiadomosc. � :year Valtrix Bank. Wszelkie prawa zastrzezone.',
+    'transfer_receipt_email_footer_notice' => 'Prosze nie odpowiadac bezposrednio na ta wiadomosc. � :year Zuider Bank S.A. Wszelkie prawa zastrzezone.',
 ];

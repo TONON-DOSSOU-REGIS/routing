@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 return [
     'welcome_greeting' => 'Bonjour, :name &#128075;',
@@ -32,7 +32,7 @@ return [
     'profile' => 'Profil',
     'logout' => 'Déconnexion',
     'recent_transactions_and_quick_actions' => 'Transactions récentes et actions rapides',
-    'bank_name' => 'Valtrix Bank',
+    'bank_name' => 'Zuider Bank S.A',
     'empty_value' => '-',
     'zero_amount' => '0,00',
     'transaction_type' => 'transaction',

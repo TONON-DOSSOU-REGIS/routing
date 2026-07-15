@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 
 return [
-    'support_title' => 'Support Valtrix Bank',
+    'support_title' => 'Support Zuider Bank S.A',
     'support_subtitle' => 'Nous sommes là pour vous aider',
     'client_support_title' => 'Support client',
     'client_support_subtitle' => 'Échangez avec notre équipe',
@@ -11,7 +11,7 @@ return [
     'attach_file' => 'Joindre un fichier',
     'file_too_large' => 'Le fichier est trop volumineux. Taille maximale : :size',
     'greeting' => 'Bonjour ! Comment puis-je vous aider aujourd\'hui ?',
-    'support_label' => 'Support Valtrix Bank',
+    'support_label' => 'Support Zuider Bank S.A',
     'support_short' => 'Support',
     'you_label' => 'Vous',
     'send_error' => 'Erreur lors de l\'envoi du message',

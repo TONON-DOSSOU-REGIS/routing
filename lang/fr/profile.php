@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 
 return [
-    'bank_name' => 'Valtrix Bank',
+    'bank_name' => 'Zuider Bank S.A',
     'page_title' => 'Mon profil',
     'page_subtitle' => 'Gérez vos informations personnelles et bancaires',
     'account_number' => 'Compte n° :number',

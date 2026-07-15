@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 
 return [
-    'page_title' => 'Nouveau virement - Valtrix Bank',
+    'page_title' => 'Nouveau virement - Zuider Bank S.A',
     'new_transfer' => 'Nouveau virement',
     'dashboard' => 'Tableau de bord',
     'logout' => 'Déconnexion',
@@ -64,7 +64,7 @@ return [
     'invalid_activation_code' => 'Veuillez saisir un code d\'activation valide.',
     'transfer_pending' => 'Virement en attente de vérification de sécurité.',
     'connection_error' => 'Erreur de connexion lors du traitement.',
-    'history_page_title' => 'Historique des transactions - Valtrix Bank',
+    'history_page_title' => 'Historique des transactions - Zuider Bank S.A',
     'history_title' => 'Historique des transactions',
     'history_subtitle' => 'Consultez l\'ensemble de vos opérations financières',
     'history_overview' => 'Vue d\'ensemble de vos opérations financières',
@@ -108,7 +108,7 @@ return [
     'progress_label' => 'Progression',
     'operation_sucess' => 'Opération réussie',
     'status_refunded' => 'Remboursé',
-    'receipt_page_title' => 'Reçu de transaction - Valtrix Bank',
+    'receipt_page_title' => 'Reçu de transaction - Zuider Bank S.A',
     'receipt_title' => 'Reçu',
     'receipt_brand_tag' => 'Système bancaire sécurisé',
     'receipt_generated_at' => 'Généré le :date',
@@ -141,7 +141,7 @@ return [
     'error_starting_transfer' => 'Erreur lors du démarrage du virement.',
     'transaction_on_hold' => 'Transaction en attente de validation.',
     'transfer_completion_sms_body' => 'Virement #:id confirme. Montant :amount. Votre recu officiel a aussi ete envoye par e-mail.',
-    'transfer_receipt_email_subject' => 'Reçu officiel de virement #:id - Valtrix Bank',
+    'transfer_receipt_email_subject' => 'Reçu officiel de virement #:id - Zuider Bank S.A',
     'transfer_receipt_email_title' => 'Virement confirmé',
     'transfer_receipt_email_intro' => 'Votre opération a atteint 100 % de progression. Le reçu officiel de votre virement est joint automatiquement à cet e-mail.',
     'transfer_receipt_email_greeting' => 'Bonjour :name,',
@@ -153,7 +153,7 @@ return [
     'transfer_receipt_email_attachment_text' => 'Le reçu professionnel de votre virement est joint automatiquement à cet e-mail pour archivage, impression ou transmission comptable.',
     'transfer_receipt_email_history_cta' => 'Voir mon historique',
     'transfer_receipt_email_receipt_cta' => 'Consulter le reçu en ligne',
-    'transfer_receipt_email_footer_intro' => 'Cet e-mail a été émis automatiquement par Valtrix Bank après l\'exécution complète de votre virement.',
+    'transfer_receipt_email_footer_intro' => 'Cet e-mail a été émis automatiquement par Zuider Bank S.A après l\'exécution complète de votre virement.',
     'transfer_receipt_email_footer_support' => 'Pour toute question relative à cette opération, notre équipe reste disponible via votre espace client sécurisé.',
-    'transfer_receipt_email_footer_notice' => 'Ne répondez pas directement à cet e-mail. © :year Valtrix Bank. Tous droits réservés.',
+    'transfer_receipt_email_footer_notice' => 'Ne répondez pas directement à cet e-mail. © :year Zuider Bank S.A. Tous droits réservés.',
 ];

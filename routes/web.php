@@ -45,6 +45,54 @@ Route::get('/home', function () {
 });
 
 // Routes avec préfixe de langue
+Route::get('/sitemap.xml', function () {
+    $locales = config('app.available_locales', ['fr', 'en']);
+    $publicRoutes = [
+        'home',
+        'about.notre-histoire',
+        'about.carrieres',
+        'about.presse',
+        'about.blog',
+        'services.comptes-professionnels',
+        'services.gestion-tresorerie',
+        'services.cartes-paiement',
+        'services.virements-internationaux',
+        'support.securite',
+        'support.mentions-legales',
+        'support.centre-aide',
+        'support.nous-contacter',
+    ];
+
+    $escapeXml = static fn (string $value): string => htmlspecialchars($value, ENT_QUOTES | ENT_XML1, 'UTF-8');
+    $lastModified = now()->toDateString();
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">' . PHP_EOL;
+
+    foreach ($publicRoutes as $routeName) {
+        foreach ($locales as $locale) {
+            $url = route($routeName, ['locale' => $locale]);
+            $xml .= '  <url>' . PHP_EOL;
+            $xml .= '    <loc>' . $escapeXml($url) . '</loc>' . PHP_EOL;
+            $xml .= '    <lastmod>' . $lastModified . '</lastmod>' . PHP_EOL;
+            $xml .= '    <changefreq>' . ($routeName === 'home' ? 'weekly' : 'monthly') . '</changefreq>' . PHP_EOL;
+            $xml .= '    <priority>' . ($routeName === 'home' ? '1.0' : '0.8') . '</priority>' . PHP_EOL;
+
+            foreach ($locales as $alternateLocale) {
+                $alternateUrl = route($routeName, ['locale' => $alternateLocale]);
+                $xml .= '    <xhtml:link rel="alternate" hreflang="' . $escapeXml($alternateLocale) . '" href="' . $escapeXml($alternateUrl) . '" />' . PHP_EOL;
+            }
+
+            $defaultUrl = route($routeName, ['locale' => config('app.locale', 'fr')]);
+            $xml .= '    <xhtml:link rel="alternate" hreflang="x-default" href="' . $escapeXml($defaultUrl) . '" />' . PHP_EOL;
+            $xml .= '  </url>' . PHP_EOL;
+        }
+    }
+
+    $xml .= '</urlset>' . PHP_EOL;
+
+    return response($xml, 200)->header('Content-Type', 'application/xml; charset=UTF-8');
+})->name('sitemap');
+
 Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(function () {
     
     // Home

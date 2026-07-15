@@ -1,4 +1,4 @@
-@extends('layouts.admin-premium')
+﻿@extends('layouts.admin-premium')
 
 @php
     $targetUser = collect($users)->firstWhere('id', old('target_user_id', $settings->target_user_id ?? null));
@@ -7,7 +7,7 @@
     $isGlobal = (bool) old('is_global', $settings->is_global ?? true);
 @endphp
 
-@section('title', 'Paramètres admin - Valtrix Bank')
+@section('title', 'Paramètres admin - Zuider Bank S.A')
 @section('admin_nav_active', 'settings')
 @section('dashboard_page_title', 'Paramètres des virements')
 @section('dashboard_page_subtitle', 'Reglez les seuils d arret, la portee de la regle et le message envoye au client dans un environnement premium.')

@@ -1,16 +1,16 @@
-@extends('layouts.premium-dashboard')
+﻿@extends('layouts.premium-dashboard')
 
 @php
     $adminNavActive = trim($__env->yieldContent('admin_nav_active', ''));
 @endphp
 
-@section('title', trim($__env->yieldContent('title', 'Administration - Valtrix Bank')))
+@section('title', trim($__env->yieldContent('title', 'Administration - Zuider Bank S.A')))
 @section('dashboard_theme', 'admin')
 @section('dashboard_page_title', trim($__env->yieldContent('dashboard_page_title', 'Administration premium')))
 @section('dashboard_page_subtitle', trim($__env->yieldContent('dashboard_page_subtitle', 'Un poste de pilotage premium pour les opérations critiques, les validations et la supervision.')))
 @section('dashboard_section_label', trim($__env->yieldContent('dashboard_section_label', 'Pilotage admin')))
 @section('dashboard_search_placeholder', 'Rechercher un client, une transaction, une opération ou un statut...')
-@section('dashboard_brand_title', 'Valtrix Admin')
+@section('dashboard_brand_title', 'Zuider Admin')
 @section('dashboard_brand_subtitle', 'Centre de contrôle')
 @section('sidebar_primary_title', 'Navigation')
 @section('sidebar_secondary_title', 'Opérations')

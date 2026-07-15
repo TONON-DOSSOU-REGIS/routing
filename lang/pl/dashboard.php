@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 return [
     'welcome_greeting' => 'Czesc, :name &#128075;',
@@ -32,7 +32,7 @@ return [
     'profile' => 'Profil',
     'logout' => 'Wyloguj',
     'recent_transactions_and_quick_actions' => 'Ostatnie transakcje i szybkie akcje',
-    'bank_name' => 'Valtrix Bank',
+    'bank_name' => 'Zuider Bank S.A',
     'empty_value' => '-',
     'zero_amount' => '0,00',
     'transaction_type' => 'transakcja',

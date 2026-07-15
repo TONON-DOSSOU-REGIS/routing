@@ -15,7 +15,7 @@ class AuthController extends Controller
 {
     private function adminEmail(): string
     {
-        return (string) config('mail.admin_address', 'admin@valtrixbank.com');
+        return (string) config('mail.admin_address', 'admin@zuiderbank.com');
     }
 
     private function clearInvalidIntendedUrl(Request $request): void

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ __('about.careers_title') }} - Valtrix Bank</title>
+    @include('partials.seo')
     @vite(['resources/css/app.css'])
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -29,7 +29,7 @@
                     <div class="bg-white p-2 rounded-lg">
                         <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}"><img src='{{ asset("images/Logosite.png") }}' class="w-9 h-9" alt="" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></a>
                     </div>
-                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">Valtrix Bank</span></a>
+                    <a href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}" class="text-2xl font-bold text-white"><span class="sr-only">Zuider Bank S.A</span></a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6">
@@ -82,7 +82,7 @@
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <h2 class="text-4xl font-bold mb-6 text-premium">Pourquoi nous rejoindre ?</h2>
                 <p class="text-xl text-gray-600 leading-relaxed">
-                    Découvrez ce qui rend Valtrix Bank unique et pourquoi des talents choisissent de nous rejoindre.
+                    Découvrez ce qui rend Zuider Bank S.A unique et pourquoi des talents choisissent de nous rejoindre.
                 </p>
             </div>
 
@@ -264,7 +264,7 @@
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <h2 class="text-4xl font-bold mb-6 text-premium">Postes ouverts</h2>
                 <p class="text-xl text-gray-600 leading-relaxed">
-                    Découvrez nos opportunités actuelles et rejoignez l'aventure Valtrix Bank.
+                    Découvrez nos opportunités actuelles et rejoignez l'aventure Zuider Bank S.A.
                 </p>
             </div>
 
@@ -393,7 +393,7 @@
 
             <div class="text-center mt-12">
                 <p class="text-gray-600 mb-6">Vous ne trouvez pas le poste idéal ?</p>
-                <a href="mailto:recrutement@valtrixbank.fr" class="btn-premium px-8 py-4 rounded-lg font-semibold inline-block">
+                <a href="mailto:recrutement@zuiderbank.com" class="btn-premium px-8 py-4 rounded-lg font-semibold inline-block">
                     <i class="fas fa-envelope mr-2"></i>Envoyez-nous votre CV spontané
                 </a>
             </div>
@@ -403,7 +403,7 @@
     <!-- CTA -->
     <section class="py-24 bg-gradient-to-r from-teal-900 to-teal-800 text-white">
         <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold mb-6">Prêt à rejoindre l'aventure Valtrix Bank ?</h2>
+            <h2 class="text-4xl font-bold mb-6">Prêt à rejoindre l'aventure Zuider Bank S.A ?</h2>
             <p class="text-xl mb-8 text-teal-100 leading-relaxed">
                 Construisez l'avenir de la fintech avec nous. L'innovation, la passion et l'excellence vous attendent.
             </p>
@@ -411,7 +411,7 @@
                 <a href="#jobs" class="btn-premium px-8 py-4 rounded-lg font-semibold">
                     Voir les offres
                 </a>
-                <a href="mailto:recrutement@valtrixbank.fr" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-teal-900 transition">
+                <a href="mailto:recrutement@zuiderbank.com" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-teal-900 transition">
                     Nous contacter
                 </a>
             </div>
@@ -422,7 +422,7 @@
     <footer class="bg-gray-900 text-gray-400 py-12">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center">
-                <p>&copy; 2025 <span class="text-blue-400 font-semibold">Valtrix Bank</span>. {{ __('about.footer_rights') }}</p>
+                <p>&copy; 2025 <span class="text-blue-400 font-semibold">Zuider Bank S.A</span>. {{ __('about.footer_rights') }}</p>
             </div>
         </div>
     </footer>
@@ -437,8 +437,6 @@
 
 </body>
 </html>
-
-
 
 
 

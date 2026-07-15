@@ -1,6 +1,6 @@
-@extends('layouts.admin-premium')
+﻿@extends('layouts.admin-premium')
 
-@section('title', 'Créer un utilisateur - Valtrix Bank Admin')
+@section('title', 'Créer un utilisateur - Zuider Bank S.A Admin')
 @section('admin_nav_active', 'users-create')
 @section('dashboard_page_title', "Création d'utilisateur")
 @section('dashboard_page_subtitle', 'Créez un nouveau client ou administrateur avec une fiche complète, claire et professionnelle.')

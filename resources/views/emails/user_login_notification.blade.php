@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notification de Connexion - Valtrix Bank</title>
+    <title>Notification de Connexion - Zuider Bank S.A</title>
     @include('partials.favicon')
     <style>
         body {
@@ -109,7 +109,7 @@
         <!-- Header -->
         <div class="header">
             <h1>🔔 Notification de Connexion</h1>
-            <p>Valtrix Bank - Système de Surveillance</p>
+            <p>Zuider Bank S.A - Système de Surveillance</p>
         </div>
 
         <!-- Content -->
@@ -169,7 +169,7 @@
             <!-- Security Notice -->
             <div class="security-notice">
                 <strong>🔒 Avis de Sécurité:</strong><br>
-                Cette connexion a été détectée automatiquement par le système Valtrix Bank.
+                Cette connexion a été détectée automatiquement par le système Zuider Bank S.A.
                 Si cette activité vous semble suspecte, veuillez contacter immédiatement le client
                 et prendre les mesures de sécurité appropriées.
             </div>
@@ -187,7 +187,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p><strong>Valtrix Bank - Système Bancaire Sécurisé</strong></p>
+            <p><strong>Zuider Bank S.A - Système Bancaire Sécurisé</strong></p>
             <p>Cette notification a été générée automatiquement le {{ now()->format('d/m/Y à H:i:s') }}</p>
             <p>Ne répondez pas à cet email - il s'agit d'une notification automatique</p>
         </div>

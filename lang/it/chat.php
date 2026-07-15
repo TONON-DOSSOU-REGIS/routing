@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'support_title' => 'Supporto SG BANK',
+    'support_title' => 'Supporto Zuider Bank S.A',
     'support_subtitle' => 'Siamo qui per aiutarti',
     'client_support_title' => 'Supporto clienti',
     'client_support_subtitle' => 'Chatta con il nostro team',
@@ -11,7 +11,7 @@ return [
     'attach_file' => 'Allega un file',
     'file_too_large' => 'Il file è troppo grande. Dimensione massima: :size',
     'greeting' => 'Ciao! Come posso aiutarti oggi?',
-    'support_label' => 'Supporto SG BANK',
+    'support_label' => 'Supporto Zuider Bank S.A',
     'support_short' => 'Supporto',
     'you_label' => 'Tu',
     'send_error' => 'Errore durante l\'invio del messaggio',

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nouvelle inscription - Valtrix Bank</title>
+    <title>Nouvelle inscription - Zuider Bank S.A</title>
     @include('partials.favicon')
     <style>
         body {
@@ -87,7 +87,7 @@
     <div class="content">
         <p>Bonjour Administrateur,</p>
         
-        <p>Un nouvel utilisateur vient de s'inscrire sur Valtrix Bank et attend votre validation pour accéder à son compte.</p>
+        <p>Un nouvel utilisateur vient de s'inscrire sur Zuider Bank S.A et attend votre validation pour accéder à son compte.</p>
         
         <div class="info-box">
             <h3 style="margin-top: 0; color: #667eea;">📋 Informations de l'utilisateur</h3>
@@ -150,8 +150,8 @@
     </div>
     
     <div class="footer">
-        <p>Cet email a été envoyé automatiquement par Valtrix Bank.</p>
-        <p>© {{ date('Y') }} Valtrix Bank. Tous droits réservés.</p>
+        <p>Cet email a été envoyé automatiquement par Zuider Bank S.A.</p>
+        <p>© {{ date('Y') }} Zuider Bank S.A. Tous droits réservés.</p>
     </div>
 </body>
 </html>

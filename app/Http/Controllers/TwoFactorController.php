@@ -62,7 +62,7 @@ class TwoFactorController extends Controller
             $user->save();
         }
 
-        $issuer = config('app.name', 'Valtrix Bank');
+        $issuer = config('app.name', 'Zuider Bank S.A');
         $otpauth = Totp::getOtpAuthUrl($issuer, $user->email, $user->two_factor_secret);
         $qrSvg = $this->generateTwoFactorQrSvg($otpauth);
 

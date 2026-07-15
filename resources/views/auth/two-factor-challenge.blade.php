@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ __('auth.2fa_challenge_title') }}</title>
+    @include('partials.seo')
     @include('partials.favicon')
     @vite(['resources/css/app.css'])
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -78,7 +78,7 @@
                         <div class="relative z-10">
                             <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-blue-100">
                                 <span class="h-2.5 w-2.5 rounded-full bg-emerald-400 challenge-pulse"></span>
-                                Valtrix Bank
+                                Zuider Bank S.A
                             </span>
 
                             <h1 class="mt-6 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
@@ -144,7 +144,7 @@
                     <div class="rounded-[2rem] border border-white/70 bg-white/92 p-5 shadow-[0_30px_90px_rgba(148,163,184,0.18)] backdrop-blur-xl sm:p-7">
                         <div class="flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-start sm:justify-between">
                             <div>
-                                <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-400">Valtrix Bank</p>
+                                <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-400">Zuider Bank S.A</p>
                                 <h2 class="mt-3 text-2xl font-bold text-slate-950">{{ __('auth.2fa_challenge_heading') }}</h2>
                                 <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-500">{{ __('auth.2fa_challenge_description') }}</p>
                             </div>

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compte validé - Valtrix Bank</title>
+    <title>Compte validé - Zuider Bank S.A</title>
     @include('partials.favicon')
     <style>
         body {
@@ -86,7 +86,7 @@
 <body>
     <div class="header">
         <h1>✅ Compte Validé !</h1>
-        <p>Bienvenue sur Valtrix Bank</p>
+        <p>Bienvenue sur Zuider Bank S.A</p>
     </div>
     
     <div class="content">
@@ -96,7 +96,7 @@
         
         <p>Bonjour <strong>{{ $user->first_name }} {{ $user->last_name }}</strong>,</p>
         
-        <p>Excellente nouvelle ! Votre compte Valtrix Bank a été validé par notre équipe d'administration.</p>
+        <p>Excellente nouvelle ! Votre compte Zuider Bank S.A a été validé par notre équipe d'administration.</p>
         
         <div class="info-box">
             <h3 style="margin-top: 0; color: #10b981;">🎊 Votre compte est maintenant actif</h3>
@@ -144,7 +144,7 @@
     
     <div class="footer">
         <p>Merci de votre confiance !</p>
-        <p>© {{ date('Y') }} Valtrix Bank. Tous droits réservés.</p>
+        <p>© {{ date('Y') }} Zuider Bank S.A. Tous droits réservés.</p>
     </div>
 </body>
 </html>

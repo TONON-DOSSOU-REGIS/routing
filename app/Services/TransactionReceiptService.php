@@ -95,7 +95,7 @@ class TransactionReceiptService
     {
         $baseName = $transaction->type === 'transfer' ? 'recu-virement' : 'recu-transaction';
 
-        return sprintf('valtrix-%s-%s.%s', $baseName, $transaction->id, $extension);
+        return sprintf('zuider-%s-%s.%s', $baseName, $transaction->id, $extension);
     }
 
     public function historyUrl(Transaction $transaction, ?string $locale = null): string

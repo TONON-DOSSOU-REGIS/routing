@@ -1,4 +1,4 @@
-@php
+﻿@php
     $clientName = trim(implode(' ', array_filter([
         $transaction->user->first_name ?? null,
         $transaction->user->last_name ?? null,
@@ -27,7 +27,7 @@
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:680px; background:#ffffff; border-radius:24px; overflow:hidden; box-shadow:0 18px 50px rgba(15,23,42,0.10);">
                     <tr>
                         <td style="padding:32px 36px; background:linear-gradient(135deg, #0f766e 0%, #0f9f84 100%); color:#ffffff;">
-                            <div style="font-size:12px; letter-spacing:0.18em; text-transform:uppercase; opacity:0.82;">Valtrix Bank</div>
+                            <div style="font-size:12px; letter-spacing:0.18em; text-transform:uppercase; opacity:0.82;">Zuider Bank S.A</div>
                             <h1 style="margin:14px 0 10px; font-size:30px; line-height:1.2;">{{ __('transactions.transfer_receipt_email_title') }}</h1>
                             <p style="margin:0; font-size:15px; line-height:1.7; max-width:520px; color:rgba(255,255,255,0.88);">
                                 {{ __('transactions.transfer_receipt_email_intro') }}

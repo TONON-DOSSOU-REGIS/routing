@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Mail;
 
@@ -36,7 +36,7 @@ class UserLoginNotification extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Notification de Connexion - Valtrix Bank',
+            subject: 'Notification de Connexion - Zuider Bank S.A',
         );
     }
 

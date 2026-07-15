@@ -118,8 +118,8 @@
 
 <script>
 (() => {
-    if (window.ValtrixClientChatMounted) return;
-    window.ValtrixClientChatMounted = true;
+    if (window.ZuiderClientChatMounted) return;
+    window.ZuiderClientChatMounted = true;
 
     const i18n = @json($clientChatI18n);
     const currentUserId = {{ auth()->id() }};

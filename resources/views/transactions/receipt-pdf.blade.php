@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
@@ -390,7 +390,7 @@
                     </svg>
                 </span>
                 <span class="brand-copy">
-                    <div class="brand-name">Valtrix Bank</div>
+                    <div class="brand-name">Zuider Bank S.A</div>
                     <div class="brand-tag">{{ __('transactions.receipt_brand_tag') }}</div>
                     <div class="brand-note">{{ __('transactions.receipt_title') }} #{{ $transaction->id }}</div>
                 </span>
@@ -568,7 +568,7 @@
                             <div class="code">{{ $receiptVerificationCode }}</div>
                             <div class="mini-line">
                                 <div class="label">Support</div>
-                                <div class="value">support@valtrixbank.com</div>
+                                <div class="value">support@zuiderbank.com</div>
                             </div>
                             <div class="mini-line">
                                 <div class="label">{{ __('transactions.receipt_generated_at', ['date' => $receiptGeneratedLabel]) }}</div>
@@ -585,7 +585,7 @@
         <table class="footer-table">
             <tr>
                 <td>
-                    <strong>Valtrix Bank</strong><br>
+                    <strong>Zuider Bank S.A</strong><br>
                     {{ __('transactions.receipt_notice') }}
                 </td>
                 <td class="footer-center">
@@ -596,7 +596,7 @@
                 <td class="footer-right">
                     <strong>{{ $amountFormatted }}</strong><br>
                     {{ $typeLabel }} - {{ $statusLabel }}<br>
-                    support@valtrixbank.com
+                    support@zuiderbank.com
                 </td>
             </tr>
         </table>

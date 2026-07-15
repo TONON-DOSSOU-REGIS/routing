@@ -1,4 +1,4 @@
-@extends('layouts.premium-dashboard')
+﻿@extends('layouts.premium-dashboard')
 
 @section('title', __('dashboard.dashboard_title'))
 @section('dashboard_theme', 'client')
@@ -6,7 +6,7 @@
 @section('dashboard_page_subtitle', __('dashboard.page_subtitle'))
 @section('dashboard_section_label', __('dashboard.client_area'))
 @section('dashboard_search_placeholder', __('dashboard.search_placeholder'))
-@section('dashboard_brand_title', 'Valtrix Bank')
+@section('dashboard_brand_title', 'Zuider Bank S.A')
 @section('dashboard_brand_subtitle', __('dashboard.client_area'))
 @section('sidebar_primary_title', __('dashboard.menu'))
 

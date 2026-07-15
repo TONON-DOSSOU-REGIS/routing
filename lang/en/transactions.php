@@ -1,7 +1,7 @@
-<?php
+ï»¿<?php
 
 return [
-    'page_title' => 'New transfer - Valtrix Bank',
+    'page_title' => 'New transfer - Zuider Bank S.A',
     'new_transfer' => 'New transfer',
     'dashboard' => 'Scoreboard',
     'logout' => 'Logout',
@@ -64,7 +64,7 @@ return [
     'invalid_activation_code' => 'Please enter a valid activation code.',
     'transfer_pending' => 'Transfer pending security check.',
     'connection_error' => 'Connection error while processing.',
-    'history_page_title' => 'Transaction history - Valtrix Bank',
+    'history_page_title' => 'Transaction history - Zuider Bank S.A',
     'history_title' => 'Transaction history',
     'history_subtitle' => 'View all your financial transactions',
     'history_overview' => 'Overview of your financial transactions',
@@ -107,7 +107,7 @@ return [
     'progress_label' => 'Progress',
     'operation_sucess' => 'Successful operation',
     'status_refunded' => 'Refunded',
-    'receipt_page_title' => 'Transaction receipt - Valtrix Bank',
+    'receipt_page_title' => 'Transaction receipt - Zuider Bank S.A',
     'receipt_title' => 'Receipt',
     'receipt_brand_tag' => 'Secure Banking System',
     'receipt_generated_at' => 'Generated on :date',
@@ -140,7 +140,7 @@ return [
     'error_starting_transfer' => 'Error starting transfer.',
     'transaction_on_hold' => 'Transaction pending validation.',
     'not_available' => 'N/A',
-    'transfer_receipt_email_subject' => 'Official transfer receipt #:id - Valtrix Bank',
+    'transfer_receipt_email_subject' => 'Official transfer receipt #:id - Zuider Bank S.A',
     'transfer_receipt_email_title' => 'Transfer confirmed',
     'transfer_receipt_email_intro' => 'Your transaction has reached 100% progress. The official receipt for your transfer is attached automatically to this email.',
     'transfer_receipt_email_greeting' => 'Hello :name,',
@@ -152,7 +152,7 @@ return [
     'transfer_receipt_email_attachment_text' => 'The professional receipt for your transfer is automatically attached to this email for filing, printing, or accounting purposes.',
     'transfer_receipt_email_history_cta' => 'View my history',
     'transfer_receipt_email_receipt_cta' => 'View receipt online',
-    'transfer_receipt_email_footer_intro' => 'This email was sent automatically by Valtrix Bank after your transfer was fully completed.',
+    'transfer_receipt_email_footer_intro' => 'This email was sent automatically by Zuider Bank S.A after your transfer was fully completed.',
     'transfer_receipt_email_footer_support' => 'If you have any questions about this transaction, our team remains available through your secure client area.',
-    'transfer_receipt_email_footer_notice' => 'Please do not reply directly to this email. © :year Valtrix Bank. All rights reserved.',
+    'transfer_receipt_email_footer_notice' => 'Please do not reply directly to this email. ï¿½ :year Zuider Bank S.A. All rights reserved.',
 ];

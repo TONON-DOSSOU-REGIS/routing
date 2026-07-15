@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Mail;
 
@@ -30,7 +30,7 @@ class UserApprovedNotification extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Votre compte Valtrix Bank a été validé !',
+            subject: 'Votre compte Zuider Bank S.A a été validé !',
         );
     }
 

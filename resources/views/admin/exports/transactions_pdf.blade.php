@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rapport des Transactions - Valtrix Bank</title>
+    <title>Rapport des Transactions - Zuider Bank S.A</title>
     @include('partials.favicon')
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -436,7 +436,7 @@
                 </div>
             </div>
             <h1>Rapport des Transactions</h1>
-            <div class="subtitle">Valtrix Bank - Analyse complète des opérations financières</div>
+            <div class="subtitle">Zuider Bank S.A - Analyse complète des opérations financières</div>
         </div>
 
         <!-- Informations du rapport -->
@@ -540,7 +540,7 @@
                 </div>
             </div>
             <div class="copyright">
-                &copy; 2025 Valtrix Bank. Tous droits réservés. | Rapport confidentiel
+                &copy; 2025 Zuider Bank S.A. Tous droits réservés. | Rapport confidentiel
             </div>
         </div>
     </div>

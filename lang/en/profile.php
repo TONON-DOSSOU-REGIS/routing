@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'bank_name' => 'SG BANK',
+    'bank_name' => 'Zuider Bank S.A',
     'page_title' => 'My Profile',
     'page_subtitle' => 'Manage your personal and banking information',
     'account_number' => 'Account No. :number',

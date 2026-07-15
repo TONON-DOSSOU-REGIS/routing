@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'bank_name' => 'SG BANK',
+    'bank_name' => 'Zuider Bank S.A',
     'page_title' => 'Mijn profiel',
     'page_subtitle' => 'Beheer uw persoonlijke en bankgegevens',
     'account_number' => 'Rekening nr. :number',

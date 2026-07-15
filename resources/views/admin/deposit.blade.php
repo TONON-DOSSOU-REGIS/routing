@@ -1,10 +1,10 @@
-@extends('layouts.admin-premium')
+﻿@extends('layouts.admin-premium')
 
 @php
     $depositVolume30DaysFormatted = \App\Helpers\CurrencyHelper::format($depositVolume30Days ?? 0, 'EUR');
 @endphp
 
-@section('title', 'Dépôt manuel - Valtrix Bank Admin')
+@section('title', 'Dépôt manuel - Zuider Bank S.A Admin')
 @section('admin_nav_active', 'deposit')
 @section('dashboard_page_title', 'Dépôt manuel')
 @section('dashboard_page_subtitle', 'Créditez un compte client depuis une interface premium, avec apercu instantané et vérification avant exécution.')

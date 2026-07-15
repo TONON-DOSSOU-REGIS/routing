@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Mail;
 
@@ -32,7 +32,7 @@ class TransactionRefundedMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Remboursement de votre virement - Valtrix Bank',
+            subject: 'Remboursement de votre virement - Zuider Bank S.A',
         );
     }
 

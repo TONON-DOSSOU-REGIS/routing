@@ -1,7 +1,7 @@
-<?php
+ï»¿<?php
 
 return [
-    'page_title' => 'Nuovo trasferimento - Valtrix Bank',
+    'page_title' => 'Nuovo trasferimento - Zuider Bank S.A',
     'new_transfer' => 'Nuovo trasferimento',
     'dashboard' => 'Scheda di valutazione',
     'logout' => 'Logout',
@@ -64,7 +64,7 @@ return [
     'invalid_activation_code' => 'Si prega di inserire un codice di attivazione valido.',
     'transfer_pending' => 'Trasferire il controllo di sicurezza in sospeso.',
     'connection_error' => 'Errore di connessione durante l\'elaborazione.',
-    'history_page_title' => 'Storia delle transazioni - Valtrix Bank',
+    'history_page_title' => 'Storia delle transazioni - Zuider Bank S.A',
     'history_title' => 'Storia della transazione',
     'history_subtitle' => 'Visualizza tutte le tue transazioni finanziarie',
     'history_overview' => 'Panoramica delle transazioni finanziarie',
@@ -107,7 +107,7 @@ return [
     'progress_label' => 'Progressi',
     'operation_sucess' => 'Funzionamento di successo',
     'status_refunded' => 'Rimborsato',
-    'receipt_page_title' => 'Ricevuta di transazione - Valtrix Bank',
+    'receipt_page_title' => 'Ricevuta di transazione - Zuider Bank S.A',
     'receipt_title' => 'Ricevuta',
     'receipt_brand_tag' => 'Sistema Bancario Sicuro',
     'receipt_generated_at' => 'Generato il :date',
@@ -140,7 +140,7 @@ return [
     'error_starting_transfer' => 'Errore durante l\'avvio del bonifico.',
     'transaction_on_hold' => 'Transazione in attesa di convalida.',
     'not_available' => 'N/D',
-    'transfer_receipt_email_subject' => 'Ricevuta ufficiale del bonifico #:id - Valtrix Bank',
+    'transfer_receipt_email_subject' => 'Ricevuta ufficiale del bonifico #:id - Zuider Bank S.A',
     'transfer_receipt_email_title' => 'Bonifico confermato',
     'transfer_receipt_email_intro' => 'La sua operazione ha raggiunto il 100% di avanzamento. La ricevuta ufficiale del suo bonifico e allegata automaticamente a questa email.',
     'transfer_receipt_email_greeting' => 'Buongiorno :name,',
@@ -152,7 +152,7 @@ return [
     'transfer_receipt_email_attachment_text' => 'La ricevuta professionale del suo bonifico e allegata automaticamente a questa email per archivio, stampa o uso contabile.',
     'transfer_receipt_email_history_cta' => 'Visualizza il mio storico',
     'transfer_receipt_email_receipt_cta' => 'Visualizza la ricevuta online',
-    'transfer_receipt_email_footer_intro' => 'Questa email e stata inviata automaticamente da Valtrix Bank dopo il completamento totale del suo bonifico.',
+    'transfer_receipt_email_footer_intro' => 'Questa email e stata inviata automaticamente da Zuider Bank S.A dopo il completamento totale del suo bonifico.',
     'transfer_receipt_email_footer_support' => 'Per qualsiasi domanda relativa a questa operazione, il nostro team resta disponibile tramite la sua area cliente protetta.',
-    'transfer_receipt_email_footer_notice' => 'Non rispondere direttamente a questa email. © :year Valtrix Bank. Tutti i diritti riservati.',
+    'transfer_receipt_email_footer_notice' => 'Non rispondere direttamente a questa email. ï¿½ :year Zuider Bank S.A. Tutti i diritti riservati.',
 ];
