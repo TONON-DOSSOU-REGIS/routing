@@ -2,66 +2,66 @@
 
 @section('title', 'Administration - Zuider Bank S.A')
 @section('dashboard_theme', 'admin')
-@section('dashboard_page_title', 'Tableau de bord administrateur')
-@section('dashboard_page_subtitle', 'Un poste de pilotage premium pour suivre les utilisateurs, les transactions, les validations et les actions critiques sans friction.')
-@section('dashboard_section_label', 'Pilotage admin')
-@section('dashboard_search_placeholder', 'Rechercher un client, une transaction, une opération ou un statut...')
+@section('dashboard_page_title', __('admin_pages.dashboard_title'))
+@section('dashboard_page_subtitle', __('admin_pages.dashboard_subtitle'))
+@section('dashboard_section_label', __('admin_pages.admin_pilotage'))
+@section('dashboard_search_placeholder', __('admin_pages.search_admin_placeholder'))
 @section('dashboard_brand_title', 'Zuider Admin')
-@section('dashboard_brand_subtitle', 'Centre de contrôle')
-@section('sidebar_primary_title', 'Navigation')
+@section('dashboard_brand_subtitle', __('admin_pages.control_center'))
+@section('sidebar_primary_title', __('admin_dashboard.sidebar_navigation'))
 
 @section('sidebar_primary')
     <a href="{{ localized_route('admin.dashboard') }}" class="premium-nav-item is-active flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-blue-700 shadow-sm ring-1 ring-slate-200">
             <i class="fas fa-chart-line"></i>
         </span>
-        <span>Tableau de bord</span>
+        <span>{{ __('admin_pages.dashboard') }}</span>
     </a>
     <a href="{{ localized_route('admin.users') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
             <i class="fas fa-users"></i>
         </span>
-        <span>Utilisateurs</span>
+        <span>{{ __('admin_pages.users') }}</span>
     </a>
     <a href="{{ localized_route('admin.transactions') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
             <i class="fas fa-exchange-alt"></i>
         </span>
-        <span>Virements</span>
+        <span>{{ __('admin_pages.transfers') }}</span>
     </a>
     <a href="{{ localized_route('admin.deposit') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
             <i class="fas fa-plus-circle"></i>
         </span>
-        <span>Dépôt</span>
+        <span>{{ __('admin_pages.deposit') }}</span>
     </a>
 @endsection
 
-@section('sidebar_secondary_title', 'Opérations')
+@section('sidebar_secondary_title', __('admin_dashboard.sidebar_operations'))
 @section('sidebar_secondary')
     <a href="{{ localized_route('admin.settings') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
             <i class="fas fa-gear"></i>
         </span>
-        <span>Paramètres</span>
+        <span>{{ __('admin_pages.settings') }}</span>
     </a>
     <a href="{{ localized_route('admin.export.pdf') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
             <i class="fas fa-file-pdf"></i>
         </span>
-        <span>Export PDF</span>
+        <span>{{ __('admin_pages.export_pdf') }}</span>
     </a>
     <a href="{{ localized_route('admin.export.excel') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
             <i class="fas fa-file-excel"></i>
         </span>
-        <span>Export Excel</span>
+        <span>{{ __('admin_pages.export_excel') }}</span>
     </a>
     <a href="{{ localized_route('home') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
             <i class="fas fa-arrow-left"></i>
         </span>
-        <span>Retour au site</span>
+        <span>{{ __('admin_dashboard.nav_back') }}</span>
     </a>
     <form method="POST" action="{{ localized_route('logout') }}">
         @csrf
@@ -69,7 +69,7 @@
             <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
                 <i class="fas fa-right-from-bracket"></i>
             </span>
-            <span>Déconnexion</span>
+            <span>{{ __('admin_dashboard.nav_logout') }}</span>
         </button>
     </form>
 @endsection
@@ -77,18 +77,18 @@
 @section('sidebar_footer')
     <div class="premium-gradient-card premium-grid-glow relative overflow-hidden rounded-[26px] p-5">
         <div class="relative z-10">
-            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white/65">Governance</p>
-            <h3 class="mt-3 premium-brand-title text-xl font-semibold">Couverture active</h3>
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white/65">{{ __('admin_pages.governance') }}</p>
+            <h3 class="mt-3 premium-brand-title text-xl font-semibold">{{ __('admin_dashboard.active_coverage') }}</h3>
             <p class="mt-2 text-sm leading-6 text-white/78">
-                {{ $activeUsersRate }}% du parc client est actif. Les files prioritaires et le chat admin restent accèssibles depuis ce centre de pilotage.
+                {{ __('admin_dashboard.active_coverage_text', ['rate' => $activeUsersRate]) }}
             </p>
             <div class="mt-5 grid grid-cols-2 gap-3">
                 <div class="rounded-2xl bg-white/10 px-4 py-3">
-                    <p class="text-xs uppercase tracking-[0.16em] text-white/60">Alertes</p>
+                    <p class="text-xs uppercase tracking-[0.16em] text-white/60">{{ __('admin_dashboard.alerts') }}</p>
                     <p class="mt-2 text-lg font-semibold">{{ $unreadNotificationsCount }}</p>
                 </div>
                 <div class="rounded-2xl bg-white/10 px-4 py-3">
-                    <p class="text-xs uppercase tracking-[0.16em] text-white/60">Chat</p>
+                    <p class="text-xs uppercase tracking-[0.16em] text-white/60">{{ __('admin_pages.chat') }}</p>
                     <p class="mt-2 text-lg font-semibold">{{ $chatUnreadCount }}</p>
                 </div>
             </div>
@@ -99,18 +99,18 @@
 @section('topbar_actions')
     <div class="hidden items-center gap-2 rounded-full bg-white/85 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 ring-1 ring-slate-200 md:inline-flex">
         <span class="h-2.5 w-2.5 rounded-full bg-blue-500"></span>
-        Supervision active
+        {{ __('admin_dashboard.active_supervision') }}
     </div>
 @endsection
 
 @section('dashboard_header_actions')
     <a href="{{ localized_route('admin.deposit') }}" class="inline-flex items-center gap-2 rounded-full bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-800">
         <i class="fas fa-plus text-xs"></i>
-        Nouveau dépôt
+        {{ __('admin_pages.new_deposit') }}
     </a>
     <a href="{{ localized_route('admin.export.excel') }}" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
         <i class="fas fa-file-export text-xs"></i>
-        Exporter
+        {{ __('admin_pages.export') }}
     </a>
 @endsection
 
@@ -131,40 +131,40 @@
             <div class="relative z-10">
                 <div class="flex min-w-0 flex-col gap-6 lg:items-start 2xl:flex-row 2xl:justify-between">
                     <div class="min-w-0 max-w-2xl">
-                        <p class="text-sm uppercase tracking-[0.22em] text-white/65">Vue exécutive</p>
+                        <p class="text-sm uppercase tracking-[0.22em] text-white/65">{{ __('admin_pages.executive_view') }}</p>
                         <h2 class="mt-4 premium-page-title text-3xl font-semibold tracking-[-0.05em] sm:text-4xl">
-                            {{ $totalUsers }} clients supervisés
+                            {{ __('admin_pages.supervised_clients', ['count' => $totalUsers]) }}
                         </h2>
                         <p class="mt-3 max-w-xl text-sm leading-6 text-white/78">
-                            Votre back office premium centralise les flux, les validations et les alertes critiques pour accélérer les décisions opérationnelles.
+                            {{ __('admin_pages.admin_backoffice_intro') }}
                         </p>
                     </div>
 
                     <div class="grid w-full gap-3 sm:grid-cols-2 2xl:max-w-[340px]">
                         <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                            <p class="text-xs uppercase tracking-[0.18em] text-white/60">Alertes admin</p>
+                            <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.admin_alerts') }}</p>
                             <p class="mt-2 text-lg font-semibold">{{ $unreadNotificationsCount }}</p>
-                            <p class="mt-1 text-xs text-white/70">Notifications non lues dans le centre de contrôle.</p>
+                            <p class="mt-1 text-xs text-white/70">{{ __('admin_pages.unread_notifications') }}</p>
                         </div>
                         <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                            <p class="text-xs uppercase tracking-[0.18em] text-white/60">Messages entrants</p>
+                            <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.incoming_messages') }}</p>
                             <p class="mt-2 text-lg font-semibold">{{ $chatUnreadCount }}</p>
-                            <p class="mt-1 text-xs text-white/70">Conversations client en attente de réponse.</p>
+                            <p class="mt-1 text-xs text-white/70">{{ __('admin_pages.client_conversations_pending') }}</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="mt-8 grid gap-3 sm:grid-cols-3">
                     <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">Virements 30 jours</p>
+                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.transfers_30d') }}</p>
                         <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $monthlyTransfersFormatted }}</p>
                     </div>
                     <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">Dépôts 30 jours</p>
+                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.deposits_30d') }}</p>
                         <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $monthlyDepositsFormatted }}</p>
                     </div>
                     <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">Succès transactions</p>
+                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.transaction_success') }}</p>
                         <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $transactionSuccessRate }}%</p>
                     </div>
                 </div>
@@ -174,11 +174,11 @@
         <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-5">
             <div class="flex items-start justify-between gap-3">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Priorités</p>
-                    <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">File critique</h2>
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('admin_pages.priorities') }}</p>
+                    <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">{{ __('admin_pages.critical_queue') }}</h2>
                 </div>
                 <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-                    {{ $pendingUsersCount + $pendingTransactionsCount }} éléments
+                    {{ __('admin_pages.items', ['count' => $pendingUsersCount + $pendingTransactionsCount]) }}
                 </span>
             </div>
 
@@ -186,8 +186,8 @@
                 <div class="rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
                     <div class="flex items-center justify-between gap-3">
                         <div>
-                            <p class="text-sm font-semibold text-slate-900">Utilisateurs en attente</p>
-                            <p class="mt-1 text-sm text-slate-500">Validation admin nécessaire pour activer les comptes.</p>
+                            <p class="text-sm font-semibold text-slate-900">{{ __('admin_pages.pending_users') }}</p>
+                            <p class="mt-1 text-sm text-slate-500">{{ __('admin_pages.admin_validation_needed') }}</p>
                         </div>
                         <span class="premium-brand-title text-3xl font-semibold text-slate-900">{{ $pendingUsersCount }}</span>
                     </div>
@@ -196,8 +196,8 @@
                 <div class="rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
                     <div class="flex items-center justify-between gap-3">
                         <div>
-                            <p class="text-sm font-semibold text-slate-900">Transactions à surveiller</p>
-                            <p class="mt-1 text-sm text-slate-500">Opérations en attente ou mises en attente.</p>
+                            <p class="text-sm font-semibold text-slate-900">{{ __('admin_pages.transactions_to_monitor') }}</p>
+                            <p class="mt-1 text-sm text-slate-500">{{ __('admin_pages.pending_operations') }}</p>
                         </div>
                         <span class="premium-brand-title text-3xl font-semibold text-slate-900">{{ $pendingTransactionsCount }}</span>
                     </div>
@@ -211,14 +211,14 @@
                                 <p class="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">{{ $pendingUser->created_at->format('d/m/Y H:i') }}</p>
                             </div>
                             <a href="{{ localized_route('admin.users.edit', ['user' => $pendingUser]) }}" class="inline-flex items-center gap-2 rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-white">
-                                Ouvrir
+                                {{ __('admin_pages.open') }}
                                 <i class="fas fa-arrow-right text-[10px]"></i>
                             </a>
                         </div>
                     @empty
                         <div class="rounded-[22px] border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center">
-                            <p class="text-sm font-semibold text-slate-900">Aucune validation urgente</p>
-                            <p class="mt-2 text-sm text-slate-500">La file d'attente est vide pour le moment.</p>
+                            <p class="text-sm font-semibold text-slate-900">{{ __('admin_pages.no_urgent_validation') }}</p>
+                            <p class="mt-2 text-sm text-slate-500">{{ __('admin_pages.queue_empty') }}</p>
                         </div>
                     @endforelse
                 </div>
@@ -229,46 +229,46 @@
     <section class="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
         <article class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
             <div class="flex items-center justify-between">
-                <span class="text-sm font-semibold text-slate-500">Clients actifs</span>
+                <span class="text-sm font-semibold text-slate-500">{{ __('admin_pages.active_clients') }}</span>
                 <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
                     <i class="fas fa-users"></i>
                 </span>
             </div>
             <p class="premium-kpi-number mt-4 text-3xl font-semibold text-slate-950">{{ $activeUsers }}</p>
-            <p class="mt-2 text-sm text-slate-500">{{ $activeUsersRate }}% de la base utilisateur.</p>
+            <p class="mt-2 text-sm text-slate-500">{{ __('admin_pages.active_user_base', ['rate' => $activeUsersRate]) }}</p>
         </article>
 
         <article class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
             <div class="flex items-center justify-between">
-                <span class="text-sm font-semibold text-slate-500">Transactions</span>
+                <span class="text-sm font-semibold text-slate-500">{{ __('admin_pages.transactions') }}</span>
                 <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
                     <i class="fas fa-arrow-right-arrow-left"></i>
                 </span>
             </div>
             <p class="premium-kpi-number mt-4 text-3xl font-semibold text-slate-950">{{ $totalTransactions }}</p>
-            <p class="mt-2 text-sm text-slate-500">Activité consolidée sur l'ensemble du système.</p>
+            <p class="mt-2 text-sm text-slate-500">{{ __('admin_pages.system_activity') }}</p>
         </article>
 
         <article class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
             <div class="flex items-center justify-between">
-                <span class="text-sm font-semibold text-slate-500">Total virements</span>
+                <span class="text-sm font-semibold text-slate-500">{{ __('admin_pages.total_transfers') }}</span>
                 <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-purple-50 text-purple-700">
                     <i class="fas fa-paper-plane"></i>
                 </span>
             </div>
             <p class="premium-kpi-number mt-4 text-3xl font-semibold text-slate-950">{{ $totalTransfersFormatted }}</p>
-            <p class="mt-2 text-sm text-slate-500">Volume cumule des virements emis.</p>
+            <p class="mt-2 text-sm text-slate-500">{{ __('admin_pages.transfers_volume') }}</p>
         </article>
 
         <article class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
             <div class="flex items-center justify-between">
-                <span class="text-sm font-semibold text-slate-500">Total dépôts</span>
+                <span class="text-sm font-semibold text-slate-500">{{ __('admin_pages.total_deposits') }}</span>
                 <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
                     <i class="fas fa-coins"></i>
                 </span>
             </div>
             <p class="premium-kpi-number mt-4 text-3xl font-semibold text-slate-950">{{ $totalDepositsFormatted }}</p>
-            <p class="mt-2 text-sm text-slate-500">Base creditee sur les comptes clients.</p>
+            <p class="mt-2 text-sm text-slate-500">{{ __('admin_pages.credited_base') }}</p>
         </article>
     </section>
 
@@ -276,10 +276,10 @@
         <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-6 xl:col-span-2 2xl:col-span-1">
             <div class="flex items-center justify-between gap-3">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Users health</p>
-                    <h2 class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">Repartition des statuts</h2>
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('admin_pages.users_health') }}</p>
+                    <h2 class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">{{ __('admin_pages.status_breakdown') }}</h2>
                 </div>
-                <span class="premium-soft-chip rounded-full px-3 py-1 text-xs font-semibold">En direct</span>
+                <span class="premium-soft-chip rounded-full px-3 py-1 text-xs font-semibold">{{ __('admin_pages.live') }}</span>
             </div>
             <div class="mt-6 grid gap-6 2xl:grid-cols-[200px_minmax(0,1fr)]">
                 <div class="relative h-[240px] sm:h-[280px]">
@@ -287,16 +287,16 @@
                 </div>
                 <div class="min-w-0 space-y-4">
                     <div class="rounded-[22px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
-                        <p class="text-sm font-semibold text-slate-900">Actifs</p>
-                        <p class="mt-2 text-sm leading-6 text-slate-500">Clients pleinement opérationnels sur la plateforme.</p>
+                        <p class="text-sm font-semibold text-slate-900">{{ __('admin_pages.active') }}</p>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('admin_pages.active_help') }}</p>
                     </div>
                     <div class="rounded-[22px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
-                        <p class="text-sm font-semibold text-slate-900">Pending</p>
-                        <p class="mt-2 text-sm leading-6 text-slate-500">Comptes a approuver, a verifier ou a relancer.</p>
+                        <p class="text-sm font-semibold text-slate-900">{{ __('admin_pages.pending') }}</p>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('admin_pages.pending_help') }}</p>
                     </div>
                     <div class="rounded-[22px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
-                        <p class="text-sm font-semibold text-slate-900">Suspendus</p>
-                        <p class="mt-2 text-sm leading-6 text-slate-500">Parc sous surveillance renforcee ou bloque.</p>
+                        <p class="text-sm font-semibold text-slate-900">{{ __('admin_pages.suspended') }}</p>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('admin_pages.suspended_help') }}</p>
                     </div>
                 </div>
             </div>
@@ -305,8 +305,8 @@
         <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-6">
             <div class="flex items-center justify-between gap-3">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Cadence</p>
-                    <h2 class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">Volumes 30 jours</h2>
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('admin_pages.cadence') }}</p>
+                    <h2 class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">{{ __('admin_pages.volumes_30_days') }}</h2>
                 </div>
                 <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">EUR</span>
             </div>
@@ -318,10 +318,10 @@
         <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-6 xl:col-span-2 2xl:col-span-1">
             <div class="flex items-center justify-between gap-3">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Onboarding</p>
-                    <h2 class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">Recents</h2>
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('admin_pages.onboarding') }}</p>
+                    <h2 class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">{{ __('admin_pages.recent') }}</h2>
                 </div>
-                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">Nouveaux</span>
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">{{ __('admin_pages.new') }}</span>
             </div>
 
             <div class="mt-6 space-y-3">
@@ -346,11 +346,11 @@
         <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-6">
             <div class="flex items-center justify-between gap-3">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Supervision</p>
-                    <h2 class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">Transactions recentes</h2>
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('admin_pages.supervision') }}</p>
+                    <h2 class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">{{ __('admin_pages.recent_transactions') }}</h2>
                 </div>
                 <a href="{{ localized_route('admin.transactions') }}" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50">
-                    Voir tout
+                    {{ __('admin_pages.view_all') }}
                     <i class="fas fa-arrow-right text-xs"></i>
                 </a>
             </div>
@@ -371,7 +371,7 @@
                                 {{ ucfirst(str_replace('_', ' ', $transaction->type)) }} #{{ $transaction->id }}
                             </p>
                             <p class="mt-1 truncate text-sm text-slate-500">
-                                {{ $transaction->user?->name ?? 'Client inconnu' }} - {{ $transaction->created_at->format('d/m/Y H:i') }}
+                                {{ $transaction->user?->name ?? __('admin_pages.unknown_client') }} - {{ $transaction->created_at->format('d/m/Y H:i') }}
                             </p>
                         </div>
                         <div class="flex flex-wrap items-center gap-3 sm:justify-end">
@@ -385,8 +385,8 @@
                     </div>
                 @empty
                     <div class="rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-5 py-10 text-center">
-                        <p class="text-lg font-semibold text-slate-900">Aucune transaction recente</p>
-                        <p class="mt-2 text-sm text-slate-500">Le flux opérationnel s'affichera ici des qu'un mouvement sera enregistre.</p>
+                        <p class="text-lg font-semibold text-slate-900">{{ __('admin_pages.no_recent_transaction') }}</p>
+                        <p class="mt-2 text-sm text-slate-500">{{ __('admin_pages.recent_transaction_empty_help') }}</p>
                     </div>
                 @endforelse
             </div>
@@ -396,8 +396,8 @@
             <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-6">
                 <div class="flex items-center justify-between gap-3">
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Execution</p>
-                        <h2 class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">Actions rapides</h2>
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('admin_pages.execution') }}</p>
+                        <h2 class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">{{ __('admin_pages.quick_actions') }}</h2>
                     </div>
                     <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">Admin</span>
                 </div>
@@ -409,8 +409,8 @@
                                 <i class="fas fa-user-check"></i>
                             </span>
                             <div>
-                                <p class="text-sm font-semibold text-slate-900">Gerer les utilisateurs</p>
-                                <p class="text-sm text-slate-500">{{ $pendingUsersCount }} validation(s) en attente</p>
+                                <p class="text-sm font-semibold text-slate-900">{{ __('admin_pages.manage_users') }}</p>
+                                <p class="text-sm text-slate-500">{{ __('admin_pages.pending_validations', ['count' => $pendingUsersCount]) }}</p>
                             </div>
                         </div>
                         <i class="fas fa-arrow-right text-slate-300"></i>
@@ -422,8 +422,8 @@
                                 <i class="fas fa-circle-plus"></i>
                             </span>
                             <div>
-                                <p class="text-sm font-semibold text-slate-900">Effectuer un dépôt</p>
-                                <p class="text-sm text-slate-500">Injecter un mouvement crediteur en quelques clics.</p>
+                                <p class="text-sm font-semibold text-slate-900">{{ __('admin_pages.make_deposit') }}</p>
+                                <p class="text-sm text-slate-500">{{ __('admin_pages.make_deposit_help') }}</p>
                             </div>
                         </div>
                         <i class="fas fa-arrow-right text-slate-300"></i>
@@ -435,8 +435,8 @@
                                 <i class="fas fa-sliders"></i>
                             </span>
                             <div>
-                                <p class="text-sm font-semibold text-slate-900">Regler les parametres</p>
-                                <p class="text-sm text-slate-500">Piloter les seuils, messages et comportements systeme.</p>
+                                <p class="text-sm font-semibold text-slate-900">{{ __('admin_pages.set_settings') }}</p>
+                                <p class="text-sm text-slate-500">{{ __('admin_pages.set_settings_help') }}</p>
                             </div>
                         </div>
                         <i class="fas fa-arrow-right text-slate-300"></i>
@@ -457,9 +457,9 @@
 
 @push('premium_dashboard_scripts')
     @php
-        $adminStatusChartLabels = ['Active', 'Pending', 'Suspendus'];
+        $adminStatusChartLabels = [__('admin_pages.active'), __('admin_pages.pending'), __('admin_pages.suspended')];
         $adminStatusChartValues = [$activeUsers, $pendingUsersCount, $suspendedUsersCount];
-        $adminVolumeChartLabels = ['Dépôts 30j', 'Virements 30j'];
+        $adminVolumeChartLabels = [__('admin_pages.chart_deposits_30d'), __('admin_pages.chart_transfers_30d')];
         $adminVolumeChartValues = [round((float) $monthlyDeposits, 2), round((float) $monthlyTransfers, 2)];
     @endphp
     <script>
@@ -502,7 +502,7 @@
                     data: {
                         labels: @json($adminVolumeChartLabels),
                         datasets: [{
-                            label: 'Montant',
+                            label: @js(__('admin_pages.chart_amount')),
                             data: @json($adminVolumeChartValues),
                             backgroundColor: ['rgba(21, 94, 239, 0.82)', 'rgba(34, 197, 94, 0.72)'],
                             borderRadius: 16,

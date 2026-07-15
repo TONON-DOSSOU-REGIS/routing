@@ -15,12 +15,12 @@ class LoginLinkController extends Controller
         $user = User::where('login_link_token', $tokenHash)->first();
         if (!$user) {
             return redirect('/' . $locale . '/login')
-                ->withErrors(['email' => 'Lien de connexion invalide ou expiré.']);
+                ->withErrors(['email' => __('auth_ui.login_link_invalid')]);
         }
 
         if ($user->login_link_expires_at && now()->greaterThan($user->login_link_expires_at)) {
             return redirect('/' . $locale . '/login')
-                ->withErrors(['email' => 'Lien de connexion expiré. Demandez un nouveau lien à votre administrateur.']);
+                ->withErrors(['email' => __('auth_ui.login_link_expired')]);
         }
 
         $user->forceFill([
@@ -30,11 +30,11 @@ class LoginLinkController extends Controller
         $request->session()->flash('prefill_email', $user->email);
 
         if ($user->status === 'pending') {
-            $request->session()->flash('login_link_notice', 'Votre compte est en attente de validation. Vous pouvez tenter de vous connecter mais l\'accès sera refusé tant que le compte n\'est pas approuvé.');
+            $request->session()->flash('login_link_notice', __('auth_ui.login_link_pending_notice'));
         } elseif ($user->status === 'suspended') {
-            $request->session()->flash('login_link_notice', 'Votre compte est suspendu. Contactez l\'administrateur si besoin.');
+            $request->session()->flash('login_link_notice', __('auth_ui.login_link_suspended_notice'));
         } else {
-            $request->session()->flash('login_link_notice', 'Veuillez vous connecter pour accéder à votre espace.');
+            $request->session()->flash('login_link_notice', __('auth_ui.login_link_ready_notice'));
         }
 
         return redirect('/' . $locale . '/login');

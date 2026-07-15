@@ -76,11 +76,11 @@ class AuthController extends Controller
 
                 if ($user->status === 'pending') {
                     return redirect('/' . $locale . '/pending-approval')
-                        ->with('status', 'Votre compte n\'est pas encore approuvé. Veuillez patienter.');
+                        ->with('status', __('auth_ui.account_pending'));
                 }
 
                 return back()->withErrors([
-                    'email' => 'Votre compte est suspendu. Veuillez contacter l\'administrateur.',
+                    'email' => __('auth_ui.account_suspended'),
                 ]);
             }
 
@@ -134,7 +134,7 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'Les identifiants sont incorrects.',
+            'email' => __('auth_ui.invalid_credentials'),
         ]);
     }
 
@@ -206,7 +206,7 @@ class AuthController extends Controller
         }
 
         $locale = app()->getLocale();
-        return redirect('/' . $locale . '/login')->with('success', 'Inscription réussie ! Votre compte est en attente de validation par un administrateur. Vous recevrez un email une fois votre compte validé.');
+        return redirect('/' . $locale . '/login')->with('success', __('auth_ui.registration_pending'));
     }
 
     public function logout(Request $request)

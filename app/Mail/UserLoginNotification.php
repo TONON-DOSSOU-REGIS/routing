@@ -36,7 +36,7 @@ class UserLoginNotification extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Notification de Connexion - Zuider Bank S.A',
+            subject: __('mail.user_login_subject'),
         );
     }
 
@@ -66,4 +66,3 @@ class UserLoginNotification extends Mailable implements ShouldQueue
         return [];
     }
 }
-

@@ -61,7 +61,7 @@ class ChatController extends Controller
     private function formatUserDisplayName(?User $user): string
     {
         if (!$user) {
-            return 'Utilisateur';
+            return __('system_messages.fallback_user');
         }
 
         $fullName = trim(implode(' ', array_filter([
@@ -73,7 +73,7 @@ class ChatController extends Controller
             return $fullName;
         }
 
-        return (string) ($user->email ?? 'Utilisateur');
+        return (string) ($user->email ?? __('system_messages.fallback_user'));
     }
 
     private function formatChatMessage(ChatMessage $message): array
@@ -276,7 +276,7 @@ class ChatController extends Controller
         if (!$request->message && !$request->hasFile('attachment')) {
             return response()->json([
                 'success' => false,
-                'message' => 'Veuillez fournir un message ou une pièce jointe',
+                'message' => __('system_messages.chat_message_required'),
             ], 422);
         }
 

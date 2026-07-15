@@ -32,9 +32,8 @@ class ContactConfirmationMail extends Mailable implements ShouldQueue
         // Explicitly assign contact to variable for compact to work
         $contact = $this->contact;
 
-        return $this->subject('Confirmation de réception - Zuider Bank S.A')
+        return $this->subject(__('mail.contact_confirmation_subject'))
                     ->view('emails.contact_confirmation')
                     ->with(compact('contact'));
     }
 }
-

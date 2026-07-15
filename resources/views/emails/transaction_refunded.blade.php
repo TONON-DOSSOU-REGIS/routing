@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Remboursement de virement - Zuider Bank S.A</title>
+    <title>{{ __('mail_body.refund_title') }}</title>
     @include('partials.favicon')
     <style>
         body {
@@ -93,8 +93,8 @@
 </head>
 <body>
     <div class="header">
-        <h1>💰 Remboursement Effectué</h1>
-        <p>Votre virement a été remboursé</p>
+        <h1>{{ __('mail_body.refund_done_heading') }}</h1>
+        <p>{{ __('mail_body.transfer_refunded') }}</p>
     </div>
     
     <div class="content">
@@ -104,13 +104,13 @@
         
         <p>Bonjour <strong>{{ $transaction->user->first_name }} {{ $transaction->user->last_name }}</strong>,</p>
         
-        <p>Nous vous informons que votre virement a été remboursé sur votre compte Zuider Bank S.A.</p>
+        <p>{{ __('mail_body.transfer_refunded_text') }}</p>
         
         <div class="info-box">
-            <h3 style="margin-top: 0; color: #10b981;">📋 Détails du remboursement</h3>
+            <h3 style="margin-top: 0; color: #10b981;">{{ __('mail_body.refund_details') }}</h3>
             
             <div class="info-row">
-                <span class="label">Montant remboursé:</span>
+                <span class="label">{{ __('mail_body.refunded_amount') }}</span>
                 <span class="value"><strong>{{ number_format($transaction->amount, 2, ',', ' ') }} €</strong></span>
             </div>
             
@@ -120,53 +120,51 @@
             </div>
             
             <div class="info-row">
-                <span class="label">Bénéficiaire initial:</span>
+                <span class="label">{{ __('mail_body.initial_beneficiary') }}</span>
                 <span class="value">{{ $transaction->recipient_name }}</span>
             </div>
             
             <div class="info-row">
-                <span class="label">Date du virement:</span>
+                <span class="label">{{ __('mail_body.transfer_date') }}</span>
                 <span class="value">{{ $transaction->created_at->format('d/m/Y à H:i') }}</span>
             </div>
             
             <div class="info-row">
-                <span class="label">Date du remboursement:</span>
+                <span class="label">{{ __('mail_body.refund_date') }}</span>
                 <span class="value">{{ now()->format('d/m/Y à H:i') }}</span>
             </div>
             
             @if($refundReason)
             <div class="info-row">
-                <span class="label">Motif du remboursement:</span>
+                <span class="label">{{ __('mail_body.refund_reason') }}</span>
                 <span class="value">{{ $refundReason }}</span>
             </div>
             @endif
         </div>
         
         <div class="alert-success">
-            <strong>✅ Fonds crédités:</strong> Le montant de {{ number_format($transaction->amount, 2, ',', ' ') }} € a été recrédité sur votre compte.
+            <strong>{{ __('mail_body.funds_credited') }}</strong> {{ __('mail_body.funds_credited_text', ['amount' => number_format($transaction->amount, 2, ',', ' ')]) }}
         </div>
         
         <div style="text-align: center; margin: 30px 0;">
             <a href="{{ url('/dashboard') }}" class="button">
-                Voir mon compte
+                {{ __('mail_body.view_account') }}
             </a>
         </div>
         
         <p style="margin-top: 30px; color: #666; font-size: 14px;">
-            Votre nouveau solde est disponible immédiatement. Vous pouvez consulter votre compte pour vérifier le remboursement.
+            {{ __('mail_body.refund_balance_available') }}
         </p>
         
         <p style="color: #666; font-size: 14px;">
-            Si vous avez des questions concernant ce remboursement, n'hésitez pas à contacter notre service client.
+            {{ __('mail_body.refund_questions') }}
         </p>
     </div>
     
     <div class="footer">
         <p>Merci de votre confiance !</p>
-        <p>© {{ date('Y') }} Zuider Bank S.A. Tous droits réservés.</p>
+        <p>© {{ date('Y') }} Zuider Bank S.A. {{ __('admin_dashboard.footer_rights') }}</p>
     </div>
 </body>
 </html>
-
-
 

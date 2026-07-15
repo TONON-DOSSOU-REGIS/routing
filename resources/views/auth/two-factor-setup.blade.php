@@ -1,5 +1,5 @@
-﻿<!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,49 +7,393 @@
     @include('partials.favicon')
     @vite(['resources/css/app.css'])
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --navy: #06172c;
+            --ink: #0f172a;
+            --muted: #64748b;
+            --line: #dbe5f0;
+            --gold: #d9a441;
+            --blue: #0b5cff;
+            --cyan: #00b8d9;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
+            margin: 0;
+            min-height: 100vh;
             font-family: 'Manrope', sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 12% 10%, rgba(11, 92, 255, .15), transparent 28%),
+                radial-gradient(circle at 88% 6%, rgba(217, 164, 65, .18), transparent 24%),
+                linear-gradient(180deg, #06172c 0%, #0b1e36 34%, #f6f9fd 34%, #ffffff 100%);
         }
 
-        @keyframes securityFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+        .tf-shell {
+            width: min(100% - 36px, 1220px);
+            margin: 0 auto;
+            padding: 28px 0 52px;
         }
 
-        @keyframes securityPulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+        .tf-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 30px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, .14);
+            border-radius: 28px;
+            background: rgba(255, 255, 255, .08);
+            backdrop-filter: blur(18px);
         }
 
-        @keyframes securitySweep {
-            0% { transform: translateX(-130%); }
-            100% { transform: translateX(130%); }
+        .tf-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: #ffffff;
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
         }
 
-        .security-float {
-            animation: securityFloat 7s ease-in-out infinite;
+        .tf-brand img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
         }
 
-        .security-pulse {
-            animation: securityPulse 2.6s ease-in-out infinite;
+        .tf-back {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 46px;
+            padding: 0 18px;
+            border: 1px solid rgba(255, 255, 255, .18);
+            border-radius: 999px;
+            color: #ffffff;
+            font-size: .9rem;
+            font-weight: 800;
+            background: rgba(255, 255, 255, .08);
+            transition: transform .2s ease, background .2s ease;
         }
 
-        .security-sweep {
-            position: relative;
+        .tf-back:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, .14);
+        }
+
+        .tf-grid {
+            display: grid;
+            grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+            gap: 26px;
+            align-items: stretch;
+        }
+
+        .tf-hero,
+        .tf-panel,
+        .tf-card {
+            border: 1px solid rgba(219, 229, 240, .9);
+            border-radius: 32px;
+            box-shadow: 0 28px 80px rgba(15, 23, 42, .12);
+        }
+
+        .tf-hero {
+            position: sticky;
+            top: 24px;
             overflow: hidden;
+            min-height: 640px;
+            padding: clamp(26px, 3vw, 36px);
+            color: #ffffff;
+            background:
+                radial-gradient(circle at 84% 14%, rgba(0, 184, 217, .26), transparent 28%),
+                radial-gradient(circle at 16% 84%, rgba(217, 164, 65, .18), transparent 30%),
+                linear-gradient(145deg, #06172c, #0b2340 62%, #071426);
         }
 
-        .security-sweep::after {
-            content: '';
+        .tf-hero::before {
+            content: "";
             position: absolute;
             inset: 0;
-            background: linear-gradient(110deg, transparent 10%, rgba(255, 255, 255, 0.18) 45%, transparent 80%);
-            transform: translateX(-130%);
-            animation: securitySweep 5.8s linear infinite;
+            background:
+                linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+                linear-gradient(180deg, rgba(255,255,255,.04) 1px, transparent 1px);
+            background-size: 76px 76px;
+            mask-image: linear-gradient(180deg, #000 0%, transparent 78%);
             pointer-events: none;
+        }
+
+        .tf-hero > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .tf-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 13px;
+            border: 1px solid rgba(255, 255, 255, .16);
+            border-radius: 999px;
+            color: #b9efff;
+            font-size: .72rem;
+            font-weight: 800;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, .08);
+        }
+
+        .tf-title {
+            max-width: 560px;
+            margin: 24px 0 0;
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.55rem);
+            line-height: 1.05;
+            letter-spacing: -.055em;
+        }
+
+        .tf-lead {
+            max-width: 560px;
+            margin: 18px 0 0;
+            color: rgba(255, 255, 255, .76);
+            font-size: 1rem;
+            line-height: 1.75;
+        }
+
+        .tf-status-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .tf-status-card {
+            display: grid;
+            grid-template-columns: 42px minmax(0, 1fr);
+            column-gap: 14px;
+            align-items: center;
+            min-height: auto;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, .07);
+        }
+
+        .tf-status-card span {
+            display: inline-flex;
+            width: 38px;
+            height: 38px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+        }
+
+        .tf-status-card strong {
+            display: block;
+            margin-top: 0;
+            color: #ffffff;
+            font-size: .95rem;
+        }
+
+        .tf-status-card p {
+            grid-column: 2;
+            margin: 5px 0 0;
+            color: rgba(255, 255, 255, .62);
+            font-size: .78rem;
+            line-height: 1.5;
+        }
+
+        .tf-progress {
+            margin-top: 28px;
+            padding: 22px;
+            border: 1px solid rgba(255, 255, 255, .14);
+            border-radius: 28px;
+            background: rgba(255, 255, 255, .08);
+        }
+
+        .tf-progress-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .tf-progress-bar {
+            overflow: hidden;
+            height: 10px;
+            margin-top: 18px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .12);
+        }
+
+        .tf-progress-bar div {
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--blue), var(--cyan), #2dd4bf);
+        }
+
+        .tf-note {
+            margin-top: 22px;
+            padding: 18px;
+            border: 1px solid rgba(245, 158, 11, .26);
+            border-radius: 24px;
+            color: #fff7ed;
+            background: rgba(245, 158, 11, .12);
+        }
+
+        .tf-note p {
+            margin: 0;
+            color: rgba(255, 247, 237, .86);
+            font-size: .88rem;
+            line-height: 1.65;
+        }
+
+        .tf-panel {
+            overflow: hidden;
+            background: rgba(255, 255, 255, .94);
+            backdrop-filter: blur(18px);
+        }
+
+        .tf-panel-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            padding: clamp(22px, 3vw, 32px);
+            border-bottom: 1px solid var(--line);
+            background:
+                radial-gradient(circle at top right, rgba(11, 92, 255, .08), transparent 32%),
+                linear-gradient(180deg, #ffffff, #f8fbff);
+        }
+
+        .tf-panel-head h2,
+        .tf-card h3 {
+            margin: 0;
+            font-family: 'Sora', sans-serif;
+            color: #071426;
+            letter-spacing: -.035em;
+        }
+
+        .tf-panel-head h2 {
+            margin-top: 8px;
+            font-size: clamp(1.35rem, 2.4vw, 2.05rem);
+        }
+
+        .tf-panel-head p,
+        .tf-card p {
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .tf-panel-body {
+            display: grid;
+            gap: 18px;
+            padding: clamp(20px, 3vw, 32px);
+        }
+
+        .tf-alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 15px;
+            border-radius: 20px;
+            font-size: .9rem;
+            font-weight: 700;
+            line-height: 1.55;
+        }
+
+        .tf-alert.success {
+            color: #047857;
+            border: 1px solid #a7f3d0;
+            background: #ecfdf5;
+        }
+
+        .tf-alert.error {
+            color: #b42318;
+            border: 1px solid #fecaca;
+            background: #fff1f2;
+        }
+
+        .tf-cards {
+            display: grid;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .tf-card {
+            padding: clamp(18px, 2.2vw, 24px);
+            background: #ffffff;
+        }
+
+        .tf-secret-card,
+        .tf-backups {
+            grid-column: 1 / -1;
+        }
+
+        .tf-enable-card,
+        .tf-disable-card {
+            grid-column: span 6;
+        }
+
+        .tf-card h3 {
+            font-size: 1.12rem;
+        }
+
+        .tf-card p {
+            margin: 8px 0 0;
+            font-size: .92rem;
+        }
+
+        .tf-card-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .tf-card-icon {
+            flex: 0 0 auto;
+            display: inline-flex;
+            width: 48px;
+            height: 48px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            box-shadow: 0 16px 34px rgba(11, 92, 255, .22);
+        }
+
+        .tf-qr-layout {
+            display: grid;
+            grid-template-columns: minmax(220px, 250px) minmax(0, 1fr);
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .tf-qr-box {
+            padding: 14px;
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            background: #f8fbff;
+        }
+
+        .tf-qr-inner {
+            overflow: hidden;
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            background: #ffffff;
         }
 
         .twofactor-qr-svg {
@@ -57,374 +401,510 @@
             width: 100%;
             height: auto;
         }
+
+        .tf-secret-box,
+        .tf-otpauth-box {
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            background: #f8fbff;
+        }
+
+        .tf-label {
+            margin: 0 0 8px;
+            color: #94a3b8;
+            font-size: .68rem;
+            font-weight: 900;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+
+        .tf-secret-value,
+        .tf-otpauth-value,
+        .tf-backup-code {
+            overflow-wrap: anywhere;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        .tf-secret-value {
+            color: #071426;
+            font-size: 1.02rem;
+            font-weight: 900;
+            line-height: 1.7;
+        }
+
+        .tf-otpauth-value {
+            color: #475569;
+            font-size: .78rem;
+            line-height: 1.65;
+        }
+
+        .tf-copy {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 9px 12px;
+            border: 1px solid #bfdbfe;
+            border-radius: 999px;
+            color: #1d4ed8;
+            font-size: .78rem;
+            font-weight: 900;
+            background: #eff6ff;
+            cursor: pointer;
+        }
+
+        .tf-code-input,
+        .tf-password-input {
+            width: 100%;
+            border: 1px solid var(--line);
+            outline: none;
+            color: #071426;
+            background: #ffffff;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .tf-code-input {
+            min-height: 68px;
+            border-radius: 22px;
+            padding: 0 18px;
+            text-align: center;
+            font-size: clamp(1.25rem, 4vw, 2rem);
+            font-weight: 900;
+            letter-spacing: .42em;
+        }
+
+        .tf-password-input {
+            min-height: 54px;
+            border-radius: 18px;
+            padding: 0 16px;
+            font-size: .95rem;
+        }
+
+        .tf-code-input:focus,
+        .tf-password-input:focus {
+            border-color: rgba(11, 92, 255, .46);
+            box-shadow: 0 0 0 5px rgba(11, 92, 255, .10);
+        }
+
+        .tf-button {
+            display: inline-flex;
+            width: 100%;
+            min-height: 54px;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 0;
+            border-radius: 18px;
+            color: #ffffff;
+            font-weight: 900;
+            cursor: pointer;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .tf-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .tf-button.primary {
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            box-shadow: 0 18px 38px rgba(11, 92, 255, .24);
+        }
+
+        .tf-button.dark {
+            background: #071426;
+            box-shadow: 0 18px 34px rgba(15, 23, 42, .18);
+        }
+
+        .tf-help {
+            margin-top: 16px;
+            padding: 15px;
+            border: 1px solid #dbeafe;
+            border-radius: 20px;
+            color: #475569;
+            background: #f8fbff;
+            font-size: .88rem;
+            line-height: 1.65;
+        }
+
+        .tf-backups {
+            border-color: #fde68a;
+            background: linear-gradient(180deg, #fffbeb, #ffffff);
+        }
+
+        .tf-backup-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .tf-backup-code {
+            padding: 12px;
+            border: 1px solid #fde68a;
+            border-radius: 16px;
+            color: #92400e;
+            text-align: center;
+            font-size: .83rem;
+            font-weight: 900;
+            letter-spacing: .08em;
+            background: #ffffff;
+        }
+
+        .tf-footer-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-top: 6px;
+            padding-top: 18px;
+            border-top: 1px solid var(--line);
+        }
+
+        .tf-footer-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 11px 14px;
+            border-radius: 999px;
+            color: #475569;
+            font-size: .86rem;
+            font-weight: 800;
+            background: #f1f5f9;
+        }
+
+        @media (max-width: 1120px) {
+            body {
+                background:
+                    radial-gradient(circle at top left, rgba(11, 92, 255, .15), transparent 30%),
+                    linear-gradient(180deg, #06172c 0%, #0b1e36 24%, #f6f9fd 24%, #ffffff 100%);
+            }
+
+            .tf-grid,
+            .tf-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .tf-secret-card,
+            .tf-enable-card,
+            .tf-disable-card,
+            .tf-backups {
+                grid-column: 1 / -1;
+            }
+
+            .tf-hero {
+                position: relative;
+                top: auto;
+                min-height: auto;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .tf-shell {
+                width: min(100% - 24px, 1220px);
+                padding-top: 14px;
+            }
+
+            .tf-nav,
+            .tf-panel-head,
+            .tf-footer-row {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .tf-back,
+            .tf-footer-pill {
+                width: 100%;
+            }
+
+            .tf-title {
+                font-size: 2.05rem;
+            }
+
+            .tf-status-grid,
+            .tf-qr-layout,
+            .tf-backup-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tf-code-input {
+                letter-spacing: .28em;
+            }
+        }
     </style>
 </head>
-<body class="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.16),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(249,115,22,0.18),_transparent_28%),linear-gradient(180deg,#f8fafc_0%,#eef2ff_52%,#f8fafc_100%)] text-slate-900">
-    @php
-        $setupProgress = $user->two_factor_enabled ? 100 : 68;
-        $backupCodeCount = is_array($backupCodes ?? null) ? count($backupCodes) : 10;
-        $maskedSecret = $user->two_factor_secret
-            ? substr($user->two_factor_secret, 0, 4) . ' **** ' . substr($user->two_factor_secret, -4)
-            : '----';
-    @endphp
+<body>
+@php
+    $setupProgress = $user->two_factor_enabled ? 100 : 66;
+    $backupCodeCount = is_array($backupCodes ?? null) ? count($backupCodes) : 10;
+    $maskedSecret = $user->two_factor_secret
+        ? substr($user->two_factor_secret, 0, 4) . ' •••• ' . substr($user->two_factor_secret, -4)
+        : '----';
+@endphp
 
-    <div class="relative overflow-hidden">
-        <div class="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top,_rgba(30,64,175,0.18),_transparent_58%)]"></div>
-        <div class="pointer-events-none absolute -top-16 left-10 h-40 w-40 rounded-full bg-blue-200/50 blur-3xl"></div>
-        <div class="pointer-events-none absolute bottom-0 right-0 h-56 w-56 rounded-full bg-orange-200/40 blur-3xl"></div>
+<div class="tf-shell">
+    <nav class="tf-nav" aria-label="{{ __('auth_ui.security') }}">
+        <a class="tf-brand" href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}">
+            <img src="{{ asset('images/zuider-logo-white.png') }}" alt="Zuider Bank S.A">
+            <span>Zuider Bank S.A</span>
+        </a>
+        <a class="tf-back" href="{{ $dashboardUrl }}">
+            <i class="fas fa-arrow-left"></i>
+            {{ __('auth.2fa_back_dashboard') }}
+        </a>
+    </nav>
 
-        <div class="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
-            <div class="grid gap-8 xl:grid-cols-[0.92fr,1.08fr]">
-                <section class="security-float overflow-hidden rounded-[2rem] border border-slate-800/60 bg-slate-950 text-white shadow-[0_35px_100px_rgba(15,23,42,0.38)]">
-                    <div class="relative h-full overflow-hidden px-6 py-7 sm:px-8 sm:py-9">
-                        <div class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-blue-500/20 blur-3xl"></div>
-                        <div class="absolute -left-14 bottom-0 h-48 w-48 rounded-full bg-orange-400/10 blur-3xl"></div>
+    <main class="tf-grid">
+        <aside class="tf-hero">
+            <span class="tf-kicker">
+                <i class="fas fa-shield-halved"></i>
+                Zuider Secure Access
+            </span>
 
-                        <div class="relative z-10">
-                            <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-blue-100">
-                                <span class="h-2.5 w-2.5 rounded-full bg-emerald-400 security-pulse"></span>
-                                Zuider Bank S.A
-                            </span>
+            <h1 class="tf-title">{{ __('auth.2fa_setup_heading') }}</h1>
+            <p class="tf-lead">{{ __('auth.2fa_setup_description') }}</p>
 
-                            <h1 class="mt-6 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                                {{ __('auth.2fa_setup_heading') }}
-                            </h1>
-                            <p class="mt-4 max-w-xl text-base leading-7 text-slate-300 sm:text-lg">
-                                {{ __('auth.2fa_setup_description') }}
-                            </p>
+            @if (!empty($isAdminTwoFactorMandatory))
+                <div class="tf-note">
+                    <p><i class="fas fa-user-shield"></i> {{ __('auth.2fa_admin_mandatory_notice') }}</p>
+                </div>
+            @endif
 
-                            <div class="mt-6 flex flex-wrap gap-3">
-                                <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200">
-                                    <i class="fas fa-shield-halved text-emerald-300"></i>
-                                    {{ __('auth.2fa_secret_title') }}
-                                </div>
-                                <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200">
-                                    <i class="fas fa-mobile-screen-button text-blue-300"></i>
-                                    {{ __('auth.2fa_enable_title') }}
-                                </div>
-                                <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200">
-                                    <i class="fas fa-key text-orange-300"></i>
-                                    {{ __('auth.2fa_backup_title') }}
-                                </div>
-                            </div>
-
-                            @if (!empty($isAdminTwoFactorMandatory))
-                                <div class="mt-6 rounded-[1.4rem] border border-amber-300/25 bg-amber-400/10 px-5 py-4 text-amber-100">
-                                    <div class="flex items-start gap-3">
-                                        <div class="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-300/15 text-amber-200">
-                                            <i class="fas fa-user-shield"></i>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-amber-200">Admin</p>
-                                            <p class="mt-2 text-sm leading-6 text-amber-50/90">{{ __('auth.2fa_admin_mandatory_notice') }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-
-                            <div class="mt-8 grid gap-4 sm:grid-cols-3">
-                                <div class="rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
-                                    <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400">{{ __('auth.2fa_secret_title') }}</p>
-                                    <p class="mt-3 text-lg font-bold text-white">{{ $maskedSecret }}</p>
-                                    <p class="mt-2 text-xs text-slate-300">{{ __('auth.2fa_secret_hint') }}</p>
-                                </div>
-                                <div class="rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
-                                    <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400">{{ __('auth.2fa_enable_title') }}</p>
-                                    <p class="mt-3 text-3xl font-bold text-white">6</p>
-                                    <p class="mt-2 text-xs text-slate-300">{{ __('auth.2fa_enable_hint') }}</p>
-                                </div>
-                                <div class="rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
-                                    <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400">{{ __('auth.2fa_backup_title') }}</p>
-                                    <p class="mt-3 text-3xl font-bold text-white">{{ $backupCodeCount }}</p>
-                                    <p class="mt-2 text-xs text-slate-300">{{ __('auth.2fa_backup_hint') }}</p>
-                                </div>
-                            </div>
-
-                            <div class="security-sweep mt-8 overflow-hidden rounded-[1.9rem] border border-white/10 bg-white/5 p-5 sm:p-6">
-                                <div class="flex items-start justify-between gap-4">
-                                    <div>
-                                        <p class="text-[11px] uppercase tracking-[0.3em] text-orange-200">{{ __('auth.2fa_setup_heading') }}</p>
-                                        <h2 class="mt-3 text-2xl font-bold text-white">{{ __('auth.2fa_setup_heading') }}</h2>
-                                    </div>
-                                    <div class="rounded-2xl border border-emerald-300/20 bg-emerald-400/10 px-4 py-3 text-right">
-                                        <p class="text-[11px] uppercase tracking-[0.2em] text-emerald-200">2FA</p>
-                                        <p class="mt-1 text-2xl font-bold text-emerald-300">{{ $setupProgress }}%</p>
-                                    </div>
-                                </div>
-
-                                <div class="mt-5 h-3 w-full overflow-hidden rounded-full bg-white/10">
-                                    <div class="h-3 rounded-full bg-gradient-to-r from-blue-400 via-sky-300 to-emerald-400" style="width: {{ $setupProgress }}%"></div>
-                                </div>
-
-                                <div class="mt-6 grid gap-3 sm:grid-cols-3">
-                                    <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
-                                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500">01</p>
-                                        <p class="mt-2 font-semibold text-white">{{ __('auth.2fa_secret_title') }}</p>
-                                        <p class="mt-2 text-xs text-slate-400">{{ __('auth.2fa_secret_hint') }}</p>
-                                    </div>
-                                    <div class="rounded-2xl border border-blue-300/20 bg-blue-400/10 px-4 py-4">
-                                        <p class="text-xs uppercase tracking-[0.2em] text-blue-200">02</p>
-                                        <p class="mt-2 font-semibold text-white">{{ __('auth.2fa_enable_title') }}</p>
-                                        <p class="mt-2 text-xs text-slate-300">{{ __('auth.2fa_enable_hint') }}</p>
-                                    </div>
-                                    <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
-                                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500">03</p>
-                                        <p class="mt-2 font-semibold text-white">{{ __('auth.2fa_backup_title') }}</p>
-                                        <p class="mt-2 text-xs text-slate-400">{{ __('auth.2fa_backup_hint') }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="space-y-6">
-                    <div class="rounded-[2rem] border border-white/70 bg-white/92 p-5 shadow-[0_30px_90px_rgba(148,163,184,0.18)] backdrop-blur-xl sm:p-7">
-                        <div class="flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-start sm:justify-between">
-                            <div>
-                                <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-400">Zuider Bank S.A</p>
-                                <h2 class="mt-3 text-2xl font-bold text-slate-950">{{ __('auth.2fa_setup_heading') }}</h2>
-                                <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-500">{{ __('auth.2fa_setup_description') }}</p>
-                            </div>
-                            <div class="rounded-[1.3rem] border border-slate-200 bg-slate-50 px-4 py-3">
-                                <p class="text-[11px] uppercase tracking-[0.24em] text-slate-400">{{ __('auth.2fa_otpauth_label') }}</p>
-                                <p class="mt-1 text-sm font-semibold text-slate-900 break-all">{{ $user->email }}</p>
-                            </div>
-                        </div>
-
-                        @if (session('status'))
-                            <div class="mt-5 rounded-[1.25rem] border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-700">
-                                <div class="flex items-start gap-3">
-                                    <div class="mt-0.5 flex h-9 w-9 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600">
-                                        <i class="fas fa-circle-check"></i>
-                                    </div>
-                                    <p class="text-sm font-medium leading-6">{{ session('status') }}</p>
-                                </div>
-                            </div>
-                        @endif
-
-                        @if ($errors->any())
-                            <div class="mt-5 rounded-[1.25rem] border border-red-200 bg-red-50 px-4 py-3 text-red-700">
-                                <div class="flex items-start gap-3">
-                                    <div class="mt-0.5 flex h-9 w-9 items-center justify-center rounded-2xl bg-red-100 text-red-600">
-                                        <i class="fas fa-triangle-exclamation"></i>
-                                    </div>
-                                    <p class="text-sm font-medium leading-6">{{ $errors->first() }}</p>
-                                </div>
-                            </div>
-                        @endif
-
-                        <div class="mt-6 grid gap-6 xl:grid-cols-2">
-                            <div class="rounded-[1.6rem] border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-slate-100 p-5 shadow-sm">
-                                <div class="flex items-start justify-between gap-4">
-                                    <div>
-                                        <h3 class="text-lg font-bold text-slate-950">{{ __('auth.2fa_secret_title') }}</h3>
-                                        <p class="mt-1 text-sm leading-6 text-slate-500">{{ __('auth.2fa_secret_hint') }}</p>
-                                    </div>
-                                    <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                                        <i class="fas fa-key"></i>
-                                    </div>
-                                </div>
-
-                                <div class="mt-5 grid gap-4 lg:grid-cols-[190px,minmax(0,1fr)]">
-                                    <div class="rounded-[1.35rem] border border-slate-200 bg-white p-4 shadow-sm">
-                                        <div class="flex items-center justify-between gap-3">
-                                            <p class="text-[11px] font-semibold uppercase tracking-[0.25em] text-slate-400">QR</p>
-                                            <span class="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                                                <i class="fas fa-qrcode"></i>
-                                            </span>
-                                        </div>
-
-                                        <div class="mt-4 overflow-hidden rounded-[1.15rem] border border-slate-200 bg-white p-3">
-                                            @if (!empty($qrSvg))
-                                                {!! $qrSvg !!}
-                                            @else
-                                                <div class="flex aspect-square items-center justify-center rounded-[0.9rem] bg-slate-100 text-slate-400">
-                                                    <i class="fas fa-qrcode text-3xl"></i>
-                                                </div>
-                                            @endif
-                                        </div>
-
-                                        <p class="mt-3 text-xs leading-5 text-slate-500">{{ __('auth.2fa_secret_hint') }}</p>
-                                    </div>
-
-                                    <div class="space-y-4">
-                                        <div class="rounded-[1.2rem] border border-slate-200 bg-white px-4 py-4">
-                                            <div class="flex items-center justify-between gap-3">
-                                                <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400">{{ __('auth.2fa_secret_title') }}</p>
-                                                <button
-                                                    type="button"
-                                                    data-copy-secret-button
-                                                    data-secret="{{ $user->two_factor_secret }}"
-                                                    data-label-default="{{ __('auth.2fa_copy_secret') }}"
-                                                    data-label-success="{{ __('auth.2fa_copy_secret_success') }}"
-                                                    class="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 transition hover:bg-blue-100"
-                                                >
-                                                    <i class="fas fa-copy text-[11px]"></i>
-                                                    <span>{{ __('auth.2fa_copy_secret') }}</span>
-                                                </button>
-                                            </div>
-                                            <div class="mt-3 break-all font-mono text-lg font-semibold text-slate-950">{{ $user->two_factor_secret }}</div>
-                                            <p data-copy-secret-feedback class="mt-3 hidden text-xs font-medium text-emerald-600" aria-live="polite">
-                                                {{ __('auth.2fa_copy_secret_success') }}
-                                            </p>
-                                        </div>
-
-                                        <div class="rounded-[1.2rem] border border-slate-200 bg-white px-4 py-4">
-                                            <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400">{{ __('auth.2fa_otpauth_label') }}</p>
-                                            <div class="mt-3 break-all font-mono text-sm leading-6 text-slate-600">{{ $otpauth }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="rounded-[1.6rem] border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-5 shadow-sm">
-                                <div class="flex items-start justify-between gap-4">
-                                    <div>
-                                        <h3 class="text-lg font-bold text-slate-950">{{ __('auth.2fa_enable_title') }}</h3>
-                                        <p class="mt-1 text-sm leading-6 text-slate-500">{{ __('auth.2fa_enable_hint') }}</p>
-                                    </div>
-                                    <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-blue-700 shadow-sm">
-                                        <i class="fas fa-mobile-screen-button"></i>
-                                    </div>
-                                </div>
-
-                                <form method="POST" action="{{ localized_route('twofactor.enable', ['locale' => app()->getLocale()]) }}" class="mt-5 space-y-4">
-                                    @csrf
-                                    <div class="rounded-[1.25rem] border border-blue-100 bg-white p-3 shadow-sm">
-                                        <input
-                                            type="text"
-                                            name="code"
-                                            inputmode="numeric"
-                                            autocomplete="one-time-code"
-                                            maxlength="6"
-                                            spellcheck="false"
-                                            class="w-full border-0 bg-transparent px-2 py-2 text-center text-2xl font-bold tracking-[0.45em] text-slate-950 outline-none placeholder:text-slate-300"
-                                            placeholder="{{ __('auth.2fa_code_placeholder') }}"
-                                        >
-                                    </div>
-
-                                    <button type="submit" class="inline-flex w-full items-center justify-center gap-3 rounded-[1.25rem] bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-600 px-5 py-3.5 text-sm font-semibold text-white shadow-[0_16px_34px_rgba(37,99,235,0.28)] transition hover:-translate-y-0.5 hover:shadow-[0_20px_40px_rgba(37,99,235,0.35)]">
-                                        <i class="fas fa-shield-alt"></i>
-                                        {{ __('auth.2fa_enable_button') }}
-                                    </button>
-                                </form>
-
-                                <div class="mt-5 rounded-[1.2rem] border border-blue-100 bg-white/85 px-4 py-4">
-                                    <div class="flex items-start gap-3">
-                                        <div class="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                                            <i class="fas fa-circle-info"></i>
-                                        </div>
-                                        <p class="text-sm leading-6 text-slate-600">{{ __('auth.2fa_enable_hint') }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        @if (!empty($backupCodes))
-                            <div class="mt-6 rounded-[1.7rem] border border-amber-200 bg-gradient-to-br from-amber-50 to-white p-5 shadow-sm">
-                                <div class="flex flex-col gap-4 border-b border-amber-200 pb-4 sm:flex-row sm:items-start sm:justify-between">
-                                    <div>
-                                        <h3 class="text-lg font-bold text-amber-950">{{ __('auth.2fa_backup_title') }}</h3>
-                                        <p class="mt-1 text-sm leading-6 text-amber-900/80">{{ __('auth.2fa_backup_hint') }}</p>
-                                    </div>
-                                    <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-amber-700 shadow-sm">
-                                        <i class="fas fa-lock"></i>
-                                    </div>
-                                </div>
-
-                                <div class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                                    @foreach ($backupCodes as $code)
-                                        <div class="rounded-[1rem] border border-amber-200 bg-white px-4 py-3 text-center font-mono text-sm font-semibold tracking-[0.12em] text-amber-900 shadow-sm">
-                                            {{ $code }}
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
-
-                        @unless (!empty($isAdminTwoFactorMandatory))
-                            <div class="mt-6 rounded-[1.7rem] border border-slate-200 bg-slate-50/80 p-5 shadow-sm">
-                                <div class="flex items-start justify-between gap-4">
-                                    <div>
-                                        <h3 class="text-lg font-bold text-slate-950">{{ __('auth.2fa_disable_title') }}</h3>
-                                        <p class="mt-1 text-sm leading-6 text-slate-500">{{ __('auth.2fa_disable_hint') }}</p>
-                                    </div>
-                                    <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-slate-700 shadow-sm">
-                                        <i class="fas fa-power-off"></i>
-                                    </div>
-                                </div>
-
-                                <form method="POST" action="{{ localized_route('twofactor.disable', ['locale' => app()->getLocale()]) }}" class="mt-5 space-y-4">
-                                    @csrf
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        autocomplete="current-password"
-                                        class="w-full rounded-[1.2rem] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-300 focus:ring-4 focus:ring-slate-200/60"
-                                        placeholder="{{ __('auth.2fa_password_placeholder') }}"
-                                    >
-                                    <button type="submit" class="inline-flex w-full items-center justify-center gap-3 rounded-[1.25rem] bg-slate-900 px-5 py-3.5 text-sm font-semibold text-white shadow-[0_16px_30px_rgba(15,23,42,0.18)] transition hover:-translate-y-0.5 hover:bg-black">
-                                        <i class="fas fa-lock-open"></i>
-                                        {{ __('auth.2fa_disable_button') }}
-                                    </button>
-                                </form>
-                            </div>
-                        @endunless
-
-                        <div class="mt-6 flex flex-col gap-4 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
-                            <a href="{{ $dashboardUrl }}" class="inline-flex items-center gap-3 rounded-[1.15rem] border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-blue-200 hover:text-blue-700">
-                                <i class="fas fa-arrow-left"></i>
-                                {{ __('auth.2fa_back_dashboard') }}
-                            </a>
-
-                            <div class="inline-flex items-center gap-3 rounded-[1.15rem] bg-slate-50 px-4 py-3 text-sm text-slate-500">
-                                <i class="fas fa-shield-check text-emerald-600"></i>
-                                <span>{{ __('auth.2fa_setup_heading') }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+            <div class="tf-status-grid">
+                <article class="tf-status-card">
+                    <span><i class="fas fa-key"></i></span>
+                    <strong>{{ $maskedSecret }}</strong>
+                    <p>{{ __('auth.2fa_secret_hint') }}</p>
+                </article>
+                <article class="tf-status-card">
+                    <span><i class="fas fa-mobile-screen-button"></i></span>
+                    <strong>6 digits</strong>
+                    <p>{{ __('auth.2fa_enable_hint') }}</p>
+                </article>
+                <article class="tf-status-card">
+                    <span><i class="fas fa-lock"></i></span>
+                    <strong>{{ $backupCodeCount }}</strong>
+                    <p>{{ __('auth.2fa_backup_hint') }}</p>
+                </article>
             </div>
-        </div>
-    </div>
-</body>
+
+            <div class="tf-progress">
+                <div class="tf-progress-head">
+                    <div>
+                        <p class="tf-label" style="color: rgba(255,255,255,.48); margin-bottom: 6px;">2FA progress</p>
+                        <strong>{{ $user->two_factor_enabled ? __('auth.2fa_enabled') : __('auth.2fa_enable_title') }}</strong>
+                    </div>
+                    <strong style="color:#7dd3fc;font-size:1.45rem;">{{ $setupProgress }}%</strong>
+                </div>
+                <div class="tf-progress-bar" aria-hidden="true">
+                    <div style="width: {{ $setupProgress }}%"></div>
+                </div>
+            </div>
+        </aside>
+
+        <section class="tf-panel">
+            <div class="tf-panel-head">
+                <div>
+                    <p class="tf-label">Zuider Bank S.A</p>
+                    <h2>{{ __('auth.2fa_setup_heading') }}</h2>
+                    <p>{{ __('auth.2fa_setup_description') }}</p>
+                </div>
+                <div class="tf-footer-pill">
+                    <i class="fas fa-user-lock text-blue-600"></i>
+                    <span>{{ $user->email }}</span>
+                </div>
+            </div>
+
+            <div class="tf-panel-body">
+                @if (session('status'))
+                    <div class="tf-alert success">
+                        <i class="fas fa-circle-check"></i>
+                        <span>{{ session('status') }}</span>
+                    </div>
+                @endif
+
+                @if ($errors->any())
+                    <div class="tf-alert error">
+                        <i class="fas fa-triangle-exclamation"></i>
+                        <span>{{ $errors->first() }}</span>
+                    </div>
+                @endif
+
+                <div class="tf-cards">
+                    <article class="tf-card tf-secret-card">
+                        <div class="tf-card-head">
+                            <div>
+                                <h3>{{ __('auth.2fa_secret_title') }}</h3>
+                                <p>{{ __('auth.2fa_secret_hint') }}</p>
+                            </div>
+                            <span class="tf-card-icon"><i class="fas fa-qrcode"></i></span>
+                        </div>
+
+                        <div class="tf-qr-layout">
+                            <div class="tf-qr-box">
+                                <p class="tf-label">QR code</p>
+                                <div class="tf-qr-inner">
+                                    @if (!empty($qrSvg))
+                                        {!! $qrSvg !!}
+                                    @else
+                                        <div style="aspect-ratio:1;display:grid;place-items:center;border-radius:16px;background:#f1f5f9;color:#94a3b8;">
+                                            <i class="fas fa-qrcode" style="font-size:2rem;"></i>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="tf-secret-box">
+                                    <p class="tf-label">{{ __('auth.2fa_secret_title') }}</p>
+                                    <div class="tf-secret-value">{{ $user->two_factor_secret }}</div>
+                                    <button
+                                        type="button"
+                                        class="tf-copy"
+                                        data-copy-secret-button
+                                        data-secret="{{ $user->two_factor_secret }}"
+                                        data-label-default="{{ __('auth.2fa_copy_secret') }}"
+                                        data-label-success="{{ __('auth.2fa_copy_secret_success') }}"
+                                    >
+                                        <i class="fas fa-copy"></i>
+                                        <span>{{ __('auth.2fa_copy_secret') }}</span>
+                                    </button>
+                                    <p data-copy-secret-feedback class="hidden" style="margin:10px 0 0;color:#047857;font-size:.8rem;font-weight:800;" aria-live="polite">
+                                        {{ __('auth.2fa_copy_secret_success') }}
+                                    </p>
+                                </div>
+
+                                <div class="tf-otpauth-box" style="margin-top:14px;">
+                                    <p class="tf-label">{{ __('auth.2fa_otpauth_label') }}</p>
+                                    <div class="tf-otpauth-value">{{ $otpauth }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="tf-card tf-enable-card">
+                        <div class="tf-card-head">
+                            <div>
+                                <h3>{{ __('auth.2fa_enable_title') }}</h3>
+                                <p>{{ __('auth.2fa_enable_hint') }}</p>
+                            </div>
+                            <span class="tf-card-icon"><i class="fas fa-mobile-screen-button"></i></span>
+                        </div>
+
+                        <form method="POST" action="{{ localized_route('twofactor.enable', ['locale' => app()->getLocale()]) }}">
+                            @csrf
+                            <input
+                                class="tf-code-input"
+                                type="text"
+                                name="code"
+                                inputmode="numeric"
+                                autocomplete="one-time-code"
+                                maxlength="6"
+                                spellcheck="false"
+                                placeholder="{{ __('auth.2fa_code_placeholder') }}"
+                            >
+                            <button type="submit" class="tf-button primary" style="margin-top:14px;">
+                                <i class="fas fa-shield-alt"></i>
+                                {{ __('auth.2fa_enable_button') }}
+                            </button>
+                        </form>
+
+                        <div class="tf-help">
+                            <i class="fas fa-circle-info text-blue-600"></i>
+                            {{ __('auth.2fa_enable_hint') }}
+                        </div>
+                    </article>
+
+                @if (!empty($backupCodes))
+                    <article class="tf-card tf-backups">
+                        <div class="tf-card-head">
+                            <div>
+                                <h3>{{ __('auth.2fa_backup_title') }}</h3>
+                                <p>{{ __('auth.2fa_backup_hint') }}</p>
+                            </div>
+                            <span class="tf-card-icon" style="background:linear-gradient(135deg,#d97706,#f59e0b);box-shadow:0 16px 34px rgba(217,119,6,.22);">
+                                <i class="fas fa-vault"></i>
+                            </span>
+                        </div>
+
+                        <div class="tf-backup-grid">
+                            @foreach ($backupCodes as $code)
+                                <div class="tf-backup-code">{{ $code }}</div>
+                            @endforeach
+                        </div>
+                    </article>
+                @endif
+
+                @unless (!empty($isAdminTwoFactorMandatory))
+                    <article class="tf-card tf-disable-card">
+                        <div class="tf-card-head">
+                            <div>
+                                <h3>{{ __('auth.2fa_disable_title') }}</h3>
+                                <p>{{ __('auth.2fa_disable_hint') }}</p>
+                            </div>
+                            <span class="tf-card-icon" style="background:linear-gradient(135deg,#0f172a,#334155);box-shadow:0 16px 34px rgba(15,23,42,.18);">
+                                <i class="fas fa-power-off"></i>
+                            </span>
+                        </div>
+
+                        <form method="POST" action="{{ localized_route('twofactor.disable', ['locale' => app()->getLocale()]) }}">
+                            @csrf
+                            <input
+                                class="tf-password-input"
+                                type="password"
+                                name="password"
+                                autocomplete="current-password"
+                                placeholder="{{ __('auth.2fa_password_placeholder') }}"
+                            >
+                            <button type="submit" class="tf-button dark" style="margin-top:12px;">
+                                <i class="fas fa-lock-open"></i>
+                                {{ __('auth.2fa_disable_button') }}
+                            </button>
+                        </form>
+                    </article>
+                @endunless
+                </div>
+
+                <div class="tf-footer-row">
+                    <a class="tf-back" href="{{ $dashboardUrl }}" style="color:#0f172a;background:#ffffff;border-color:var(--line);">
+                        <i class="fas fa-arrow-left"></i>
+                        {{ __('auth.2fa_back_dashboard') }}
+                    </a>
+                    <span class="tf-footer-pill">
+                        <i class="fas fa-shield-check text-emerald-600"></i>
+                        {{ __('auth.2fa_setup_heading') }}
+                    </span>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
 <script>
     (() => {
         const copyButton = document.querySelector('[data-copy-secret-button]');
         const feedback = document.querySelector('[data-copy-secret-feedback]');
 
-        if (!copyButton) {
-            return;
-        }
+        if (!copyButton) return;
 
         const defaultLabel = copyButton.dataset.labelDefault || 'Copy key';
         const successLabel = copyButton.dataset.labelSuccess || 'Key copied';
 
-        const updateSuccessState = () => {
+        const setSuccess = () => {
             const label = copyButton.querySelector('span');
-            if (label) {
-                label.textContent = successLabel;
-            }
-
-            copyButton.classList.remove('bg-blue-50', 'text-blue-700', 'border-blue-100');
-            copyButton.classList.add('bg-emerald-50', 'text-emerald-700', 'border-emerald-100');
-
-            if (feedback) {
-                feedback.classList.remove('hidden');
-            }
+            if (label) label.textContent = successLabel;
+            copyButton.style.borderColor = '#a7f3d0';
+            copyButton.style.color = '#047857';
+            copyButton.style.background = '#ecfdf5';
+            feedback?.classList.remove('hidden');
 
             window.setTimeout(() => {
-                if (label) {
-                    label.textContent = defaultLabel;
-                }
-
-                copyButton.classList.add('bg-blue-50', 'text-blue-700', 'border-blue-100');
-                copyButton.classList.remove('bg-emerald-50', 'text-emerald-700', 'border-emerald-100');
-
-                if (feedback) {
-                    feedback.classList.add('hidden');
-                }
+                if (label) label.textContent = defaultLabel;
+                copyButton.style.borderColor = '#bfdbfe';
+                copyButton.style.color = '#1d4ed8';
+                copyButton.style.background = '#eff6ff';
+                feedback?.classList.add('hidden');
             }, 2200);
         };
 
@@ -442,27 +922,21 @@
 
         copyButton.addEventListener('click', async () => {
             const secret = copyButton.dataset.secret || '';
-            if (!secret) {
-                return;
-            }
+            if (!secret) return;
 
             try {
-                if (navigator.clipboard && navigator.clipboard.writeText) {
+                if (navigator.clipboard?.writeText) {
                     await navigator.clipboard.writeText(secret);
                 } else {
                     fallbackCopy(secret);
                 }
-
-                updateSuccessState();
+                setSuccess();
             } catch (error) {
-                try {
-                    fallbackCopy(secret);
-                    updateSuccessState();
-                } catch (fallbackError) {
-                    console.error(fallbackError);
-                }
+                fallbackCopy(secret);
+                setSuccess();
             }
         });
     })();
 </script>
+</body>
 </html>

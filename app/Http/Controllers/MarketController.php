@@ -32,7 +32,7 @@ class MarketController extends Controller
             
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur lors de la récupération des données du marché',
+                'message' => __('system_messages.market_data_error'),
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -55,7 +55,7 @@ class MarketController extends Controller
             
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur lors de la récupération des données crypto',
+                'message' => __('system_messages.market_crypto_error'),
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -78,7 +78,7 @@ class MarketController extends Controller
             
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur lors de la récupération des données boursières',
+                'message' => __('system_messages.market_stocks_error'),
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -101,7 +101,7 @@ class MarketController extends Controller
             
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur lors de la récupération des données forex',
+                'message' => __('system_messages.market_forex_error'),
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -117,14 +117,14 @@ class MarketController extends Controller
             
             return response()->json([
                 'success' => true,
-                'message' => 'Cache du marché effacé avec succès',
+                'message' => __('system_messages.market_cache_cleared'),
             ]);
         } catch (\Exception $e) {
             Log::error('Error clearing market cache: ' . $e->getMessage());
             
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur lors de l\'effacement du cache',
+                'message' => __('system_messages.market_cache_clear_error'),
                 'error' => $e->getMessage(),
             ], 500);
         }

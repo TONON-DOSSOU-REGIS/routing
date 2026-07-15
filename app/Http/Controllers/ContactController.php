@@ -72,7 +72,7 @@ class ContactController extends Controller
 
             // Redirect to thank you page without creating a new record
             return redirect()->route('support.nous-contacter.thankyou', ['locale' => app()->getLocale()])
-                ->with('status', 'Votre demande a déjà été enregistrée. Un email de confirmation vous a été envoyé.');
+                ->with('status', __('auth_ui.contact_duplicate'));
         }
 
         // Save new contact to database

@@ -31,7 +31,7 @@ class PasswordResetMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Votre mot de passe a été réinitialisé - Zuider Bank S.A',
+            subject: __('mail.password_reset_subject'),
         );
     }
 
@@ -59,5 +59,4 @@ class PasswordResetMail extends Mailable
         return [];
     }
 }
-
 

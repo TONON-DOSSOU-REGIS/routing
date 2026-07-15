@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nouvelle inscription - Zuider Bank S.A</title>
+    <title>{{ __('mail_body.new_registration_title') }}</title>
     @include('partials.favicon')
     <style>
         body {
@@ -81,19 +81,19 @@
 <body>
     <div class="header">
         <h1>🔔 Nouvelle Inscription</h1>
-        <p>Un nouvel utilisateur attend votre validation</p>
+        <p>{{ __('mail_body.new_user_waiting') }}</p>
     </div>
     
     <div class="content">
         <p>Bonjour Administrateur,</p>
         
-        <p>Un nouvel utilisateur vient de s'inscrire sur Zuider Bank S.A et attend votre validation pour accéder à son compte.</p>
+        <p>{{ __('mail_body.new_user_registered') }}</p>
         
         <div class="info-box">
-            <h3 style="margin-top: 0; color: #667eea;">📋 Informations de l'utilisateur</h3>
+            <h3 style="margin-top: 0; color: #667eea;">{{ __('mail_body.user_info') }}</h3>
             
             <div class="info-row">
-                <span class="label">Nom complet:</span>
+                <span class="label">{{ __('mail_body.full_name') }}:</span>
                 <span class="value">{{ $user->first_name }} {{ $user->last_name }}</span>
             </div>
             
@@ -104,7 +104,7 @@
             
             @if($user->phone)
             <div class="info-row">
-                <span class="label">Téléphone:</span>
+                <span class="label">{{ __('mail_body.phone') }}:</span>
                 <span class="value">{{ $user->phone }}</span>
             </div>
             @endif
@@ -124,7 +124,7 @@
             @endif
             
             <div class="info-row">
-                <span class="label">Date d'inscription:</span>
+                <span class="label">{{ __('mail_body.registration_date') }}</span>
                 <span class="value">{{ $registrationTime->format('d/m/Y à H:i') }}</span>
             </div>
             
@@ -135,26 +135,24 @@
         </div>
         
         <div class="alert">
-            <strong>⚠️ Action requise:</strong> Cet utilisateur ne pourra pas se connecter tant que vous n'aurez pas validé son compte.
+            <strong>{{ __('mail_body.action_required') }}</strong> {{ __('mail_body.cannot_login_until_approved') }}
         </div>
         
         <div style="text-align: center;">
             <a href="{{ url('/admin/users') }}" class="button">
-                Gérer les utilisateurs
+                {{ __('mail_body.manage_users') }}
             </a>
         </div>
         
         <p style="margin-top: 30px; color: #666; font-size: 14px;">
-            Pour valider cet utilisateur, connectez-vous à votre panneau d'administration et cliquez sur le bouton "Valider" à côté de son compte.
+            {{ __('mail_body.approve_instruction') }}
         </p>
     </div>
     
     <div class="footer">
-        <p>Cet email a été envoyé automatiquement par Zuider Bank S.A.</p>
-        <p>© {{ date('Y') }} Zuider Bank S.A. Tous droits réservés.</p>
+        <p>{{ __('mail_body.auto_sent') }}</p>
+        <p>© {{ date('Y') }} Zuider Bank S.A. {{ __('admin_dashboard.footer_rights') }}</p>
     </div>
 </body>
 </html>
-
-
 

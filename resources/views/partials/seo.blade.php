@@ -14,19 +14,19 @@
         ],
         'about.notre-histoire' => [
             'title' => __('about.our_story_title') . ' - ' . $seoBrand,
-            'description' => 'Découvrez l’histoire, la mission et les engagements de Zuider Bank S.A, banque en ligne moderne, sécurisée et orientée client.',
+            'description' => __('public_pages.pages.about_story.subtitle'),
         ],
         'about.carrieres' => [
             'title' => __('about.careers_title') . ' - ' . $seoBrand,
-            'description' => 'Rejoignez Zuider Bank S.A et contribuez à construire une banque digitale moderne, fiable et centrée sur l’expérience client.',
+            'description' => __('public_pages.pages.about_careers.subtitle'),
         ],
         'about.presse' => [
             'title' => __('about.press_title') . ' - ' . $seoBrand,
-            'description' => 'Accédez aux informations presse, actualités et ressources officielles de Zuider Bank S.A.',
+            'description' => __('public_pages.pages.about_press.subtitle'),
         ],
         'about.blog' => [
             'title' => __('about.blog_title') . ' - ' . $seoBrand,
-            'description' => 'Conseils, analyses et actualités de Zuider Bank S.A pour mieux comprendre la banque en ligne, la sécurité et les services financiers.',
+            'description' => __('public_pages.pages.about_blog.subtitle'),
         ],
         'services.comptes-professionnels' => [
             'title' => __('services.business_page_title'),
@@ -50,11 +50,11 @@
         ],
         'support.mentions-legales' => [
             'title' => __('support.legal_mentions_title'),
-            'description' => 'Consultez les mentions légales, informations réglementaires et conditions d’utilisation de Zuider Bank S.A.',
+            'description' => __('public_pages.pages.support_legal.subtitle'),
         ],
         'support.centre-aide' => [
             'title' => __('support.help_center_title'),
-            'description' => 'Trouvez rapidement de l’aide sur l’ouverture de compte, la sécurité, les virements et les services Zuider Bank S.A.',
+            'description' => __('public_pages.pages.support_help.subtitle'),
         ],
         'support.nous-contacter' => [
             'title' => __('support.contact_title'),
@@ -72,7 +72,7 @@
         ? $seoTitleFromSection
         : ($seoData['title'] ?? ($seoTitleFromTitle !== '' ? $seoTitleFromTitle . ' - ' . $seoBrand : $seoBrand));
 
-    $seoDescription = trim($__env->yieldContent('seo_description')) ?: ($seoData['description'] ?? 'Zuider Bank S.A propose une banque en ligne moderne, sécurisée et pensée pour gérer vos comptes, cartes et virements avec clarté.');
+    $seoDescription = trim($__env->yieldContent('seo_description')) ?: ($seoData['description'] ?? __('home.hero_description'));
     $seoDescription = str($seoDescription)->squish()->limit(165, '')->toString();
 
     $seoRobotsOverride = trim($__env->yieldContent('seo_robots'));

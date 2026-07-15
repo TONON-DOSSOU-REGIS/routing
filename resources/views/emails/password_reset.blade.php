@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Réinitialisation de mot de passe - Zuider Bank S.A</title>
+    <title>{{ __('mail_body.password_reset_title') }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     @include('partials.favicon')
     <style>
@@ -386,7 +386,7 @@
                 </div>
             </div>
             <h1>Zuider Bank S.A</h1>
-            <h2>Réinitialisation de votre mot de passe</h2>
+            <h2>{{ __('mail_body.password_reset_heading') }}</h2>
         </div>
 
         <!-- Contenu principal -->
@@ -398,28 +398,28 @@
 
             <!-- Message d'introduction -->
             <div class="message">
-                Votre mot de passe a été réinitialisé par un administrateur pour des raisons de sécurité. 
+                {{ __('mail_body.password_reset_text') }}
                 Voici votre nouveau mot de passe temporaire :
             </div>
 
             <!-- Section du mot de passe -->
             <div class="password-section">
-                <div class="password-label">Votre nouveau mot de passe :</div>
+                <div class="password-label">{{ __('mail_body.new_password') }}</div>
                 <div class="password">{{ $newPassword }}</div>
                 <div style="color: #6b7280; font-size: 14px; margin-top: 8px;">
-                    Mot de passe temporaire - À changer dès la première connexion
+                    {{ __('mail_body.temporary_password') }}
                 </div>
             </div>
 
             <!-- Avertissements de sécurité -->
             <div class="warning">
                 <div class="warning-title">
-                    Important - Consignes de sécurité
+                    {{ __('mail_body.important_security') }}
                 </div>
                 <ul class="warning-list">
-                    <li>Conservez ce mot de passe en lieu sûr et confidentiel</li>
-                    <li>Changez-le dès que possible après votre première connexion</li>
-                    <li>Ne partagez jamais votre mot de passe avec qui que ce soit</li>
+                    <li>{{ __('mail_body.security_tip_1') }}</li>
+                    <li>{{ __('mail_body.security_tip_2') }}</li>
+                    <li>{{ __('mail_body.security_tip_3') }}</li>
                     <li>Utilisez un mot de passe unique que vous n'utilisez nulle part ailleurs</li>
                 </ul>
             </div>
@@ -427,37 +427,37 @@
             <!-- Conseils de sécurité -->
             <div class="security-tips">
                 <div class="security-title">
-                    Pour votre sécurité
+                    {{ __('mail_body.for_your_security') }}
                 </div>
                 <ul class="security-list">
-                    <li>Activez l'authentification à deux facteurs si disponible</li>
-                    <li>Vérifiez régulièrement l'activité de votre compte</li>
-                    <li>Signalez toute activité suspecte immédiatement</li>
-                    <li>Évitez d'utiliser des réseaux Wi-Fi publics pour accéder à votre compte</li>
+                    <li>{{ __('mail_body.security_advice_1') }}</li>
+                    <li>{{ __('mail_body.security_advice_2') }}</li>
+                    <li>{{ __('mail_body.security_advice_3') }}</li>
+                    <li>{{ __('mail_body.security_advice_4') }}</li>
                 </ul>
             </div>
 
             <!-- Support -->
             <div class="support">
-                <p>Si vous n'avez pas demandé cette réinitialisation ou si vous avez des questions,</p>
-                <p>contactez immédiatement notre support :</p>
+                <p>{{ __('mail_body.password_reset_questions') }}</p>
+                <p>{{ __('mail_body.contact_support_now') }}</p>
                 <a href="mailto:support@zuiderbank.com" class="support-contact">support@zuiderbank.com</a>
             </div>
 
             <!-- Signature -->
             <div class="closing">
                 <div class="signature">Cordialement,</div>
-                <div class="team">L'équipe Zuider Bank S.A</div>
+                <div class="team">{{ __('mail_body.team_signature') }}</div>
             </div>
         </div>
 
         <!-- Pied de page -->
         <div class="footer">
-            <p>Cet email a été envoyé automatiquement. Ne pas répondre à cet email.</p>
-            <p>Pour votre sécurité, ne transférez jamais cet email à qui que ce soit.</p>
+            <p>{{ __('mail_body.do_not_reply') }}</p>
+            <p>{{ __('mail_body.do_not_forward') }}</p>
             <div class="copyright">
-                &copy; 2025 Zuider Bank S.A. Tous droits réservés.<br>
-                Votre sécurité est notre priorité.
+                &copy; 2025 Zuider Bank S.A. {{ __('admin_dashboard.footer_rights') }}<br>
+                {{ __('mail_body.security_priority') }}
             </div>
         </div>
     </div>
@@ -466,4 +466,3 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
 </body>
 </html>
-

@@ -87,11 +87,11 @@ class BudgetController extends Controller
             $this->updateBudgetSpentAmount($budget);
 
             return redirect()->route('budgets.index')
-                           ->with('success', 'Budget créé avec succès.');
+                           ->with('success', __('system_messages.budget_created'));
         } catch (\Exception $e) {
             Log::error('Error creating budget: ' . $e->getMessage());
             return back()->withInput()
-                        ->with('error', 'Erreur lors de la création du budget.');
+                        ->with('error', __('system_messages.budget_create_error'));
         }
     }
 
@@ -155,11 +155,11 @@ class BudgetController extends Controller
             $this->updateBudgetSpentAmount($budget);
 
             return redirect()->route('budgets.index')
-                           ->with('success', 'Budget mis à jour avec succès.');
+                           ->with('success', __('system_messages.budget_updated'));
         } catch (\Exception $e) {
             Log::error('Error updating budget: ' . $e->getMessage());
             return back()->withInput()
-                        ->with('error', 'Erreur lors de la mise à jour du budget.');
+                        ->with('error', __('system_messages.budget_update_error'));
         }
     }
 
@@ -172,10 +172,10 @@ class BudgetController extends Controller
             $budget->delete();
 
             return redirect()->route('budgets.index')
-                           ->with('success', 'Budget supprimé avec succès.');
+                           ->with('success', __('system_messages.budget_deleted'));
         } catch (\Exception $e) {
             Log::error('Error deleting budget: ' . $e->getMessage());
-            return back()->with('error', 'Erreur lors de la suppression du budget.');
+            return back()->with('error', __('system_messages.budget_delete_error'));
         }
     }
 
@@ -194,10 +194,10 @@ class BudgetController extends Controller
             }
 
             return redirect()->route('budgets.index')
-                           ->with('success', $updated . ' budgets mis à jour.');
+                           ->with('success', __('system_messages.budgets_updated', ['count' => $updated]));
         } catch (\Exception $e) {
             Log::error('Error updating budget spent amounts: ' . $e->getMessage());
-            return back()->with('error', 'Erreur lors de la mise à jour des montants dépensés.');
+            return back()->with('error', __('system_messages.budget_spent_update_error'));
         }
     }
 
@@ -239,4 +239,3 @@ class BudgetController extends Controller
         ];
     }
 }
-

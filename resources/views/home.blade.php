@@ -34,7 +34,7 @@
       margin: 0;
       font-family: 'Inter', sans-serif;
       color: var(--ink);
-      background: #ffffff;
+      background: #071a2f;
       letter-spacing: 0;
     }
 
@@ -45,7 +45,7 @@
     .site-shell {
       overflow: hidden;
       background:
-        linear-gradient(180deg, #ffffff 0%, #f8fbff 36%, #ffffff 100%);
+        linear-gradient(180deg, #f8fbff 0%, #ffffff 42%, #f8fbff 100%);
     }
 
     .container-bank {
@@ -56,10 +56,13 @@
     .bank-nav {
       position: fixed;
       z-index: 60;
-      top: 14px;
+      top: 0;
       left: 0;
       right: 0;
+      padding-top: 14px;
+      padding-bottom: 10px;
       pointer-events: none;
+      background: linear-gradient(180deg, #071a2f 0%, rgba(7, 26, 47, 0.94) 64%, rgba(7, 26, 47, 0) 100%);
     }
 
     .bank-nav-inner {
@@ -177,23 +180,136 @@
       cursor: pointer;
     }
 
-    .mobile-menu {
+    body.mobile-menu-active {
+      overflow: hidden;
+    }
+
+    .mobile-menu-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 89;
       display: none;
-      margin-top: 10px;
-      padding: 16px;
+      background: rgba(2, 6, 23, 0.52);
+      opacity: 0;
+      backdrop-filter: blur(10px);
+      transition: opacity .32s ease;
+    }
+
+    .mobile-menu-backdrop.open {
+      display: block;
+      opacity: 1;
+    }
+
+    .mobile-menu {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      bottom: 14px;
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      width: min(88vw, 390px);
+      padding: 18px;
       border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 28px;
-      background: rgba(7, 26, 47, 0.95);
-      box-shadow: 0 22px 56px rgba(7, 26, 47, 0.26);
-      backdrop-filter: blur(20px);
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at top right, rgba(0, 184, 217, 0.18), transparent 36%),
+        linear-gradient(180deg, rgba(7, 26, 47, 0.98), rgba(6, 23, 44, 0.96));
+      box-shadow: -28px 0 80px rgba(2, 6, 23, 0.34);
+      backdrop-filter: blur(24px);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(112%);
+      transition: transform .42s cubic-bezier(.22, 1, .36, 1), opacity .26s ease;
+      will-change: transform, opacity;
+    }
+
+    .mobile-menu.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0);
+    }
+
+    .mobile-menu-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 4px 2px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .mobile-menu-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .mobile-menu-brand img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+    }
+
+    .mobile-close {
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 50%;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+    }
+
+    .mobile-menu-links {
+      display: grid;
+      gap: 8px;
+      padding: 18px 0;
     }
 
     .mobile-menu a {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
       color: #ffffff;
-      padding: 12px 14px;
-      border-radius: 16px;
+      padding: 13px 14px;
+      border: 1px solid transparent;
+      border-radius: 18px;
       font-weight: 700;
+      background: rgba(255, 255, 255, 0.05);
+      transition: transform .2s ease, background .2s ease, border-color .2s ease;
+    }
+
+    .mobile-menu a:hover {
+      transform: translateX(-4px);
+      border-color: rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .mobile-menu-foot {
+      display: grid;
+      gap: 10px;
+      margin-top: auto;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .mobile-menu-foot .language-selector {
+      width: 100%;
+    }
+
+    .mobile-menu-foot .language-selector .language-btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .mobile-menu-foot .mobile-auth-link {
+      justify-content: center;
     }
 
     .hero {
@@ -336,6 +452,20 @@
     .section {
       position: relative;
       padding: clamp(82px, 8vw, 124px) 0;
+    }
+
+    #about {
+      color: var(--ink);
+      background: #ffffff;
+    }
+
+    #about .section-heading h2 {
+      color: #0b1220;
+    }
+
+    #about .section-heading p,
+    #about .lead-text {
+      color: #475467;
     }
 
     .section.soft {
@@ -894,10 +1024,6 @@
         justify-content: center;
       }
 
-      .mobile-menu.open {
-        display: block;
-      }
-
       .hero-layout,
       .about-grid,
       .trust-layout,
@@ -936,7 +1062,9 @@
       }
 
       .bank-nav {
-        top: 8px;
+        top: 0;
+        padding-top: 8px;
+        padding-bottom: 8px;
       }
 
       .bank-nav-inner {
@@ -1059,21 +1187,37 @@
           <a class="btn btn-primary" href="{{ localized_route('register', ['locale' => $locale]) }}">{{ __('home.nav_register') }}</a>
         </div>
 
-        <button class="mobile-toggle" type="button" id="mobile-menu-button" aria-label="Ouvrir le menu" aria-expanded="false">
+        <button class="mobile-toggle" type="button" id="mobile-menu-button" aria-label="Ouvrir le menu" aria-controls="mobile-menu" aria-expanded="false">
           <i class="fas fa-bars"></i>
         </button>
       </div>
 
-      <div class="mobile-menu" id="mobile-menu">
-        <a href="{{ localized_route('home', ['locale' => $locale]) }}">{{ __('home.nav_home') }}</a>
-        <a href="#about">{{ __('home.nav_about') }}</a>
-        <a href="#services">{{ __('home.nav_services') }}</a>
-        <a href="#partners">{{ __('home.partners_title') }}</a>
-        <a href="#trustpilot">{{ __('home.trustpilot_badge') }}</a>
-        <a href="#faq">{{ __('home.nav_faq') }}</a>
-        @include('components.language-selector')
-        <a href="{{ localized_route('login', ['locale' => $locale]) }}">{{ __('home.nav_login') }}</a>
-        <a href="{{ localized_route('register', ['locale' => $locale]) }}">{{ __('home.nav_register') }}</a>
+      <div class="mobile-menu-backdrop" id="mobile-menu-backdrop"></div>
+      <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+        <div class="mobile-menu-head">
+          <span class="mobile-menu-brand">
+            <img src="{{ asset('images/zuider-logo-white.png') }}" alt="Zuider Bank S.A">
+            <span>Zuider Bank S.A</span>
+          </span>
+          <button class="mobile-close" type="button" id="mobile-menu-close" aria-label="Fermer le menu">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div class="mobile-menu-links">
+          <a href="{{ localized_route('home', ['locale' => $locale]) }}">{{ __('home.nav_home') }} <i class="fas fa-arrow-left"></i></a>
+          <a href="#about">{{ __('home.nav_about') }} <i class="fas fa-arrow-left"></i></a>
+          <a href="#services">{{ __('home.nav_services') }} <i class="fas fa-arrow-left"></i></a>
+          <a href="#partners">{{ __('home.partners_title') }} <i class="fas fa-arrow-left"></i></a>
+          <a href="#trustpilot">{{ __('home.trustpilot_badge') }} <i class="fas fa-arrow-left"></i></a>
+          <a href="#faq">{{ __('home.nav_faq') }} <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+        <div class="mobile-menu-foot">
+          @include('components.language-selector')
+          <a class="mobile-auth-link" href="{{ localized_route('login', ['locale' => $locale]) }}">{{ __('home.nav_login') }}</a>
+          <a class="mobile-auth-link" href="{{ localized_route('register', ['locale' => $locale]) }}">{{ __('home.nav_register') }}</a>
+        </div>
       </div>
     </div>
   </header>
@@ -1350,23 +1494,45 @@
   document.addEventListener('DOMContentLoaded', function () {
     const toggle = document.getElementById('mobile-menu-button');
     const menu = document.getElementById('mobile-menu');
+    const close = document.getElementById('mobile-menu-close');
+    const backdrop = document.getElementById('mobile-menu-backdrop');
 
     if (toggle && menu) {
-      toggle.addEventListener('click', function () {
-        const isOpen = menu.classList.toggle('open');
+      const setMobileMenu = function (isOpen) {
+        menu.classList.toggle('open', isOpen);
+        backdrop?.classList.toggle('open', isOpen);
+        document.body.classList.toggle('mobile-menu-active', isOpen);
         toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        menu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
         const icon = toggle.querySelector('i');
         if (icon) {
           icon.classList.toggle('fa-bars', !isOpen);
           icon.classList.toggle('fa-times', isOpen);
         }
+      };
+
+      toggle.addEventListener('click', function () {
+        setMobileMenu(!menu.classList.contains('open'));
+      });
+
+      close?.addEventListener('click', function () {
+        setMobileMenu(false);
+      });
+
+      backdrop?.addEventListener('click', function () {
+        setMobileMenu(false);
       });
 
       menu.querySelectorAll('a').forEach(function (link) {
         link.addEventListener('click', function () {
-          menu.classList.remove('open');
-          toggle.setAttribute('aria-expanded', 'false');
+          setMobileMenu(false);
         });
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+          setMobileMenu(false);
+        }
       });
     }
 

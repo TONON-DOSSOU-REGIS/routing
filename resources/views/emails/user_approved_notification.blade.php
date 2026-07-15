@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compte validé - Zuider Bank S.A</title>
+    <title>{{ __('mail_body.account_validated_title') }}</title>
     @include('partials.favicon')
     <style>
         body {
@@ -85,8 +85,8 @@
 </head>
 <body>
     <div class="header">
-        <h1>✅ Compte Validé !</h1>
-        <p>Bienvenue sur Zuider Bank S.A</p>
+        <h1>{{ __('mail_body.account_validated_heading') }}</h1>
+        <p>{{ __('mail_body.welcome_bank') }}</p>
     </div>
     
     <div class="content">
@@ -96,11 +96,11 @@
         
         <p>Bonjour <strong>{{ $user->first_name }} {{ $user->last_name }}</strong>,</p>
         
-        <p>Excellente nouvelle ! Votre compte Zuider Bank S.A a été validé par notre équipe d'administration.</p>
+        <p>{{ __('mail_body.account_validated_text') }}</p>
         
         <div class="info-box">
-            <h3 style="margin-top: 0; color: #10b981;">🎊 Votre compte est maintenant actif</h3>
-            <p style="margin-bottom: 0;">Vous pouvez désormais vous connecter et profiter de tous nos services bancaires en ligne.</p>
+            <h3 style="margin-top: 0; color: #10b981;">{{ __('mail_body.account_active') }}</h3>
+            <p style="margin-bottom: 0;">{{ __('mail_body.account_access_ready') }}</p>
         </div>
         
         <div class="features">
@@ -108,22 +108,22 @@
             
             <div class="feature-item">
                 <span class="feature-icon">💳</span>
-                <strong>Gestion de compte</strong> - Consultez votre solde et vos transactions
+                <strong>{{ __('mail_body.account_management_feature') }}</strong> - {{ __('mail_body.account_management_text') }}
             </div>
             
             <div class="feature-item">
                 <span class="feature-icon">💸</span>
-                <strong>Virements</strong> - Effectuez des transferts d'argent en toute sécurité
+                <strong>{{ __('mail_body.transfers_feature') }}</strong> - {{ __('mail_body.transfers_feature_text') }}
             </div>
             
             <div class="feature-item">
                 <span class="feature-icon">📊</span>
-                <strong>Historique</strong> - Accédez à l'historique complet de vos opérations
+                <strong>{{ __('mail_body.history_feature') }}</strong> - {{ __('mail_body.history_text') }}
             </div>
             
             <div class="feature-item">
                 <span class="feature-icon">🔒</span>
-                <strong>Sécurité</strong> - Profitez d'une protection maximale de vos données
+                <strong>{{ __('mail_body.security_feature') }}</strong> - {{ __('mail_body.security_feature_text') }}
             </div>
         </div>
         
@@ -134,20 +134,18 @@
         </div>
         
         <div style="background: #e0f2fe; border: 1px solid #0ea5e9; color: #0c4a6e; padding: 15px; border-radius: 5px; margin: 20px 0;">
-            <strong>💡 Conseil :</strong> Utilisez l'adresse email <strong>{{ $user->email }}</strong> et le mot de passe que vous avez choisi lors de votre inscription pour vous connecter.
+            <strong>{{ __('mail_body.tip') }}</strong> {{ __('mail_body.login_tip_text', ['email' => $user->email]) }}
         </div>
         
         <p style="margin-top: 30px; color: #666; font-size: 14px;">
-            Si vous avez des questions ou besoin d'assistance, n'hésitez pas à contacter notre service client.
+            {{ __('mail_body.support_questions') }}
         </p>
     </div>
     
     <div class="footer">
         <p>Merci de votre confiance !</p>
-        <p>© {{ date('Y') }} Zuider Bank S.A. Tous droits réservés.</p>
+        <p>© {{ date('Y') }} Zuider Bank S.A. {{ __('admin_dashboard.footer_rights') }}</p>
     </div>
 </body>
 </html>
-
-
 

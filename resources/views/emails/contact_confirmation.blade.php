@@ -276,7 +276,7 @@
         <!-- En-tête -->
         <div class="header">
             <div class="logo">Zuider Bank S.A</div>
-            <div class="logo-subtitle">Votre partenaire financier de confiance</div>
+            <div class="logo-subtitle">{{ __('mail_body.trusted_partner') }}</div>
         </div>
         
         <!-- Contenu principal -->
@@ -284,7 +284,7 @@
             <h1 class="greeting">Bonjour {{ $contact->first_name }},</h1>
             
             <p class="intro">
-                Nous avons bien reçu votre message et vous en remercions. Votre demande a été transmise à notre équipe qui en prendra connaissance dans les plus brefs délais.
+                {{ __('mail_body.contact_received') }}
             </p>
             
             <!-- Carte des détails -->
@@ -293,12 +293,12 @@
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    Récapitulatif de votre demande
+                    {{ __('mail_body.request_summary') }}
                 </h2>
                 
                 <ul class="details-list">
                     <li>
-                        <span class="detail-label">Nom complet :</span>
+                        <span class="detail-label">{{ __('mail_body.full_name') }} :</span>
                         <span class="detail-value">{{ $contact->first_name }} {{ $contact->last_name }}</span>
                     </li>
                     <li>
@@ -306,7 +306,7 @@
                         <span class="detail-value">{{ $contact->email }}</span>
                     </li>
                     <li>
-                        <span class="detail-label">Téléphone :</span>
+                        <span class="detail-label">{{ __('mail_body.phone') }} :</span>
                         <span class="detail-value">{{ $contact->phone ?? 'Non fourni' }}</span>
                     </li>
                     <li>
@@ -316,7 +316,7 @@
                 </ul>
                 
                 <div class="message-preview">
-                    <strong>Votre message :</strong><br>
+                    <strong>{{ __('mail_body.your_message') }} :</strong><br>
                     {{ $contact->message }}
                 </div>
             </div>
@@ -328,25 +328,25 @@
                         <path d="M9 12L11 14L15 10M12 3L4 9V21L12 17L20 21V9L12 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
-                <h3 class="assurance-title">Votre demande est entre de bonnes mains</h3>
+                <h3 class="assurance-title">{{ __('mail_body.request_safe_title') }}</h3>
                 <p class="assurance-text">
-                    Notre équipe d'experts traite votre demande avec la plus grande attention. Nous nous engageons à vous répondre dans les <span class="highlight">24 à 48 heures</span>.
+                    {{ __('mail_body.request_attention') }}
                 </p>
             </div>
             
             <!-- Étapes suivantes -->
             <div class="next-steps">
-                <h3 class="steps-title">Prochaines étapes</h3>
+                <h3 class="steps-title">{{ __('mail_body.next_steps') }}</h3>
                 <ol class="steps-list">
-                    <li>Notre équipe analyse votre demande pour vous apporter la réponse la plus adaptée</li>
-                    <li>Vous recevrez une réponse personnalisée par email</li>
-                    <li>Si nécessaire, nous organiserons un appel pour discuter de vos besoins en détail</li>
+                    <li>{{ __('mail_body.next_step_1') }}</li>
+                    <li>{{ __('mail_body.next_step_2') }}</li>
+                    <li>{{ __('mail_body.next_step_3') }}</li>
                 </ol>
             </div>
             
             <p style="color: #64748b; margin-top: 30px;">
                 Cordialement,<br>
-                <strong>L'équipe Zuider Bank S.A</strong>
+                <strong>{{ __('mail_body.team_signature') }}</strong>
             </p>
         </div>
         
@@ -375,16 +375,14 @@
             <div class="footer-links">
                 <a href="#" class="footer-link">Notre site web</a>
                 <a href="#" class="footer-link">Contactez-nous</a>
-                <a href="#" class="footer-link">Politique de confidentialité</a>
+                <a href="#" class="footer-link">{{ __('mail_body.privacy_policy') }}</a>
             </div>
             
             <p class="copyright">
-                © 2023 Zuider Bank S.A. Tous droits réservés.<br>
-                Cet email a été envoyé à {{ $contact->email }}
+                © 2023 Zuider Bank S.A. {{ __('admin_dashboard.footer_rights') }}<br>
+                {{ __('mail_body.sent_to', ['email' => $contact->email]) }}
             </p>
         </div>
     </div>
 </body>
 </html>
-
-

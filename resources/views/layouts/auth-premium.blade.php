@@ -254,7 +254,7 @@
                             </a>
                             <div>
                                 <p class="auth-brand-title text-lg font-semibold text-slate-950">Zuider Bank S.A</p>
-                                <p class="text-sm text-slate-500">@yield('auth_nav_subtitle', 'Accès client sécurisé')</p>
+                                <p class="text-sm text-slate-500">@yield('auth_nav_subtitle', __('auth_ui.secure_client_access'))</p>
                             </div>
                         </div>
 

@@ -179,9 +179,9 @@ class DashboardController extends Controller
         $counts = [];
 
         $typeLabels = [
-            'deposit' => 'Dépôts',
+            'deposit' => __('system_messages.dashboard_deposits'),
             'withdrawal' => 'Retraits',
-            'transfer' => 'Virements'
+            'transfer' => __('system_messages.dashboard_transfers')
         ];
 
         foreach ($transactionsByType as $item) {

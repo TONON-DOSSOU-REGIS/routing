@@ -188,8 +188,8 @@ class TransactionController extends Controller
                 try {
                     NotificationService::notifySystem(
                         $tx->user,
-                        'Transaction en attente',
-                        "Votre transaction #{$tx->id} est en attente de validation."
+                        __('system_messages.transaction_pending_title'),
+                        __('system_messages.transaction_pending_body', ['id' => $tx->id])
                     );
                 } catch (\Exception $e) {
                     Log::error('Failed to create on-hold notification', [
@@ -203,7 +203,7 @@ class TransactionController extends Controller
                     NotificationService::notifyAdminTransferFailed(
                         $tx->user,
                         $tx,
-                        "Transaction mise en attente a {$stopPercentage}%"
+                        __('system_messages.transaction_hold_admin', ['percentage' => $stopPercentage])
                     );
                 } catch (\Exception $e) {
                     Log::error('Failed to notify admins of on-hold transfer', [

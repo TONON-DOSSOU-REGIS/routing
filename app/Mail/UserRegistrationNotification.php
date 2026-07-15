@@ -34,7 +34,7 @@ class UserRegistrationNotification extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Nouvelle inscription en attente de validation - Zuider Bank S.A',
+            subject: __('mail.user_registration_subject'),
         );
     }
 
@@ -58,4 +58,3 @@ class UserRegistrationNotification extends Mailable implements ShouldQueue
         return [];
     }
 }
-

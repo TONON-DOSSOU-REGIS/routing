@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dépôt reçu</title>
+    <title>{{ __('mail_body.deposit_received_title') }}</title>
     @include('partials.favicon')
     <style>
         body {
@@ -146,34 +146,34 @@
     <div class="container">
         <div class="header">
             <div class="icon">💰</div>
-            <h1>Dépôt Reçu</h1>
+            <h1>{{ __('mail_body.deposit_received_heading') }}</h1>
         </div>
         
         <div class="content">
             <p class="greeting">Bonjour {{ $user->first_name }} {{ $user->last_name }},</p>
             
             <p class="message">
-                Nous avons le plaisir de vous informer qu'un dépôt a été effectué avec succès sur votre compte.
+                {{ __('mail_body.deposit_received_text') }}
             </p>
             
             <div class="amount-box">
-                <div class="amount-label">Montant crédité</div>
+                <div class="amount-label">{{ __('mail_body.credited_amount') }}</div>
                 <div class="amount-value">{{ $amount }}</div>
             </div>
             
             <div class="transaction-details">
-                <h3>📋 Détails de la transaction</h3>
+                <h3>{{ __('mail_body.transaction_details') }}</h3>
                 <div class="detail-row">
-                    <span class="detail-label">Numéro de transaction</span>
+                    <span class="detail-label">{{ __('mail_body.transaction_number') }}</span>
                     <span class="detail-value">#{{ $transaction->id }}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Type</span>
-                    <span class="detail-value">Dépôt</span>
+                    <span class="detail-value">{{ __('mail_body.deposit') }}</span>
                 </div>
                 <div class="detail-row">
-                    <span class="detail-label">Statut</span>
-                    <span class="detail-value" style="color: #10b981;">✓ Réussi</span>
+                    <span class="detail-label">{{ __('mail_body.status') }}</span>
+                    <span class="detail-value" style="color: #10b981;">{{ __('mail_body.successful') }}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Date</span>
@@ -188,25 +188,24 @@
             </div>
             
             <p class="message">
-                Le montant est maintenant disponible sur votre compte et vous pouvez l'utiliser immédiatement pour vos transactions.
+                {{ __('mail_body.deposit_available') }}
             </p>
             
             <center>
                 <a href="{{ url('/dashboard') }}" class="cta-button">
-                    Voir mon compte
+                    {{ __('mail_body.view_account') }}
                 </a>
             </center>
             
             <p class="message" style="margin-top: 30px; font-size: 14px; color: #6b7280;">
-                <strong>Note de sécurité :</strong> Si vous n'êtes pas à l'origine de cette transaction ou si vous avez des questions, 
-                veuillez contacter immédiatement notre service client.
+                <strong>{{ __('mail_body.security_note') }}</strong> {{ __('mail_body.deposit_contact_warning') }}
             </p>
         </div>
         
         <div class="footer">
             <p><strong>Zuider Bank S.A</strong></p>
-            <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
-            <p>© {{ date('Y') }} Zuider Bank S.A. Tous droits réservés.</p>
+            <p>{{ __('mail_body.auto_email_no_reply') }}</p>
+            <p>© {{ date('Y') }} Zuider Bank S.A. {{ __('admin_dashboard.footer_rights') }}</p>
         </div>
     </div>
 </body>

@@ -98,11 +98,11 @@ class LoginController extends Controller
 
             if ($user->status === 'pending') {
                 return redirect('/' . $locale . '/pending-approval')
-                    ->with('status', 'Votre compte n\'est pas encore approuvé. Veuillez patienter.');
+                    ->with('status', __('auth_ui.account_pending'));
             }
 
             return redirect('/' . $locale . '/login')->withErrors([
-                'email' => 'Votre compte est suspendu. Veuillez contacter l\'administrateur.',
+                'email' => __('auth_ui.account_suspended'),
             ]);
         }
 

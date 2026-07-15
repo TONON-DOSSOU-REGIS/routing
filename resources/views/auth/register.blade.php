@@ -50,7 +50,7 @@
 @endphp
 
 @section('title', __('auth.register_page_title'))
-@section('auth_nav_subtitle', 'Premium onboarding')
+@section('auth_nav_subtitle', __('auth_ui.premium_onboarding'))
 
 @section('auth_nav_actions')
     <a href="{{ localized_route('home') }}" class="auth-link-btn inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm hover:border-slate-300 hover:bg-slate-50">
@@ -66,7 +66,7 @@
 @section('auth_hero')
     <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 ring-1 ring-white/10">
         <span class="h-2.5 w-2.5 rounded-full bg-orange-400"></span>
-        Premium onboarding
+        {{ __('auth_ui.premium_onboarding') }}
     </span>
 
     <h1 class="auth-heading mt-6 text-4xl font-semibold tracking-[-0.05em] text-white sm:text-5xl">
@@ -99,19 +99,19 @@
 
     <div class="mt-10 grid gap-3 sm:grid-cols-3">
         <div class="auth-stat-card">
-            <p>Identite</p>
-            <div class="mt-3 text-lg font-semibold text-white">Complete</div>
-            <p class="mt-2 text-sm leading-6 text-white/74">Ajoutez vos informations personnelles et de verification dans un seul flux premium.</p>
+            <p>{{ __('auth_ui.identity') }}</p>
+            <div class="mt-3 text-lg font-semibold text-white">{{ __('auth_ui.identity_complete') }}</div>
+            <p class="mt-2 text-sm leading-6 text-white/74">{{ __('auth_ui.identity_text') }}</p>
         </div>
         <div class="auth-stat-card">
-            <p>Validation</p>
-            <div class="mt-3 text-lg font-semibold text-white">Admin review</div>
-            <p class="mt-2 text-sm leading-6 text-white/74">Votre dossier sera controle avant activation pour garder un environnement bancaire propre.</p>
+            <p>{{ __('auth_ui.validation') }}</p>
+            <div class="mt-3 text-lg font-semibold text-white">{{ __('auth_ui.admin_review') }}</div>
+            <p class="mt-2 text-sm leading-6 text-white/74">{{ __('auth_ui.validation_text') }}</p>
         </div>
         <div class="auth-stat-card">
-            <p>Activation</p>
-            <div class="mt-3 text-lg font-semibold text-white">Secure</div>
-            <p class="mt-2 text-sm leading-6 text-white/74">Les notifications et le suivi premium prennent le relais des que votre compte est valide.</p>
+            <p>{{ __('auth_ui.activation') }}</p>
+            <div class="mt-3 text-lg font-semibold text-white">{{ __('auth_ui.secure') }}</div>
+            <p class="mt-2 text-sm leading-6 text-white/74">{{ __('auth_ui.activation_text') }}</p>
         </div>
     </div>
 @endsection
@@ -119,7 +119,7 @@
 @section('auth_panel')
     <div class="flex items-start justify-between gap-4">
         <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Onboarding</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('auth_ui.onboarding') }}</p>
             <h2 class="auth-heading mt-2 text-3xl font-semibold tracking-[-0.04em] text-slate-950">{{ __('auth.register_title') }}</h2>
             <p class="mt-2 text-sm leading-6 text-slate-500">
                 {{ __('auth.already_account') }}
@@ -130,7 +130,7 @@
         </div>
         <span class="inline-flex items-center gap-2 rounded-full bg-orange-50 px-3 py-2 text-xs font-semibold text-orange-700 ring-1 ring-orange-200/80">
             <i class="fas fa-user-plus text-[11px]"></i>
-            New client
+            {{ __('auth_ui.new_client') }}
         </span>
     </div>
 
@@ -149,7 +149,7 @@
         @csrf
 
         <section class="rounded-[28px] bg-slate-50 px-5 py-5 ring-1 ring-slate-200/70">
-            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Identite</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('auth_ui.identity') }}</p>
             <div class="mt-4 grid gap-4 sm:grid-cols-2">
                 <div>
                     <label for="first_name" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('auth.first_name') }}</label>
@@ -206,7 +206,7 @@
         </section>
 
         <section class="rounded-[28px] bg-slate-50 px-5 py-5 ring-1 ring-slate-200/70">
-            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Coordonnees bancaires</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('auth_ui.bank_details') }}</p>
             <div class="mt-4 grid gap-4 sm:grid-cols-2">
                 <div>
                     <label for="iban" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('auth.iban') }}</label>
@@ -220,7 +220,7 @@
         </section>
 
         <section class="rounded-[28px] bg-slate-50 px-5 py-5 ring-1 ring-slate-200/70">
-            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Securite</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('auth_ui.security') }}</p>
             <div class="mt-4 grid gap-4 sm:grid-cols-2">
                 <div>
                     <label for="password" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('auth.password_field') }}</label>

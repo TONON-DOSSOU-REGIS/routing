@@ -109,14 +109,14 @@
         <!-- Header -->
         <div class="header">
             <h1>🔔 Notification de Connexion</h1>
-            <p>Zuider Bank S.A - Système de Surveillance</p>
+            <p>{{ __('mail_body.monitoring_system') }}</p>
         </div>
 
         <!-- Content -->
         <div class="content">
             <div class="alert">
-                <h3>⚠️ Alerte de Sécurité</h3>
-                <p>Un client vient de se connecter à son compte bancaire en ligne.</p>
+                <h3>{{ __('mail_body.security_alert') }}</h3>
+                <p>{{ __('mail_body.client_login_text') }}</p>
             </div>
 
             <!-- User Information -->
@@ -124,7 +124,7 @@
                 <h3 style="margin-top: 0; color: #495057;">Informations du Client</h3>
 
                 <div class="info-row">
-                    <span class="label">Nom complet:</span>
+                    <span class="label">{{ __('mail_body.full_name') }}:</span>
                     <span class="value">{{ $user->first_name }} {{ $user->last_name }}</span>
                 </div>
 
@@ -135,20 +135,20 @@
 
                 @if($user->phone)
                 <div class="info-row">
-                    <span class="label">Téléphone:</span>
+                    <span class="label">{{ __('mail_body.phone') }}:</span>
                     <span class="value">{{ $user->phone }}</span>
                 </div>
                 @endif
 
                 <div class="info-row">
-                    <span class="label">Date d'inscription:</span>
+                    <span class="label">{{ __('mail_body.registration_date') }}</span>
                     <span class="value">{{ $user->created_at->format('d/m/Y') }}</span>
                 </div>
             </div>
 
             <!-- Login Details -->
             <div class="user-info">
-                <h3 style="margin-top: 0; color: #495057;">Détails de Connexion</h3>
+                <h3 style="margin-top: 0; color: #495057;">{{ __('mail_body.login_details') }}</h3>
 
                 <div class="info-row">
                     <span class="label">Date et heure:</span>
@@ -168,32 +168,28 @@
 
             <!-- Security Notice -->
             <div class="security-notice">
-                <strong>🔒 Avis de Sécurité:</strong><br>
-                Cette connexion a été détectée automatiquement par le système Zuider Bank S.A.
-                Si cette activité vous semble suspecte, veuillez contacter immédiatement le client
-                et prendre les mesures de sécurité appropriées.
+                <strong>{{ __('mail_body.security_notice') }}</strong><br>
+                {{ __('mail_body.login_notice_text') }}
             </div>
 
             <!-- Action Buttons -->
             <div style="text-align: center; margin: 30px 0;">
                 <a href="{{ localized_route('admin.users') }}" class="action-button">
-                    👥 Voir tous les utilisateurs
+                    {{ __('mail_body.view_all_users') }}
                 </a>
                 <a href="{{ localized_route('admin.dashboard') }}" class="action-button">
-                    📊 Accéder au tableau de bord
+                    {{ __('mail_body.go_dashboard') }}
                 </a>
             </div>
         </div>
 
         <!-- Footer -->
         <div class="footer">
-            <p><strong>Zuider Bank S.A - Système Bancaire Sécurisé</strong></p>
-            <p>Cette notification a été générée automatiquement le {{ now()->format('d/m/Y à H:i:s') }}</p>
-            <p>Ne répondez pas à cet email - il s'agit d'une notification automatique</p>
+            <p><strong>{{ __('mail_body.secure_banking_system') }}</strong></p>
+            <p>{{ __('mail_body.generated_notification', ['date' => now()->format('d/m/Y H:i:s')]) }}</p>
+            <p>{{ __('mail_body.automatic_notification_no_reply') }}</p>
         </div>
     </div>
 </body>
 </html>
-
-
 

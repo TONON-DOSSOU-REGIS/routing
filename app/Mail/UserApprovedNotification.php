@@ -30,7 +30,7 @@ class UserApprovedNotification extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Votre compte Zuider Bank S.A a été validé !',
+            subject: __('mail.user_approved_subject'),
         );
     }
 
@@ -54,4 +54,3 @@ class UserApprovedNotification extends Mailable implements ShouldQueue
         return [];
     }
 }
-

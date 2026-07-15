@@ -37,7 +37,7 @@ class DepositNotificationMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Dépôt reçu sur votre compte',
+            subject: __('mail.deposit_subject'),
         );
     }
 

@@ -32,7 +32,7 @@ class TransactionRefundedMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Remboursement de votre virement - Zuider Bank S.A',
+            subject: __('mail.transaction_refunded_subject'),
         );
     }
 
@@ -56,4 +56,3 @@ class TransactionRefundedMail extends Mailable implements ShouldQueue
         return [];
     }
 }
-

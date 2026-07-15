@@ -205,10 +205,10 @@
         $dashboardTheme = trim($__env->yieldContent('dashboard_theme')) ?: 'client';
         $dashboardTitle = html_entity_decode(trim($__env->yieldContent('dashboard_page_title')) ?: 'Dashboard', ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $dashboardSubtitle = html_entity_decode(trim($__env->yieldContent('dashboard_page_subtitle')) ?: '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        $dashboardSearchPlaceholder = html_entity_decode(trim($__env->yieldContent('dashboard_search_placeholder')) ?: 'Rechercher une action, un client ou un mouvement...', ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        $dashboardSectionLabel = html_entity_decode(trim($__env->yieldContent('dashboard_section_label')) ?: ($dashboardTheme === 'admin' ? 'Pilotage central' : 'Espace premium'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $dashboardSearchPlaceholder = html_entity_decode(trim($__env->yieldContent('dashboard_search_placeholder')) ?: __('admin_pages.dashboard_search_default'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $dashboardSectionLabel = html_entity_decode(trim($__env->yieldContent('dashboard_section_label')) ?: ($dashboardTheme === 'admin' ? __('admin_pages.central_pilotage') : __('admin_pages.premium_space')), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $dashboardFooterBrand = html_entity_decode(trim($__env->yieldContent('dashboard_footer_brand')) ?: ($dashboardTheme === 'admin' ? 'Zuider Admin' : 'Zuider Bank S.A'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        $displayName = $authUser?->name ?? 'Utilisateur';
+        $displayName = $authUser?->name ?? __('common.user');
         $displayEmail = $authUser?->email ?? '';
         $profilePhotoUrl = $authUser?->profile_photo_url;
     @endphp

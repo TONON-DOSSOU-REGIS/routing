@@ -135,7 +135,7 @@ class AdminController extends Controller
             'is_global' => $request->is_global,
         ]);
 
-        return back()->with('status', 'Paramètres mis à jour avec succès.');
+        return back()->with('status', __('system_messages.admin_settings_updated'));
     }
 
     public function updatePassword($locale, Request $request)
@@ -144,18 +144,18 @@ class AdminController extends Controller
             'current_password' => 'required|string',
             'new_password' => 'required|string|min:8|confirmed|different:current_password',
         ], [
-            'current_password.required' => 'Le mot de passe actuel est obligatoire.',
-            'new_password.required' => 'Le nouveau mot de passe est obligatoire.',
-            'new_password.min' => 'Le nouveau mot de passe doit contenir au moins 8 caracteres.',
-            'new_password.confirmed' => 'La confirmation du nouveau mot de passe ne correspond pas.',
-            'new_password.different' => 'Le nouveau mot de passe doit etre different de l\'ancien.',
+            'current_password.required' => __('system_messages.current_password_required'),
+            'new_password.required' => __('system_messages.new_password_required'),
+            'new_password.min' => __('system_messages.new_password_min'),
+            'new_password.confirmed' => __('system_messages.new_password_confirmed'),
+            'new_password.different' => __('system_messages.new_password_different'),
         ]);
 
         $admin = auth()->user();
 
         if (!$admin || !Hash::check($request->current_password, $admin->password)) {
             return back()->withErrors([
-                'current_password' => 'Le mot de passe actuel est incorrect.',
+                'current_password' => __('system_messages.current_password_invalid'),
             ]);
         }
 
@@ -168,7 +168,7 @@ class AdminController extends Controller
             'admin_email' => $admin->email,
         ]);
 
-        return back()->with('status', 'Mot de passe modifie avec succes.');
+        return back()->with('status', __('system_messages.admin_password_updated'));
     }
 
     public function users(Request $request)
@@ -214,7 +214,7 @@ class AdminController extends Controller
             'new_status' => $user->status,
         ]);
 
-        return back()->with('status', 'Statut utilisateur mis à jour.');
+        return back()->with('status', __('system_messages.admin_user_status_updated'));
     }
 
     public function depositForm($locale)
@@ -271,7 +271,7 @@ class AdminController extends Controller
         ]);
 
 
-        $message = 'Dépôt effectué avec succès. La devise par défaut de l\'utilisateur a été mise à jour.';
+        $message = __('system_messages.admin_deposit_success');
 
         return redirect(localized_route('admin.deposit'))
             ->with('status', $message)
@@ -317,7 +317,7 @@ class AdminController extends Controller
             ]);
         }
 
-        return redirect(localized_route('admin.users'))->with('status', 'Mot de passe réinitialisé avec succès. Un email a été envoyé à l\'utilisateur.');
+        return redirect(localized_route('admin.users'))->with('status', __('system_messages.admin_password_reset'));
     }
 
     public function createUser($locale)
@@ -485,7 +485,7 @@ class AdminController extends Controller
         ]);
 
         $redirect = redirect(localized_route('admin.users'))
-            ->with('status', 'Utilisateur créé avec succès et carte de crédit virtuelle générée.');
+            ->with('status', __('system_messages.admin_user_created'));
 
         if ($loginLink) {
             $redirect->with('login_link', $loginLink)
@@ -499,11 +499,11 @@ class AdminController extends Controller
     public function generateLoginLink($locale, User $user)
     {
         if ($user->role !== 'user') {
-            return back()->withErrors(['error' => 'Le lien de connexion ne peut être généré que pour un client.']);
+            return back()->withErrors(['error' => __('system_messages.admin_login_link_client_only')]);
         }
 
         if ($user->status !== 'active') {
-            return back()->withErrors(['error' => 'Le lien de connexion ne peut être généré que pour un utilisateur actif.']);
+            return back()->withErrors(['error' => __('system_messages.admin_login_link_active_only')]);
         }
 
         [$loginLink, $loginLinkExpiresAt] = $this->issueLoginLink($user);
@@ -516,7 +516,7 @@ class AdminController extends Controller
         ]);
 
         return back()
-            ->with('status', 'Lien de connexion généré avec succès.')
+            ->with('status', __('system_messages.admin_login_link_generated'))
             ->with('login_link', $loginLink)
             ->with('login_link_user', $user->email)
             ->with('login_link_expires_at', $loginLinkExpiresAt->format('d/m/Y H:i'));
@@ -646,13 +646,13 @@ class AdminController extends Controller
             'user_email' => $user->email,
         ]);
 
-        return redirect(localized_route('admin.users'))->with('status', 'Utilisateur mis à jour avec succès.');
+        return redirect(localized_route('admin.users'))->with('status', __('system_messages.admin_user_updated'));
     }
 
     public function deleteUser($locale, User $user)
     {
         if ($user->id === auth()->id()) {
-            return back()->withErrors(['error' => 'Vous ne pouvez pas supprimer votre propre compte.']);
+            return back()->withErrors(['error' => __('system_messages.admin_self_delete_forbidden')]);
         }
 
         $user->delete();
@@ -663,13 +663,13 @@ class AdminController extends Controller
             'user_email' => $user->email,
         ]);
 
-        return redirect(localized_route('admin.users'))->with('status', 'Utilisateur supprimé avec succès.');
+        return redirect(localized_route('admin.users'))->with('status', __('system_messages.admin_user_deleted'));
     }
 
     public function approveUser($locale, User $user)
     {
         if ($user->status !== 'pending') {
-            return back()->withErrors(['error' => 'L\'utilisateur n\'est pas en attente de validation.']);
+            return back()->withErrors(['error' => __('system_messages.admin_user_not_pending')]);
         }
 
         $user->update(['status' => 'active']);
@@ -700,7 +700,7 @@ class AdminController extends Controller
             'user_email' => $user->email,
         ]);
 
-        return back()->with('status', 'Utilisateur validé avec succès. Un email de confirmation a été envoyé.');
+        return back()->with('status', __('system_messages.admin_user_approved'));
     }
 
     /**
@@ -789,11 +789,11 @@ class AdminController extends Controller
 
         // Check if transaction can be refunded
         if ($transaction->status !== 'success') {
-            return back()->withErrors(['error' => 'Seules les transactions réussies peuvent être remboursées.']);
+            return back()->withErrors(['error' => __('system_messages.refund_success_only')]);
         }
 
         if ($transaction->status === 'refunded') {
-            return back()->withErrors(['error' => 'Cette transaction a déjà été remboursée.']);
+            return back()->withErrors(['error' => __('system_messages.refund_already_done')]);
         }
 
         // Perform refund in a database transaction
@@ -828,7 +828,9 @@ class AdminController extends Controller
 
         // Notify user of refund
         try {
-            $message = "Votre virement de " . number_format($transaction->amount, 2, ',', ' ') . " € a été remboursé";
+            $message = __('system_messages.refund_notification', [
+                'amount' => number_format($transaction->amount, 2, ',', ' '),
+            ]);
             if ($request->refund_reason) {
                 $message .= ". Motif: {$request->refund_reason}";
             }
@@ -849,7 +851,10 @@ class AdminController extends Controller
             'refund_reason' => $request->refund_reason,
         ]);
 
-        return back()->with('status', 'Remboursement effectué avec succès ! Le montant de ' . number_format($transaction->amount, 2, ',', ' ') . ' € a été recrédité sur le compte du client ' . $transaction->user->first_name . ' ' . $transaction->user->last_name . '.');
+        return back()->with('status', __('system_messages.refund_done', [
+            'amount' => number_format($transaction->amount, 2, ',', ' '),
+            'client' => $transaction->user->first_name . ' ' . $transaction->user->last_name,
+        ]));
     }
     private function normalizePhoneInput(Request $request): void
     {

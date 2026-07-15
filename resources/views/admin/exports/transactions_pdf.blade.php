@@ -445,28 +445,28 @@
                 <div class="info-item">
                     <div class="info-label">
                         <i class="fas fa-calendar"></i>
-                        Période du rapport
+                        {{ __('admin_pages.report_period') }}
                     </div>
                     <div class="info-value">{{ now()->format('d/m/Y') }}</div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">
                         <i class="fas fa-exchange-alt"></i>
-                        Total des transactions
+                        {{ __('admin_pages.total_transactions') }}
                     </div>
                     <div class="info-value">{{ $transactions->count() }}</div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">
                         <i class="fas fa-euro-sign"></i>
-                        Volume total
+                        {{ __('admin_pages.total_volume') }}
                     </div>
                     <div class="info-value">{{ number_format($transactions->sum('amount'), 2) }} €</div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">
                         <i class="fas fa-check-circle"></i>
-                        Taux de réussite
+                        {{ __('admin_pages.success_rate_report') }}
                     </div>
                     <div class="info-value">
                         {{ $transactions->where('status', 'success')->count() }}/{{ $transactions->count() }}
@@ -480,13 +480,13 @@
             <table>
                 <thead>
                     <tr>
-                        <th>ID Transaction</th>
-                        <th>Utilisateur</th>
-                        <th>Type</th>
-                        <th>Montant</th>
-                        <th>Statut</th>
-                        <th>Progression</th>
-                        <th>Date</th>
+                        <th>{{ __('admin_pages.transaction_id') }}</th>
+                        <th>{{ __('admin_pages.users') }}</th>
+                        <th>{{ __('admin_pages.type') }}</th>
+                        <th>{{ __('admin_pages.amount') }}</th>
+                        <th>{{ __('admin_pages.status') }}</th>
+                        <th>{{ __('admin_pages.progress') }}</th>
+                        <th>{{ __('admin_pages.date') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -533,14 +533,14 @@
             <div class="footer-info">
                 <div class="generated-info">
                     <i class="fas fa-clock"></i>
-                    Généré le {{ now()->format('d/m/Y à H:i') }}
+                    {{ __('admin_pages.generated_on', ['date' => now()->format('d/m/Y H:i')]) }}
                 </div>
                 <div class="page-info">
-                    Page 1 sur 1
+                    {{ __('admin_pages.page_one') }}
                 </div>
             </div>
             <div class="copyright">
-                &copy; 2025 Zuider Bank S.A. Tous droits réservés. | Rapport confidentiel
+                &copy; 2025 Zuider Bank S.A. {{ __('admin_dashboard.footer_rights') }} | {{ __('admin_pages.confidential_report') }}
             </div>
         </div>
     </div>
@@ -562,7 +562,7 @@
         // Ajout d'un bouton d'impression (optionnel)
         document.addEventListener('DOMContentLoaded', function() {
             const printButton = document.createElement('button');
-            printButton.innerHTML = '<i class="fas fa-print"></i> Imprimer le rapport';
+            printButton.innerHTML = '<i class="fas fa-print"></i> {{ __('admin_pages.print_report') }}';
             printButton.style.cssText = `
                 position: fixed;
                 top: 20px;
@@ -593,5 +593,4 @@
     </script>
 </body>
 </html>
-
 

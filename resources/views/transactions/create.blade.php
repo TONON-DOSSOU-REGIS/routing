@@ -8,70 +8,7 @@
     $formattedClientIban = $user->iban
         ? trim(chunk_split(preg_replace('/\s+/', '', (string) $user->iban), 4, ' '))
         : __('transactions.not_available');
-    $autoTransferText = static function (string $key): string {
-        $locale = app()->getLocale();
-        $translationKey = 'transactions.' . $key;
-        $value = app('translator')->get($translationKey, [], $locale);
-
-        if ($value !== $translationKey) {
-            return $value;
-        }
-
-        $fallbacks = [
-            'en' => [
-                'auto_transfer_title' => 'Amount transferred automatically',
-                'auto_transfer_description' => 'The transfer will automatically use the full available balance in your account.',
-                'auto_transfer_amount_label' => 'Amount to be transferred',
-                'auto_transfer_amount_notice' => 'The amount is pulled automatically from your account to speed up the operation.',
-                'auto_transfer_helper' => 'Only complete the beneficiary information and the activation code to finalize the transfer.',
-            ],
-            'fr' => [
-                'auto_transfer_title' => 'Montant vire automatiquement',
-                'auto_transfer_description' => 'Le virement utilisera automatiquement la totalite du solde disponible sur votre compte.',
-                'auto_transfer_amount_label' => 'Montant qui sera vire',
-                'auto_transfer_amount_notice' => 'Le montant est recupere automatiquement depuis votre compte pour accelerer l operation.',
-                'auto_transfer_helper' => 'Completez uniquement les informations du beneficiaire et le code d activation pour finaliser le virement.',
-            ],
-            'de' => [
-                'auto_transfer_title' => 'Betrag wird automatisch ueberwiesen',
-                'auto_transfer_description' => 'Die Ueberweisung verwendet automatisch das gesamte verfuegbare Guthaben auf Ihrem Konto.',
-                'auto_transfer_amount_label' => 'Betrag, der ueberwiesen wird',
-                'auto_transfer_amount_notice' => 'Der Betrag wird automatisch von Ihrem Konto abgebucht, um den Vorgang zu beschleunigen.',
-                'auto_transfer_helper' => 'Ergaenzen Sie nur die Angaben zum Beguenstigten und den Aktivierungscode, um die Ueberweisung abzuschliessen.',
-            ],
-            'nl' => [
-                'auto_transfer_title' => 'Bedrag wordt automatisch overgemaakt',
-                'auto_transfer_description' => 'De overschrijving gebruikt automatisch het volledige beschikbare saldo op uw rekening.',
-                'auto_transfer_amount_label' => 'Bedrag dat zal worden overgemaakt',
-                'auto_transfer_amount_notice' => 'Het bedrag wordt automatisch van uw rekening opgenomen om de verwerking te versnellen.',
-                'auto_transfer_helper' => 'Vul alleen de gegevens van de begunstigde en de activeringscode in om de overschrijving af te ronden.',
-            ],
-            'es' => [
-                'auto_transfer_title' => 'Importe transferido automaticamente',
-                'auto_transfer_description' => 'La transferencia utilizara automaticamente la totalidad del saldo disponible de su cuenta.',
-                'auto_transfer_amount_label' => 'Importe que se transferira',
-                'auto_transfer_amount_notice' => 'El importe se recupera automaticamente de su cuenta para agilizar la operacion.',
-                'auto_transfer_helper' => 'Complete unicamente los datos del beneficiario y el codigo de activacion para finalizar la transferencia.',
-            ],
-            'pl' => [
-                'auto_transfer_title' => 'Kwota przelewana automatycznie',
-                'auto_transfer_description' => 'Przelew automatycznie wykorzysta cale dostepne saldo na koncie.',
-                'auto_transfer_amount_label' => 'Kwota, ktora zostanie przelana',
-                'auto_transfer_amount_notice' => 'Kwota jest automatycznie pobierana z konta, aby przyspieszyc operacje.',
-                'auto_transfer_helper' => 'Uzupelnij tylko dane beneficjenta i kod aktywacji, aby sfinalizowac przelew.',
-            ],
-            'it' => [
-                'auto_transfer_title' => 'Importo trasferito automaticamente',
-                'auto_transfer_description' => 'Il bonifico utilizzera automaticamente l intero saldo disponibile sul suo conto.',
-                'auto_transfer_amount_label' => 'Importo che verra trasferito',
-                'auto_transfer_amount_notice' => 'L importo viene prelevato automaticamente dal suo conto per velocizzare l operazione.',
-                'auto_transfer_helper' => 'Completi solo i dati del beneficiario e il codice di attivazione per finalizzare il bonifico.',
-            ],
-        ];
-
-        return $fallbacks[$locale][$key]
-            ?? app('translator')->get($translationKey, [], config('app.fallback_locale', 'en'));
-    };
+    $autoTransferText = static fn (string $key): string => __('transactions.' . $key);
 @endphp
 
 @section('title', __('transactions.page_title'))
