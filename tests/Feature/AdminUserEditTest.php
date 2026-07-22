@@ -65,7 +65,7 @@ test('admin can update user details', function () {
     expect($user->id_number)->toBe('AA998877');
     expect($user->iban)->toBe('FR7612345678901234567890123');
     expect($user->bic)->toBe('BNPAFRPP');
-    expect($user->activation_code)->toBe('new_code');
+    expect($user->activation_code)->toBe('old_code');
     expect($user->balance)->toBe('200.00');
     expect($user->status)->toBe('active');
 });
@@ -240,5 +240,5 @@ test('admin can edit user page loads correctly', function () {
     $response->assertSee('Test');
     $response->assertSee('User');
     $response->assertSee('test@example.com');
-    $response->assertSee('test_code');
+    $response->assertDontSee('test_code');
 });

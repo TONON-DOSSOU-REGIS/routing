@@ -8,7 +8,7 @@
         <i class="fas fa-user-plus text-xs"></i>
         {{ __('auth.nav_create_account') }}
     </a>
-    <span class="inline-flex items-center justify-center gap-2 rounded-full bg-orange-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-900/20">
+    <span class="inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-950/20">
         <i class="fas fa-right-to-bracket text-xs"></i>
         {{ __('auth.nav_login') }}
     </span>
@@ -16,7 +16,7 @@
 
 @section('auth_hero')
     <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 ring-1 ring-white/10">
-        <span class="h-2.5 w-2.5 rounded-full bg-orange-400"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-cyan-300 shadow-[0_0_16px_rgba(103,232,249,.75)]"></span>
         {{ __('auth_ui.secure_access') }}
     </span>
 
@@ -68,13 +68,13 @@
             : localized_route('support.nous-contacter');
     @endphp
 
-    <div class="flex items-start justify-between gap-4">
+    <div class="auth-panel-header flex items-start justify-between gap-4">
         <div>
             <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('auth_ui.client_access') }}</p>
             <h2 class="auth-heading mt-2 text-3xl font-semibold tracking-[-0.04em] text-slate-950">{{ __('auth.login_title') }}</h2>
             <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('auth.login_subtitle') }}</p>
         </div>
-        <span class="inline-flex items-center gap-2 rounded-full bg-orange-50 px-3 py-2 text-xs font-semibold text-orange-700 ring-1 ring-orange-200/80">
+        <span class="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 ring-1 ring-blue-200/80">
             <i class="fas fa-lock text-[11px]"></i>
             {{ __('auth_ui.bank_level') }}
         </span>
@@ -138,7 +138,7 @@
         </div>
 
         <div>
-            <div class="mb-2 flex items-center justify-between gap-3">
+            <div class="auth-field-header mb-2 flex items-center justify-between gap-3">
                 <label for="password" class="block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('auth.password') }}</label>
                 <a href="{{ $passwordRequestUrl }}" class="text-sm font-semibold text-orange-700 transition hover:text-orange-800">{{ __('auth.forgot_password') }}</a>
             </div>
@@ -155,7 +155,7 @@
                     placeholder="{{ __('auth.password_placeholder') }}"
                     class="auth-input w-full rounded-2xl py-3.5 pl-11 pr-12 text-sm text-slate-700"
                 >
-                <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 px-4 text-slate-400 transition hover:text-slate-700">
+                <button type="button" id="togglePassword" aria-label="{{ __('auth.password') }}" aria-pressed="false" class="absolute inset-y-0 right-0 px-4 text-slate-400 transition hover:text-slate-700">
                     <i class="fa-regular fa-eye"></i>
                 </button>
             </div>
@@ -163,7 +163,7 @@
 
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <label for="remember" class="inline-flex items-center gap-3 text-sm text-slate-600">
-                <input id="remember" type="checkbox" name="remember" class="h-4 w-4 rounded border-slate-300 text-orange-500 focus:ring-orange-500">
+                <input id="remember" type="checkbox" name="remember" class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
                 <span>{{ __('auth.remember_me') }}</span>
             </label>
             <div class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-500">
@@ -206,6 +206,7 @@
                 const icon = toggleBtn.querySelector('i');
                 const isPassword = passwordInput.type === 'password';
                 passwordInput.type = isPassword ? 'text' : 'password';
+                toggleBtn.setAttribute('aria-pressed', isPassword ? 'true' : 'false');
                 icon?.classList.toggle('fa-eye', !isPassword);
                 icon?.classList.toggle('fa-eye-slash', isPassword);
             });

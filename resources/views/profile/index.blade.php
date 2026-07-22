@@ -17,7 +17,6 @@
         ? trim(chunk_split(preg_replace('/\s+/', '', (string) $user->iban), 4, ' '))
         : __('profile.not_specified');
     $formattedBic = $user->bic ?: __('profile.not_specified');
-    $maskedActivationCode = $user->activation_code ? str_repeat('•', 8) : __('profile.no_activation_code');
     $cardExpiry = $user->creditCard?->expiry_date?->format('m/Y') ?? __('profile.not_specified');
     $profileInfoCards = [
         ['icon' => 'fa-user-circle', 'tone' => 'bg-blue-50 text-blue-700', 'label' => __('profile.full_name'), 'value' => trim(($user->first_name ?? '') . ' ' . ($user->last_name ?? '')) ?: __('profile.not_specified')],
@@ -464,10 +463,6 @@
                 <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('profile.security_title') }}</p>
                 <h3 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">{{ __('profile.security_subtitle') }}</h3>
                 <div class="mt-5 space-y-4">
-                    <div class="profile-side-card rounded-[24px] px-4 py-4">
-                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">{{ __('profile.activation_code') }}</p>
-                        <p class="profile-info-value mt-2 text-sm font-semibold leading-6 text-slate-950">{{ $maskedActivationCode }}</p>
-                    </div>
                     <div class="profile-side-card rounded-[24px] px-4 py-4">
                         <div class="profile-data-row flex flex-col gap-1 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between">
                             <span class="text-sm text-slate-500">{{ __('profile.account_status_label') }}</span>

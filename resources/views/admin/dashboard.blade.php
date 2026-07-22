@@ -104,7 +104,7 @@
 @endsection
 
 @section('dashboard_header_actions')
-    <a href="{{ localized_route('admin.deposit') }}" class="inline-flex items-center gap-2 rounded-full bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-800">
+    <a href="{{ localized_route('admin.deposit') }}" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-indigo-700 to-cyan-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-950/20 transition hover:-translate-y-0.5 hover:shadow-xl">
         <i class="fas fa-plus text-xs"></i>
         {{ __('admin_pages.new_deposit') }}
     </a>
@@ -444,9 +444,7 @@
                 </div>
             </section>
 
-            <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-3">
-                @include('components.market-tracker-fixed', ['compact' => true])
-            </section>
+            @include('components.live-news-feed', ['audience' => 'admin'])
         </div>
     </div>
 @endsection
@@ -474,7 +472,7 @@
                         labels: @json($adminStatusChartLabels),
                         datasets: [{
                             data: @json($adminStatusChartValues),
-                            backgroundColor: ['#155eef', '#f79009', '#98a2b3'],
+                            backgroundColor: ['#4f46e5', '#f5b544', '#94a3b8'],
                             borderWidth: 0,
                         }],
                     },
@@ -504,7 +502,7 @@
                         datasets: [{
                             label: @js(__('admin_pages.chart_amount')),
                             data: @json($adminVolumeChartValues),
-                            backgroundColor: ['rgba(21, 94, 239, 0.82)', 'rgba(34, 197, 94, 0.72)'],
+                            backgroundColor: ['rgba(79, 70, 229, 0.86)', 'rgba(0, 184, 217, 0.76)'],
                             borderRadius: 16,
                             borderSkipped: false,
                         }],

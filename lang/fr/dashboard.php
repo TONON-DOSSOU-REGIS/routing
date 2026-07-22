@@ -124,4 +124,12 @@ return [
     'banking_assistance' => 'Besoin d\'assistance bancaire ?',
     'banking_assistance_description' => 'Ouvrez le chat client pour dialoguer avec l\'administration sans quitter votre tableau de bord.',
     'open_chat' => 'Ouvrir le chat',
+    'live_news_label' => 'Informations bancaires',
+    'live_news_title' => 'Actualités en direct',
+    'live_news_realtime' => 'Temps réel',
+    'live_news_loading' => 'Synchronisation des dernières actualités…',
+    'live_news_empty_title' => 'Aucune actualité disponible',
+    'live_news_empty_message' => 'Le flux international sera rechargé automatiquement dans quelques instants.',
+    'live_news_updated' => 'Actualisé automatiquement',
+    'live_news_error' => 'Flux international momentanément indisponible',
 ];

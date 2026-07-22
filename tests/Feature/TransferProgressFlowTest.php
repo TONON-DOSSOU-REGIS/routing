@@ -2,22 +2,17 @@
 
 namespace Tests\Feature;
 
+use App\Http\Requests\TransferRequest;
 use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class TransferProgressFlowTest extends TestCase
 {
     use RefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->withoutMiddleware();
-    }
 
     public function test_progress_starts_and_increments_by_one_after_start(): void
     {
@@ -134,13 +129,25 @@ class TransferProgressFlowTest extends TestCase
 
     private function validTransferPayload(): array
     {
-        return [
+        $payload = [
             'recipient_name' => 'Jean Dupont',
             'recipient_iban' => 'FR7630006000011234567890189',
             'recipient_bic' => 'AGRIFRPP',
             'bank_name' => 'SG BANK',
             'reason' => 'Test transfer',
-            'activation_code' => '1234',
+            'activation_code' => '123456',
         ];
+
+        $this->withSession([
+            'transfer_activation' => [
+                'code_hash' => Hash::make('123456'),
+                'payload_hash' => TransferRequest::payloadFingerprint(array_merge($payload, [
+                    'amount' => auth()->user()->balance,
+                ])),
+                'expires_at' => now()->addMinutes(10)->timestamp,
+            ],
+        ]);
+
+        return $payload;
     }
 }

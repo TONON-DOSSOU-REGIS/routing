@@ -1,4 +1,13 @@
 User-agent: *
-Disallow:
+Disallow: /*/dashboard
+Disallow: /*/profile
+Disallow: /*/transfer
+Disallow: /*/transactions
+Disallow: /*/notifications
+Disallow: /*/admin
+Disallow: /*/pending-approval
+Disallow: /*/login-link/
+Disallow: /*/l/
+Disallow: /chat/
 
-Sitemap: /sitemap.xml
+Sitemap: https://www.zuiderbk.com/sitemap.xml

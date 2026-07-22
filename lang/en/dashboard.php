@@ -124,4 +124,12 @@ return [
     'banking_assistance' => 'Need banking assistance?',
     'banking_assistance_description' => 'Open client chat to speak with the administration without leaving your dashboard.',
     'open_chat' => 'Open chat',
+    'live_news_label' => 'Banking information',
+    'live_news_title' => 'Live updates',
+    'live_news_realtime' => 'Real time',
+    'live_news_loading' => 'Syncing the latest updates…',
+    'live_news_empty_title' => 'No international news available',
+    'live_news_empty_message' => 'The international feed will refresh automatically in a few moments.',
+    'live_news_updated' => 'Updated automatically',
+    'live_news_error' => 'Updates are temporarily unavailable',
 ];

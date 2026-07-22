@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Transaction;
 use App\Observers\TransactionObserver;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Middleware\Authenticate;
 
@@ -26,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (! $this->app->environment('local', 'testing')) {
+            URL::forceScheme('https');
+        }
+
         // Configure the Authenticate middleware to redirect to login with locale
         Authenticate::redirectUsing(function ($request) {
             $locale = session('locale', config('app.locale', 'fr'));

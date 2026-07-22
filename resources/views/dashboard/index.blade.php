@@ -95,7 +95,7 @@
 @endsection
 
 @section('dashboard_header_actions')
-    <a href="{{ localized_route('transfer.create') }}" class="inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-900/20 transition hover:bg-orange-600">
+    <a href="{{ localized_route('transfer.create') }}" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-700 to-cyan-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:-translate-y-0.5 hover:shadow-xl">
         <i class="fas fa-paper-plane text-xs"></i>
         {{ __('dashboard.new_transfer') }}
     </a>
@@ -359,6 +359,10 @@
             <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('dashboard.verified_account') }}</p>
         </article>
     </section>
+
+    <div data-client-news-section>
+        @include('components.live-news-feed', ['audience' => 'client'])
+    </div>
 
     <div class="grid gap-6 2xl:grid-cols-[minmax(0,1.65fr)_minmax(320px,360px)]">
         <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-6">

@@ -124,4 +124,12 @@ return [
     'banking_assistance' => 'Necesita asistencia bancaria?',
     'banking_assistance_description' => 'Abra el chat cliente para hablar con la administracion sin salir del panel.',
     'open_chat' => 'Abrir chat',
+    'live_news_label' => 'Información bancaria',
+    'live_news_title' => 'Actualidad en directo',
+    'live_news_realtime' => 'Tiempo real',
+    'live_news_loading' => 'Sincronizando las últimas noticias…',
+    'live_news_empty_title' => 'Todos los servicios están operativos',
+    'live_news_empty_message' => 'No hay alertas nuevas. Su espacio bancario está actualizado.',
+    'live_news_updated' => 'Actualizado automáticamente',
+    'live_news_error' => 'Actualización temporalmente no disponible',
 ];

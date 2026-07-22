@@ -10,3 +10,127 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+/* Global button feedback: tactile press, ripple and real submit/navigation loading. */
+:where(button, input[type='button'], input[type='submit'], input[type='reset'], [role='button']) {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.ui-feedback-control {
+    transition-property: scale, filter, opacity;
+    transition-duration: 160ms;
+    transition-timing-function: cubic-bezier(.22, 1, .36, 1);
+}
+
+.ui-feedback-control:not(:disabled):not([aria-disabled='true']):active {
+    scale: .97;
+}
+
+.ui-feedback-control.ui-click-feedback {
+    animation: ui-button-feedback 340ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.ui-ripple-host {
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.ui-ripple-positioned {
+    position: relative;
+}
+
+.ui-button-ripple {
+    position: absolute;
+    z-index: 2;
+    width: 12px;
+    height: 12px;
+    margin: -6px 0 0 -6px;
+    border-radius: 999px;
+    color: inherit;
+    background: currentColor;
+    opacity: .16;
+    pointer-events: none;
+    transform: scale(0);
+    animation: ui-button-ripple 540ms ease-out forwards;
+}
+
+.ui-is-loading {
+    cursor: wait !important;
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.ui-is-loading > :not(.ui-loading-indicator):not(.ui-button-ripple) {
+    opacity: 0 !important;
+}
+
+.ui-input-loading {
+    cursor: wait !important;
+    opacity: .72;
+    pointer-events: none;
+}
+
+.ui-loading-indicator {
+    position: absolute;
+    z-index: 4;
+    top: 50%;
+    left: 50%;
+    width: 1.05rem;
+    height: 1.05rem;
+    margin: -.525rem 0 0 -.525rem;
+    border: 2px solid color-mix(in srgb, var(--ui-spinner-color, #ffffff) 30%, transparent);
+    border-top-color: var(--ui-spinner-color, #ffffff);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: ui-button-spinner 720ms linear infinite;
+}
+
+.ui-page-progress {
+    position: fixed;
+    z-index: 2147483647;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    opacity: 0;
+    background: linear-gradient(90deg, #0b5cff, #00b8d9, #8ee9ff);
+    box-shadow: 0 0 18px rgba(0, 184, 217, .72);
+    pointer-events: none;
+    transition: width 10s cubic-bezier(.1, .55, .2, 1), opacity .18s ease;
+}
+
+.ui-page-progress.is-active {
+    width: 82%;
+    opacity: 1;
+}
+
+@keyframes ui-button-feedback {
+    0% { scale: 1; }
+    42% { scale: .965; }
+    100% { scale: 1; }
+}
+
+@keyframes ui-button-ripple {
+    70% { opacity: .12; }
+    100% { opacity: 0; transform: scale(24); }
+}
+
+@keyframes ui-button-spinner {
+    to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ui-feedback-control,
+    .ui-page-progress {
+        transition: none;
+    }
+
+    .ui-feedback-control.ui-click-feedback,
+    .ui-loading-indicator {
+        animation: none;
+    }
+
+    .ui-button-ripple {
+        display: none;
+    }
+}

@@ -31,17 +31,25 @@
     <div id="client-chat-backdrop" class="chat-premium-backdrop hidden"></div>
     <span id="client-unread-badge" class="pointer-events-none absolute -right-1 -top-1 z-[1] hidden min-w-[1.5rem] rounded-full bg-rose-500 px-1.5 py-1 text-center text-[11px] font-bold leading-none text-white shadow-lg shadow-rose-900/20">0</span>
 
-    <button type="button" id="client-chat-toggle" class="chat-premium-launcher" aria-controls="client-chat-window" aria-expanded="false">
-        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
-        </svg>
+    <button type="button" id="client-chat-toggle" class="chat-premium-launcher" aria-label="{{ __('chat.client_support_title') }}" aria-controls="client-chat-window" aria-expanded="false">
+        <span class="chat-premium-invite" aria-hidden="true">
+            <span class="chat-premium-invite-kicker"><span></span>{{ __('admin_chat.online') }}</span>
+            <strong>{{ __('chat.client_support_title') }}</strong>
+        </span>
+        <img src="{{ asset('images/chat/banking-advisor-v1.png') }}" alt="" class="chat-premium-launcher-photo">
+        <span class="chat-premium-launcher-presence" aria-hidden="true"></span>
+        <span class="chat-premium-launcher-chat" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+        </span>
     </button>
 
     <section id="client-chat-window" class="chat-premium-window fixed inset-x-0 bottom-0 top-0 hidden sm:absolute sm:inset-auto sm:bottom-20 sm:right-0" aria-hidden="true">
         <header class="chat-premium-header shrink-0">
+            <span class="chat-premium-header-orb chat-premium-header-orb--one" aria-hidden="true"></span>
+            <span class="chat-premium-header-orb chat-premium-header-orb--two" aria-hidden="true"></span>
             <div class="flex items-start justify-between gap-3">
                 <div class="flex min-w-0 items-start gap-3">
-                    <span id="client-chat-avatar" class="chat-premium-avatar">CS</span>
+                    <span id="client-chat-avatar" class="chat-premium-avatar chat-premium-avatar--photo"><img src="{{ asset('images/chat/banking-advisor-v1.png') }}" alt=""></span>
                     <div class="min-w-0">
                         <div class="chat-premium-badge">
                             <span id="client-chat-status-dot" class="chat-premium-status-dot is-connected"></span>
@@ -60,7 +68,7 @@
         </header>
 
         <div class="chat-premium-body flex min-h-0 flex-1 flex-col">
-            <div id="client-chat-messages" class="chat-premium-scroll min-h-0 flex-1 px-4 py-4 sm:px-5">
+            <div id="client-chat-messages" class="chat-premium-scroll chat-premium-message-list min-h-0 flex-1 px-4 py-4 sm:px-5" data-chat-scroll="client">
                 <div class="chat-premium-empty">
                     <span class="chat-premium-empty-icon">
                         <svg class="h-8 w-8 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -70,6 +78,10 @@
                     <p class="text-sm font-semibold text-slate-800">{{ __('chat.loading_messages') }}</p>
                 </div>
             </div>
+
+            <button type="button" id="client-chat-jump-latest" class="chat-premium-jump-latest hidden" aria-label="Voir les derniers messages">
+                <i class="fas fa-arrow-down"></i><span>Nouveaux messages</span>
+            </button>
 
             <div id="client-chat-typing-wrap" class="hidden px-4 pb-3 sm:px-5">
                 <div class="chat-premium-typing">
@@ -113,6 +125,11 @@
 <div id="client-chat-image-modal" class="chat-premium-image-modal">
     <button type="button" id="client-chat-image-close" class="absolute right-4 top-4 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-sm font-semibold text-white">X</button>
     <a id="client-chat-image-download" class="absolute left-4 top-4 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-sm font-semibold text-white" download>{{ __('chat.download') }}</a>
+    <div class="chat-premium-zoom-controls" aria-label="Zoom">
+        <button type="button" data-chat-zoom-out aria-label="Zoom arrière">−</button>
+        <button type="button" data-chat-zoom-reset aria-label="Réinitialiser le zoom">100%</button>
+        <button type="button" data-chat-zoom-in aria-label="Zoom avant">+</button>
+    </div>
     <img id="client-chat-image-full" src="" alt="{{ __('chat.image_preview_alt') }}" class="chat-premium-image-view">
 </div>
 
@@ -132,6 +149,7 @@
         backdrop: document.getElementById('client-chat-backdrop'),
         badge: document.getElementById('client-unread-badge'),
         messages: document.getElementById('client-chat-messages'),
+        jumpLatest: document.getElementById('client-chat-jump-latest'),
         avatar: document.getElementById('client-chat-avatar'),
         subtitle: document.getElementById('client-chat-subtitle'),
         statusDot: document.getElementById('client-chat-status-dot'),
@@ -153,7 +171,7 @@
         imageFull: document.getElementById('client-chat-image-full'),
     };
 
-    const state = { open: false, init: false, loading: false, sending: false, poll: null, unread: null, typingTimer: null, feedbackTimer: null, lastPing: 0, sig: '', file: null, partnerName: i18n.supportShort };
+    const state = { open: false, init: false, loading: false, sending: false, poll: null, unread: null, unreadCount: null, typingTimer: null, feedbackTimer: null, lastPing: 0, lastIncomingId: null, partnerId: null, zoom: 1, sig: '', file: null, partnerName: i18n.supportShort };
 
     const esc = (v) => { const d = document.createElement('div'); d.textContent = v ?? ''; return d.innerHTML; };
     const time = (v) => { try { return v ? new Date(v).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }) : ''; } catch { return ''; } };
@@ -186,9 +204,9 @@
     }
 
     function updatePartner(partner, userPresence) {
+        state.partnerId = Number(partner?.id) || null;
         state.partnerName = partner?.display_name || i18n.supportShort;
         const safe = presence(userPresence?.presence_status);
-        el.avatar.textContent = initials(state.partnerName);
         el.subtitle.textContent = `${state.partnerName} - ${presenceLabel(safe)}`;
         setPresence(safe);
     }
@@ -216,7 +234,7 @@
         const name = msg.attachment_name || i18n.fileLabel;
         const fsize = msg.formatted_attachment_size || size(msg.attachment_size);
         if (msg.is_image_attachment || (msg.attachment_type || '').startsWith('image/')) {
-            return `<button type="button" class="chat-premium-attachment w-full overflow-hidden text-left" data-client-chat-image="${esc(url)}"><img src="${esc(url)}" alt="${esc(name)}" class="chat-premium-image"></button>`;
+            return `<button type="button" class="chat-premium-attachment chat-premium-image-trigger w-full overflow-hidden text-left" data-client-chat-image="${esc(url)}"><img src="${esc(url)}" alt="${esc(name)}" class="chat-premium-image"><span class="chat-premium-image-zoom-hint"><i class="fas fa-magnifying-glass-plus"></i></span></button>`;
         }
         return `<a href="${esc(url)}" target="_blank" rel="noopener" class="chat-premium-attachment chat-premium-file"><span class="chat-premium-file-icon"><i class="fas fa-file-alt text-sm"></i></span><span class="min-w-0 flex-1"><span class="block truncate text-sm font-semibold">${esc(name)}</span><span class="mt-1 block text-xs ${outgoing ? 'text-white/75' : 'text-slate-500'}">${esc(fsize)}</span></span></a>`;
     }
@@ -229,12 +247,17 @@
 
     function renderMessages(messages) {
         if (!Array.isArray(messages) || !messages.length) { state.sig = ''; emptyState(); return; }
+        const newestIncomingId = messages.reduce((latest, message) => Number(message.sender_id) !== Number(currentUserId) ? Math.max(latest, Number(message.id) || 0) : latest, 0);
+        const hasNewReply = state.lastIncomingId !== null && newestIncomingId > state.lastIncomingId;
+        state.lastIncomingId = Math.max(Number(state.lastIncomingId) || 0, newestIncomingId);
         const sig = messages.map((m) => `${m.id}:${m.updated_at || m.created_at || ''}`).join('|');
         const stick = el.messages.scrollHeight - el.messages.scrollTop - el.messages.clientHeight < 72;
         if (sig === state.sig) { if (stick) el.messages.scrollTop = el.messages.scrollHeight; return; }
         state.sig = sig;
         el.messages.innerHTML = `<div class="space-y-4">${messages.map(messageHtml).join('')}</div>`;
-        el.messages.scrollTop = el.messages.scrollHeight;
+        if (stick) el.messages.scrollTo({ top: el.messages.scrollHeight, behavior: state.init ? 'smooth' : 'auto' });
+        el.jumpLatest.classList.toggle('hidden', stick);
+        if (hasNewReply) window.ZuiderChatAudio?.notify();
     }
 
     async function json(url, options = {}) {
@@ -273,6 +296,8 @@
             const { response, data } = await json('{{ route("chat.unread-count") }}');
             if (!response.ok || !data || !data.success) return;
             const count = Number(data.count || 0);
+            if (state.unreadCount !== null && count > state.unreadCount) window.ZuiderChatAudio?.notify();
+            state.unreadCount = count;
             if (count > 0) {
                 el.badge.textContent = count > 99 ? '99+' : `${count}`;
                 el.badge.classList.remove('hidden');
@@ -288,7 +313,7 @@
         if (isTyping && now - state.lastPing < 1800) return;
         state.lastPing = isTyping ? now : 0;
         try {
-            await json('{{ route("chat.typing") }}', { method: 'POST', headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' }, body: JSON.stringify({ is_typing: Boolean(isTyping) }) });
+            await json('{{ route("chat.typing") }}', { method: 'POST', headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' }, body: JSON.stringify({ receiver_id: state.partnerId, is_typing: Boolean(isTyping) }) });
         } catch {}
     }
 
@@ -359,7 +384,7 @@
             setFeedback('');
             el.badge.classList.add('hidden');
             loadMessages(!state.init);
-            state.poll = setInterval(() => loadMessages(false), 3500);
+            state.poll = setInterval(() => loadMessages(false), 1600);
             setTimeout(() => el.input.focus(), 100);
         } else {
             sendTyping(false);
@@ -368,10 +393,11 @@
     }
 
     function toggle(force) { setOpen(typeof force === 'boolean' ? force : !state.open); }
-    function openImage(src) { if (!src) return; el.imageFull.src = src; el.imageDownload.href = src; el.imageModal.classList.add('is-open'); document.body.classList.add('overflow-hidden'); }
-    function closeImage() { el.imageModal.classList.remove('is-open'); el.imageFull.src = ''; el.imageDownload.removeAttribute('href'); if (!state.open || window.innerWidth >= 640) document.body.classList.remove('overflow-hidden'); }
+    function setZoom(value) { state.zoom = Math.min(3, Math.max(.75, value)); el.imageFull.style.setProperty('--chat-image-zoom', state.zoom); el.imageModal.querySelector('[data-chat-zoom-reset]').textContent = `${Math.round(state.zoom * 100)}%`; }
+    function openImage(src) { if (!src) return; setZoom(1); el.imageFull.src = src; el.imageDownload.href = src; el.imageModal.classList.add('is-open'); document.body.classList.add('overflow-hidden'); }
+    function closeImage() { el.imageModal.classList.remove('is-open'); el.imageFull.src = ''; setZoom(1); el.imageDownload.removeAttribute('href'); if (!state.open || window.innerWidth >= 640) document.body.classList.remove('overflow-hidden'); }
 
-    el.toggle.addEventListener('click', () => toggle());
+    el.toggle.addEventListener('click', () => { window.ZuiderChatAudio?.unlock(); toggle(); });
     el.close.addEventListener('click', () => toggle(false));
     el.backdrop.addEventListener('click', () => toggle(false));
     el.fileTrigger.addEventListener('click', () => el.fileInput.click());
@@ -388,7 +414,7 @@
         resizeInput();
         sendTyping(true);
         clearTimeout(state.typingTimer);
-        state.typingTimer = setTimeout(() => sendTyping(false), 1800);
+        state.typingTimer = setTimeout(() => sendTyping(false), 1400);
     });
     el.input.addEventListener('blur', () => sendTyping(false));
     el.input.addEventListener('keydown', (event) => {
@@ -401,7 +427,20 @@
         const trigger = event.target.closest('[data-client-chat-image]');
         if (trigger) openImage(trigger.getAttribute('data-client-chat-image'));
     });
+    el.messages.addEventListener('scroll', () => {
+        const awayFromBottom = el.messages.scrollHeight - el.messages.scrollTop - el.messages.clientHeight > 120;
+        el.jumpLatest.classList.toggle('hidden', !awayFromBottom);
+    }, { passive: true });
+    el.jumpLatest.addEventListener('click', () => {
+        el.messages.scrollTo({ top: el.messages.scrollHeight, behavior: 'smooth' });
+        el.jumpLatest.classList.add('hidden');
+    });
     el.imageClose.addEventListener('click', closeImage);
+    el.imageModal.querySelector('[data-chat-zoom-in]').addEventListener('click', () => setZoom(state.zoom + .25));
+    el.imageModal.querySelector('[data-chat-zoom-out]').addEventListener('click', () => setZoom(state.zoom - .25));
+    el.imageModal.querySelector('[data-chat-zoom-reset]').addEventListener('click', () => setZoom(1));
+    el.imageFull.addEventListener('dblclick', () => setZoom(state.zoom > 1 ? 1 : 2));
+    el.imageModal.addEventListener('wheel', (event) => { event.preventDefault(); setZoom(state.zoom + (event.deltaY < 0 ? .15 : -.15)); }, { passive: false });
     el.imageModal.addEventListener('click', (event) => { if (event.target === el.imageModal) closeImage(); });
     document.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape') return;

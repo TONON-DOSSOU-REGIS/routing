@@ -138,15 +138,117 @@
             box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06);
         }
 
+        .transfer-journey {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            border: 1px solid rgba(125, 211, 252, .18);
+            background:
+                radial-gradient(circle at 18% 0%, rgba(14, 165, 233, .2), transparent 34%),
+                radial-gradient(circle at 92% 110%, rgba(249, 115, 22, .14), transparent 34%),
+                linear-gradient(135deg, #06172d 0%, #0b2441 55%, #102f50 100%) !important;
+            box-shadow: 0 28px 60px rgba(4, 20, 39, .24), inset 0 1px 0 rgba(255,255,255,.08);
+        }
+
+        .transfer-journey::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            opacity: .42;
+            background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+            background-size: 28px 28px;
+            mask-image: linear-gradient(to right, #000, transparent 80%);
+        }
+
         .transfer-step {
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(8px);
+            position: relative;
+            min-height: 9rem;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.055);
+            color: rgba(255,255,255,.72);
+            backdrop-filter: blur(12px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+            transition: transform 260ms ease, background 260ms ease, border-color 260ms ease;
+        }
+
+        .transfer-step::after {
+            content: '';
+            position: absolute;
+            right: -2.5rem;
+            bottom: -3rem;
+            width: 7rem;
+            height: 7rem;
+            border-radius: 999px;
+            background: currentColor;
+            opacity: .035;
+        }
+
+        .transfer-step:hover {
+            transform: translateY(-3px);
+            background: rgba(255,255,255,.09);
+            border-color: rgba(125,211,252,.25);
         }
 
         .transfer-step.is-active {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.18);
+            color: #fff;
+            background: linear-gradient(145deg, rgba(14,165,233,.3), rgba(255,255,255,.1));
+            border-color: rgba(125, 211, 252, .38);
+            box-shadow: 0 18px 36px rgba(2,132,199,.14), inset 0 1px 0 rgba(255,255,255,.16);
+        }
+
+        .transfer-step-icon {
+            display: flex;
+            width: 3rem;
+            height: 3rem;
+            align-items: center;
+            justify-content: center;
+            border-radius: 1rem;
+            color: #bae6fd;
+            background: rgba(255,255,255,.09);
+            border: 1px solid rgba(255,255,255,.1);
+            box-shadow: 0 12px 24px rgba(0,0,0,.14);
+        }
+
+        .transfer-step.is-active .transfer-step-icon {
+            color: #082f49;
+            background: linear-gradient(145deg, #e0f2fe, #7dd3fc);
+            box-shadow: 0 12px 26px rgba(56,189,248,.25);
+        }
+
+        .transfer-step-number {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: .68rem;
+            font-weight: 800;
+            letter-spacing: .18em;
+            color: rgba(255,255,255,.42);
+        }
+
+        .transfer-step-status {
+            display: inline-flex;
+            align-items: center;
+            gap: .42rem;
+            margin-top: .65rem;
+            font-size: .66rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.46);
+        }
+
+        .transfer-step-status::before {
+            content: '';
+            width: .42rem;
+            height: .42rem;
+            border-radius: 999px;
+            background: currentColor;
+        }
+
+        .transfer-step.is-active .transfer-step-status {
+            color: #7dd3fc;
         }
 
         .transfer-draft-item {
@@ -978,25 +1080,31 @@
 
     <div class="grid gap-6 2xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,380px)]">
         <section class="space-y-6">
-            <div class="premium-panel rounded-[30px] bg-slate-900 p-5 sm:p-6">
-                <div class="grid gap-3 sm:grid-cols-3">
-                    <div class="transfer-step is-active rounded-[24px] px-4 py-4 text-white">
-                        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/16 text-sm shadow-sm">
+            <div class="transfer-journey rounded-[30px] p-4 sm:p-5" data-transfer-journey>
+                <div class="grid gap-3 sm:grid-cols-3" role="list" aria-label="{{ __('transactions.transfer_progress') }}">
+                    <div class="transfer-step is-active rounded-[22px] px-4 py-4" role="listitem">
+                        <span class="transfer-step-number">01</span>
+                        <div class="transfer-step-icon">
                             <i class="fas fa-edit"></i>
                         </div>
-                        <p class="mt-4 text-sm font-semibold">{{ __('transactions.step_information') }}</p>
+                        <p class="mt-4 text-sm font-semibold text-white">{{ __('transactions.step_information') }}</p>
+                        <span class="transfer-step-status">{{ __('common.processing') }}</span>
                     </div>
-                    <div class="transfer-step rounded-[24px] px-4 py-4 text-white/82">
-                        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/12 text-sm shadow-sm">
+                    <div class="transfer-step rounded-[22px] px-4 py-4" role="listitem">
+                        <span class="transfer-step-number">02</span>
+                        <div class="transfer-step-icon">
                             <i class="fas fa-cog"></i>
                         </div>
-                        <p class="mt-4 text-sm font-semibold">{{ __('transactions.step_processing') }}</p>
+                        <p class="mt-4 text-sm font-semibold text-white">{{ __('transactions.step_processing') }}</p>
+                        <span class="transfer-step-status">{{ __('common.pending') }}</span>
                     </div>
-                    <div class="transfer-step rounded-[24px] px-4 py-4 text-white/82">
-                        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/12 text-sm shadow-sm">
+                    <div class="transfer-step rounded-[22px] px-4 py-4" role="listitem">
+                        <span class="transfer-step-number">03</span>
+                        <div class="transfer-step-icon">
                             <i class="fas fa-check"></i>
                         </div>
-                        <p class="mt-4 text-sm font-semibold">{{ __('transactions.step_confirmation') }}</p>
+                        <p class="mt-4 text-sm font-semibold text-white">{{ __('transactions.step_confirmation') }}</p>
+                        <span class="transfer-step-status">{{ __('common.pending') }}</span>
                     </div>
                 </div>
             </div>
@@ -1187,7 +1295,7 @@
                                     @enderror
                                 </div>
 
-                                <div>
+                                <div id="activationCodeGroup" class="hidden">
                                     <label for="activation_code" class="mb-3 block text-sm font-semibold text-slate-800">
                                         {{ __('transactions.activation_code') }}
                                     </label>
@@ -1196,10 +1304,18 @@
                                         id="activation_code"
                                         name="activation_code"
                                         value="{{ old('activation_code') }}"
-                                        required
+                                        inputmode="numeric"
+                                        maxlength="6"
+                                        autocomplete="one-time-code"
                                         class="transfer-field input-field block w-full rounded-2xl px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400"
                                         placeholder="{{ __('transactions.activation_code_placeholder') }}"
                                     >
+                                    <div class="mt-2 flex flex-wrap items-center justify-between gap-2">
+                                        <p id="activationCodeStatus" class="text-sm text-emerald-700"></p>
+                                        <button type="button" id="resendActivationCode" class="text-sm font-semibold text-blue-700 hover:text-blue-800">
+                                            {{ __('transactions.resend_activation_code') }}
+                                        </button>
+                                    </div>
                                     @error('activation_code')
                                         <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
                                     @enderror
@@ -1215,7 +1331,7 @@
                         </a>
                         <button type="button" id="startBtn" @disabled(!$hasTransferableBalance) class="inline-flex min-w-[220px] items-center justify-center gap-2 rounded-full border border-orange-300 bg-orange-500 px-6 py-3.5 text-sm font-semibold text-white shadow-[0_18px_45px_rgba(249,115,22,0.35)] transition hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-200 disabled:cursor-not-allowed disabled:opacity-80">
                             <i class="fas fa-paper-plane text-xs"></i>
-                            {{ __('transactions.start_transfer') }}
+                            {{ __('transactions.send_activation_code') }}
                         </button>
                     </div>
                 </form>
@@ -1372,6 +1488,10 @@
         document.addEventListener('DOMContentLoaded', function () {
             const transferForm = document.getElementById('transferForm');
             const startBtn = document.getElementById('startBtn');
+            const activationCodeGroup = document.getElementById('activationCodeGroup');
+            const activationCodeInput = document.getElementById('activation_code');
+            const activationCodeStatus = document.getElementById('activationCodeStatus');
+            const resendActivationCode = document.getElementById('resendActivationCode');
             const overlay = document.getElementById('flashOverlay');
             const flashMsg = document.getElementById('flashMessage');
             const closeFlash = document.getElementById('closeFlash');
@@ -1401,6 +1521,7 @@
             }
 
             let txId = null;
+            let activationCodeRequested = false;
             let ticking = false;
             let progressMode = false;
             let audioContext = null;
@@ -1727,7 +1848,9 @@
 
             function resetStartButton() {
                 startBtn.disabled = false;
-                startBtn.innerHTML = '<i class="fas fa-paper-plane text-xs"></i>{{ __('transactions.start_transfer') }}';
+                startBtn.innerHTML = activationCodeRequested
+                    ? '<i class="fas fa-paper-plane text-xs"></i>{{ __('transactions.start_transfer') }}'
+                    : '<i class="fas fa-envelope text-xs"></i>{{ __('transactions.send_activation_code') }}';
             }
 
             function showMessage(message, type) {
@@ -1817,8 +1940,54 @@
                 }
             }
 
+            async function requestActivationCode() {
+                if (!transferForm.reportValidity()) {
+                    return;
+                }
+
+                startBtn.disabled = true;
+                startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>{{ __('transactions.sending_activation_code') }}';
+
+                try {
+                    const res = await fetch('{{ localized_route('transactions.activation-code') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: new FormData(transferForm)
+                    });
+                    const data = await res.json().catch(function () { return {}; });
+
+                    if (!res.ok) {
+                        const firstError = data.errors
+                            ? Object.values(data.errors)[0][0]
+                            : (data.message || '{{ __('transactions.activation_email_failed') }}');
+                        resetStartButton();
+                        showMessage(firstError, 'error');
+                        return;
+                    }
+
+                    activationCodeRequested = true;
+                    activationCodeGroup.classList.remove('hidden');
+                    activationCodeStatus.textContent = data.message;
+                    activationCodeStatus.className = 'text-sm text-emerald-700';
+                    activationCodeInput.value = '';
+                    activationCodeInput.focus();
+                    resetStartButton();
+                } catch (error) {
+                    resetStartButton();
+                    showMessage('{{ __('transactions.connection_error') }}', 'error');
+                }
+            }
+
             async function handleTransferStart() {
                 if (ticking) {
+                    return;
+                }
+
+                if (!activationCodeRequested) {
+                    await requestActivationCode();
                     return;
                 }
 
@@ -1876,6 +2045,7 @@
             }
 
             startBtn.addEventListener('click', handleTransferStart);
+            resendActivationCode.addEventListener('click', requestActivationCode);
 
             closeFlash.addEventListener('click', function () {
                 if (progressMode) {

@@ -423,23 +423,16 @@ class AdminController extends Controller
             'phone' => $this->phoneRules(),
             'role' => 'required|in:user,admin',
             'adresse' => 'nullable|string|max:255',
-            'ville' => 'required|string|max:255',
+            'ville' => 'nullable|string|max:255',
             'pays' => 'required|string|max:255',
-            'date_naissance' => 'required|date|before:today',
-            'type_piece' => 'required|in:CNI,Passport,Permis',
-            'numero_piece' => 'required|string|max:50|unique:users,id_number',
+            'date_naissance' => 'nullable|date|before:today',
+            'type_piece' => 'nullable|in:CNI,Passport,Permis',
+            'numero_piece' => 'nullable|string|max:50|unique:users,id_number',
             'iban' => 'nullable|string|max:34',
             'bic' => 'nullable|string|max:11',
-            'activation_code' => 'nullable|string|max:255',
-            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
             'phone.max' => __('auth.phone_international_format'),
         ]);
-
-        $profilePhotoPath = null;
-        if ($request->hasFile('profile_photo')) {
-            $profilePhotoPath = $request->file('profile_photo')->store('profile-photos', 'public');
-        }
 
         $user = User::create([
             'first_name' => $request->first_name,
@@ -456,8 +449,6 @@ class AdminController extends Controller
             'id_number' => $request->numero_piece,
             'iban' => $request->iban,
             'bic' => $request->bic,
-            'activation_code' => $request->activation_code,
-            'profile_photo_path' => $profilePhotoPath,
             'balance' => 0,
             'status' => 'active',
         ]);
@@ -570,7 +561,6 @@ class AdminController extends Controller
             'numero_piece' => 'nullable|string|max:50|unique:users,id_number,' . $user->id,
             'iban' => 'nullable|string|max:34',
             'bic' => 'nullable|string|max:11',
-            'activation_code' => 'nullable|string|max:255',
             'balance' => 'required|numeric|min:0',
             'status' => 'required|in:active,suspended',
 
@@ -598,7 +588,6 @@ class AdminController extends Controller
             'id_number' => $request->has('numero_piece') ? $request->numero_piece : $user->id_number,
             'iban' => $request->iban,
             'bic' => $request->bic,
-            'activation_code' => $request->activation_code,
             'balance' => $request->balance,
             'status' => $request->status,
         ];

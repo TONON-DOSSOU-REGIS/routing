@@ -124,4 +124,12 @@ return [
     'banking_assistance' => 'Brauchen Sie Bankhilfe?',
     'banking_assistance_description' => 'Oeffnen Sie den Client-Chat, um mit der Administration zu sprechen, ohne das Dashboard zu verlassen.',
     'open_chat' => 'Chat oeffnen',
+    'live_news_label' => 'Bankinformationen',
+    'live_news_title' => 'Live-Aktualisierungen',
+    'live_news_realtime' => 'Echtzeit',
+    'live_news_loading' => 'Neueste Meldungen werden synchronisiert…',
+    'live_news_empty_title' => 'Alle Dienste sind betriebsbereit',
+    'live_news_empty_message' => 'Keine neuen Warnungen. Ihr Banking-Bereich ist aktuell.',
+    'live_news_updated' => 'Automatisch aktualisiert',
+    'live_news_error' => 'Aktualisierung vorübergehend nicht verfügbar',
 ];

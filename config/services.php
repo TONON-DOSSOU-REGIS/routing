@@ -42,4 +42,8 @@ return [
         'timeout' => env('TWILIO_TIMEOUT', 10),
     ],
 
+    'gnews' => [
+        'key' => env('GNEWS_API_KEY'),
+    ],
+
 ];

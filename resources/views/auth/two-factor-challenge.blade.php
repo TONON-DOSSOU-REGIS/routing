@@ -1,255 +1,210 @@
-﻿<!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @include('partials.seo')
-    @include('partials.favicon')
-    @vite(['resources/css/app.css'])
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+@extends('layouts.auth-premium')
 
+@section('title', __('auth.2fa_challenge_heading'))
+@section('auth_nav_subtitle', __('auth.2fa_challenge_heading'))
+
+@php
+    $emailParts = explode('@', (string) $email, 2);
+    $localPart = $emailParts[0] ?? '';
+    $maskedLocal = $localPart === ''
+        ? '***'
+        : substr($localPart, 0, min(2, strlen($localPart))) . str_repeat('*', max(strlen($localPart) - 2, 0));
+    $maskedEmail = isset($emailParts[1]) ? $maskedLocal . '@' . $emailParts[1] : $email;
+@endphp
+
+@push('auth_premium_head')
     <style>
-        body {
-            font-family: 'Manrope', sans-serif;
-        }
-
-        @keyframes challengeFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-7px); }
-        }
-
-        @keyframes challengePulse {
-            0%, 100% { opacity: 0.55; }
-            50% { opacity: 1; }
-        }
-
-        @keyframes challengeSweep {
-            0% { transform: translateX(-130%); }
-            100% { transform: translateX(130%); }
-        }
-
-        .challenge-float {
-            animation: challengeFloat 7s ease-in-out infinite;
-        }
-
-        .challenge-pulse {
-            animation: challengePulse 2.8s ease-in-out infinite;
-        }
-
-        .challenge-sweep {
+        .two-factor-orbit {
             position: relative;
-            overflow: hidden;
+            display: grid;
+            width: min(17rem, 58vw);
+            aspect-ratio: 1;
+            place-items: center;
+            margin-inline: auto;
         }
 
-        .challenge-sweep::after {
-            content: '';
+        .two-factor-orbit::before,
+        .two-factor-orbit::after {
+            content: "";
             position: absolute;
-            inset: 0;
-            background: linear-gradient(110deg, transparent 10%, rgba(255, 255, 255, 0.18) 45%, transparent 80%);
-            transform: translateX(-130%);
-            animation: challengeSweep 5.8s linear infinite;
-            pointer-events: none;
+            border: 1px solid rgba(125, 211, 252, .22);
+            border-radius: 999px;
+            animation: twoFactorSpin 14s linear infinite;
+        }
+
+        .two-factor-orbit::before { inset: 0; border-top-color: rgba(103, 232, 249, .9); }
+        .two-factor-orbit::after { inset: 1.8rem; border-right-color: rgba(251, 146, 60, .9); animation-direction: reverse; animation-duration: 9s; }
+
+        .two-factor-core {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            width: 8.5rem;
+            aspect-ratio: 1;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, .16);
+            border-radius: 2.5rem;
+            background: linear-gradient(145deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, .05));
+            box-shadow: 0 30px 70px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(255, 255, 255, .2);
+            backdrop-filter: blur(16px);
+        }
+
+        .two-factor-core::after {
+            content: "";
+            position: absolute;
+            inset: -.75rem;
+            border-radius: 3rem;
+            background: radial-gradient(circle, rgba(34, 211, 238, .2), transparent 68%);
+            animation: twoFactorPulse 2.4s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        .two-factor-code-input { font-variant-numeric: tabular-nums; }
+
+        @keyframes twoFactorSpin { to { transform: rotate(360deg); } }
+        @keyframes twoFactorPulse { 50% { transform: scale(1.12); opacity: .55; } }
+
+        @media (prefers-reduced-motion: reduce) {
+            .two-factor-orbit::before,
+            .two-factor-orbit::after,
+            .two-factor-core::after { animation: none; }
         }
     </style>
-</head>
-<body class="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.16),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(249,115,22,0.16),_transparent_28%),linear-gradient(180deg,#f8fafc_0%,#eef2ff_50%,#f8fafc_100%)] text-slate-900">
-    @php
-        $emailParts = explode('@', (string) $email, 2);
-        $localPart = $emailParts[0] ?? '';
-        $maskedLocal = $localPart === ''
-            ? '***'
-            : substr($localPart, 0, min(2, strlen($localPart))) . str_repeat('*', max(strlen($localPart) - 2, 0));
-        $maskedEmail = isset($emailParts[1]) ? $maskedLocal . '@' . $emailParts[1] : $email;
-    @endphp
+@endpush
 
-    <div class="relative overflow-hidden">
-        <div class="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top,_rgba(30,64,175,0.18),_transparent_58%)]"></div>
-        <div class="pointer-events-none absolute -top-16 left-10 h-40 w-40 rounded-full bg-blue-200/50 blur-3xl"></div>
-        <div class="pointer-events-none absolute bottom-0 right-0 h-56 w-56 rounded-full bg-orange-200/40 blur-3xl"></div>
+@section('auth_nav_actions')
+    <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="auth-link-btn inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm hover:border-slate-300 hover:bg-slate-50">
+        <i class="fas fa-arrow-left text-xs"></i>
+        {{ __('auth.back_to_login') }}
+    </a>
+    <span class="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-950/20">
+        <i class="fas fa-shield-halved text-xs"></i>
+        2FA
+    </span>
+@endsection
 
-        <div class="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
-            <div class="grid gap-8 xl:grid-cols-[0.9fr,1.1fr]">
-                <section class="challenge-float overflow-hidden rounded-[2rem] border border-slate-800/60 bg-slate-950 text-white shadow-[0_35px_100px_rgba(15,23,42,0.38)]">
-                    <div class="relative h-full overflow-hidden px-6 py-7 sm:px-8 sm:py-9">
-                        <div class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-blue-500/20 blur-3xl"></div>
-                        <div class="absolute -left-14 bottom-0 h-48 w-48 rounded-full bg-orange-400/10 blur-3xl"></div>
+@section('auth_hero')
+    <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 ring-1 ring-white/10">
+        <span class="h-2.5 w-2.5 rounded-full bg-emerald-300 shadow-[0_0_16px_rgba(110,231,183,.8)]"></span>
+        {{ __('auth_ui.secure_access') }} · 2FA
+    </span>
 
-                        <div class="relative z-10">
-                            <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-blue-100">
-                                <span class="h-2.5 w-2.5 rounded-full bg-emerald-400 challenge-pulse"></span>
-                                Zuider Bank S.A
-                            </span>
+    <h1 class="auth-heading mt-6 text-4xl font-semibold tracking-[-0.05em] text-white sm:text-5xl">
+        {{ __('auth.2fa_challenge_heading') }}
+    </h1>
+    <p class="mt-4 max-w-2xl text-base leading-7 text-white/76 sm:text-lg">
+        {{ __('auth.2fa_challenge_description') }}
+    </p>
 
-                            <h1 class="mt-6 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                                {{ __('auth.2fa_challenge_heading') }}
-                            </h1>
-                            <p class="mt-4 max-w-xl text-base leading-7 text-slate-300 sm:text-lg">
-                                {{ __('auth.2fa_challenge_description') }}
-                            </p>
+    <div class="two-factor-orbit mt-7" aria-hidden="true">
+        <div class="two-factor-core">
+            <i class="fas fa-fingerprint text-5xl text-cyan-200"></i>
+        </div>
+    </div>
 
-                            <div class="mt-7 rounded-[1.6rem] border border-white/10 bg-white/5 p-5">
-                                <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400">{{ __('auth.2fa_otpauth_label') }}</p>
-                                <p class="mt-3 text-lg font-semibold text-white break-all">{{ $maskedEmail }}</p>
-                                <p class="mt-2 text-sm leading-6 text-slate-300">{{ __('auth.2fa_setup_heading') }}</p>
-                            </div>
+    <div class="mt-7 grid gap-3 sm:grid-cols-3">
+        <div class="auth-stat-card">
+            <p>{{ __('auth.2fa_code_label') }}</p>
+            <div class="mt-3 text-2xl font-semibold text-white">6</div>
+            <p class="mt-2 text-sm leading-6 text-white/74">{{ __('auth.2fa_code_placeholder') }}</p>
+        </div>
+        <div class="auth-stat-card">
+            <p>{{ __('auth_ui.bank_level') }}</p>
+            <div class="mt-3 text-lg font-semibold text-emerald-300">AES-256</div>
+            <p class="mt-2 text-sm leading-6 text-white/74">{{ __('auth_ui.secure_space') }}</p>
+        </div>
+        <div class="auth-stat-card">
+            <p>{{ __('auth.2fa_backup_label') }}</p>
+            <div class="mt-3 text-lg font-semibold text-white">24/7</div>
+            <p class="mt-2 text-sm leading-6 text-white/74">{{ __('auth.2fa_backup_placeholder') }}</p>
+        </div>
+    </div>
+@endsection
 
-                            <div class="challenge-sweep mt-7 rounded-[1.9rem] border border-white/10 bg-white/5 p-5 sm:p-6">
-                                <div class="flex items-start justify-between gap-4">
-                                    <div>
-                                        <p class="text-[11px] uppercase tracking-[0.3em] text-orange-200">2FA</p>
-                                        <h2 class="mt-3 text-2xl font-bold text-white">{{ __('auth.2fa_challenge_heading') }}</h2>
-                                    </div>
-                                    <div class="rounded-2xl border border-emerald-300/20 bg-emerald-400/10 px-4 py-3 text-right">
-                                        <p class="text-[11px] uppercase tracking-[0.2em] text-emerald-200">Secure</p>
-                                        <p class="mt-1 text-2xl font-bold text-emerald-300">100%</p>
-                                    </div>
-                                </div>
+@section('auth_panel')
+    <div class="auth-panel-header flex items-start justify-between gap-4">
+        <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('auth_ui.secure_access') }}</p>
+            <h2 class="auth-heading mt-2 text-3xl font-semibold tracking-[-0.04em] text-slate-950">{{ __('auth.2fa_challenge_heading') }}</h2>
+            <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('auth.2fa_challenge_description') }}</p>
+        </div>
+        <span class="inline-flex shrink-0 items-center gap-2 rounded-full bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200/80">
+            <i class="fas fa-shield-check text-[11px]"></i>
+            {{ __('auth_ui.bank_level') }}
+        </span>
+    </div>
 
-                                <div class="mt-5 h-3 w-full overflow-hidden rounded-full bg-white/10">
-                                    <div class="h-3 rounded-full bg-gradient-to-r from-blue-400 via-sky-300 to-emerald-400" style="width: 100%"></div>
-                                </div>
+    <div class="mt-6 rounded-[24px] bg-gradient-to-br from-slate-950 to-blue-950 px-5 py-5 text-white shadow-xl shadow-blue-950/15">
+        <div class="flex items-center gap-4">
+            <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white/10 text-cyan-200 ring-1 ring-white/10">
+                <i class="fas fa-user-shield"></i>
+            </span>
+            <div class="min-w-0">
+                <p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/50">{{ __('auth.2fa_otpauth_label') }}</p>
+                <p class="mt-1 truncate text-sm font-semibold text-white">{{ $maskedEmail }}</p>
+            </div>
+            <span class="ml-auto h-2.5 w-2.5 shrink-0 rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(74,222,128,.8)]"></span>
+        </div>
+    </div>
 
-                                <div class="mt-6 grid gap-3 sm:grid-cols-2">
-                                    <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
-                                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500">01</p>
-                                        <p class="mt-2 font-semibold text-white">{{ __('auth.2fa_code_label') }}</p>
-                                        <p class="mt-2 text-xs text-slate-400">{{ __('auth.2fa_challenge_description') }}</p>
-                                    </div>
-                                    <div class="rounded-2xl border border-blue-300/20 bg-blue-400/10 px-4 py-4">
-                                        <p class="text-xs uppercase tracking-[0.2em] text-blue-200">02</p>
-                                        <p class="mt-2 font-semibold text-white">{{ __('auth.2fa_backup_label') }}</p>
-                                        <p class="mt-2 text-xs text-slate-300">{{ __('auth.2fa_backup_placeholder') }}</p>
-                                    </div>
-                                </div>
-                            </div>
+    @if ($errors->any())
+        <div class="mt-5 rounded-[24px] border border-rose-200 bg-rose-50 px-4 py-4">
+            <div class="flex items-start gap-3 text-sm text-rose-700">
+                <span class="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-rose-100 text-rose-600"><i class="fas fa-triangle-exclamation"></i></span>
+                <p class="pt-2 font-medium">{{ $errors->first() }}</p>
+            </div>
+        </div>
+    @endif
 
-                            <div class="mt-7 grid gap-4 sm:grid-cols-2">
-                                <div class="rounded-[1.4rem] border border-white/10 bg-white/5 p-4">
-                                    <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400">{{ __('auth.2fa_code_label') }}</p>
-                                    <p class="mt-3 text-3xl font-bold text-white">6</p>
-                                    <p class="mt-2 text-xs text-slate-300">{{ __('auth.2fa_code_placeholder') }}</p>
-                                </div>
-                                <div class="rounded-[1.4rem] border border-white/10 bg-white/5 p-4">
-                                    <p class="text-[11px] uppercase tracking-[0.25em] text-slate-400">{{ __('auth.2fa_backup_label') }}</p>
-                                    <p class="mt-3 text-3xl font-bold text-white">1</p>
-                                    <p class="mt-2 text-xs text-slate-300">{{ __('auth.2fa_verify_button') }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+    <form method="POST" action="{{ localized_route('twofactor.verify', ['locale' => app()->getLocale()]) }}" class="mt-6 space-y-5">
+        @csrf
 
-                <section class="space-y-6">
-                    <div class="rounded-[2rem] border border-white/70 bg-white/92 p-5 shadow-[0_30px_90px_rgba(148,163,184,0.18)] backdrop-blur-xl sm:p-7">
-                        <div class="flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-start sm:justify-between">
-                            <div>
-                                <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-400">Zuider Bank S.A</p>
-                                <h2 class="mt-3 text-2xl font-bold text-slate-950">{{ __('auth.2fa_challenge_heading') }}</h2>
-                                <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-500">{{ __('auth.2fa_challenge_description') }}</p>
-                            </div>
-                            <div class="rounded-[1.3rem] border border-slate-200 bg-slate-50 px-4 py-3">
-                                <p class="text-[11px] uppercase tracking-[0.24em] text-slate-400">{{ __('auth.2fa_otpauth_label') }}</p>
-                                <p class="mt-1 text-sm font-semibold text-slate-900 break-all">{{ $maskedEmail }}</p>
-                            </div>
-                        </div>
+        <div>
+            <label for="code" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('auth.2fa_code_label') }}</label>
+            <div class="relative">
+                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-blue-600"><i class="fas fa-mobile-screen-button text-sm"></i></span>
+                <input id="code" type="text" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" spellcheck="false" value="{{ old('code') }}" class="auth-input two-factor-code-input w-full rounded-2xl py-4 pl-12 pr-4 text-center text-xl font-bold tracking-[0.38em] text-slate-900" placeholder="000000" autofocus>
+            </div>
+            <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('auth.2fa_challenge_description') }}</p>
+        </div>
 
-                        @if ($errors->any())
-                            <div class="mt-5 rounded-[1.25rem] border border-red-200 bg-red-50 px-4 py-3 text-red-700">
-                                <div class="flex items-start gap-3">
-                                    <div class="mt-0.5 flex h-9 w-9 items-center justify-center rounded-2xl bg-red-100 text-red-600">
-                                        <i class="fas fa-triangle-exclamation"></i>
-                                    </div>
-                                    <p class="text-sm font-medium leading-6">{{ $errors->first() }}</p>
-                                </div>
-                            </div>
-                        @endif
+        <div class="relative py-1 text-center">
+            <span class="relative z-10 bg-white px-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('auth.or') }}</span>
+            <span class="absolute inset-x-0 top-1/2 h-px bg-slate-200"></span>
+        </div>
 
-                        <form method="POST" action="{{ localized_route('twofactor.verify', ['locale' => app()->getLocale()]) }}" class="mt-6 space-y-6">
-                            @csrf
+        <div>
+            <label for="recovery_code" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('auth.2fa_backup_label') }}</label>
+            <div class="relative">
+                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-orange-600"><i class="fas fa-key text-sm"></i></span>
+                <input id="recovery_code" type="text" name="recovery_code" autocomplete="off" spellcheck="false" value="{{ old('recovery_code') }}" class="auth-input w-full rounded-2xl py-3.5 pl-12 pr-4 text-sm font-semibold tracking-[0.12em] text-slate-900" placeholder="{{ __('auth.2fa_backup_placeholder') }}">
+            </div>
+        </div>
 
-                            <div class="grid gap-6 xl:grid-cols-2">
-                                <div class="rounded-[1.6rem] border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-5 shadow-sm">
-                                    <div class="flex items-start justify-between gap-4">
-                                        <div>
-                                            <h3 class="text-lg font-bold text-slate-950">{{ __('auth.2fa_code_label') }}</h3>
-                                            <p class="mt-1 text-sm leading-6 text-slate-500">{{ __('auth.2fa_challenge_description') }}</p>
-                                        </div>
-                                        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-blue-700 shadow-sm">
-                                            <i class="fas fa-mobile-screen-button"></i>
-                                        </div>
-                                    </div>
+        <button type="submit" class="auth-submit inline-flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-sm font-semibold text-white">
+            <i class="fas fa-shield-halved text-xs"></i>
+            {{ __('auth.2fa_verify_button') }}
+        </button>
+    </form>
 
-                                    <div class="mt-5 rounded-[1.25rem] border border-blue-100 bg-white p-3 shadow-sm">
-                                        <input
-                                            type="text"
-                                            name="code"
-                                            inputmode="numeric"
-                                            autocomplete="one-time-code"
-                                            maxlength="6"
-                                            spellcheck="false"
-                                            value="{{ old('code') }}"
-                                            class="w-full border-0 bg-transparent px-2 py-2 text-center text-2xl font-bold tracking-[0.45em] text-slate-950 outline-none placeholder:text-slate-300"
-                                            placeholder="{{ __('auth.2fa_code_placeholder') }}"
-                                        >
-                                    </div>
-                                </div>
-
-                                <div class="rounded-[1.6rem] border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-orange-50 p-5 shadow-sm">
-                                    <div class="flex items-start justify-between gap-4">
-                                        <div>
-                                            <h3 class="text-lg font-bold text-slate-950">{{ __('auth.2fa_backup_label') }}</h3>
-                                            <p class="mt-1 text-sm leading-6 text-slate-500">{{ __('auth.2fa_backup_placeholder') }}</p>
-                                        </div>
-                                        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-amber-700 shadow-sm">
-                                            <i class="fas fa-key"></i>
-                                        </div>
-                                    </div>
-
-                                    <div class="mt-5 rounded-[1.25rem] border border-amber-100 bg-white p-3 shadow-sm">
-                                        <input
-                                            type="text"
-                                            name="recovery_code"
-                                            autocomplete="off"
-                                            spellcheck="false"
-                                            value="{{ old('recovery_code') }}"
-                                            class="w-full border-0 bg-transparent px-2 py-2 text-center text-base font-semibold tracking-[0.18em] text-slate-950 outline-none placeholder:text-slate-300"
-                                            placeholder="{{ __('auth.2fa_backup_placeholder') }}"
-                                        >
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="rounded-[1.35rem] border border-slate-200 bg-slate-50/80 px-4 py-4">
-                                <div class="flex items-start gap-3">
-                                    <div class="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-slate-700 shadow-sm">
-                                        <i class="fas fa-shield-check"></i>
-                                    </div>
-                                    <p class="text-sm leading-6 text-slate-600">{{ __('auth.2fa_challenge_description') }}</p>
-                                </div>
-                            </div>
-
-                            <button type="submit" class="inline-flex w-full items-center justify-center gap-3 rounded-[1.25rem] bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-600 px-5 py-3.5 text-sm font-semibold text-white shadow-[0_16px_34px_rgba(37,99,235,0.28)] transition hover:-translate-y-0.5 hover:shadow-[0_20px_40px_rgba(37,99,235,0.35)]">
-                                <i class="fas fa-shield-alt"></i>
-                                {{ __('auth.2fa_verify_button') }}
-                            </button>
-                        </form>
-
-                        <div class="mt-6 flex flex-col gap-4 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
-                            <a href="{{ localized_route('login', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center gap-3 rounded-[1.15rem] border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-blue-200 hover:text-blue-700">
-                                <i class="fas fa-arrow-left"></i>
-                                {{ __('auth.back_to_login') }}
-                            </a>
-
-                            <div class="inline-flex items-center gap-3 rounded-[1.15rem] bg-slate-50 px-4 py-3 text-sm text-slate-500">
-                                <i class="fas fa-lock text-emerald-600"></i>
-                                <span>{{ __('auth.2fa_setup_heading') }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+    <div class="mt-6 rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
+        <div class="flex items-start gap-3">
+            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white text-emerald-600 shadow-sm ring-1 ring-slate-200/70"><i class="fas fa-lock"></i></span>
+            <div>
+                <p class="text-sm font-semibold text-slate-900">{{ __('auth_ui.secure_space') }}</p>
+                <p class="mt-1 text-sm leading-6 text-slate-500">{{ __('auth.2fa_setup_heading') }}</p>
             </div>
         </div>
     </div>
-</body>
-</html>
+@endsection
+
+@push('auth_premium_scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const codeInput = document.getElementById('code');
+            codeInput?.addEventListener('input', function () {
+                this.value = this.value.replace(/\D/g, '').slice(0, 6);
+            });
+        });
+    </script>
+@endpush

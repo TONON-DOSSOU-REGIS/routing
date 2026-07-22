@@ -4,9 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   @include('partials.seo')
-  @vite(['resources/css/app.css'])
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  @vite(['resources/css/app.css', 'resources/js/button-feedback.js'])
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  </noscript>
   @include('partials.favicon')
 
   <style>
@@ -375,11 +382,71 @@
 
     .hero-subtitle {
       max-width: 620px;
-      margin: 0 0 16px;
+      margin: 0;
       color: #8ee9ff;
       font-size: clamp(1.16rem, 1.7vw, 1.5rem);
       font-weight: 700;
       line-height: 1.35;
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
+      transition: opacity 0.48s ease, transform 0.48s ease, filter 0.48s ease;
+    }
+
+    .hero-title-slider {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 650px;
+      min-height: clamp(86px, 8vw, 112px);
+      margin-bottom: 12px;
+    }
+
+    .hero-subtitle.is-fading {
+      opacity: 0;
+      filter: blur(5px);
+      transform: translateY(-10px);
+    }
+
+    .hero-title-slider-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: min(100%, 330px);
+      margin-top: 13px;
+    }
+
+    .hero-title-counter {
+      min-width: 47px;
+      color: rgba(255, 255, 255, 0.52);
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+    }
+
+    .hero-title-progress {
+      position: relative;
+      flex: 1;
+      height: 2px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .hero-title-progress span {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, #8ee9ff, #ffffff);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    .hero-title-progress span.is-running {
+      animation: heroTitleProgress 5.6s linear forwards;
+    }
+
+    @keyframes heroTitleProgress {
+      to { transform: scaleX(1); }
     }
 
     .hero-copy {
@@ -417,6 +484,7 @@
       color: #ffffff;
       font-size: 1.35rem;
       font-weight: 800;
+      font-variant-numeric: tabular-nums;
     }
 
     .proof-item span {
@@ -636,15 +704,74 @@
       min-height: 540px;
       object-fit: cover;
       object-position: center;
-      transform: scale(1.02);
-      animation: happyImageFloat 9s ease-in-out infinite;
+    }
+
+    .happy-client-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      filter: saturate(0.9) contrast(1.02);
+      transform: scale(1.075);
+      transition:
+        opacity 1.45s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 1.45s ease,
+        transform 7.2s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .happy-client-slide.is-active {
+      z-index: 1;
+      opacity: 1;
+      filter: saturate(1.06) contrast(1.01);
+      transform: scale(1.015);
+    }
+
+    .happy-carousel-status {
+      position: absolute;
+      z-index: 3;
+      top: 18px;
+      right: 18px;
+      display: flex;
+      align-items: center;
+      width: 64px;
+      padding: 9px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.48);
+      border-radius: 999px;
+      background: rgba(7, 26, 47, 0.58);
+      box-shadow: 0 12px 30px rgba(7, 26, 47, 0.18);
+      backdrop-filter: blur(14px);
+    }
+
+    .happy-carousel-progress {
+      position: relative;
+      flex: 1;
+      height: 2px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .happy-carousel-progress span {
+      position: absolute;
+      inset: 0;
+      background: #8ee9ff;
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    .happy-carousel-progress span.is-running {
+      animation: happyCarouselProgress 6.4s linear forwards;
+    }
+
+    @keyframes happyCarouselProgress {
+      to { transform: scaleX(1); }
     }
 
     .happy-client-frame::before {
       content: '';
       position: absolute;
       inset: 0;
-      z-index: 1;
+      z-index: 2;
       background: linear-gradient(180deg, rgba(7, 26, 47, 0) 42%, rgba(7, 26, 47, 0.26) 100%);
       pointer-events: none;
     }
@@ -746,6 +873,362 @@
       margin-top: auto;
       color: var(--blue);
       font-weight: 800;
+    }
+
+    .cards-showcase {
+      position: relative;
+      overflow: hidden;
+      color: #ffffff;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(0, 184, 217, 0.18), transparent 28%),
+        radial-gradient(circle at 88% 8%, rgba(245, 181, 68, 0.15), transparent 25%),
+        linear-gradient(145deg, #06111f 0%, #0a2039 52%, #071a2f 100%);
+      isolation: isolate;
+    }
+
+    .cards-showcase::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      opacity: 0.22;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+      background-size: 52px 52px;
+      mask-image: linear-gradient(to bottom, #000, transparent 86%);
+    }
+
+    .cards-heading {
+      display: grid;
+      grid-template-columns: minmax(0, 0.75fr) minmax(320px, 0.55fr);
+      gap: 36px;
+      align-items: end;
+      margin-bottom: clamp(42px, 6vw, 78px);
+    }
+
+    .cards-heading h2 {
+      max-width: 780px;
+      margin: 14px 0 0;
+      font-size: clamp(2.35rem, 4.6vw, 5rem);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+    }
+
+    .cards-heading p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 1.04rem;
+      line-height: 1.75;
+    }
+
+    .bank-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(18px, 2.2vw, 34px);
+      align-items: stretch;
+    }
+
+    .bank-card-product {
+      --card-accent: #60a5fa;
+      --card-glow: rgba(59, 130, 246, 0.28);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      padding: clamp(18px, 2vw, 26px);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.065);
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.24);
+      backdrop-filter: blur(18px);
+      transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .bank-card-product:hover {
+      border-color: color-mix(in srgb, var(--card-accent) 58%, transparent);
+      background: rgba(255, 255, 255, 0.09);
+      transform: translateY(-8px);
+    }
+
+    .bank-card-product--premium {
+      --card-accent: #e2e8f0;
+      --card-glow: rgba(203, 213, 225, 0.3);
+    }
+
+    .bank-card-product--vip {
+      --card-accent: #f7d774;
+      --card-glow: rgba(245, 181, 68, 0.34);
+      border-color: rgba(247, 215, 116, 0.28);
+    }
+
+    .card-popular-badge {
+      position: absolute;
+      z-index: 5;
+      top: 18px;
+      right: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 11px;
+      border-radius: 999px;
+      color: #071a2f;
+      background: var(--card-accent);
+      box-shadow: 0 10px 28px var(--card-glow);
+      font-size: 0.69rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .bank-card-scene {
+      --rx: 5deg;
+      --ry: -8deg;
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 270px;
+      perspective: 1200px;
+    }
+
+    .bank-card-scene::after {
+      content: '';
+      position: absolute;
+      right: 10%;
+      bottom: 17px;
+      left: 10%;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--card-glow);
+      filter: blur(20px);
+      transform: rotate(-2deg);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .bank-card-3d {
+      position: relative;
+      z-index: 2;
+      width: min(100%, 370px);
+      aspect-ratio: 1.586 / 1;
+      overflow: hidden;
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 21px;
+      color: #ffffff;
+      background:
+        radial-gradient(circle at 85% 16%, rgba(255, 255, 255, 0.24), transparent 27%),
+        linear-gradient(140deg, #163866 0%, #0a2142 54%, #071326 100%);
+      box-shadow:
+        -16px 24px 45px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.32),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.24);
+      transform: rotateX(var(--rx)) rotateY(var(--ry)) translateZ(0);
+      transform-style: preserve-3d;
+      transition: transform 0.18s ease-out, box-shadow 0.3s ease;
+      will-change: transform;
+    }
+
+    .bank-card-product--premium .bank-card-3d {
+      color: #172033;
+      background:
+        radial-gradient(circle at 82% 14%, rgba(255, 255, 255, 0.82), transparent 24%),
+        linear-gradient(135deg, #f8fafc 0%, #aeb8c5 38%, #eef2f6 67%, #8d99a8 100%);
+      border-color: rgba(255, 255, 255, 0.72);
+      box-shadow: -16px 24px 48px rgba(3, 14, 29, 0.38), inset 0 1px 0 #ffffff;
+    }
+
+    .bank-card-product--vip .bank-card-3d {
+      color: #231804;
+      background:
+        radial-gradient(circle at 83% 14%, rgba(255, 255, 255, 0.54), transparent 22%),
+        linear-gradient(135deg, #fff2a9 0%, #bf8120 34%, #f5d36a 61%, #8a570d 100%);
+      border-color: rgba(255, 245, 191, 0.7);
+      box-shadow: -16px 24px 52px rgba(82, 49, 3, 0.4), inset 0 1px 0 #fff6cb;
+    }
+
+    .bank-card-3d::before,
+    .bank-card-3d::after {
+      content: '';
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .bank-card-3d::before {
+      inset: -45% -30%;
+      background: linear-gradient(110deg, transparent 36%, rgba(255, 255, 255, 0.32) 47%, transparent 58%);
+      transform: translateX(-55%) rotate(8deg);
+      transition: transform 0.7s ease;
+    }
+
+    .bank-card-product:hover .bank-card-3d::before {
+      transform: translateX(58%) rotate(8deg);
+    }
+
+    .bank-card-3d::after {
+      inset: 0;
+      opacity: 0.28;
+      background-image: repeating-linear-gradient(120deg, rgba(255,255,255,0.12) 0, rgba(255,255,255,0.12) 1px, transparent 1px, transparent 9px);
+    }
+
+    .bank-card-top,
+    .bank-card-chip-row,
+    .bank-card-bottom {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transform: translateZ(24px);
+    }
+
+    .bank-card-brand {
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .bank-card-tier {
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .bank-card-chip-row {
+      margin-top: 28px;
+    }
+
+    .bank-card-chip {
+      width: 47px;
+      height: 35px;
+      border: 1px solid rgba(76, 57, 12, 0.28);
+      border-radius: 8px;
+      background:
+        linear-gradient(90deg, transparent 46%, rgba(69, 49, 6, 0.28) 48%, rgba(69, 49, 6, 0.28) 52%, transparent 54%),
+        linear-gradient(0deg, transparent 44%, rgba(69, 49, 6, 0.22) 46%, rgba(69, 49, 6, 0.22) 52%, transparent 54%),
+        linear-gradient(135deg, #f7e39a, #b88c29);
+    }
+
+    .bank-card-contactless {
+      font-size: 1.35rem;
+      transform: rotate(90deg);
+    }
+
+    .bank-card-number {
+      position: relative;
+      z-index: 2;
+      margin-top: 23px;
+      font-family: 'Courier New', monospace;
+      font-size: clamp(0.95rem, 1.45vw, 1.22rem);
+      font-weight: 700;
+      letter-spacing: 0.11em;
+      transform: translateZ(28px);
+    }
+
+    .bank-card-bottom {
+      margin-top: 18px;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .bank-card-bottom strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+    }
+
+    .card-product-copy {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      padding: 8px 5px 4px;
+    }
+
+    .card-product-label {
+      color: var(--card-accent);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .card-product-copy h3 {
+      margin: 9px 0 10px;
+      font-size: 1.65rem;
+    }
+
+    .card-product-copy > p {
+      min-height: 76px;
+      margin: 0;
+      color: rgba(255, 255, 255, 0.64);
+      font-size: 0.93rem;
+      line-height: 1.65;
+    }
+
+    .card-features {
+      display: grid;
+      gap: 12px;
+      margin: 22px 0 26px;
+      padding: 20px 0 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.11);
+      list-style: none;
+    }
+
+    .card-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .card-features i {
+      margin-top: 4px;
+      color: var(--card-accent);
+    }
+
+    .card-select-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      min-height: 50px;
+      margin-top: auto;
+      padding: 0 18px;
+      border: 1px solid color-mix(in srgb, var(--card-accent) 42%, transparent);
+      border-radius: 999px;
+      color: #ffffff;
+      background: color-mix(in srgb, var(--card-accent) 12%, transparent);
+      font-size: 0.88rem;
+      font-weight: 800;
+      transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .card-select-link:hover {
+      color: #071a2f;
+      background: var(--card-accent);
+      transform: translateY(-2px);
+    }
+
+    .cards-security-note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      max-width: 880px;
+      margin: 34px auto 0;
+      color: rgba(255, 255, 255, 0.52);
+      font-size: 0.78rem;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .cards-security-note i {
+      color: #8ee9ff;
     }
 
     .partners-slider {
@@ -919,7 +1402,7 @@
       position: absolute;
       inset: 0;
       z-index: -2;
-      background-image: url('{{ asset('images/happy-bank-customers.jpg') }}');
+      background-image: url('{{ asset('images/happy-bank-customers.webp') }}');
       background-size: cover;
       background-position: center;
       opacity: 0;
@@ -1006,6 +1489,31 @@
       .hero-card-image {
         animation: none;
       }
+
+      .hero-subtitle {
+        transition: none;
+      }
+
+      .hero-title-progress {
+        display: none;
+      }
+
+      .happy-client-slide {
+        transition: none;
+      }
+
+      .happy-carousel-status {
+        display: none;
+      }
+
+      .bank-card-product,
+      .bank-card-3d {
+        transition: none;
+      }
+
+      .bank-card-3d {
+        transform: none;
+      }
     }
 
     @media (max-width: 1080px) {
@@ -1026,9 +1534,20 @@
 
       .hero-layout,
       .about-grid,
+      .cards-heading,
       .trust-layout,
       .faq-layout {
         grid-template-columns: 1fr;
+      }
+
+      .bank-cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .bank-card-product--vip {
+        grid-column: 1 / -1;
+        width: min(100%, 620px);
+        justify-self: center;
       }
 
       .about-values {
@@ -1092,11 +1611,29 @@
 
       .hero-proof,
       .about-values,
+      .bank-cards-grid,
       .services-grid,
       .reviews-grid,
       .partners-strip,
       .footer-grid {
         grid-template-columns: 1fr;
+      }
+
+      .bank-card-product--vip {
+        grid-column: auto;
+        width: 100%;
+      }
+
+      .cards-heading {
+        gap: 18px;
+      }
+
+      .bank-card-scene {
+        min-height: 245px;
+      }
+
+      .bank-card-3d {
+        padding: 19px;
       }
 
       .hero-actions .btn,
@@ -1144,22 +1681,34 @@
 </head>
 
 <body>
+  @include('partials.site-launch-loader')
 @php
   $locale = app()->getLocale();
+  $heroSliderTitles = trans('home.hero_slider_titles');
+  $heroSliderTitles = is_array($heroSliderTitles) && count($heroSliderTitles) > 0
+    ? array_values($heroSliderTitles)
+    : [__('home.hero_title_2')];
+  $happyCustomerImages = array_merge(
+    ['images/happy-bank-customers.webp'],
+    array_map(fn ($index) => sprintf('images/customer-carousel/happy-customer-%02d.webp', $index), range(1, 11))
+  );
   $serviceRoutes = [
     ['icon' => 'fa-building-columns', 'route' => 'services.comptes-professionnels', 'title' => __('home.services_1_title'), 'text' => __('home.services_1_text'), 'points' => [__('home.services_1_point_1'), __('home.services_1_point_2'), __('home.services_1_point_3')]],
     ['icon' => 'fa-earth-europe', 'route' => 'services.virements-internationaux', 'title' => __('home.services_2_title'), 'text' => __('home.services_2_text'), 'points' => [__('home.services_2_point_1'), __('home.services_2_point_2'), __('home.services_2_point_3')]],
     ['icon' => 'fa-chart-line', 'route' => 'services.gestion-tresorerie', 'title' => __('home.services_3_title'), 'text' => __('home.services_3_text'), 'points' => [__('home.services_3_point_1'), __('home.services_3_point_2'), __('home.services_3_point_3')]],
     ['icon' => 'fa-credit-card', 'route' => 'services.cartes-paiement', 'title' => __('home.services_4_title'), 'text' => __('home.services_4_text'), 'points' => [__('home.services_4_point_1'), __('home.services_4_point_2'), __('home.services_4_point_3')]],
   ];
+  $bankCards = [
+    ['variant' => 'standard', 'name' => __('home.cards_standard_name'), 'label' => __('home.cards_standard_label'), 'description' => __('home.cards_standard_description'), 'number' => '4892  ••••  ••••  2418', 'features' => [__('home.cards_standard_feature_1'), __('home.cards_standard_feature_2'), __('home.cards_standard_feature_3')]],
+    ['variant' => 'premium', 'name' => __('home.cards_premium_name'), 'label' => __('home.cards_premium_label'), 'description' => __('home.cards_premium_description'), 'number' => '5417  ••••  ••••  8062', 'badge' => __('home.cards_popular'), 'features' => [__('home.cards_premium_feature_1'), __('home.cards_premium_feature_2'), __('home.cards_premium_feature_3')]],
+    ['variant' => 'vip', 'name' => __('home.cards_vip_name'), 'label' => __('home.cards_vip_label'), 'description' => __('home.cards_vip_description'), 'number' => '7841  ••••  ••••  0097', 'badge' => __('home.cards_signature'), 'features' => [__('home.cards_vip_feature_1'), __('home.cards_vip_feature_2'), __('home.cards_vip_feature_3')]],
+  ];
   $partnerBanks = [
-    ['name' => 'BNP Paribas', 'image' => 'https://commons.wikimedia.org/wiki/Special:Redirect/file/BNP_Paribas_logo.svg'],
-    ['name' => 'Deutsche Bank', 'image' => 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Deutsche_Bank_logo.svg'],
-    ['name' => 'HSBC', 'image' => 'https://commons.wikimedia.org/wiki/Special:Redirect/file/HSBC.svg'],
-    ['name' => 'Barclays', 'image' => 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Barclays-Logo.svg'],
-    ['name' => 'Santander', 'image' => 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Banco_Santander_Logotipo.svg'],
-    ['name' => 'UBS', 'image' => 'https://commons.wikimedia.org/wiki/Special:Redirect/file/UBS_Logo.png'],
-    ['name' => 'ING', 'image' => 'https://commons.wikimedia.org/wiki/Special:Redirect/file/ING-DiBa-Logo.svg'],
+    ['name' => 'BNP Paribas', 'image' => asset('images/partners/bnp-paribas.svg')],
+    ['name' => 'Deutsche Bank', 'image' => asset('images/partners/deutsche-bank.svg')],
+    ['name' => 'HSBC', 'image' => asset('images/partners/hsbc.svg')],
+    ['name' => 'Barclays', 'image' => asset('images/partners/barclays.svg')],
+    ['name' => 'Santander', 'image' => asset('images/partners/santander.svg')],
   ];
   $faqItems = [1, 2, 3, 4, 5, 6];
 @endphp
@@ -1177,6 +1726,7 @@
           <a href="{{ localized_route('home', ['locale' => $locale]) }}">{{ __('home.nav_home') }}</a>
           <a href="#about">{{ __('home.nav_about') }}</a>
           <a href="#services">{{ __('home.nav_services') }}</a>
+          <a href="#cards">{{ __('home.nav_cards') }}</a>
           <a href="#partners">{{ __('home.partners_title') }}</a>
           <a href="#faq">{{ __('home.nav_faq') }}</a>
         </nav>
@@ -1208,6 +1758,7 @@
           <a href="{{ localized_route('home', ['locale' => $locale]) }}">{{ __('home.nav_home') }} <i class="fas fa-arrow-left"></i></a>
           <a href="#about">{{ __('home.nav_about') }} <i class="fas fa-arrow-left"></i></a>
           <a href="#services">{{ __('home.nav_services') }} <i class="fas fa-arrow-left"></i></a>
+          <a href="#cards">{{ __('home.nav_cards') }} <i class="fas fa-arrow-left"></i></a>
           <a href="#partners">{{ __('home.partners_title') }} <i class="fas fa-arrow-left"></i></a>
           <a href="#trustpilot">{{ __('home.trustpilot_badge') }} <i class="fas fa-arrow-left"></i></a>
           <a href="#faq">{{ __('home.nav_faq') }} <i class="fas fa-arrow-left"></i></a>
@@ -1228,7 +1779,13 @@
         <div>
           <span class="eyebrow"><i class="fas fa-shield-halved"></i>{{ __('home.hero_badge') }}</span>
           <h1>Zuider Bank S.A</h1>
-          <p class="hero-subtitle">{{ __('home.hero_title_2') }}</p>
+          <div class="hero-title-slider" aria-live="polite" aria-atomic="true">
+            <p class="hero-subtitle" id="hero-rotating-title">{{ $heroSliderTitles[0] }}</p>
+            <div class="hero-title-slider-meta" aria-hidden="true">
+              <span class="hero-title-counter" id="hero-title-counter">01 / {{ str_pad((string) count($heroSliderTitles), 2, '0', STR_PAD_LEFT) }}</span>
+              <span class="hero-title-progress"><span class="is-running" id="hero-title-progress"></span></span>
+            </div>
+          </div>
           <p class="hero-copy">{{ __('home.hero_description') }}</p>
 
           <div class="hero-actions">
@@ -1242,22 +1799,22 @@
 
           <div class="hero-proof" aria-label="Indicateurs de confiance">
             <div class="proof-item">
-              <strong>{{ __('home.about_stat_4_value') }}</strong>
+              <strong class="hero-counter" data-counter-target="10000" data-counter-decimals="0" data-counter-suffix="+" aria-label="{{ __('home.about_stat_4_value') }}">{{ __('home.about_stat_4_value') }}</strong>
               <span>{{ __('home.about_stat_4_label') }}</span>
             </div>
             <div class="proof-item">
-              <strong>{{ __('home.about_stat_2_value') }}</strong>
+              <strong class="hero-counter" data-counter-target="27" data-counter-decimals="0" aria-label="{{ __('home.about_stat_2_value') }}">{{ __('home.about_stat_2_value') }}</strong>
               <span>{{ __('home.about_stat_2_label') }}</span>
             </div>
             <div class="proof-item">
-              <strong>{{ __('home.trustpilot_score') }}/5</strong>
+              <strong class="hero-counter" data-counter-target="4.7" data-counter-decimals="1" data-counter-suffix="/5" aria-label="{{ __('home.trustpilot_score') }}/5">{{ __('home.trustpilot_score') }}/5</strong>
               <span>{{ __('home.trustpilot_score_label') }} Trustpilot</span>
             </div>
           </div>
         </div>
 
         <div class="card-stage" aria-hidden="true">
-          <img class="hero-card-image" src="{{ asset('images/zuider-card-3d-hero.png') }}" alt="">
+          <img class="hero-card-image" src="{{ asset('images/zuider-card-3d-hero.webp') }}" alt="" width="1000" height="667" fetchpriority="high" decoding="async">
         </div>
       </div>
     </section>
@@ -1275,8 +1832,20 @@
         </div>
 
         <div class="happy-client-visual">
-          <div class="happy-client-frame">
-            <img src="{{ asset('images/happy-bank-customers.jpg') }}" alt="Clients heureux utilisant les services de Zuider Bank S.A" loading="lazy">
+          <div class="happy-client-frame" id="happy-customer-carousel" role="img" aria-label="{{ __('home.about_stat_4_value') }} {{ __('home.about_stat_4_label') }}">
+            @foreach ($happyCustomerImages as $customerImage)
+              <img
+                class="happy-client-slide {{ $loop->first ? 'is-active' : '' }}"
+                src="{{ asset($customerImage) }}"
+                alt=""
+                loading="{{ $loop->first ? 'eager' : 'lazy' }}"
+                decoding="async"
+                aria-hidden="{{ $loop->first ? 'false' : 'true' }}"
+              >
+            @endforeach
+            <div class="happy-carousel-status" aria-hidden="true">
+              <span class="happy-carousel-progress"><span class="is-running" id="happy-carousel-progress"></span></span>
+            </div>
           </div>
           <div class="happy-client-badge">
             <i class="fas fa-heart"></i>
@@ -1332,6 +1901,62 @@
             </article>
           @endforeach
         </div>
+      </div>
+    </section>
+
+    <section class="section cards-showcase" id="cards">
+      <div class="container-bank">
+        <div class="cards-heading">
+          <div>
+            <span class="section-kicker" style="color:#8ee9ff"><i class="fas fa-credit-card"></i>{{ __('home.cards_badge') }}</span>
+            <h2>{{ __('home.cards_title') }}</h2>
+          </div>
+          <p>{{ __('home.cards_description') }}</p>
+        </div>
+
+        <div class="bank-cards-grid">
+          @foreach ($bankCards as $card)
+            <article class="bank-card-product bank-card-product--{{ $card['variant'] }}" data-bank-card>
+              @isset($card['badge'])
+                <span class="card-popular-badge"><i class="fas {{ $card['variant'] === 'vip' ? 'fa-crown' : 'fa-star' }}"></i>{{ $card['badge'] }}</span>
+              @endisset
+
+              <div class="bank-card-scene" aria-label="{{ $card['name'] }}">
+                <div class="bank-card-3d">
+                  <div class="bank-card-top">
+                    <span class="bank-card-brand">Zuider Bank</span>
+                    <span class="bank-card-tier">{{ $card['label'] }}</span>
+                  </div>
+                  <div class="bank-card-chip-row">
+                    <span class="bank-card-chip" aria-hidden="true"></span>
+                    <i class="fas fa-wifi bank-card-contactless" aria-hidden="true"></i>
+                  </div>
+                  <div class="bank-card-number">{{ $card['number'] }}</div>
+                  <div class="bank-card-bottom">
+                    <span>{{ __('home.cards_holder_label') }}<strong>J. DUPONT</strong></span>
+                    <span>{{ __('home.cards_valid_thru') }}<strong>09/30</strong></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-product-copy">
+                <span class="card-product-label">{{ $card['label'] }}</span>
+                <h3>{{ $card['name'] }}</h3>
+                <p>{{ $card['description'] }}</p>
+                <ul class="card-features">
+                  @foreach ($card['features'] as $feature)
+                    <li><i class="fas fa-check-circle"></i><span>{{ $feature }}</span></li>
+                  @endforeach
+                </ul>
+                <a class="card-select-link" href="{{ localized_route('register', ['locale' => $locale]) }}">
+                  {{ __('home.cards_choose') }} <i class="fas fa-arrow-right"></i>
+                </a>
+              </div>
+            </article>
+          @endforeach
+        </div>
+
+        <p class="cards-security-note"><i class="fas fa-shield-halved"></i>{{ __('home.cards_security_note') }}</p>
       </div>
     </section>
 
@@ -1533,6 +2158,190 @@
         if (event.key === 'Escape') {
           setMobileMenu(false);
         }
+      });
+
+      window.addEventListener('resize', function () {
+        if (window.innerWidth >= 769) setMobileMenu(false);
+      });
+      window.addEventListener('pageshow', function () { setMobileMenu(false); });
+      window.addEventListener('pagehide', function () { setMobileMenu(false); });
+    }
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
+    const heroTitles = @json($heroSliderTitles);
+    const rotatingTitle = document.getElementById('hero-rotating-title');
+    const titleCounter = document.getElementById('hero-title-counter');
+    const titleProgress = document.getElementById('hero-title-progress');
+
+    if (!reduceMotion && rotatingTitle && heroTitles.length > 1) {
+      let titleIndex = 0;
+      let rotationTimer = null;
+
+      const restartTitleProgress = function () {
+        if (!titleProgress) return;
+        titleProgress.classList.remove('is-running');
+        void titleProgress.offsetWidth;
+        titleProgress.classList.add('is-running');
+      };
+
+      const scheduleTitleRotation = function () {
+        window.clearTimeout(rotationTimer);
+        rotationTimer = window.setTimeout(function () {
+          rotatingTitle.classList.add('is-fading');
+
+          window.setTimeout(function () {
+            titleIndex = (titleIndex + 1) % heroTitles.length;
+            rotatingTitle.textContent = heroTitles[titleIndex];
+            titleCounter.textContent = String(titleIndex + 1).padStart(2, '0') + ' / ' + String(heroTitles.length).padStart(2, '0');
+            rotatingTitle.classList.remove('is-fading');
+            restartTitleProgress();
+            scheduleTitleRotation();
+          }, 480);
+        }, 5120);
+      };
+
+      scheduleTitleRotation();
+
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          window.clearTimeout(rotationTimer);
+          return;
+        }
+
+        restartTitleProgress();
+        scheduleTitleRotation();
+      });
+    }
+
+    const heroCounters = document.querySelectorAll('.hero-counter[data-counter-target]');
+
+    if (!reduceMotion && heroCounters.length > 0) {
+      const numberLocale = document.documentElement.lang || 'fr';
+
+      const animateCounter = function (counter) {
+        const target = Number.parseFloat(counter.dataset.counterTarget || '0');
+        const decimals = Number.parseInt(counter.dataset.counterDecimals || '0', 10);
+        const suffix = counter.dataset.counterSuffix || '';
+        const duration = target >= 1000 ? 2200 : 1700;
+        const formatter = new Intl.NumberFormat(numberLocale, {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals
+        });
+        const startedAt = performance.now();
+
+        const renderFrame = function (now) {
+          const progress = Math.min((now - startedAt) / duration, 1);
+          const easedProgress = 1 - Math.pow(1 - progress, 3);
+          const currentValue = target * easedProgress;
+          counter.textContent = formatter.format(decimals > 0 ? currentValue : Math.floor(currentValue)) + suffix;
+
+          if (progress < 1) {
+            requestAnimationFrame(renderFrame);
+            return;
+          }
+
+          counter.textContent = formatter.format(target) + suffix;
+        };
+
+        counter.textContent = formatter.format(0) + suffix;
+        requestAnimationFrame(renderFrame);
+      };
+
+      if ('IntersectionObserver' in window) {
+        const counterObserver = new IntersectionObserver(function (entries, observer) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            animateCounter(entry.target);
+            observer.unobserve(entry.target);
+          });
+        }, { threshold: 0.35 });
+
+        heroCounters.forEach(function (counter) {
+          counterObserver.observe(counter);
+        });
+      } else {
+        heroCounters.forEach(animateCounter);
+      }
+    }
+
+    const customerCarousel = document.getElementById('happy-customer-carousel');
+
+    if (!reduceMotion && customerCarousel) {
+      const customerSlides = Array.from(customerCarousel.querySelectorAll('.happy-client-slide'));
+      const customerProgress = document.getElementById('happy-carousel-progress');
+      let customerIndex = 0;
+      let customerTimer = null;
+
+      const preloadCustomerSlide = function (index) {
+        const slide = customerSlides[index];
+        if (!slide || slide.complete) return;
+        const preload = new Image();
+        preload.src = slide.currentSrc || slide.src;
+      };
+
+      const restartCustomerProgress = function () {
+        if (!customerProgress) return;
+        customerProgress.classList.remove('is-running');
+        void customerProgress.offsetWidth;
+        customerProgress.classList.add('is-running');
+      };
+
+      const scheduleCustomerSlide = function () {
+        window.clearTimeout(customerTimer);
+        customerTimer = window.setTimeout(function () {
+          const currentSlide = customerSlides[customerIndex];
+          customerIndex = (customerIndex + 1) % customerSlides.length;
+          const nextSlide = customerSlides[customerIndex];
+
+          currentSlide.classList.remove('is-active');
+          currentSlide.setAttribute('aria-hidden', 'true');
+          nextSlide.classList.add('is-active');
+          nextSlide.setAttribute('aria-hidden', 'false');
+
+          preloadCustomerSlide((customerIndex + 1) % customerSlides.length);
+          restartCustomerProgress();
+          scheduleCustomerSlide();
+        }, 6400);
+      };
+
+      if (customerSlides.length > 1) {
+        preloadCustomerSlide(1);
+        scheduleCustomerSlide();
+
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden) {
+            window.clearTimeout(customerTimer);
+            return;
+          }
+
+          restartCustomerProgress();
+          scheduleCustomerSlide();
+        });
+      }
+    }
+
+    if (!reduceMotion && finePointer) {
+      document.querySelectorAll('[data-bank-card] .bank-card-scene').forEach(function (scene) {
+        let animationFrame = null;
+
+        scene.addEventListener('pointermove', function (event) {
+          const bounds = scene.getBoundingClientRect();
+          const pointerX = (event.clientX - bounds.left) / bounds.width;
+          const pointerY = (event.clientY - bounds.top) / bounds.height;
+
+          if (animationFrame) cancelAnimationFrame(animationFrame);
+          animationFrame = requestAnimationFrame(function () {
+            scene.style.setProperty('--rx', ((0.5 - pointerY) * 14).toFixed(2) + 'deg');
+            scene.style.setProperty('--ry', ((pointerX - 0.5) * 18).toFixed(2) + 'deg');
+          });
+        });
+
+        scene.addEventListener('pointerleave', function () {
+          if (animationFrame) cancelAnimationFrame(animationFrame);
+          scene.style.setProperty('--rx', '5deg');
+          scene.style.setProperty('--ry', '-8deg');
+        });
       });
     }
 

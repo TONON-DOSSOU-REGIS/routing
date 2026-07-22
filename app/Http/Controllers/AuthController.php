@@ -180,7 +180,6 @@ class AuthController extends Controller
             'iban' => $request->iban,
             'bic' => $request->bic,
             'password' => Hash::make($request->password),
-            'activation_code' => $request->activation_code ?? null,
             'status' => 'pending',
         ]);
 

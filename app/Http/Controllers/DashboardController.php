@@ -2,12 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\InternationalNewsService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+    public function internationalNews(InternationalNewsService $newsService)
+    {
+        try {
+            return response()->json([
+                'success' => true,
+                'articles' => $newsService->latest(app()->getLocale()),
+                'updated_at' => now()->toIso8601String(),
+            ]);
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return response()->json([
+                'success' => false,
+                'articles' => [],
+                'message' => __('dashboard.live_news_error'),
+            ], 503);
+        }
+    }
+
     public function home()
     {
         return view('home');

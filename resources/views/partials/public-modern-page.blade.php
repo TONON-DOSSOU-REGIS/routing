@@ -15,7 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @include('partials.seo')
     @include('partials.favicon')
-    @vite(['resources/css/app.css'])
+    @vite(['resources/css/app.css', 'resources/js/button-feedback.js'])
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -828,6 +828,7 @@
     </style>
 </head>
 <body>
+    @include('partials.site-launch-loader')
 <div class="modern-page">
     <header class="modern-nav">
         <div class="page-container modern-nav-inner">
@@ -1134,6 +1135,12 @@
                 setMobileMenu(false);
             }
         });
+
+        window.addEventListener('resize', function () {
+            if (window.innerWidth >= 769) setMobileMenu(false);
+        });
+        window.addEventListener('pageshow', function () { setMobileMenu(false); });
+        window.addEventListener('pagehide', function () { setMobileMenu(false); });
     });
 </script>
 </body>

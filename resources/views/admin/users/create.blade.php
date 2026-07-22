@@ -18,11 +18,18 @@
 @endsection
 
 @push('premium_dashboard_head')
+    @vite('resources/js/admin-user-create.js')
     <style>
         .admin-field { background: rgba(248, 250, 252, 0.9); border: 1px solid rgba(148, 163, 184, 0.24); box-shadow: inset 0 1px 0 rgba(255,255,255,0.72); transition: border-color .18s, box-shadow .18s, background-color .18s; }
         .admin-field:focus { background: rgba(255,255,255,.98); border-color: rgba(21, 94, 239, 0.36); box-shadow: 0 0 0 4px rgba(21, 94, 239, 0.08); outline: none; }
         .admin-surface { border: 1px solid rgba(148,163,184,.18); background: linear-gradient(180deg, rgba(255,255,255,.94), rgba(248,250,252,.88)); box-shadow: 0 18px 36px rgba(15,23,42,.06); }
         .admin-section { border: 1px solid rgba(226,232,240,.8); background: rgba(248,250,252,.8); }
+        .admin-phone .iti { width: 100%; }
+        .admin-phone .iti__selected-country { padding-left: 1rem; }
+        .admin-phone .iti__tel-input { padding-left: 6.25rem !important; }
+        .admin-phone .iti__dropdown-content { border: 1px solid rgba(148,163,184,.25); border-radius: 18px; box-shadow: 0 20px 50px rgba(15,23,42,.16); overflow: hidden; }
+        .admin-phone .iti__search-input { margin: .75rem; width: calc(100% - 1.5rem); border: 1px solid rgba(148,163,184,.35); border-radius: 12px; padding: .7rem .85rem; }
+        .admin-phone .iti__country-list { scrollbar-width: thin; }
     </style>
 @endpush
 
@@ -55,59 +62,34 @@
                 <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('admin_pages.create_form_intro') }}</p>
             </div>
 
-            <form method="POST" action="{{ localized_route('admin.users.store') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
+            <form method="POST" action="{{ localized_route('admin.users.store') }}" class="mt-6 space-y-6">
                 @csrf
 
                 <section class="admin-section rounded-[24px] p-5">
-                    <h3 class="text-lg font-semibold text-slate-950">{{ __('admin_pages.personal_information') }}</h3>
+                    <div class="flex items-start gap-3">
+                        <span class="grid size-10 shrink-0 place-items-center rounded-2xl bg-blue-100 text-blue-700"><i class="fas fa-user"></i></span>
+                        <div><h3 class="text-lg font-semibold text-slate-950">Informations essentielles</h3><p class="mt-1 text-sm text-slate-500">Les données indispensables pour ouvrir et sécuriser le compte.</p></div>
+                    </div>
                     <div class="mt-5 grid gap-4 md:grid-cols-2">
                         <div><label for="first_name" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.first_name') }} *</label><input type="text" name="first_name" id="first_name" value="{{ old('first_name') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="Jean" required></div>
                         <div><label for="last_name" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Nom *</label><input type="text" name="last_name" id="last_name" value="{{ old('last_name') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="Dupont" required></div>
                         <div><label for="email" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Email *</label><input type="email" name="email" id="email" value="{{ old('email') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="jean.dupont@email.com" required></div>
-                        <div><label for="phone" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.phone') }}</label><input type="tel" name="phone" id="phone" value="{{ old('phone') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="+33612345678" autocomplete="tel" inputmode="tel"><p class="mt-2 text-sm text-slate-500">{{ __('admin_pages.phone_format_help') }}</p></div>
-                        <div><label for="date_naissance" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.birth_date') }}</label><input type="date" name="date_naissance" id="date_naissance" value="{{ old('date_naissance') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700"></div>
                         <div><label for="role" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.role') }} *</label><select name="role" id="role" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" required><option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>{{ __('admin_pages.client') }}</option><option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>{{ __('admin_pages.administrator') }}</option></select></div>
-                        <div class="md:col-span-2"><label for="profile_photo" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.client_photo') }}</label><input type="file" name="profile_photo" id="profile_photo" accept="image/png,image/jpeg,image/webp" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700"><p class="mt-2 text-sm text-slate-500">{{ __('admin_pages.accepted_formats') }}</p></div>
+                        <div class="admin-phone"><label for="phone" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.phone') }}</label><input type="tel" name="phone" id="phone" value="{{ old('phone') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" autocomplete="tel" inputmode="tel" aria-describedby="phone-help" data-invalid-message="Saisissez un numéro international valide."><p id="phone-help" class="mt-2 text-sm text-slate-500">Choisissez l’indicatif : le numéro sera enregistré au format international.</p></div>
+                        <div><label for="pays" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Pays *</label><select name="pays" id="pays" data-selected="{{ old('pays') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" required><option value="">Sélectionner un pays</option>@foreach($countries as $country)<option value="{{ $country['name'] }}" {{ old('pays') == $country['name'] ? 'selected' : '' }}>{{ $country['name'] }}</option>@endforeach</select><p class="mt-2 text-sm text-slate-500">Tous les pays sont disponibles dans la liste.</p></div>
+                        <div class="md:col-span-2 md:max-w-[calc(50%-0.5rem)]"><label for="date_naissance" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.birth_date') }} <span class="normal-case tracking-normal text-slate-400">(facultatif)</span></label><input type="date" name="date_naissance" id="date_naissance" value="{{ old('date_naissance') }}" max="{{ now()->subDay()->format('Y-m-d') }}" autocomplete="bday" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700"></div>
                     </div>
                 </section>
 
                 <section class="admin-section rounded-[24px] p-5">
-                    <h3 class="text-lg font-semibold text-slate-950">{{ __('admin_pages.security_auth') }}</h3>
-                    <div class="mt-5 grid gap-4 md:grid-cols-2">
-                        <div><label for="password" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.password_required') }} *</label><input type="password" name="password" id="password" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" required><div class="mt-3 h-2 rounded-full bg-slate-200"><div id="password-strength-bar" class="h-2 w-0 rounded-full bg-rose-500 transition-all"></div></div></div>
-                        <div><label for="password_confirmation" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Confirmation *</label><input type="password" name="password_confirmation" id="password_confirmation" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" required></div>
+                    <div class="flex items-start gap-3">
+                        <span class="grid size-10 shrink-0 place-items-center rounded-2xl bg-emerald-100 text-emerald-700"><i class="fas fa-shield-halved"></i></span>
+                        <div><h3 class="text-lg font-semibold text-slate-950">{{ __('admin_pages.security_auth') }}</h3><p class="mt-1 text-sm text-slate-500">Définissez le premier accès sécurisé du client.</p></div>
                     </div>
-                </section>
-
-                <section class="admin-section rounded-[24px] p-5">
-                    <h3 class="text-lg font-semibold text-slate-950">Adresse</h3>
                     <div class="mt-5 grid gap-4 md:grid-cols-2">
-                        <div class="md:col-span-2"><label for="adresse" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Adresse</label><input type="text" name="adresse" id="adresse" value="{{ old('adresse') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="123 Avenue de l Europe"></div>
-                        <div><label for="ville" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Ville</label><input type="text" name="ville" id="ville" value="{{ old('ville') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="Paris"></div>
-                        <div><label for="pays" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Pays</label><select name="pays" id="pays" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700"><option value="">Selectionner un pays</option>@foreach($countries as $country)<option value="{{ $country['name'] }}" {{ old('pays') == $country['name'] ? 'selected' : '' }}>({{ $country['code'] }}) {{ $country['name'] }}</option>@endforeach</select></div>
+                        <div><label for="password" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.password_required') }} *</label><div class="relative"><input type="password" name="password" id="password" class="admin-field w-full rounded-2xl py-3 pl-4 pr-12 text-sm text-slate-700" required><button type="button" data-password-toggle="password" aria-label="Afficher le mot de passe" aria-pressed="false" class="absolute inset-y-0 right-0 grid w-12 place-items-center rounded-r-2xl text-slate-400 transition hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-600"><i class="fas fa-eye" aria-hidden="true"></i></button></div><div class="mt-3 h-2 rounded-full bg-slate-200"><div id="password-strength-bar" class="h-2 w-0 rounded-full bg-rose-500 transition-all"></div></div></div>
+                        <div><label for="password_confirmation" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Confirmation *</label><div class="relative"><input type="password" name="password_confirmation" id="password_confirmation" class="admin-field w-full rounded-2xl py-3 pl-4 pr-12 text-sm text-slate-700" required><button type="button" data-password-toggle="password_confirmation" aria-label="Afficher la confirmation du mot de passe" aria-pressed="false" class="absolute inset-y-0 right-0 grid w-12 place-items-center rounded-r-2xl text-slate-400 transition hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-600"><i class="fas fa-eye" aria-hidden="true"></i></button></div></div>
                     </div>
-                </section>
-
-                <section class="admin-section rounded-[24px] p-5">
-                    <h3 class="text-lg font-semibold text-slate-950">{{ __('admin_pages.identity_document') }}</h3>
-                    <div class="mt-5 grid gap-4 md:grid-cols-2">
-                        <div><label for="type_piece" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.type') }}</label><select name="type_piece" id="type_piece" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700"><option value="">{{ __('admin_pages.select') }}</option><option value="CNI" {{ old('type_piece') == 'CNI' ? 'selected' : '' }}>{{ __('admin_pages.national_id') }}</option><option value="Passeport" {{ old('type_piece') == 'Passeport' ? 'selected' : '' }}>{{ __('admin_pages.passport') }}</option><option value="Permis" {{ old('type_piece') == 'Permis' ? 'selected' : '' }}>{{ __('admin_pages.driver_license') }}</option></select></div>
-                        <div><label for="numero_piece" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Numero</label><input type="text" name="numero_piece" id="numero_piece" value="{{ old('numero_piece') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="12AB34567"></div>
-                    </div>
-                </section>
-
-                <section class="admin-section rounded-[24px] p-5">
-                    <h3 class="text-lg font-semibold text-slate-950">{{ __('admin_pages.banking_information') }}</h3>
-                    <div class="mt-5 grid gap-4 md:grid-cols-2">
-                        <div><label for="iban" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">IBAN</label><input type="text" name="iban" id="iban" value="{{ old('iban') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="FR76 1234 5678 9012 3456 7890 123"></div>
-                        <div><label for="bic" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">BIC</label><input type="text" name="bic" id="bic" value="{{ old('bic') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="BNPAFRPP"></div>
-                    </div>
-                </section>
-
-                <section class="rounded-[24px] bg-blue-50 px-5 py-5 ring-1 ring-blue-200/80">
-                    <h3 class="text-lg font-semibold text-blue-900">Code d activation</h3>
-                    <p class="mt-2 text-sm leading-6 text-blue-700">{{ __('admin_pages.optional_transfer_code_help') }}</p>
-                    <div class="mt-4 max-w-xl"><input type="text" name="activation_code" id="activation_code" value="{{ old('activation_code') }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="{{ __('admin_pages.activation_code_placeholder') }}"></div>
                 </section>
 
                 <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
@@ -145,6 +127,20 @@
         document.addEventListener('DOMContentLoaded', function () {
             const password = document.getElementById('password');
             const strengthBar = document.getElementById('password-strength-bar');
+            document.querySelectorAll('[data-password-toggle]').forEach(function (toggle) {
+                const input = document.getElementById(toggle.dataset.passwordToggle);
+                const icon = toggle.querySelector('i');
+
+                toggle.addEventListener('click', function () {
+                    const shouldShow = input.type === 'password';
+                    input.type = shouldShow ? 'text' : 'password';
+                    toggle.setAttribute('aria-pressed', String(shouldShow));
+                    toggle.setAttribute('aria-label', shouldShow ? 'Masquer le mot de passe' : 'Afficher le mot de passe');
+                    icon.classList.toggle('fa-eye', !shouldShow);
+                    icon.classList.toggle('fa-eye-slash', shouldShow);
+                });
+            });
+
             password?.addEventListener('input', function () {
                 let score = 0;
                 if (this.value.length >= 8) score += 25;

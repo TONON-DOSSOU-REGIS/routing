@@ -124,4 +124,12 @@ return [
     'banking_assistance' => 'Bankhulp nodig?',
     'banking_assistance_description' => 'Open de klantenchat om met de administratie te spreken zonder het dashboard te verlaten.',
     'open_chat' => 'Chat openen',
+    'live_news_label' => 'Bankinformatie',
+    'live_news_title' => 'Live-updates',
+    'live_news_realtime' => 'Realtime',
+    'live_news_loading' => 'De nieuwste updates worden gesynchroniseerd…',
+    'live_news_empty_title' => 'Alle diensten zijn operationeel',
+    'live_news_empty_message' => 'Geen nieuwe meldingen. Uw bankomgeving is bijgewerkt.',
+    'live_news_updated' => 'Automatisch bijgewerkt',
+    'live_news_error' => 'Updates zijn tijdelijk niet beschikbaar',
 ];

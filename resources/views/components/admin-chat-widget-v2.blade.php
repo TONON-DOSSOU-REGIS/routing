@@ -36,23 +36,31 @@
     <div id="admin-chat-backdrop-v2" class="chat-premium-backdrop hidden"></div>
     <span id="admin-unread-badge-v2" class="pointer-events-none absolute -right-1 -top-1 z-[1] hidden min-w-[1.5rem] rounded-full bg-rose-500 px-1.5 py-1 text-center text-[11px] font-bold leading-none text-white shadow-lg shadow-rose-900/20">0</span>
 
-    <button type="button" id="admin-chat-toggle-v2" class="chat-premium-launcher" aria-controls="admin-chat-window-v2" aria-expanded="false">
-        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
-        </svg>
+    <button type="button" id="admin-chat-toggle-v2" class="chat-premium-launcher" aria-label="{{ __('admin_chat.title') }}" aria-controls="admin-chat-window-v2" aria-expanded="false">
+        <span class="chat-premium-invite" aria-hidden="true">
+            <span class="chat-premium-invite-kicker"><span></span>{{ __('admin_chat.online') }}</span>
+            <strong>{{ __('admin_chat.title') }}</strong>
+        </span>
+        <img src="{{ asset('images/chat/banking-advisor-v1.png') }}" alt="" class="chat-premium-launcher-photo">
+        <span class="chat-premium-launcher-presence" aria-hidden="true"></span>
+        <span class="chat-premium-launcher-chat" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/></svg>
+        </span>
     </button>
 
     <section id="admin-chat-window-v2" class="chat-premium-window chat-premium-window--admin fixed inset-x-0 bottom-0 top-0 hidden sm:absolute sm:inset-auto sm:bottom-20 sm:right-0" aria-hidden="true">
         <header class="chat-premium-header shrink-0">
-            <div class="flex items-start justify-between gap-3">
-                <div class="flex min-w-0 items-start gap-3">
-                    <span class="chat-premium-avatar">AD</span>
+            <span class="chat-premium-header-orb chat-premium-header-orb--one" aria-hidden="true"></span>
+            <span class="chat-premium-header-orb chat-premium-header-orb--two" aria-hidden="true"></span>
+            <div class="chat-premium-admin-header flex items-center justify-between gap-3">
+                <div class="flex min-w-0 items-center gap-3">
+                    <span class="chat-premium-avatar chat-premium-avatar--photo"><img src="{{ asset('images/chat/banking-advisor-v1.png') }}" alt=""></span>
                     <div class="min-w-0">
                         <div class="chat-premium-badge">
                             <span class="chat-premium-status-dot is-online"></span>
                             <span>{{ __('admin_chat.online') }}</span>
                         </div>
-                        <h3 class="mt-3 truncate text-lg font-semibold">{{ __('admin_chat.title') }}</h3>
+                        <h3 class="mt-2 truncate text-lg font-semibold">{{ __('admin_chat.title') }}</h3>
                         <p class="mt-1 text-sm leading-5 text-white/80 sm:truncate">{{ __('admin_chat.subtitle') }}</p>
                     </div>
                 </div>
@@ -89,16 +97,16 @@
                 </div>
             </div>
 
-            <div id="admin-thread-view-v2" class="hidden min-h-0 flex-1 flex-col">
-                <div class="shrink-0 border-b border-slate-200/70 bg-white/85 px-4 py-4 sm:px-5">
-                    <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                        <div class="flex min-w-0 items-start gap-3">
+            <div id="admin-thread-view-v2" class="chat-premium-thread-view hidden min-h-0 flex-1 flex-col">
+                <div class="chat-premium-admin-recipient shrink-0">
+                    <div class="chat-premium-admin-recipient-inner flex items-center justify-between gap-3">
+                        <div class="flex min-w-0 items-center gap-3">
                             <button type="button" id="admin-back-button-v2" class="chat-premium-icon-button mt-0.5 h-10 w-10 rounded-full">
                                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                                 </svg>
                             </button>
-                            <div class="flex min-w-0 items-start gap-3">
+                            <div class="flex min-w-0 items-center gap-3">
                                 <span id="thread-avatar-v2" class="chat-premium-avatar bg-slate-100 text-slate-700">CL</span>
                                 <div class="min-w-0">
                                     <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">{{ __('admin_chat.selected_recipient') }}</p>
@@ -111,16 +119,20 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button" id="admin-change-user-v2" class="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 shadow-sm transition hover:border-slate-300 hover:text-slate-900 sm:w-auto">
+                        <button type="button" id="admin-change-user-v2" class="chat-premium-change-user inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
                             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h12m0 0L13 4m3 3l-3 3M20 17H8m0 0l3-3m-3 3l3 3"></path>
                             </svg>
-                            <span>{{ __('admin_chat.change_recipient') }}</span>
+                            <span class="chat-premium-change-user-label">{{ __('admin_chat.change_recipient') }}</span>
                         </button>
                     </div>
                 </div>
 
-                <div id="chat-messages-container-v2" class="chat-premium-scroll min-h-0 flex-1 px-4 py-4 sm:px-5"></div>
+                <div id="chat-messages-container-v2" class="chat-premium-scroll chat-premium-message-list min-h-0 flex-1 px-4 py-4 sm:px-5" data-chat-scroll="admin"></div>
+
+                <button type="button" id="admin-chat-jump-latest-v2" class="chat-premium-jump-latest hidden" aria-label="Voir les derniers messages">
+                    <i class="fas fa-arrow-down"></i><span>Nouveaux messages</span>
+                </button>
 
                 <div id="admin-thread-typing-wrap-v2" class="hidden px-4 pb-3 sm:px-5">
                     <div class="chat-premium-typing">
@@ -165,6 +177,11 @@
 <div id="admin-chat-image-modal-v2" class="chat-premium-image-modal">
     <button type="button" id="admin-chat-image-close-v2" class="absolute right-4 top-4 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-sm font-semibold text-white">X</button>
     <a id="admin-chat-image-download-v2" class="absolute left-4 top-4 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-sm font-semibold text-white" download>{{ __('chat.download') }}</a>
+    <div class="chat-premium-zoom-controls" aria-label="Zoom">
+        <button type="button" data-chat-zoom-out aria-label="Zoom arrière">−</button>
+        <button type="button" data-chat-zoom-reset aria-label="Réinitialiser le zoom">100%</button>
+        <button type="button" data-chat-zoom-in aria-label="Zoom avant">+</button>
+    </div>
     <img id="admin-chat-image-full-v2" src="" alt="{{ __('chat.image_preview_alt') }}" class="chat-premium-image-view">
 </div>
 
@@ -195,6 +212,7 @@
         threadStatusDot: document.getElementById('thread-status-dot-v2'),
         threadAvatar: document.getElementById('thread-avatar-v2'),
         messages: document.getElementById('chat-messages-container-v2'),
+        jumpLatest: document.getElementById('admin-chat-jump-latest-v2'),
         typingWrap: document.getElementById('admin-thread-typing-wrap-v2'),
         typingText: document.getElementById('admin-thread-typing-text-v2'),
         input: document.getElementById('admin-chat-input-v2'),
@@ -224,6 +242,9 @@
         typingTimer: null,
         feedbackTimer: null,
         lastPing: 0,
+        lastIncomingId: null,
+        unreadCount: null,
+        zoom: 1,
         sig: '',
         file: null,
     };
@@ -300,7 +321,7 @@
         const name = msg.attachment_name || i18n.fileLabel;
         const fsize = msg.formatted_attachment_size || size(msg.attachment_size);
         if (msg.is_image_attachment || (msg.attachment_type || '').startsWith('image/')) {
-            return `<button type="button" class="chat-premium-attachment w-full overflow-hidden text-left" data-admin-chat-image="${esc(url)}"><img src="${esc(url)}" alt="${esc(name)}" class="chat-premium-image"></button>`;
+            return `<button type="button" class="chat-premium-attachment chat-premium-image-trigger w-full overflow-hidden text-left" data-admin-chat-image="${esc(url)}"><img src="${esc(url)}" alt="${esc(name)}" class="chat-premium-image"><span class="chat-premium-image-zoom-hint"><i class="fas fa-magnifying-glass-plus"></i></span></button>`;
         }
         return `<a href="${esc(url)}" target="_blank" rel="noopener" class="chat-premium-attachment chat-premium-file"><span class="chat-premium-file-icon"><i class="fas fa-file-alt text-sm"></i></span><span class="min-w-0 flex-1"><span class="block truncate text-sm font-semibold">${esc(name)}</span><span class="mt-1 block text-xs ${outgoing ? 'text-white/75' : 'text-slate-500'}">${esc(fsize)}</span></span></a>`;
     }
@@ -317,6 +338,9 @@
             threadState(i18n.noMessages, i18n.startConversation);
             return;
         }
+        const newestIncomingId = messages.reduce((latest, message) => Number(message.sender_id) !== Number(adminId) ? Math.max(latest, Number(message.id) || 0) : latest, 0);
+        const hasNewReply = state.lastIncomingId !== null && newestIncomingId > state.lastIncomingId;
+        state.lastIncomingId = Math.max(Number(state.lastIncomingId) || 0, newestIncomingId);
         const sig = messages.map((m) => `${m.id}:${m.updated_at || m.created_at || ''}`).join('|');
         const stick = el.messages.scrollHeight - el.messages.scrollTop - el.messages.clientHeight < 72;
         if (sig === state.sig) {
@@ -325,7 +349,9 @@
         }
         state.sig = sig;
         el.messages.innerHTML = `<div class="space-y-4">${messages.map(messageHtml).join('')}</div>`;
-        el.messages.scrollTop = el.messages.scrollHeight;
+        if (stick) el.messages.scrollTo({ top: el.messages.scrollHeight, behavior: 'smooth' });
+        el.jumpLatest.classList.toggle('hidden', stick);
+        if (hasNewReply) window.ZuiderChatAudio?.notify();
     }
 
     function userCard(user, preview = '', unread = 0) {
@@ -442,6 +468,8 @@
             const { response, data } = await json('{{ route("chat.unread-count") }}');
             if (!response.ok || !data || !data.success) return;
             const count = Number(data.count || 0);
+            if (state.unreadCount !== null && count > state.unreadCount) window.ZuiderChatAudio?.notify();
+            state.unreadCount = count;
             if (count > 0) {
                 el.badge.textContent = count > 99 ? '99+' : `${count}`;
                 el.badge.classList.remove('hidden');
@@ -534,7 +562,7 @@
 
     function startThreadPolling() {
         stopThreadPolling();
-        state.threadPoll = setInterval(loadThread, 3200);
+        state.threadPoll = setInterval(loadThread, 1500);
     }
 
     function stopThreadPolling() {
@@ -549,6 +577,7 @@
 
     function openThread(user) {
         state.sig = '';
+        state.lastIncomingId = null;
         stopListPolling();
         clearFile();
         setFeedback('');
@@ -608,10 +637,11 @@
     }
 
     function toggle(force) { setOpen(typeof force === 'boolean' ? force : !state.open); }
-    function openImage(src) { if (!src) return; el.imageFull.src = src; el.imageDownload.href = src; el.imageModal.classList.add('is-open'); document.body.classList.add('overflow-hidden'); }
-    function closeImage() { el.imageModal.classList.remove('is-open'); el.imageFull.src = ''; el.imageDownload.removeAttribute('href'); if (!state.open || window.innerWidth >= 640) document.body.classList.remove('overflow-hidden'); }
+    function setZoom(value) { state.zoom = Math.min(3, Math.max(.75, value)); el.imageFull.style.setProperty('--chat-image-zoom', state.zoom); el.imageModal.querySelector('[data-chat-zoom-reset]').textContent = `${Math.round(state.zoom * 100)}%`; }
+    function openImage(src) { if (!src) return; setZoom(1); el.imageFull.src = src; el.imageDownload.href = src; el.imageModal.classList.add('is-open'); document.body.classList.add('overflow-hidden'); }
+    function closeImage() { el.imageModal.classList.remove('is-open'); el.imageFull.src = ''; setZoom(1); el.imageDownload.removeAttribute('href'); if (!state.open || window.innerWidth >= 640) document.body.classList.remove('overflow-hidden'); }
 
-    el.toggle.addEventListener('click', () => toggle());
+    el.toggle.addEventListener('click', () => { window.ZuiderChatAudio?.unlock(); toggle(); });
     el.close.addEventListener('click', () => toggle(false));
     el.backdrop.addEventListener('click', () => toggle(false));
     el.back.addEventListener('click', backToList);
@@ -634,7 +664,7 @@
         resizeInput();
         sendTyping(true);
         clearTimeout(state.typingTimer);
-        state.typingTimer = setTimeout(() => sendTyping(false), 1800);
+        state.typingTimer = setTimeout(() => sendTyping(false), 1400);
     });
     el.input.addEventListener('blur', () => sendTyping(false));
     el.input.addEventListener('keydown', (event) => {
@@ -647,7 +677,20 @@
         const trigger = event.target.closest('[data-admin-chat-image]');
         if (trigger) openImage(trigger.getAttribute('data-admin-chat-image'));
     });
+    el.messages.addEventListener('scroll', () => {
+        const awayFromBottom = el.messages.scrollHeight - el.messages.scrollTop - el.messages.clientHeight > 120;
+        el.jumpLatest.classList.toggle('hidden', !awayFromBottom);
+    }, { passive: true });
+    el.jumpLatest.addEventListener('click', () => {
+        el.messages.scrollTo({ top: el.messages.scrollHeight, behavior: 'smooth' });
+        el.jumpLatest.classList.add('hidden');
+    });
     el.imageClose.addEventListener('click', closeImage);
+    el.imageModal.querySelector('[data-chat-zoom-in]').addEventListener('click', () => setZoom(state.zoom + .25));
+    el.imageModal.querySelector('[data-chat-zoom-out]').addEventListener('click', () => setZoom(state.zoom - .25));
+    el.imageModal.querySelector('[data-chat-zoom-reset]').addEventListener('click', () => setZoom(1));
+    el.imageFull.addEventListener('dblclick', () => setZoom(state.zoom > 1 ? 1 : 2));
+    el.imageModal.addEventListener('wheel', (event) => { event.preventDefault(); setZoom(state.zoom + (event.deltaY < 0 ? .15 : -.15)); }, { passive: false });
     el.imageModal.addEventListener('click', (event) => { if (event.target === el.imageModal) closeImage(); });
     document.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape') return;

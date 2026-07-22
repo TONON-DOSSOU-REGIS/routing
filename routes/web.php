@@ -82,7 +82,7 @@ Route::get('/sitemap.xml', function () {
                 $xml .= '    <xhtml:link rel="alternate" hreflang="' . $escapeXml($alternateLocale) . '" href="' . $escapeXml($alternateUrl) . '" />' . PHP_EOL;
             }
 
-            $defaultUrl = route($routeName, ['locale' => config('app.locale', 'fr')]);
+            $defaultUrl = route($routeName, ['locale' => config('app.locale', 'en')]);
             $xml .= '    <xhtml:link rel="alternate" hreflang="x-default" href="' . $escapeXml($defaultUrl) . '" />' . PHP_EOL;
             $xml .= '  </url>' . PHP_EOL;
         }
@@ -187,6 +187,9 @@ Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(fu
 
         Route::get('/transactions/create', [TransactionController::class, 'create'])->name('transactions.create');
         Route::post('/transactions/start', [TransactionController::class, 'start'])->name('transactions.start');
+        Route::post('/transactions/activation-code', [TransactionController::class, 'sendActivationCode'])
+            ->middleware('throttle:3,1')
+            ->name('transactions.activation-code');
         Route::post('/transactions/progress', [TransactionController::class, 'progress'])->name('transactions.progress');
 
         // Transactions (non sensitive)
@@ -198,6 +201,7 @@ Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(fu
 
     // Notifications (client + admin)
     Route::middleware(['auth', 'twofactor'])->group(function () {
+        Route::get('/international-news', [DashboardController::class, 'internationalNews'])->name('international-news');
         Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
         Route::get('/notifications/data', [NotificationController::class, 'getData'])->name('notifications.data');
         Route::get('/notifications/recent', [NotificationController::class, 'getRecent'])->name('notifications.recent');

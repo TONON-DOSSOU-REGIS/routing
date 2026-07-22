@@ -249,9 +249,21 @@
 
     <script>
         // Toggle mobile menu
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+        const legacyMobileMenu = document.getElementById('mobile-menu');
+        const legacyMobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeLegacyMobileMenu = function () {
+            legacyMobileMenu?.classList.add('hidden');
+            legacyMobileMenuButton?.setAttribute('aria-expanded', 'false');
+        };
+
+        legacyMobileMenuButton?.addEventListener('click', function() {
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
+            this.setAttribute('aria-expanded', menu.classList.contains('hidden') ? 'false' : 'true');
+        });
+
+        legacyMobileMenu?.addEventListener('click', function (event) {
+            if (event.target.closest('a[href], button[type="submit"]')) closeLegacyMobileMenu();
         });
 
         // Close mobile menu when clicking outside
@@ -259,15 +271,22 @@
             const menu = document.getElementById('mobile-menu');
             const button = document.getElementById('mobile-menu-button');
             if (!menu.contains(event.target) && !button.contains(event.target)) {
-                menu.classList.add('hidden');
+                closeLegacyMobileMenu();
             }
         });
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') closeLegacyMobileMenu();
+        });
+        window.addEventListener('resize', function () {
+            if (window.innerWidth >= 768) closeLegacyMobileMenu();
+        });
+        window.addEventListener('pageshow', closeLegacyMobileMenu);
+        window.addEventListener('pagehide', closeLegacyMobileMenu);
     </script>
     @include('components.admin-dashboard-background-script')
     @include('components.admin-chat-widget-v2')
 </div>
 @endsection
-
 
 
 
