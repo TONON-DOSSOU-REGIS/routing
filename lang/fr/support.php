@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'help_center_title' => 'Centre d\'aide - Zuider Bank S.A',

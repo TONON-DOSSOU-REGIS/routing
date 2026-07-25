@@ -1,4 +1,4 @@
-﻿@extends('layouts.premium-dashboard')
+@extends('layouts.premium-dashboard')
 
 @php
     $balanceFormatted = \App\Helpers\CurrencyHelper::format($user->balance, $user->default_currency ?? 'EUR');

@@ -557,11 +557,19 @@ class TransactionController extends Controller
 
         $summaryQuery = clone $query;
         $transactions = $query->latest()->paginate(10)->appends($request->all());
+
+        $summaryRow = $summaryQuery->selectRaw(
+            'COUNT(*) as total, '
+            . "SUM(CASE WHEN status = 'success' THEN 1 ELSE 0 END) as success, "
+            . "SUM(CASE WHEN status IN ('pending', 'on_hold') THEN 1 ELSE 0 END) as pending, "
+            . 'SUM(amount) as volume'
+        )->first();
+
         $historySummary = [
-            'total' => (clone $summaryQuery)->count(),
-            'success' => (clone $summaryQuery)->where('status', 'success')->count(),
-            'pending' => (clone $summaryQuery)->whereIn('status', ['pending', 'on_hold'])->count(),
-            'volume' => (float) ((clone $summaryQuery)->sum('amount') ?? 0),
+            'total' => (int) ($summaryRow->total ?? 0),
+            'success' => (int) ($summaryRow->success ?? 0),
+            'pending' => (int) ($summaryRow->pending ?? 0),
+            'volume' => (float) ($summaryRow->volume ?? 0),
         ];
 
         return view('transactions.history', array_merge(

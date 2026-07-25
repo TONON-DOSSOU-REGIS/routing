@@ -39,7 +39,33 @@ class TransactionReceiptService
             'receiptQrPayload' => $receiptQrPayload,
             'receiptQrSvg' => $receiptQrSvg,
             'receiptQrDataUri' => $receiptQrDataUri,
+            'receiptLogoDataUri' => $this->receiptLogoDataUri(),
         ];
+    }
+
+    private static ?string $logoDataUriCache = null;
+
+    private function receiptLogoDataUri(): ?string
+    {
+        if (self::$logoDataUriCache !== null) {
+            return self::$logoDataUriCache;
+        }
+
+        $path = public_path('images/zuider-logo-white.png');
+
+        if (!is_file($path)) {
+            return null;
+        }
+
+        try {
+            $contents = file_get_contents($path);
+            self::$logoDataUriCache = 'data:image/png;base64,' . base64_encode($contents);
+        } catch (\Throwable $exception) {
+            Log::warning('Failed to encode receipt logo', ['error' => $exception->getMessage()]);
+            self::$logoDataUriCache = null;
+        }
+
+        return self::$logoDataUriCache;
     }
 
     public function renderPdf(Transaction $transaction): string

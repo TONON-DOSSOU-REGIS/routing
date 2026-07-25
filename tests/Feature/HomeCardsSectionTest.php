@@ -6,12 +6,23 @@ use Tests\TestCase;
 
 class HomeCardsSectionTest extends TestCase
 {
+    public function test_public_mobile_menu_is_initialized_without_waiting_for_dom_content_loaded(): void
+    {
+        $response = $this->get(route('about.notre-histoire', ['locale' => 'fr']));
+
+        $response->assertOk()
+            ->assertSee('id="modern-mobile-menu-button"', false)
+            ->assertSee("toggle.dataset.menuInitialized = 'true'", false);
+    }
+
     public function test_homepage_displays_the_three_card_offers(): void
     {
         $response = $this->get(route('home', ['locale' => 'fr']));
 
         $response->assertOk();
         $response->assertSee('button-feedback-', false);
+        $response->assertSee("toggle.dataset.menuInitialized = 'true'", false);
+        $response->assertSee('(function () {', false);
         $response->assertSee('id="cards"', false);
         $response->assertSee('Carte Standard');
         $response->assertSee('Carte Premium');

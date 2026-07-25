@@ -46,7 +46,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'isAdmin' => \App\Http\Middleware\IsAdmin::class,
             'notAdmin' => \App\Http\Middleware\EnsureNotAdmin::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-            'checkUserStatus' => \App\Http\Middleware\CheckUserStatus::class,
             'twofactor' => \App\Http\Middleware\EnsureTwoFactorVerified::class,
         ]);
     })

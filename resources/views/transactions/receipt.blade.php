@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
@@ -126,7 +126,7 @@
         }
 
         .brand-emblem {
-            width: 74px;
+            width: 190px;
             margin-right: 14px;
         }
 
@@ -134,6 +134,12 @@
             display: block;
             width: 74px;
             height: 74px;
+        }
+
+        .brand-logo-img {
+            display: block;
+            width: 190px;
+            height: auto;
         }
 
         .brand-copy {
@@ -531,7 +537,7 @@
                 <div style="margin-top:8px;font-size:24px;font-weight:800;color:#0f172a;">#{{ $transaction->id }}</div>
                 <div style="margin-top:8px;color:#64748b;">{{ __('transactions.receipt_generated_at', ['date' => $receiptGeneratedLabel]) }}</div>
                 <div class="receipt-toolbar-links">
-                    <a href="{{ localized_route('transactions.receipt', $transaction) }}" class="primary">{{ __('transactions.action_download_receipt') }}</a>
+                    <a href="{{ localized_route('transactions.receipt', $transaction) }}" download class="primary">{{ __('transactions.action_download_receipt') }}</a>
                     <a href="{{ localized_route('transactions.history') }}" class="secondary">{{ __('transactions.history_title') }}</a>
                 </div>
             </div>
@@ -551,15 +557,18 @@
                     <td class="receipt-brand">
                         <div class="brand-stack">
                             <div class="brand-emblem">
-                                <svg viewBox="0 0 74 74" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <rect x="4" y="4" width="66" height="66" rx="22" fill="#f97316"/>
-                                    <path d="M20 22H31L37 34L43 22H54L37 51L20 22Z" fill="#ffffff"/>
-                                    <path d="M23 54H51" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-                                    <circle cx="55" cy="19" r="5" fill="#fdba74"/>
-                                </svg>
+                                @if($receiptLogoDataUri ?? null)
+                                    <img src="{{ $receiptLogoDataUri }}" alt="Zuider Bank S.A" class="brand-logo-img">
+                                @else
+                                    <svg viewBox="0 0 74 74" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <rect x="4" y="4" width="66" height="66" rx="22" fill="#f97316"/>
+                                        <path d="M20 22H31L37 34L43 22H54L37 51L20 22Z" fill="#ffffff"/>
+                                        <path d="M23 54H51" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+                                        <circle cx="55" cy="19" r="5" fill="#fdba74"/>
+                                    </svg>
+                                @endif
                             </div>
                             <div class="brand-copy">
-                                <div class="brand-name">Zuider Bank S.A</div>
                                 <div class="brand-tag">{{ __('transactions.receipt_brand_tag') }}</div>
                                 <div class="brand-micro">{{ __('transactions.receipt_title') }} #{{ $transaction->id }}</div>
                             </div>

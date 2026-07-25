@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'welcome_greeting' => 'Hello, :name &#128075;',
@@ -75,6 +75,7 @@ return [
     'complete' => 'Complete',
     'secure_session' => 'Secure session',
     'immediate_summary' => 'Immediate overview',
+    'live_balance' => 'Live balance',
     'hero_summary' => 'Your cockpit highlights the essentials: available balance, activity pace, pending operations, and follow-up priorities.',
     'loan_amount_title' => 'Loan amount',
     'loan_amount_description' => 'Your dashboard now highlights only the approved loan amount to avoid confusion with other financial figures.',

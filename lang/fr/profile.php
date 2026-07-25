@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'bank_name' => 'Zuider Bank S.A',

@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @push('head')
     <link rel="preconnect" href="https://fonts.googleapis.com">

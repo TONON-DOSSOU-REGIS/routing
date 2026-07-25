@@ -1,10 +1,15 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @push('head')
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    </noscript>
     <style>
         :root {
             --shell-bg: rgba(244, 248, 253, 0.94);
@@ -292,6 +297,41 @@
             opacity: .78;
         }
 
+        .balance-card {
+            background:
+                radial-gradient(circle at 100% 0%, rgba(0, 184, 217, 0.22), transparent 42%),
+                linear-gradient(155deg, #030d1c 0%, #071a2f 46%, #0a2036 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 64px rgba(2, 12, 26, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        }
+
+        .balance-card-mesh {
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+            background-size: 28px 28px;
+            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+        }
+
+        .balance-figure {
+            font-size: clamp(2.2rem, 4.4vw, 3rem);
+            line-height: 1;
+        }
+
+        .balance-quick-action {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: background-color .2s ease, border-color .2s ease, transform .2s ease;
+        }
+
+        .balance-quick-action:hover {
+            background: rgba(255, 255, 255, 0.09);
+            border-color: rgba(255, 255, 255, 0.16);
+            transform: translateY(-2px);
+        }
+
         .premium-topbar {
             position: sticky;
             z-index: 18;
@@ -409,6 +449,7 @@
     @php
         $authUser = auth()->user();
         $dashboardTheme = trim($__env->yieldContent('dashboard_theme')) ?: 'client';
+        $dashboardHomeUrl = localized_route($dashboardTheme === 'admin' ? 'admin.dashboard' : 'dashboard');
         $dashboardTitle = html_entity_decode(trim($__env->yieldContent('dashboard_page_title')) ?: 'Dashboard', ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $dashboardSubtitle = html_entity_decode(trim($__env->yieldContent('dashboard_page_subtitle')) ?: '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $dashboardSearchPlaceholder = html_entity_decode(trim($__env->yieldContent('dashboard_search_placeholder')) ?: __('admin_pages.dashboard_search_default'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
@@ -437,7 +478,7 @@
                     <div class="flex min-h-full flex-col gap-8">
                         <div class="premium-sidebar-brand flex items-center justify-between gap-3">
                             <div class="flex min-w-0 items-center gap-4">
-                                <a href="{{ localized_route('home') }}" class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white shadow-xl shadow-slate-950/20 ring-1 ring-white/20">
+                                <a href="{{ $dashboardHomeUrl }}" data-dashboard-brand-link class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white shadow-xl shadow-slate-950/20 ring-1 ring-white/20">
                                     <img src="{{ asset('images/Logosite.png') }}" alt="Zuider Bank S.A" class="h-10 w-10 object-contain">
                                 </a>
                                 <div class="min-w-0">
@@ -596,7 +637,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        (function () {
             const dashboardBody = document.querySelector('.premium-dashboard-body');
             const sidebar = document.getElementById('premium-dashboard-sidebar');
             const toggleButton = document.getElementById('premium-dashboard-sidebar-toggle');
@@ -604,9 +645,10 @@
             const backdrop = document.getElementById('premium-dashboard-sidebar-backdrop');
             const html = document.documentElement;
 
-            if (!dashboardBody || !sidebar || !toggleButton || !backdrop) {
+            if (!dashboardBody || !sidebar || !toggleButton || !backdrop || toggleButton.dataset.menuInitialized === 'true') {
                 return;
             }
+            toggleButton.dataset.menuInitialized = 'true';
 
             const setSidebarState = (isOpen) => {
                 if (window.innerWidth >= 1024) {
@@ -683,7 +725,7 @@
                     });
                 });
             }
-        });
+        })();
     </script>
     @stack('premium_dashboard_scripts')
 @endsection

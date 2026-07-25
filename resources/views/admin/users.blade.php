@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin-premium')
+@extends('layouts.admin-premium')
 
 @section('title', __('admin_pages.users_title'))
 @section('admin_nav_active', 'users')

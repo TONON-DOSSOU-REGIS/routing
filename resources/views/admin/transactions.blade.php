@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin-premium')
+@extends('layouts.admin-premium')
 
 @php
     $filteredTransactionsVolumeFormatted = \App\Helpers\CurrencyHelper::format($filteredTransactionsVolume ?? 0, 'EUR');

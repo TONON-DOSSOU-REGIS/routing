@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'welcome_greeting' => 'Czesc, :name &#128075;',
@@ -75,6 +75,7 @@ return [
     'complete' => 'Uzupelnij',
     'secure_session' => 'Bezpieczna sesja',
     'immediate_summary' => 'Szybki przeglad',
+    'live_balance' => 'Saldo na zywo',
     'hero_summary' => 'Kokpit pokazuje to, co najwazniejsze: dostepne saldo, tempo operacji, oczekujace sprawy i priorytety.',
     'loan_amount_title' => 'Kwota pozyczki',
     'loan_amount_description' => 'Panel pokazuje teraz wylacznie dostepna kwote pozyczki, aby uniknac pomylek z innymi wartosciami finansowymi.',

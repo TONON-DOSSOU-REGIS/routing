@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin-premium')
+@extends('layouts.admin-premium')
 
 @php
     $targetUser = collect($users)->firstWhere('id', old('target_user_id', $settings->target_user_id ?? null));

@@ -63,7 +63,7 @@ class DashboardController extends Controller
             (collect($profileFields)->filter(fn ($value) => filled($value))->count() / count($profileFields)) * 100
         );
 
-        $latestTransaction = $user->transactions()->latest()->first();
+        $latestTransaction = $transactions->first();
 
         return view('dashboard.index', compact(
             'user',

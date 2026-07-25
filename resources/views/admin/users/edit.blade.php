@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin-premium')
+@extends('layouts.admin-premium')
 
 @php
     $creditCard = $user->creditCard;

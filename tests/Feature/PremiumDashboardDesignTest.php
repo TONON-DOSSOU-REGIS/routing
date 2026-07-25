@@ -18,10 +18,11 @@ class PremiumDashboardDesignTest extends TestCase
             'two_factor_enabled' => false,
         ]);
 
-        $this->actingAs($client)
+        $response = $this->actingAs($client)
             ->get(route('dashboard', ['locale' => 'fr']))
             ->assertOk()
             ->assertSee('premium-sidebar-brand', false)
+            ->assertSee('href="' . route('dashboard', ['locale' => 'fr']) . '" data-dashboard-brand-link', false)
             ->assertSee('premium-topbar', false)
             ->assertSee('premium-content-stack', false)
             ->assertSee('data-premium-card-system="ultra"', false)
@@ -32,9 +33,12 @@ class PremiumDashboardDesignTest extends TestCase
             ->assertSee('client-chat-jump-latest', false)
             ->assertSee('data-chat-scroll="client"', false)
             ->assertSee('premium-dashboard-sidebar-close', false)
+            ->assertSee("toggleButton.dataset.menuInitialized = 'true'", false)
             ->assertSee('data-live-news', false)
             ->assertSee('data-client-news-section', false)
             ->assertDontSee('market-tracker-widget', false);
+
+        $this->assertSame(5, substr_count($response->getContent(), 'data-ui-no-loading'));
     }
 
     public function test_admin_dashboard_uses_the_vip_shared_shell(): void
@@ -52,6 +56,7 @@ class PremiumDashboardDesignTest extends TestCase
             ->assertOk()
             ->assertSee('premium-theme-admin', false)
             ->assertSee('premium-sidebar-brand', false)
+            ->assertSee('href="' . route('admin.dashboard', ['locale' => 'fr']) . '" data-dashboard-brand-link', false)
             ->assertSee('premium-topbar', false)
             ->assertSee('premium-content-stack', false)
             ->assertSee('data-premium-card-system="ultra"', false)
@@ -77,6 +82,7 @@ class PremiumDashboardDesignTest extends TestCase
         $this->actingAs($client)
             ->get(route('transactions.create', ['locale' => 'fr']))
             ->assertOk()
+            ->assertSee('href="#transferForm"', false)
             ->assertSee('data-transfer-journey', false)
             ->assertSee('transfer-step-number', false)
             ->assertSee('transfer-step-status', false);

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'support_title' => 'Support Zuider Bank S.A',

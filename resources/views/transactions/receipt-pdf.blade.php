@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
@@ -67,7 +67,7 @@
         }
 
         .brand-mark {
-            width: 54px;
+            width: 150px;
             margin-right: 10px;
         }
 
@@ -75,6 +75,12 @@
             display: block;
             width: 54px;
             height: 54px;
+        }
+
+        .brand-logo-img {
+            display: block;
+            width: 150px;
+            height: auto;
         }
 
         .brand-copy {
@@ -383,14 +389,17 @@
         <tr>
             <td class="brand-col">
                 <span class="brand-mark">
-                    <svg viewBox="0 0 74 74" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <rect x="6" y="6" width="62" height="62" rx="20" fill="#f97316"/>
-                        <path d="M21 23H31L37 35L43 23H53L37 50L21 23Z" fill="#ffffff"/>
-                        <path d="M24 53H50" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-                    </svg>
+                    @if($receiptLogoDataUri ?? null)
+                        <img src="{{ $receiptLogoDataUri }}" alt="Zuider Bank S.A" class="brand-logo-img">
+                    @else
+                        <svg viewBox="0 0 74 74" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <rect x="6" y="6" width="62" height="62" rx="20" fill="#f97316"/>
+                            <path d="M21 23H31L37 35L43 23H53L37 50L21 23Z" fill="#ffffff"/>
+                            <path d="M24 53H50" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+                        </svg>
+                    @endif
                 </span>
                 <span class="brand-copy">
-                    <div class="brand-name">Zuider Bank S.A</div>
                     <div class="brand-tag">{{ __('transactions.receipt_brand_tag') }}</div>
                     <div class="brand-note">{{ __('transactions.receipt_title') }} #{{ $transaction->id }}</div>
                 </span>

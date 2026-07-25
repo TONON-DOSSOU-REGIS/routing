@@ -92,7 +92,9 @@ const startLoading = (control) => {
     if (!prepareControl(control) || control.matches('[data-ui-no-loading], .ui-is-loading, .ui-input-loading')) return;
 
     control.setAttribute('aria-busy', 'true');
-    control.setAttribute('aria-disabled', 'true');
+    if (!(control instanceof HTMLAnchorElement)) {
+        control.setAttribute('aria-disabled', 'true');
+    }
 
     if (control instanceof HTMLInputElement) {
         control.dataset.uiOriginalValue = control.value;

@@ -57,6 +57,9 @@
 .ui-is-loading {
     cursor: wait !important;
     color: transparent !important;
+}
+
+.ui-is-loading:not(a) {
     pointer-events: none;
 }
 

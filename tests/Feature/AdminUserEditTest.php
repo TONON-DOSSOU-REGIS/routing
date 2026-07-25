@@ -153,7 +153,7 @@ test('admin can reset user password', function () {
         ]);
 
     $response->assertRedirect(localized_route('admin.users'));
-    $response->assertSessionHas('status', 'Mot de passe réinitialisé avec succès. Un email a été envoyé à l\'utilisateur.');
+    $response->assertSessionHas('status', 'Mot de passe réinitialisé avec succès. Un email a été envoyé à l’utilisateur.');
 
     // Check that password was changed
     $user->refresh();

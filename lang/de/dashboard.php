@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'welcome_greeting' => 'Hallo, :name &#128075;',
@@ -75,6 +75,7 @@ return [
     'complete' => 'Fertigstellen',
     'secure_session' => 'Sichere Sitzung',
     'immediate_summary' => 'Sofortuebersicht',
+    'live_balance' => 'Kontostand live',
     'hero_summary' => 'Ihr Cockpit zeigt das Wesentliche: verfuegbarer Saldo, Aktivitaetsrhythmus, offene Vorgaenge und Prioritaeten.',
     'loan_amount_title' => 'Darlehensbetrag',
     'loan_amount_description' => 'Ihr Dashboard hebt nur noch den verfuegbaren Darlehensbetrag hervor, um Verwechslungen mit anderen Finanzzahlen zu vermeiden.',

@@ -1090,13 +1090,14 @@
     </footer>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    (function () {
         const toggle = document.getElementById('modern-mobile-menu-button');
         const menu = document.getElementById('modern-mobile-menu');
         const close = document.getElementById('modern-mobile-menu-close');
         const backdrop = document.getElementById('modern-mobile-backdrop');
 
-        if (!toggle || !menu) return;
+        if (!toggle || !menu || toggle.dataset.menuInitialized === 'true') return;
+        toggle.dataset.menuInitialized = 'true';
 
         const setMobileMenu = function (isOpen) {
             menu.classList.toggle('open', isOpen);
@@ -1141,7 +1142,7 @@
         });
         window.addEventListener('pageshow', function () { setMobileMenu(false); });
         window.addEventListener('pagehide', function () { setMobileMenu(false); });
-    });
+    })();
 </script>
 </body>
 </html>

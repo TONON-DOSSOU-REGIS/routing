@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin-premium')
+@extends('layouts.admin-premium')
 
 @php
     $depositVolume30DaysFormatted = \App\Helpers\CurrencyHelper::format($depositVolume30Days ?? 0, 'EUR');

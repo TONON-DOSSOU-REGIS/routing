@@ -1,4 +1,4 @@
-﻿@extends('layouts.premium-dashboard')
+@extends('layouts.premium-dashboard')
 
 @php
     $i18n = [

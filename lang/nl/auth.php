@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'failed' => 'Deze identificaties komen niet overeen met onze gegevens.',

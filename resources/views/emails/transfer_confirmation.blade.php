@@ -1,4 +1,4 @@
-﻿@php
+@php
     $clientName = trim(implode(' ', array_filter([
         $transaction->user->first_name ?? null,
         $transaction->user->last_name ?? null,

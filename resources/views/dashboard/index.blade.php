@@ -1,4 +1,4 @@
-﻿@extends('layouts.premium-dashboard')
+@extends('layouts.premium-dashboard')
 
 @section('title', __('dashboard.dashboard_title'))
 @section('dashboard_theme', 'client')
@@ -17,7 +17,7 @@
         </span>
         <span>{{ __('dashboard.dashboard_title') }}</span>
     </a>
-    <a href="{{ localized_route('transfer.create') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
+    <a href="{{ localized_route('transfer.create') }}" data-ui-no-loading class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
             <i class="fas fa-paper-plane"></i>
         </span>
@@ -95,7 +95,7 @@
 @endsection
 
 @section('dashboard_header_actions')
-    <a href="{{ localized_route('transfer.create') }}" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-700 to-cyan-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:-translate-y-0.5 hover:shadow-xl">
+    <a href="{{ localized_route('transfer.create') }}" data-ui-no-loading class="relative z-10 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-700 to-cyan-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:-translate-y-0.5 hover:shadow-xl">
         <i class="fas fa-paper-plane text-xs"></i>
         {{ __('dashboard.new_transfer') }}
     </a>
@@ -156,350 +156,146 @@
         $profileCompletionWidth = min(max($profileCompletion, 10), 100);
     @endphp
 
-    <div class="grid gap-6 2xl:grid-cols-[minmax(0,1.72fr)_minmax(320px,380px)]">
-        <section class="premium-gradient-card premium-grid-glow premium-card-hover relative min-w-0 overflow-hidden rounded-[30px] p-6 sm:p-7">
-            <div class="pointer-events-none absolute inset-0">
-                <div class="absolute -right-20 top-8 h-48 w-48 rounded-full bg-white/10 blur-3xl"></div>
-                <div class="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-emerald-300/10 blur-3xl"></div>
-            </div>
+    <div class="grid items-start gap-6 2xl:grid-cols-[minmax(0,1.72fr)_minmax(320px,380px)]">
+        <section class="balance-card premium-card-hover relative min-w-0 overflow-hidden rounded-[26px] p-5 sm:p-6">
+            <div class="balance-card-mesh pointer-events-none absolute inset-0"></div>
 
             <div class="relative z-10">
-                <div class="flex min-w-0 flex-col gap-6 2xl:flex-row 2xl:items-start 2xl:justify-between">
-                    <div class="min-w-0 max-w-3xl">
-                        <span class="inline-flex items-center gap-2 rounded-full bg-white/12 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/78 ring-1 ring-white/12">
-                            <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
-                            {{ __('dashboard.immediate_summary') }}
-                        </span>
-                        <p class="mt-6 text-xs font-semibold uppercase tracking-[0.22em] text-white/60">{{ __('dashboard.loan_amount_title') }}</p>
-                        <h2 class="mt-4 premium-page-title text-4xl font-semibold tracking-[-0.06em] sm:text-5xl">
+                <div class="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <span class="relative flex h-2 w-2">
+                                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
+                            </span>
+                            <span class="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/55">{{ __('dashboard.live_balance') }}</span>
+                        </div>
+
+                        <h2 class="balance-figure mt-2 font-semibold tabular-nums tracking-[-0.04em] text-white">
                             {{ $balanceFormatted }}
                         </h2>
-                        <p class="mt-4 max-w-2xl text-sm leading-7 text-white/78 sm:text-base">
-                            {{ __('dashboard.loan_amount_description') }}
-                        </p>
 
-                        <div class="mt-6 flex flex-wrap gap-3">
-                            <span class="inline-flex items-center gap-2 rounded-full bg-white/12 px-4 py-2 text-sm font-semibold text-white ring-1 ring-white/12">
-                                <i class="fas fa-shield-check text-[11px]"></i>
+                        <div class="mt-3 flex flex-wrap items-center gap-1.5">
+                            <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/12 px-3 py-1 text-xs font-semibold text-emerald-300 ring-1 ring-emerald-400/20">
+                                <i class="fas fa-circle-check text-[10px]"></i>
+                                {{ $accountStatusLabel }}
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 rounded-full bg-white/8 px-3 py-1 text-xs font-semibold text-white/70 ring-1 ring-white/10">
+                                <i class="fas fa-lock text-[10px]"></i>
                                 {{ __('dashboard.secure_session') }}
                             </span>
-                            <span class="inline-flex items-center gap-2 rounded-full bg-white/12 px-4 py-2 text-sm font-semibold text-white ring-1 ring-white/12">
-                                <i class="fas fa-circle-check text-[11px]"></i>
-                                {{ __('dashboard.account') }} : {{ $accountStatusLabel }}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="grid w-full gap-3 sm:grid-cols-2 2xl:max-w-[420px]">
-                        <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm ring-1 ring-white/10">
-                            <div class="flex items-start justify-between gap-3">
-                                <div>
-                                    <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.account') }}</p>
-                                    <p class="mt-2 text-lg font-semibold text-white">{{ $accountStatusLabel }}</p>
-                                </div>
-                                <span class="flex h-11 w-11 items-center justify-center rounded-2xl {{ $accountStatusIconClasses }}">
-                                    <i class="fas fa-shield-check"></i>
-                                </span>
-                            </div>
-                            <p class="mt-4 inline-flex rounded-full px-3 py-1 text-xs font-semibold ring-1 {{ $accountStatusBadgeClasses }}">
-                                {{ __('dashboard.verified_account') }}
-                            </p>
-                        </div>
-
-                        <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm ring-1 ring-white/10">
-                            <div class="flex items-start justify-between gap-3">
-                                <div>
-                                    <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.latest_operation') }}</p>
-                                    <p class="mt-2 text-lg font-semibold text-white">{{ $latestTransactionLabel }}</p>
-                                </div>
-                                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/12 text-white">
-                                    <i class="fas fa-clock-rotate-left"></i>
-                                </span>
-                            </div>
-                            <p class="mt-4 text-xs text-white/70">
-                                {{ $latestTransaction?->created_at?->format('d/m/Y H:i') ?? __('dashboard.no_recorded_movement') }}
-                            </p>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-8 grid gap-3 sm:grid-cols-3">
-                    <article class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm ring-1 ring-white/10">
-                        <div class="flex items-start justify-between gap-3">
-                            <div>
-                                <p class="text-sm font-semibold text-white">{{ __('dashboard.unread_notifications') }}</p>
-                                <p class="mt-1 text-sm text-white/70">{{ __('dashboard.unread_notifications_description') }}</p>
-                            </div>
-                            <span class="rounded-full bg-white/14 px-3 py-1 text-xs font-semibold text-white">{{ $unreadNotificationsCount }}</span>
-                        </div>
-                    </article>
+                <div class="mt-5 grid grid-cols-2 gap-2.5 sm:max-w-[360px]">
+                    <a href="{{ localized_route('transfer.create') }}" data-ui-no-loading class="balance-quick-action group flex items-center gap-3 rounded-2xl p-3.5">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-slate-950 transition group-hover:scale-105">
+                            <i class="fas fa-paper-plane text-sm"></i>
+                        </span>
+                        <span class="min-w-0">
+                            <span class="block text-sm font-semibold text-white">{{ __('dashboard.new_transfer') }}</span>
+                            <span class="block text-xs text-white/50">{{ __('dashboard.send_payment') }}</span>
+                        </span>
+                    </a>
 
-                    <article class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm ring-1 ring-white/10">
-                        <div class="flex items-start justify-between gap-3">
-                            <div>
-                                <p class="text-sm font-semibold text-white">{{ __('dashboard.operations_to_track') }}</p>
-                                <p class="mt-1 text-sm text-white/70">{{ __('dashboard.operations_to_track_description') }}</p>
-                            </div>
-                            <span class="rounded-full bg-white/14 px-3 py-1 text-xs font-semibold text-white">{{ $pendingOperationsCount }}</span>
-                        </div>
-                    </article>
-
-                    <article class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm ring-1 ring-white/10">
-                        <div class="flex items-start justify-between gap-3">
-                            <div>
-                                <p class="text-sm font-semibold text-white">{{ __('dashboard.premium_profile') }}</p>
-                                <p class="mt-1 text-sm text-white/70">{{ __('dashboard.premium_profile_description') }}</p>
-                            </div>
-                            <span class="rounded-full bg-white/14 px-3 py-1 text-xs font-semibold text-white">{{ $profileCompletion }}%</span>
-                        </div>
-                        <div class="mt-4 h-2 rounded-full bg-white/15">
-                            <div class="h-2 rounded-full bg-white" style="width: {{ $profileCompletionWidth }}%"></div>
-                        </div>
-                    </article>
+                    <a href="{{ localized_route('transactions.history') }}" class="balance-quick-action group flex items-center gap-3 rounded-2xl p-3.5">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/12 text-white transition group-hover:scale-105">
+                            <i class="fas fa-clock-rotate-left text-sm"></i>
+                        </span>
+                        <span class="min-w-0">
+                            <span class="block truncate text-sm font-semibold text-white">{{ $latestTransactionLabel }}</span>
+                            <span class="block truncate text-xs text-white/50">{{ $latestTransactionStatusLabel }}</span>
+                        </span>
+                    </a>
                 </div>
+
+                @if($transactions->isNotEmpty())
+                    <div class="mt-5 rounded-2xl bg-white/5 p-4 ring-1 ring-white/8">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/50">{{ __('dashboard.client_priorities') }}</p>
+                            <a href="{{ localized_route('transactions.history') }}" class="text-[11px] font-semibold text-white/60 transition hover:text-white">{{ __('dashboard.view_all') }}</a>
+                        </div>
+
+                        <div class="mt-3 space-y-2.5">
+                            @foreach($transactions->take(3) as $recentTx)
+                                @php
+                                    $txStatusDot = match ($recentTx->status) {
+                                        'success' => 'bg-emerald-400',
+                                        'on_hold' => 'bg-amber-400',
+                                        'pending' => 'bg-sky-400',
+                                        'failed' => 'bg-rose-400',
+                                        default => 'bg-white/40',
+                                    };
+                                @endphp
+                                <div class="flex items-center justify-between gap-3">
+                                    <div class="flex min-w-0 items-center gap-2.5">
+                                        <span class="h-1.5 w-1.5 shrink-0 rounded-full {{ $txStatusDot }}"></span>
+                                        <span class="truncate text-xs font-medium text-white/85">{{ $translateTransactionType($recentTx->type) }} #{{ $recentTx->id }}</span>
+                                    </div>
+                                    <span class="shrink-0 text-xs text-white/45">{{ $recentTx->created_at->format('d/m H:i') }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
             </div>
         </section>
 
-        <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-5">
-            <div class="flex items-start justify-between gap-3">
+        <section class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
+            <div class="flex items-center justify-between gap-3">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('dashboard.daily_focus') }}</p>
-                    <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">{{ __('dashboard.client_priorities') }}</h2>
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('dashboard.quick_pilot') }}</p>
+                    <h2 class="premium-brand-title mt-2 text-xl font-semibold text-slate-950">{{ __('dashboard.smart_actions') }}</h2>
                 </div>
-                <span class="premium-soft-chip rounded-full px-3 py-1 text-xs font-semibold">
-                    {{ __('dashboard.real_time') }}
-                </span>
+                <span class="premium-soft-chip rounded-full px-3 py-1 text-xs font-semibold">{{ __('dashboard.flash') }}</span>
             </div>
 
-            <div class="mt-5 space-y-4">
-                <div class="rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
-                    <div class="flex items-start justify-between gap-3">
-                        <div>
-                            <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.unread_notifications') }}</p>
-                            <p class="mt-1 text-sm text-slate-500">{{ __('dashboard.unread_notifications_description') }}</p>
+            <div class="mt-4 space-y-2.5">
+                <a href="{{ localized_route('transfer.create') }}" data-ui-no-loading class="group flex items-center justify-between gap-3 rounded-2xl bg-slate-50 px-4 py-3.5 ring-1 ring-slate-200/70 transition hover:bg-white hover:ring-emerald-200">
+                    <div class="flex min-w-0 items-center gap-3">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+                            <i class="fas fa-paper-plane text-sm"></i>
+                        </span>
+                        <div class="min-w-0">
+                            <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.new_transfer') }}</p>
+                            <p class="truncate text-xs text-slate-500">{{ __('dashboard.send_payment') }}</p>
                         </div>
-                        <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">{{ $unreadNotificationsCount }}</span>
                     </div>
-                </div>
+                    <i class="fas fa-arrow-right text-xs text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-emerald-600"></i>
+                </a>
 
-                <div class="rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
-                    <div class="flex items-start justify-between gap-3">
-                        <div>
-                            <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.operations_to_track') }}</p>
-                            <p class="mt-1 text-sm text-slate-500">{{ __('dashboard.operations_to_track_description') }}</p>
+                <a href="{{ localized_route('notifications.index') }}" class="group flex items-center justify-between gap-3 rounded-2xl bg-slate-50 px-4 py-3.5 ring-1 ring-slate-200/70 transition hover:bg-white hover:ring-blue-200">
+                    <div class="flex min-w-0 items-center gap-3">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
+                            <i class="fas fa-bell text-sm"></i>
+                        </span>
+                        <div class="min-w-0">
+                            <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.notification_center') }}</p>
+                            <p class="truncate text-xs text-slate-500">{{ __('dashboard.notification_center_description', ['count' => $unreadNotificationsCount]) }}</p>
                         </div>
-                        <span class="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">{{ $pendingOperationsCount }}</span>
                     </div>
-                </div>
+                    <i class="fas fa-arrow-right text-xs text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-blue-600"></i>
+                </a>
 
-                <div class="rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
-                    <div class="flex items-start justify-between gap-3">
-                        <div>
-                            <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.premium_profile') }}</p>
-                            <p class="mt-1 text-sm text-slate-500">{{ __('dashboard.premium_profile_description') }}</p>
+                <a href="{{ localized_route('profile') }}" class="group flex items-center justify-between gap-3 rounded-2xl bg-slate-50 px-4 py-3.5 ring-1 ring-slate-200/70 transition hover:bg-white hover:ring-amber-200">
+                    <div class="flex min-w-0 items-center gap-3">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
+                            <i class="fas fa-user-gear text-sm"></i>
+                        </span>
+                        <div class="min-w-0">
+                            <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.my_profile') }}</p>
+                            <p class="truncate text-xs text-slate-500">{{ __('dashboard.profile_completion_short', ['percent' => $profileCompletion]) }}</p>
                         </div>
-                        <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">{{ $profileCompletion }}%</span>
                     </div>
-                    <div class="mt-3 h-2.5 rounded-full bg-slate-200">
-                        <div class="h-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-700" style="width: {{ $profileCompletionWidth }}%"></div>
-                    </div>
-                </div>
-
-                <a href="{{ localized_route('support.nous-contacter') }}" class="premium-gradient-card block rounded-[24px] p-4">
-                    <p class="text-xs uppercase tracking-[0.18em] text-white/65">{{ __('dashboard.direct_support') }}</p>
-                    <h3 class="mt-2 text-lg font-semibold">{{ __('dashboard.support_immediate_title') }}</h3>
-                    <p class="mt-2 text-sm text-white/78">{{ __('dashboard.support_immediate_description') }}</p>
+                    <i class="fas fa-arrow-right text-xs text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-amber-600"></i>
                 </a>
             </div>
         </section>
     </div>
 
-    <section class="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
-        <article class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
-            <div class="flex items-center justify-between">
-                <span class="text-sm font-semibold text-slate-500">{{ __('dashboard.secure_area') }}</span>
-                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
-                    <i class="fas fa-shield-heart"></i>
-                </span>
-            </div>
-            <p class="mt-4 text-lg font-semibold text-slate-950">{{ __('dashboard.priority_access') }}</p>
-            <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('dashboard.secure_area_description') }}</p>
-        </article>
-
-        <article class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
-            <div class="flex items-center justify-between">
-                <span class="text-sm font-semibold text-slate-500">{{ __('dashboard.instant_reading') }}</span>
-                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
-                    <i class="fas fa-wave-square"></i>
-                </span>
-            </div>
-            <p class="mt-4 text-lg font-semibold text-slate-950">{{ __('dashboard.client_priorities') }}</p>
-            <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('dashboard.instant_reading_description') }}</p>
-        </article>
-
-        <article class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
-            <div class="flex items-center justify-between">
-                <span class="text-sm font-semibold text-slate-500">{{ __('dashboard.support') }}</span>
-                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-rose-50 text-rose-700">
-                    <i class="fas fa-headset"></i>
-                </span>
-            </div>
-            <p class="mt-4 text-lg font-semibold text-slate-950">{{ __('dashboard.support_immediate_title') }}</p>
-            <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('dashboard.support_immediate_description') }}</p>
-        </article>
-
-        <article class="premium-panel premium-card-hover min-w-0 rounded-[26px] p-5">
-            <div class="flex items-center justify-between">
-                <span class="text-sm font-semibold text-slate-500">{{ __('dashboard.account') }}</span>
-                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
-                    <i class="fas fa-circle-check"></i>
-                </span>
-            </div>
-            <p class="mt-4 text-lg font-semibold text-slate-950">{{ $accountStatusLabel }}</p>
-            <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('dashboard.verified_account') }}</p>
-        </article>
-    </section>
-
     <div data-client-news-section>
         @include('components.live-news-feed', ['audience' => 'client'])
-    </div>
-
-    <div class="grid gap-6 2xl:grid-cols-[minmax(0,1.65fr)_minmax(320px,360px)]">
-        <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-6">
-            <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-                <div class="max-w-2xl">
-                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('dashboard.experience') }}</p>
-                    <h2 class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">{{ __('dashboard.premium_journey') }}</h2>
-                    <p class="mt-3 text-sm leading-6 text-slate-500">{{ __('dashboard.concierge_description') }}</p>
-                </div>
-                <span class="premium-soft-chip inline-flex rounded-full px-3 py-1 text-xs font-semibold">{{ __('dashboard.guidance') }}</span>
-            </div>
-
-            <div class="mt-6 grid gap-4 xl:grid-cols-[minmax(0,1.12fr)_minmax(260px,320px)]">
-                <div class="space-y-4">
-                    <div class="rounded-[26px] border border-slate-200/70 bg-slate-50 px-5 py-5">
-                        <div class="flex items-start gap-4">
-                            <span class="mt-1 flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
-                                <i class="fas fa-shield-heart"></i>
-                            </span>
-                            <div>
-                                <p class="text-sm font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('dashboard.secure_area') }}</p>
-                                <p class="mt-2 text-lg font-semibold text-slate-950">{{ __('dashboard.priority_access') }}</p>
-                                <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('dashboard.secure_area_description') }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="rounded-[26px] border border-slate-200/70 bg-slate-50 px-5 py-5">
-                        <div class="flex items-start gap-4">
-                            <span class="mt-1 flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                                <i class="fas fa-bell"></i>
-                            </span>
-                            <div>
-                                <p class="text-sm font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('dashboard.notification_center') }}</p>
-                                <p class="mt-2 text-lg font-semibold text-slate-950">{{ __('dashboard.client_priorities') }}</p>
-                                <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('dashboard.notification_center_description', ['count' => $unreadNotificationsCount]) }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="rounded-[26px] border border-slate-200/70 bg-slate-50 px-5 py-5">
-                        <div class="flex items-start gap-4">
-                            <span class="mt-1 flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
-                                <i class="fas fa-headset"></i>
-                            </span>
-                            <div>
-                                <p class="text-sm font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('dashboard.direct_support') }}</p>
-                                <p class="mt-2 text-lg font-semibold text-slate-950">{{ __('dashboard.support_immediate_title') }}</p>
-                                <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('dashboard.support_close_description') }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="premium-gradient-card premium-grid-glow rounded-[28px] p-5">
-                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white/65">{{ __('dashboard.priority_channel') }}</p>
-                    <h3 class="premium-brand-title mt-3 text-2xl font-semibold">{{ __('dashboard.banking_assistance') }}</h3>
-                    <p class="mt-3 text-sm leading-6 text-white/78">{{ __('dashboard.banking_assistance_description') }}</p>
-
-                    <div class="mt-6 space-y-3">
-                        <div class="rounded-[22px] bg-white/10 px-4 py-4">
-                            <p class="text-xs uppercase tracking-[0.16em] text-white/60">{{ __('dashboard.account') }}</p>
-                            <p class="mt-2 text-lg font-semibold text-white">{{ $accountStatusLabel }}</p>
-                        </div>
-                        <div class="rounded-[22px] bg-white/10 px-4 py-4">
-                            <p class="text-xs uppercase tracking-[0.16em] text-white/60">{{ __('dashboard.latest_operation') }}</p>
-                            <p class="mt-2 text-sm font-semibold text-white">{{ $latestTransactionLabel }}</p>
-                            <p class="mt-2 text-xs text-white/65">{{ $latestTransactionStatusLabel }}</p>
-                        </div>
-                    </div>
-
-                    <div class="mt-6 flex flex-wrap gap-3">
-                        <button type="button" onclick="toggleClientChat()" class="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-slate-900">
-                            <i class="fas fa-comments text-xs"></i>
-                            {{ __('dashboard.open_chat') }}
-                        </button>
-                        <a href="{{ localized_route('support.nous-contacter') }}" class="inline-flex items-center gap-2 rounded-full border border-white/30 px-4 py-2.5 text-sm font-semibold text-white">
-                            {{ __('home.footer_contact_us') }}
-                            <i class="fas fa-arrow-right text-xs"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <div class="min-w-0 space-y-6">
-            <section class="premium-panel premium-card-hover min-w-0 rounded-[28px] p-5">
-                <div class="flex items-center justify-between gap-3">
-                    <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('dashboard.quick_pilot') }}</p>
-                        <h2 class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">{{ __('dashboard.smart_actions') }}</h2>
-                    </div>
-                    <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">{{ __('dashboard.flash') }}</span>
-                </div>
-
-                <div class="mt-5 space-y-3">
-                    <a href="{{ localized_route('transfer.create') }}" class="flex items-center justify-between gap-3 rounded-[22px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70 transition hover:bg-white">
-                        <div class="flex min-w-0 items-center gap-3">
-                            <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
-                                <i class="fas fa-paper-plane"></i>
-                            </span>
-                            <div>
-                                <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.new_transfer') }}</p>
-                                <p class="text-sm text-slate-500">{{ __('dashboard.send_payment') }}</p>
-                            </div>
-                        </div>
-                        <i class="fas fa-arrow-right text-slate-300"></i>
-                    </a>
-
-                    <a href="{{ localized_route('notifications.index') }}" class="flex items-center justify-between gap-3 rounded-[22px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70 transition hover:bg-white">
-                        <div class="flex min-w-0 items-center gap-3">
-                            <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                                <i class="fas fa-bell"></i>
-                            </span>
-                            <div>
-                                <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.notification_center') }}</p>
-                                <p class="text-sm text-slate-500">{{ __('dashboard.notification_center_description', ['count' => $unreadNotificationsCount]) }}</p>
-                            </div>
-                        </div>
-                        <i class="fas fa-arrow-right text-slate-300"></i>
-                    </a>
-
-                    <a href="{{ localized_route('profile') }}" class="flex items-center justify-between gap-3 rounded-[22px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70 transition hover:bg-white">
-                        <div class="flex min-w-0 items-center gap-3">
-                            <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
-                                <i class="fas fa-user-gear"></i>
-                            </span>
-                            <div>
-                                <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.my_profile') }}</p>
-                                <p class="text-sm text-slate-500">{{ __('dashboard.profile_completion_short', ['percent' => $profileCompletion]) }}</p>
-                            </div>
-                        </div>
-                        <i class="fas fa-arrow-right text-slate-300"></i>
-                    </a>
-                </div>
-            </section>
-        </div>
     </div>
 
     <div class="grid gap-6 xl:grid-cols-2 2xl:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
@@ -522,6 +318,7 @@
                         $transactionColor = $isPositive ? 'emerald' : ($transaction->status === 'on_hold' ? 'amber' : 'slate');
                         $transactionTypeLabel = $translateTransactionType($transaction->type);
                         $transactionStatusLabel = $translateTransactionStatus($transaction->status);
+                        $transactionAmountFormatted = \App\Helpers\CurrencyHelper::format($transaction->amount, $user->default_currency ?? 'EUR');
                         $transactionStatusClasses = match ($transaction->status) {
                             'success' => 'bg-emerald-50 text-emerald-700 ring-emerald-200/80',
                             'pending' => 'bg-blue-50 text-blue-700 ring-blue-200/80',
@@ -532,7 +329,7 @@
                     @endphp
                     <div class="flex flex-col gap-3 rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70 sm:flex-row sm:items-center sm:justify-between">
                         <div class="flex min-w-0 items-center gap-3">
-                            <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-{{ $transactionColor }}-50 text-{{ $transactionColor }}-700">
+                            <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-{{ $transactionColor }}-50 text-{{ $transactionColor }}-700">
                                 <i class="fas {{ $isPositive ? 'fa-arrow-down' : 'fa-arrow-up' }}"></i>
                             </span>
                             <div class="min-w-0">
@@ -549,7 +346,10 @@
                             </div>
                         </div>
 
-                        <div class="text-left sm:text-right">
+                        <div class="flex items-center justify-between gap-3 sm:flex-col sm:items-end sm:justify-center">
+                            <p class="text-sm font-semibold {{ $isPositive ? 'text-emerald-700' : 'text-slate-900' }}">
+                                {{ $isPositive ? '+' : '-' }}{{ $transactionAmountFormatted }}
+                            </p>
                             <span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold ring-1 {{ $transactionStatusClasses }}">
                                 {{ $transactionStatusLabel }}
                             </span>
@@ -566,59 +366,45 @@
 
         <div class="min-w-0 space-y-6">
             <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('dashboard.experience') }}</p>
-                        <h2 class="premium-brand-title mt-2 text-2xl font-semibold text-slate-950">{{ __('dashboard.premium_journey') }}</h2>
-                    </div>
-                    <span class="premium-soft-chip rounded-full px-3 py-1 text-xs font-semibold">{{ __('dashboard.guidance') }}</span>
-                </div>
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('dashboard.experience') }}</p>
+                <h2 class="premium-brand-title mt-2 text-xl font-semibold text-slate-950">{{ __('dashboard.premium_journey') }}</h2>
 
-                <div class="mt-6 space-y-4">
-                    <div class="rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
-                        <div class="flex items-start gap-3">
-                            <span class="mt-1 flex h-9 w-9 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
-                                <i class="fas fa-shield-heart"></i>
-                            </span>
-                            <div>
-                                <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.secure_area') }}</p>
-                                <p class="mt-1 text-sm leading-6 text-slate-500">{{ __('dashboard.secure_area_description') }}</p>
-                            </div>
+                <div class="mt-5 space-y-3">
+                    <div class="flex items-start gap-3 rounded-2xl bg-slate-50 px-4 py-3.5 ring-1 ring-slate-200/70">
+                        <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+                            <i class="fas fa-shield-heart text-sm"></i>
+                        </span>
+                        <div>
+                            <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.secure_area') }}</p>
+                            <p class="mt-0.5 text-xs leading-5 text-slate-500">{{ __('dashboard.secure_area_description') }}</p>
                         </div>
                     </div>
 
-                    <div class="rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
-                        <div class="flex items-start gap-3">
-                            <span class="mt-1 flex h-9 w-9 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                                <i class="fas fa-wave-square"></i>
-                            </span>
-                            <div>
-                                <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.instant_reading') }}</p>
-                                <p class="mt-1 text-sm leading-6 text-slate-500">{{ __('dashboard.instant_reading_description') }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
-                        <div class="flex items-start gap-3">
-                            <span class="mt-1 flex h-9 w-9 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
-                                <i class="fas fa-headset"></i>
-                            </span>
-                            <div>
-                                <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.support_close') }}</p>
-                                <p class="mt-1 text-sm leading-6 text-slate-500">{{ __('dashboard.support_close_description') }}</p>
-                            </div>
+                    <div class="flex items-start gap-3 rounded-2xl bg-slate-50 px-4 py-3.5 ring-1 ring-slate-200/70">
+                        <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
+                            <i class="fas fa-wave-square text-sm"></i>
+                        </span>
+                        <div>
+                            <p class="text-sm font-semibold text-slate-900">{{ __('dashboard.instant_reading') }}</p>
+                            <p class="mt-0.5 text-xs leading-5 text-slate-500">{{ __('dashboard.instant_reading_description') }}</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section class="premium-gradient-card min-w-0 rounded-[30px] p-6">
+            <section class="premium-gradient-card premium-grid-glow min-w-0 rounded-[30px] p-6">
                 <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white/65">{{ __('dashboard.priority_channel') }}</p>
                 <h2 class="premium-brand-title mt-3 text-2xl font-semibold">{{ __('dashboard.banking_assistance') }}</h2>
                 <p class="mt-3 text-sm leading-6 text-white/78">
                     {{ __('dashboard.banking_assistance_description') }}
                 </p>
+
+                <div class="mt-5 rounded-2xl bg-white/10 px-4 py-3.5">
+                    <p class="text-xs uppercase tracking-[0.16em] text-white/60">{{ __('dashboard.latest_operation') }}</p>
+                    <p class="mt-1.5 text-sm font-semibold text-white">{{ $latestTransactionLabel }}</p>
+                    <p class="mt-1 text-xs text-white/65">{{ $latestTransactionStatusLabel }}</p>
+                </div>
+
                 <div class="mt-5 flex flex-wrap gap-3">
                     <button type="button" onclick="toggleClientChat()" class="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-slate-900">
                         <i class="fas fa-comments text-xs"></i>

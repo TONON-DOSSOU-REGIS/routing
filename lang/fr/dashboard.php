@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'welcome_greeting' => 'Bonjour, :name &#128075;',
@@ -75,6 +75,7 @@ return [
     'complete' => 'Finaliser',
     'secure_session' => 'Session sécurisée',
     'immediate_summary' => 'Synthèse immédiate',
+    'live_balance' => 'Solde en direct',
     'hero_summary' => 'Votre cockpit affiche l\'essentiel : solde disponible, cadence des mouvements, opérations en attente et priorités de suivi.',
     'loan_amount_title' => 'Solde disponible',
     'loan_amount_description' => 'Votre tableau de bord met en avant le montant immédiatement disponible pour vous aider à agir rapidement et sans confusion.',

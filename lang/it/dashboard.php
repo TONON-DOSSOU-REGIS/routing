@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'welcome_greeting' => 'Ciao, :name &#128075;',
@@ -75,6 +75,7 @@ return [
     'complete' => 'Completa',
     'secure_session' => 'Sessione sicura',
     'immediate_summary' => 'Sintesi immediata',
+    'live_balance' => 'Saldo in tempo reale',
     'hero_summary' => "Il tuo cockpit mostra l'essenziale: saldo disponibile, ritmo dei movimenti, operazioni in attesa e priorita da seguire.",
     'loan_amount_title' => 'Importo del prestito',
     'loan_amount_description' => 'La dashboard mette in evidenza solo l importo del prestito disponibile per evitare qualsiasi confusione con altri valori finanziari.',

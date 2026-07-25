@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'failed' => 'These identifiers do not match our records.',

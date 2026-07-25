@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'failed' => 'Estos identificadores no coinciden con nuestros registros.',

@@ -29,11 +29,11 @@
         </span>
     </button>
 
-    <div data-notification-backdrop class="fixed inset-0 z-[9997] hidden bg-slate-950/30 backdrop-blur-[1px] md:hidden"></div>
+    <div data-notification-backdrop class="notification-backdrop fixed inset-0 z-[9997] hidden bg-slate-950/30 backdrop-blur-[1px] md:hidden"></div>
 
     <div
         data-notification-dropdown
-        class="fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom,0px)+0.75rem)] top-[calc(env(safe-area-inset-top,0px)+4.75rem)] z-[9998] hidden min-h-0 flex-col overflow-hidden rounded-[28px] border border-slate-200 bg-white/95 shadow-2xl ring-1 ring-black/5 backdrop-blur md:absolute md:bottom-auto md:left-auto md:right-0 md:top-full md:mt-3 md:max-h-[min(70vh,42rem)] md:w-[26rem] md:max-w-[min(26rem,calc(100vw-2rem))] md:rounded-2xl"
+        class="notification-dropdown fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom,0px)+0.75rem)] top-[calc(env(safe-area-inset-top,0px)+4.75rem)] z-[9998] hidden min-h-0 flex-col overflow-hidden rounded-[28px] border border-slate-200 bg-white/95 shadow-2xl ring-1 ring-black/5 backdrop-blur md:max-h-[min(70vh,42rem)] md:w-[26rem] md:max-w-[min(26rem,calc(100vw-2rem))] md:rounded-2xl"
         role="dialog"
         aria-modal="true"
         aria-hidden="true"
@@ -108,6 +108,35 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // Move the dropdown/backdrop to <body> so their `position: fixed`
+        // is always relative to the real viewport. Ancestors using
+        // backdrop-filter/transform (e.g. the dashboard shell) create a new
+        // containing block that silently breaks `fixed` positioning,
+        // leaving the panel open in the DOM but rendered off-screen.
+        document.body.appendChild(backdrop);
+        document.body.appendChild(dropdown);
+
+        function positionDropdown() {
+            if (!isDesktopDropdown()) {
+                dropdown.style.top = '';
+                dropdown.style.bottom = '';
+                dropdown.style.left = '';
+                dropdown.style.right = '';
+                return;
+            }
+
+            const bellRect = bell.getBoundingClientRect();
+            const dropdownWidth = dropdown.offsetWidth || 416;
+            const margin = 16;
+            let left = bellRect.right - dropdownWidth;
+            left = Math.max(margin, Math.min(left, window.innerWidth - dropdownWidth - margin));
+
+            dropdown.style.top = `${bellRect.bottom + 12}px`;
+            dropdown.style.bottom = 'auto';
+            dropdown.style.left = `${left}px`;
+            dropdown.style.right = 'auto';
+        }
+
         let isOpen = false;
         let soundEnabled = localStorage.getItem('notification_sound_enabled') === '1';
         let lastUnreadCount = null;
@@ -140,15 +169,48 @@ document.addEventListener('DOMContentLoaded', function () {
             document.body.classList.toggle('overflow-hidden', lock);
         }
 
+        let closeTransitionTimer = null;
+
         function setOpenState(next, options = {}) {
             const { shouldLoad = next } = options;
             isOpen = next;
             bell.setAttribute('aria-expanded', next ? 'true' : 'false');
             dropdown.setAttribute('aria-hidden', next ? 'false' : 'true');
-            dropdown.classList.toggle('hidden', !next);
-            dropdown.classList.toggle('flex', next);
-            backdrop.classList.toggle('hidden', !next || isDesktopDropdown());
             setPageScrollLock(next);
+
+            if (closeTransitionTimer) {
+                window.clearTimeout(closeTransitionTimer);
+                closeTransitionTimer = null;
+            }
+
+            const showBackdrop = next && !isDesktopDropdown();
+
+            if (next) {
+                positionDropdown();
+                dropdown.classList.remove('hidden');
+                dropdown.classList.add('flex');
+
+                if (showBackdrop) {
+                    backdrop.classList.remove('hidden');
+                }
+
+                // Force a reflow so the browser registers the starting state
+                // before the visible class kicks in the transition.
+                void dropdown.offsetWidth;
+
+                dropdown.classList.add('is-visible');
+                backdrop.classList.toggle('is-visible', showBackdrop);
+            } else {
+                dropdown.classList.remove('is-visible');
+                backdrop.classList.remove('is-visible');
+
+                closeTransitionTimer = window.setTimeout(function () {
+                    dropdown.classList.add('hidden');
+                    dropdown.classList.remove('flex');
+                    backdrop.classList.add('hidden');
+                    closeTransitionTimer = null;
+                }, 280);
+            }
 
             if (next && shouldLoad) {
                 loadNotifications({ background: hasLoadedNotifications });
@@ -657,7 +719,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         document.addEventListener('click', function (event) {
-            if (isOpen && !root.contains(event.target)) {
+            if (isOpen && !root.contains(event.target) && !dropdown.contains(event.target)) {
                 setOpenState(false, { shouldLoad: false });
             }
         });
@@ -673,8 +735,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            backdrop.classList.toggle('hidden', isDesktopDropdown());
+            const showBackdrop = !isDesktopDropdown();
+            backdrop.classList.toggle('hidden', !showBackdrop);
+            backdrop.classList.toggle('is-visible', showBackdrop);
             setPageScrollLock(true);
+            positionDropdown();
         });
 
         list.addEventListener('click', function (event) {
@@ -785,5 +850,33 @@ document.addEventListener('DOMContentLoaded', function () {
 .notification-list::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 9999px;
+}
+
+.notification-backdrop {
+    opacity: 0;
+    transition: opacity .28s ease;
+}
+
+.notification-backdrop.is-visible {
+    opacity: 1;
+}
+
+.notification-dropdown {
+    opacity: 0;
+    transform: translateY(10px) scale(.98);
+    transition: opacity .28s cubic-bezier(.16, 1, .3, 1), transform .28s cubic-bezier(.16, 1, .3, 1);
+    transform-origin: top right;
+}
+
+.notification-dropdown.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .notification-backdrop,
+    .notification-dropdown {
+        transition: none;
+    }
 }
 </style>

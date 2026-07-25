@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'page_title' => 'Nuovo trasferimento - Zuider Bank S.A',
@@ -177,5 +177,5 @@ return [
     'transfer_receipt_email_receipt_cta' => 'Visualizza la ricevuta online',
     'transfer_receipt_email_footer_intro' => 'Questa email e stata inviata automaticamente da Zuider Bank S.A dopo il completamento totale del suo bonifico.',
     'transfer_receipt_email_footer_support' => 'Per qualsiasi domanda relativa a questa operazione, il nostro team resta disponibile tramite la sua area cliente protetta.',
-    'transfer_receipt_email_footer_notice' => 'Non rispondere direttamente a questa email. � :year Zuider Bank S.A. Tutti i diritti riservati.',
+    'transfer_receipt_email_footer_notice' => 'Non rispondere direttamente a questa email. © :year Zuider Bank S.A. Tutti i diritti riservati.',
 ];

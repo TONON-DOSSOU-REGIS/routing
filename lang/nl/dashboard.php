@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'welcome_greeting' => 'Hallo, :name &#128075;',
@@ -75,6 +75,7 @@ return [
     'complete' => 'Voltooien',
     'secure_session' => 'Beveiligde sessie',
     'immediate_summary' => 'Direct overzicht',
+    'live_balance' => 'Saldo live',
     'hero_summary' => 'Uw cockpit toont het belangrijkste: beschikbaar saldo, ritme van bewegingen, lopende operaties en prioriteiten.',
     'loan_amount_title' => 'Leningbedrag',
     'loan_amount_description' => 'Uw dashboard toont alleen nog het beschikbare leningbedrag om verwarring met andere financiele cijfers te voorkomen.',

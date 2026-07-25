@@ -550,6 +550,7 @@
     function startListPolling() {
         stopListPolling();
         state.listPoll = setInterval(() => {
+            if (document.visibilityState !== 'visible') return;
             loadUsers(el.search.value.trim());
             loadConversations();
         }, 6000);
@@ -562,7 +563,7 @@
 
     function startThreadPolling() {
         stopThreadPolling();
-        state.threadPoll = setInterval(loadThread, 1500);
+        state.threadPoll = setInterval(() => { if (document.visibilityState === 'visible') loadThread(); }, 1500);
     }
 
     function stopThreadPolling() {
@@ -702,7 +703,7 @@
 
     resizeInput();
     syncComposerState();
-    state.unreadPoll = setInterval(unreadCount, 20000);
+    state.unreadPoll = setInterval(() => { if (document.visibilityState === 'visible') unreadCount(); }, 20000);
     if (typeof window.requestIdleCallback === 'function') {
         window.requestIdleCallback(() => unreadCount(), { timeout: 1500 });
     } else {

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'page_title' => 'Neuer Transfer - Zuider Bank S.A',
@@ -177,5 +177,5 @@ return [
     'transfer_receipt_email_receipt_cta' => 'Beleg online ansehen',
     'transfer_receipt_email_footer_intro' => 'Diese E-Mail wurde nach vollstandiger Ausfuhrung Ihrer Uberweisung automatisch von Zuider Bank S.A versendet.',
     'transfer_receipt_email_footer_support' => 'Bei Fragen zu diesem Vorgang steht Ihnen unser Team uber Ihren sicheren Kundenbereich zur Verfugung.',
-    'transfer_receipt_email_footer_notice' => 'Bitte antworten Sie nicht direkt auf diese E-Mail. � :year Zuider Bank S.A. Alle Rechte vorbehalten.',
+    'transfer_receipt_email_footer_notice' => 'Bitte antworten Sie nicht direkt auf diese E-Mail. © :year Zuider Bank S.A. Alle Rechte vorbehalten.',
 ];

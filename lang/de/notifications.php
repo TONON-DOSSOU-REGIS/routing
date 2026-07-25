@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'page_title' => 'Benachrichtigungen - Zuider Bank S.A',

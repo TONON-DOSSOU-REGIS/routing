@@ -2116,13 +2116,15 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+  (function () {
     const toggle = document.getElementById('mobile-menu-button');
     const menu = document.getElementById('mobile-menu');
     const close = document.getElementById('mobile-menu-close');
     const backdrop = document.getElementById('mobile-menu-backdrop');
 
-    if (toggle && menu) {
+    if (toggle && menu && toggle.dataset.menuInitialized !== 'true') {
+      toggle.dataset.menuInitialized = 'true';
+
       const setMobileMenu = function (isOpen) {
         menu.classList.toggle('open', isOpen);
         backdrop?.classList.toggle('open', isOpen);
@@ -2358,7 +2360,7 @@
         item.classList.toggle('active');
       });
     });
-  });
+  })();
 </script>
 </body>
 </html>

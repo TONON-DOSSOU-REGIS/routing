@@ -1,4 +1,4 @@
-﻿@extends('layouts.premium-dashboard')
+@extends('layouts.premium-dashboard')
 
 @php
     $balanceFormatted = \App\Helpers\CurrencyHelper::format($user->balance, $user->default_currency ?? 'EUR');
@@ -106,10 +106,10 @@
 @endsection
 
 @section('dashboard_header_actions')
-    <span class="inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-900/20">
+    <a href="#transferForm" data-ui-no-loading class="inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-900/20 transition hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-200">
         <i class="fas fa-paper-plane text-xs"></i>
         {{ __('transactions.new_transfer') }}
-    </span>
+    </a>
     <a href="{{ localized_route('transactions.history') }}" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
         <i class="fas fa-clock-rotate-left text-xs"></i>
         {{ __('dashboard.history') }}
@@ -1121,7 +1121,7 @@
                     </div>
                 </div>
 
-                <form id="transferForm" method="POST" class="mt-6 space-y-6">
+                <form id="transferForm" method="POST" class="mt-6 scroll-mt-28 space-y-6">
                     @csrf
 
                     <div class="grid gap-6 xl:grid-cols-2">

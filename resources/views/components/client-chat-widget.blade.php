@@ -384,7 +384,7 @@
             setFeedback('');
             el.badge.classList.add('hidden');
             loadMessages(!state.init);
-            state.poll = setInterval(() => loadMessages(false), 1600);
+            state.poll = setInterval(() => { if (document.visibilityState === 'visible') loadMessages(false); }, 1600);
             setTimeout(() => el.input.focus(), 100);
         } else {
             sendTyping(false);
@@ -449,7 +449,7 @@
     });
 
     resizeInput();
-    state.unread = setInterval(unreadCount, 20000);
+    state.unread = setInterval(() => { if (document.visibilityState === 'visible') unreadCount(); }, 20000);
     if (typeof window.requestIdleCallback === 'function') {
         window.requestIdleCallback(() => unreadCount(), { timeout: 1500 });
     } else {

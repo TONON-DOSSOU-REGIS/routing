@@ -1,4 +1,4 @@
-﻿@extends('layouts.premium-dashboard')
+@extends('layouts.premium-dashboard')
 
 @php
     $adminNavActive = trim($__env->yieldContent('admin_nav_active', ''));

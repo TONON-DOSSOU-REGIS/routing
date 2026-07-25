@@ -38,7 +38,7 @@ class AdminTransferNotificationTest extends TestCase
         $this->assertDatabaseHas('notifications', [
             'user_id' => $admin->id,
             'type' => 'transaction',
-            'title' => 'Virement initie',
+            'title' => 'Virement initié',
             'is_read' => false,
         ]);
     }

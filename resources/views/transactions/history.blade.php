@@ -1,4 +1,4 @@
-﻿@extends('layouts.premium-dashboard')
+@extends('layouts.premium-dashboard')
 
 @php
     $historyTotal = $historySummary['total'] ?? $transactions->total();
@@ -297,11 +297,11 @@
                         @endif
 
                         @if(auth()->user()->isAdmin())
-                            <a href="{{ localized_route('admin.export.pdf') }}" class="history-export-link inline-flex w-full items-center justify-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-700 transition hover:border-rose-300 hover:bg-rose-100 sm:w-auto">
+                            <a href="{{ localized_route('admin.export.pdf') }}" download class="history-export-link inline-flex w-full items-center justify-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-700 transition hover:border-rose-300 hover:bg-rose-100 sm:w-auto">
                                 <i class="fas fa-file-pdf text-xs"></i>
                                 {{ __('transactions.export_pdf') }}
                             </a>
-                            <a href="{{ localized_route('admin.export.excel') }}" class="history-export-link inline-flex w-full items-center justify-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:border-emerald-300 hover:bg-emerald-100 sm:w-auto">
+                            <a href="{{ localized_route('admin.export.excel') }}" download class="history-export-link inline-flex w-full items-center justify-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:border-emerald-300 hover:bg-emerald-100 sm:w-auto">
                                 <i class="fas fa-file-excel text-xs"></i>
                                 {{ __('transactions.export_excel') }}
                             </a>
@@ -513,7 +513,7 @@
                                     <td class="px-5 py-4 align-top">
                                         <div class="flex flex-wrap items-center gap-2">
                                             @if($transaction->status === 'success' && in_array($transaction->type, ['transfer', 'deposit']))
-                                                <a href="{{ localized_route('transactions.receipt', $transaction) }}" class="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-2 text-xs font-semibold text-sky-700 transition hover:border-sky-300 hover:bg-sky-100" title="{{ __('transactions.action_download_receipt') }}">
+                                                <a href="{{ localized_route('transactions.receipt', $transaction) }}" download class="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-2 text-xs font-semibold text-sky-700 transition hover:border-sky-300 hover:bg-sky-100" title="{{ __('transactions.action_download_receipt') }}">
                                                     <i class="fas fa-download text-[10px]"></i>
                                                     {{ __('transactions.action_receipt') }}
                                                 </a>
@@ -601,11 +601,11 @@
                     <h3 class="mt-2 premium-brand-title text-2xl font-semibold">{{ __('transactions.table_actions') }}</h3>
                     <p class="mt-3 text-sm leading-6 text-white/78">{{ __('transactions.history_overview') }}</p>
                     <div class="mt-5 space-y-3">
-                        <a href="{{ localized_route('admin.export.pdf') }}" class="history-export-link inline-flex w-full items-center justify-center gap-2 rounded-full bg-white/90 px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-white">
+                        <a href="{{ localized_route('admin.export.pdf') }}" download class="history-export-link inline-flex w-full items-center justify-center gap-2 rounded-full bg-white/90 px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-white">
                             <i class="fas fa-file-pdf text-xs"></i>
                             {{ __('transactions.export_pdf') }}
                         </a>
-                        <a href="{{ localized_route('admin.export.excel') }}" class="history-export-link inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/30 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
+                        <a href="{{ localized_route('admin.export.excel') }}" download class="history-export-link inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/30 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
                             <i class="fas fa-file-excel text-xs"></i>
                             {{ __('transactions.export_excel') }}
                         </a>

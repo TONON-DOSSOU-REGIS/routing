@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'failed' => 'Te identyfikatory nie pasują do naszych danych.',

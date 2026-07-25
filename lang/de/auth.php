@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'failed' => 'Diese Kennungen passen nicht zu unseren Aufzeichnungen.',

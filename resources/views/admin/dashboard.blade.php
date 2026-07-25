@@ -1,4 +1,4 @@
-﻿@extends('layouts.premium-dashboard')
+@extends('layouts.premium-dashboard')
 
 @section('title', 'Administration - Zuider Bank S.A')
 @section('dashboard_theme', 'admin')
@@ -82,16 +82,13 @@
             <p class="mt-2 text-sm leading-6 text-white/78">
                 {{ __('admin_dashboard.active_coverage_text', ['rate' => $activeUsersRate]) }}
             </p>
-            <div class="mt-5 grid grid-cols-2 gap-3">
-                <div class="rounded-2xl bg-white/10 px-4 py-3">
-                    <p class="text-xs uppercase tracking-[0.16em] text-white/60">{{ __('admin_dashboard.alerts') }}</p>
-                    <p class="mt-2 text-lg font-semibold">{{ $unreadNotificationsCount }}</p>
-                </div>
-                <div class="rounded-2xl bg-white/10 px-4 py-3">
-                    <p class="text-xs uppercase tracking-[0.16em] text-white/60">{{ __('admin_pages.chat') }}</p>
-                    <p class="mt-2 text-lg font-semibold">{{ $chatUnreadCount }}</p>
-                </div>
+            <div class="mt-5 h-2 rounded-full bg-white/10">
+                <div class="h-2 rounded-full bg-gradient-to-r from-cyan-300 to-emerald-300" style="width: {{ $activeUsersRate }}%"></div>
             </div>
+            <a href="{{ localized_route('admin.users') }}" class="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-white/80 transition hover:text-white">
+                {{ __('admin_pages.manage_users') }}
+                <i class="fas fa-arrow-right text-[10px]"></i>
+            </a>
         </div>
     </div>
 @endsection
@@ -115,7 +112,7 @@
 @endsection
 
 @push('premium_dashboard_head')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 @endpush
 
 @section('dashboard_content')
@@ -126,12 +123,18 @@
         $totalDepositsFormatted = \App\Helpers\CurrencyHelper::format($totalDeposits, 'EUR');
     @endphp
 
-    <div class="grid gap-6 2xl:grid-cols-[minmax(0,1.7fr)_minmax(300px,360px)]">
+    <div class="grid items-start gap-6 2xl:grid-cols-[minmax(0,1.7fr)_minmax(300px,360px)]">
         <section class="premium-gradient-card premium-grid-glow premium-card-hover relative min-w-0 overflow-hidden rounded-[30px] p-6 sm:p-7">
             <div class="relative z-10">
                 <div class="flex min-w-0 flex-col gap-6 lg:items-start 2xl:flex-row 2xl:justify-between">
                     <div class="min-w-0 max-w-2xl">
-                        <p class="text-sm uppercase tracking-[0.22em] text-white/65">{{ __('admin_pages.executive_view') }}</p>
+                        <div class="flex items-center gap-2">
+                            <span class="relative flex h-2 w-2">
+                                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
+                            </span>
+                            <p class="text-sm uppercase tracking-[0.22em] text-white/65">{{ __('admin_pages.executive_view') }}</p>
+                        </div>
                         <h2 class="mt-4 premium-page-title text-3xl font-semibold tracking-[-0.05em] sm:text-4xl">
                             {{ __('admin_pages.supervised_clients', ['count' => $totalUsers]) }}
                         </h2>
@@ -142,12 +145,22 @@
 
                     <div class="grid w-full gap-3 sm:grid-cols-2 2xl:max-w-[340px]">
                         <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                            <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.admin_alerts') }}</p>
+                            <div class="flex items-center justify-between gap-2">
+                                <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.admin_alerts') }}</p>
+                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/12 text-white/80">
+                                    <i class="fas fa-bell text-xs"></i>
+                                </span>
+                            </div>
                             <p class="mt-2 text-lg font-semibold">{{ $unreadNotificationsCount }}</p>
                             <p class="mt-1 text-xs text-white/70">{{ __('admin_pages.unread_notifications') }}</p>
                         </div>
                         <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                            <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.incoming_messages') }}</p>
+                            <div class="flex items-center justify-between gap-2">
+                                <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.incoming_messages') }}</p>
+                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/12 text-white/80">
+                                    <i class="fas fa-comments text-xs"></i>
+                                </span>
+                            </div>
                             <p class="mt-2 text-lg font-semibold">{{ $chatUnreadCount }}</p>
                             <p class="mt-1 text-xs text-white/70">{{ __('admin_pages.client_conversations_pending') }}</p>
                         </div>
@@ -156,15 +169,30 @@
 
                 <div class="mt-8 grid gap-3 sm:grid-cols-3">
                     <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.transfers_30d') }}</p>
+                        <div class="flex items-center justify-between gap-2">
+                            <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.transfers_30d') }}</p>
+                            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/12 text-cyan-200">
+                                <i class="fas fa-paper-plane text-xs"></i>
+                            </span>
+                        </div>
                         <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $monthlyTransfersFormatted }}</p>
                     </div>
                     <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.deposits_30d') }}</p>
+                        <div class="flex items-center justify-between gap-2">
+                            <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.deposits_30d') }}</p>
+                            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/12 text-amber-200">
+                                <i class="fas fa-coins text-xs"></i>
+                            </span>
+                        </div>
                         <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $monthlyDepositsFormatted }}</p>
                     </div>
                     <div class="min-w-0 rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.transaction_success') }}</p>
+                        <div class="flex items-center justify-between gap-2">
+                            <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.transaction_success') }}</p>
+                            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/12 text-emerald-200">
+                                <i class="fas fa-chart-line text-xs"></i>
+                            </span>
+                        </div>
                         <p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $transactionSuccessRate }}%</p>
                     </div>
                 </div>
@@ -272,8 +300,8 @@
         </article>
     </section>
 
-    <div class="grid gap-6 xl:grid-cols-2 2xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_320px]">
-        <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-6 xl:col-span-2 2xl:col-span-1">
+    <div class="grid items-start gap-6 2xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_320px]">
+        <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-6 2xl:col-span-1">
             <div class="flex items-center justify-between gap-3">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('admin_pages.users_health') }}</p>
@@ -315,7 +343,7 @@
             </div>
         </section>
 
-        <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-6 xl:col-span-2 2xl:col-span-1">
+        <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-6 2xl:col-span-1">
             <div class="flex items-center justify-between gap-3">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ __('admin_pages.onboarding') }}</p>
@@ -342,7 +370,7 @@
         </section>
     </div>
 
-    <div class="grid gap-6 2xl:grid-cols-[minmax(0,1.5fr)_minmax(300px,360px)]">
+    <div class="grid items-start gap-6 2xl:grid-cols-[minmax(0,1.5fr)_minmax(300px,360px)]">
         <section class="premium-panel premium-card-hover min-w-0 rounded-[30px] p-6">
             <div class="flex items-center justify-between gap-3">
                 <div>
@@ -364,22 +392,29 @@
                             'refunded' => 'bg-slate-100 text-slate-700',
                             default => 'bg-rose-50 text-rose-700',
                         };
+                        $isCredit = $transaction->type === 'deposit';
+                        $txColor = $isCredit ? 'emerald' : ($transaction->status === 'on_hold' ? 'amber' : 'slate');
                     @endphp
                     <div class="flex flex-col gap-3 rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70 sm:flex-row sm:items-center sm:justify-between">
-                        <div class="min-w-0">
-                            <p class="text-sm font-semibold text-slate-900">
-                                {{ ucfirst(str_replace('_', ' ', $transaction->type)) }} #{{ $transaction->id }}
-                            </p>
-                            <p class="mt-1 truncate text-sm text-slate-500">
-                                {{ $transaction->user?->name ?? __('admin_pages.unknown_client') }} - {{ $transaction->created_at->format('d/m/Y H:i') }}
-                            </p>
+                        <div class="flex min-w-0 items-center gap-3">
+                            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-{{ $txColor }}-50 text-{{ $txColor }}-700">
+                                <i class="fas {{ $isCredit ? 'fa-arrow-down' : 'fa-arrow-up' }}"></i>
+                            </span>
+                            <div class="min-w-0">
+                                <p class="text-sm font-semibold text-slate-900">
+                                    {{ ucfirst(str_replace('_', ' ', $transaction->type)) }} #{{ $transaction->id }}
+                                </p>
+                                <p class="mt-1 truncate text-sm text-slate-500">
+                                    {{ $transaction->user?->name ?? __('admin_pages.unknown_client') }} - {{ $transaction->created_at->format('d/m/Y H:i') }}
+                                </p>
+                            </div>
                         </div>
-                        <div class="flex flex-wrap items-center gap-3 sm:justify-end">
+                        <div class="flex flex-wrap items-center gap-3 sm:flex-col sm:items-end sm:gap-1.5">
+                            <span class="text-sm font-semibold {{ $isCredit ? 'text-emerald-700' : 'text-slate-900' }}">
+                                {{ $isCredit ? '+' : '-' }}{{ \App\Helpers\CurrencyHelper::format($transaction->amount, 'EUR') }}
+                            </span>
                             <span class="rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] {{ $statusClass }}">
                                 {{ str_replace('_', ' ', $transaction->status) }}
-                            </span>
-                            <span class="text-sm font-semibold text-slate-900">
-                                {{ \App\Helpers\CurrencyHelper::format($transaction->amount, 'EUR') }}
                             </span>
                         </div>
                     </div>

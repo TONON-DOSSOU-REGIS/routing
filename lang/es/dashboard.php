@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'welcome_greeting' => 'Hola, :name &#128075;',
@@ -75,6 +75,7 @@ return [
     'complete' => 'Completar',
     'secure_session' => 'Sesion segura',
     'immediate_summary' => 'Resumen inmediato',
+    'live_balance' => 'Saldo en directo',
     'hero_summary' => 'Su cockpit muestra lo esencial: saldo disponible, ritmo de actividad, operaciones pendientes y prioridades de seguimiento.',
     'loan_amount_title' => 'Importe del prestamo',
     'loan_amount_description' => 'Su panel destaca unicamente el importe del prestamo disponible para evitar cualquier confusion con otras cifras financieras.',

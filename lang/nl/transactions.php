@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'page_title' => 'Nieuwe overdracht - Zuider Bank S.A',
@@ -177,5 +177,5 @@ return [
     'transfer_receipt_email_receipt_cta' => 'Ontvangstbewijs online bekijken',
     'transfer_receipt_email_footer_intro' => 'Deze e-mail werd automatisch door Zuider Bank S.A verzonden nadat uw overschrijving volledig was voltooid.',
     'transfer_receipt_email_footer_support' => 'Voor vragen over deze transactie blijft ons team beschikbaar via uw beveiligde klantenzone.',
-    'transfer_receipt_email_footer_notice' => 'Antwoord niet rechtstreeks op deze e-mail. � :year Zuider Bank S.A. Alle rechten voorbehouden.',
+    'transfer_receipt_email_footer_notice' => 'Antwoord niet rechtstreeks op deze e-mail. © :year Zuider Bank S.A. Alle rechten voorbehouden.',
 ];

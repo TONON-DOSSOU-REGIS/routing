@@ -32,7 +32,7 @@ class TransactionReceiptTest extends TestCase
         $response->assertSee('Reçu');
         $response->assertSee('Réussi');
         $response->assertSee('100%');
-        $response->assertSee('Code de verification');
+        $response->assertSee('Code de vérification');
     }
 
     public function test_receipt_shows_pending_status_and_progress_when_progress_less_than_100(): void
@@ -52,7 +52,7 @@ class TransactionReceiptTest extends TestCase
         $response->assertSee('status-pending');
         $response->assertSee('En attente');
         $response->assertSee('75%');
-        $response->assertSee('Code de verification');
+        $response->assertSee('Code de vérification');
     }
 
     public function test_stop_percentage_validation_allows_0_to_100(): void
@@ -64,7 +64,7 @@ class TransactionReceiptTest extends TestCase
         $user = User::factory()->create([
             'role' => 'admin',
             'date_of_birth' => '1990-01-01',
-            'id_type' => 'passport',
+            'id_type' => 'Passport',
         ]);
 
         $this->actingAs($user);
@@ -99,7 +99,7 @@ class TransactionReceiptTest extends TestCase
         $admin = User::factory()->create([
             'role' => 'admin',
             'date_of_birth' => '1990-01-01',
-            'id_type' => 'passport',
+            'id_type' => 'Passport',
         ]);
 
         $this->actingAs($admin);

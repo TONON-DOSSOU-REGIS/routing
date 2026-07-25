@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'footer_kicker' => 'Zuider Bank S.A Admin',

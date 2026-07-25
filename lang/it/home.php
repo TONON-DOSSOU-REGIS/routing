@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'page_title' => 'Zuider Bank S.A - Banca Online Professionale',
