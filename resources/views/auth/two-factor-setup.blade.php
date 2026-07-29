@@ -40,32 +40,47 @@
             padding: 28px 0 52px;
         }
 
+        /* Matches the public bank-nav pill (same radius, background, blur,
+           padding rhythm) so this authenticated step still reads as part of
+           the same Zuider shell. */
         .tf-nav {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 18px;
+            min-height: 74px;
             margin-bottom: 30px;
-            padding: 14px 16px;
-            border: 1px solid rgba(255, 255, 255, .14);
-            border-radius: 28px;
-            background: rgba(255, 255, 255, .08);
-            backdrop-filter: blur(18px);
+            padding: 12px 16px 12px 20px;
+            border: 1px solid rgba(255, 255, 255, .24);
+            border-radius: 999px;
+            background: rgba(7, 26, 47, .82);
+            box-shadow: 0 24px 70px rgba(7, 26, 47, .2);
+            backdrop-filter: blur(22px);
         }
 
         .tf-brand {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
+            gap: 0;
+            min-width: 0;
             color: #ffffff;
-            font-family: 'Sora', sans-serif;
             font-weight: 800;
         }
 
         .tf-brand img {
-            width: 48px;
-            height: 48px;
+            width: clamp(150px, 14vw, 220px);
+            height: 50px;
             object-fit: contain;
+            filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .22));
+        }
+
+        .tf-brand span {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
         }
 
         .tf-back {
@@ -75,7 +90,7 @@
             gap: 10px;
             min-height: 46px;
             padding: 0 18px;
-            border: 1px solid rgba(255, 255, 255, .18);
+            border: 1px solid rgba(255, 255, 255, .28);
             border-radius: 999px;
             color: #ffffff;
             font-size: .9rem;
@@ -606,6 +621,11 @@
                 padding-top: 14px;
             }
 
+            .tf-nav {
+                padding: 10px 12px;
+                border-radius: 20px;
+            }
+
             .tf-nav,
             .tf-panel-head,
             .tf-footer-row {
@@ -938,5 +958,6 @@
         });
     })();
 </script>
+@include('components.cookie-consent')
 </body>
 </html>

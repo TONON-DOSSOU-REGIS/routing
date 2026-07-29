@@ -59,6 +59,7 @@ Route::get('/sitemap.xml', function () {
         'services.virements-internationaux',
         'support.securite',
         'support.mentions-legales',
+        'support.politique-cookies',
         'support.centre-aide',
         'support.nous-contacter',
     ];
@@ -155,6 +156,10 @@ Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(fu
     Route::get('/support/mentions-legales', function () {
         return view('support.mentions-legales');
     })->name('support.mentions-legales');
+
+    Route::get('/support/politique-cookies', function () {
+        return view('support.politique-cookies');
+    })->name('support.politique-cookies');
 
     Route::get('/support/centre-aide', function () {
         return view('support.centre-aide');

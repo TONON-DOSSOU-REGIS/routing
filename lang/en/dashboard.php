@@ -31,6 +31,7 @@ return [
     'client_area' => 'Client area',
     'profile' => 'Profile',
     'logout' => 'Logout',
+    'nav_back' => 'Back to site',
     'recent_transactions_and_quick_actions' => 'Recent transactions and quick actions',
     'bank_name' => 'Zuider Bank S.A',
     'empty_value' => '-',

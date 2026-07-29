@@ -11,8 +11,28 @@ class HomeCardsSectionTest extends TestCase
         $response = $this->get(route('about.notre-histoire', ['locale' => 'fr']));
 
         $response->assertOk()
-            ->assertSee('id="modern-mobile-menu-button"', false)
+            ->assertSee('id="mobile-menu-button"', false)
             ->assertSee("toggle.dataset.menuInitialized = 'true'", false);
+    }
+
+    public function test_public_pages_share_the_home_navigation(): void
+    {
+        // Home and footer pages must render the exact same navigation shell.
+        foreach ([
+            route('home', ['locale' => 'fr']),
+            route('about.notre-histoire', ['locale' => 'fr']),
+            route('support.centre-aide', ['locale' => 'fr']),
+            route('services.cartes-paiement', ['locale' => 'fr']),
+        ] as $url) {
+            $this->get($url)
+                ->assertOk()
+                ->assertSee('class="bank-nav"', false)
+                ->assertSee('class="bank-nav-inner"', false)
+                ->assertSee('id="mobile-menu-button"', false)
+                ->assertSee('language-selector', false)
+                // The legacy inner-page navbar must be gone everywhere.
+                ->assertDontSee('modern-nav-inner', false);
+        }
     }
 
     public function test_homepage_displays_the_three_card_offers(): void
@@ -84,5 +104,25 @@ class HomeCardsSectionTest extends TestCase
         $response->assertSee('happy-customer-11.webp');
         $response->assertSee('const scheduleCustomerSlide = function', false);
         $this->assertSame(11, count(glob(public_path('images/customer-carousel/*.webp'))));
+    }
+
+    public function test_public_pages_are_responsive_on_small_screens(): void
+    {
+        foreach ([
+            route('about.notre-histoire', ['locale' => 'fr']),
+            route('support.nous-contacter', ['locale' => 'fr']),
+            route('services.comptes-professionnels', ['locale' => 'fr']),
+            route('support.mentions-legales', ['locale' => 'fr']),
+        ] as $url) {
+            $this->get($url)
+                ->assertOk()
+                // Sideways scrolling must be impossible on a phone.
+                ->assertSee('overflow-x: hidden', false)
+                // Two-column layouts with fixed track minimums collapse in time.
+                ->assertSee('.hero-grid,', false)
+                ->assertSee('.split-panel,', false)
+                // Dedicated small-phone breakpoint.
+                ->assertSee('@media (max-width: 480px)', false);
+        }
     }
 }

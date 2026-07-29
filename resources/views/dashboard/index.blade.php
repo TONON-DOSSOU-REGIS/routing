@@ -54,6 +54,12 @@
         </span>
         <span>{{ __('dashboard.support') }}</span>
     </a>
+    <a href="{{ localized_route('home') }}" class="premium-nav-item flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600">
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70">
+            <i class="fas fa-arrow-left"></i>
+        </span>
+        <span>{{ __('dashboard.nav_back') }}</span>
+    </a>
     <form method="POST" action="{{ localized_route('logout') }}">
         @csrf
         <button type="submit" class="premium-nav-item flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-600">

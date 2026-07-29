@@ -127,6 +127,7 @@
       </div>
     </div>
   </footer>
+  @include('components.cookie-consent')
 </body>
 </html>
 

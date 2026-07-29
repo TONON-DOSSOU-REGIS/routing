@@ -52,6 +52,10 @@
             'title' => __('support.legal_mentions_title'),
             'description' => __('public_pages.pages.support_legal.subtitle'),
         ],
+        'support.politique-cookies' => [
+            'title' => __('cookies.page_title'),
+            'description' => __('cookies.page_intro'),
+        ],
         'support.centre-aide' => [
             'title' => __('support.help_center_title'),
             'description' => __('public_pages.pages.support_help.subtitle'),

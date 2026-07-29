@@ -163,7 +163,6 @@
         }
 
         .profile-info-value,
-        .profile-stat-value,
         .profile-balance-value {
             display: block;
             max-width: 100%;
@@ -172,19 +171,61 @@
             word-break: break-word;
         }
 
-        .profile-stat-value {
-            font-size: clamp(1.55rem, 1rem + 1.1vw, 2.7rem);
-            line-height: 1.08;
+        .profile-stat-list {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-stat-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+            padding: 9px 10px;
+            border-radius: 18px;
+            transition: background-color .16s ease;
+        }
+
+        .profile-stat-row:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .profile-stat-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            font-size: 0.85rem;
+        }
+
+        .profile-stat-row-value {
+            font-size: clamp(1.05rem, 0.9rem + 0.4vw, 1.35rem);
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-variant-numeric: tabular-nums;
         }
 
         .profile-balance-value {
-            font-size: clamp(1.35rem, 0.92rem + 1vw, 2.35rem);
-            line-height: 1.1;
-            text-wrap: balance;
+            font-size: clamp(1.1rem, 0.75rem + 1.6vw, 2.1rem);
+            line-height: 1.15;
+            white-space: nowrap;
+            overflow-wrap: normal;
+            word-break: normal;
+            font-variant-numeric: tabular-nums;
         }
 
         .profile-stat-card {
             min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 92px;
         }
 
         .profile-avatar-shell {
@@ -243,22 +284,34 @@
                 </p>
             </div>
 
-            <div class="grid gap-3 sm:grid-cols-2">
-                <div class="profile-stat-card rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                    <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('profile.current_balance') }}</p>
-                    <p class="profile-balance-value premium-kpi-number mt-2 font-semibold">{{ $balanceFormatted }}</p>
+            <div class="profile-stat-list flex flex-col gap-2.5 rounded-[26px] bg-white/8 p-3 backdrop-blur-sm">
+                <div class="profile-stat-row">
+                    <span class="profile-stat-icon"><i class="fas fa-wallet"></i></span>
+                    <span class="min-w-0 flex-1">
+                        <span class="block text-xs uppercase tracking-[0.16em] text-white/55">{{ __('profile.current_balance') }}</span>
+                        <span class="profile-stat-row-value block font-semibold text-white">{{ $balanceFormatted }}</span>
+                    </span>
                 </div>
-                <div class="profile-stat-card rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                    <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.premium_profile') }}</p>
-                    <p class="profile-stat-value premium-kpi-number mt-2 font-semibold">{{ $profileCompletion }}%</p>
+                <div class="profile-stat-row">
+                    <span class="profile-stat-icon"><i class="fas fa-gem"></i></span>
+                    <span class="min-w-0 flex-1">
+                        <span class="block text-xs uppercase tracking-[0.16em] text-white/55">{{ __('dashboard.premium_profile') }}</span>
+                        <span class="profile-stat-row-value block font-semibold text-white">{{ $profileCompletion }}%</span>
+                    </span>
                 </div>
-                <div class="profile-stat-card rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                    <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.operations_to_track') }}</p>
-                    <p class="profile-stat-value premium-kpi-number mt-2 font-semibold">{{ $pendingOperationsCount }}</p>
+                <div class="profile-stat-row">
+                    <span class="profile-stat-icon"><i class="fas fa-clock-rotate-left"></i></span>
+                    <span class="min-w-0 flex-1">
+                        <span class="block text-xs uppercase tracking-[0.16em] text-white/55">{{ __('dashboard.operations_to_track') }}</span>
+                        <span class="profile-stat-row-value block font-semibold text-white">{{ $pendingOperationsCount }}</span>
+                    </span>
                 </div>
-                <div class="profile-stat-card rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm">
-                    <p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('dashboard.notifications') }}</p>
-                    <p class="profile-stat-value premium-kpi-number mt-2 font-semibold">{{ $unreadNotificationsCount }}</p>
+                <div class="profile-stat-row">
+                    <span class="profile-stat-icon"><i class="fas fa-bell"></i></span>
+                    <span class="min-w-0 flex-1">
+                        <span class="block text-xs uppercase tracking-[0.16em] text-white/55">{{ __('dashboard.notifications') }}</span>
+                        <span class="profile-stat-row-value block font-semibold text-white">{{ $unreadNotificationsCount }}</span>
+                    </span>
                 </div>
             </div>
         </div>

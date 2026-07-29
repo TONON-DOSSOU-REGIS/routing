@@ -44,6 +44,20 @@
             background: var(--brand-navy);
         }
 
+        /* No page should ever scroll sideways on a phone. */
+        html,
+        body {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+
+        img,
+        svg,
+        video {
+            max-width: 100%;
+            height: auto;
+        }
+
         a {
             color: inherit;
             text-decoration: none;
@@ -61,23 +75,6 @@
             margin: 0 auto;
         }
 
-        .modern-nav {
-            position: sticky;
-            top: 0;
-            z-index: 70;
-            background: rgba(6, 23, 44, 0.88);
-            backdrop-filter: blur(18px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-        }
-
-        .modern-nav-inner {
-            min-height: 78px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
-        }
-
         .modern-brand {
             display: inline-flex;
             align-items: center;
@@ -91,141 +88,6 @@
             width: 52px;
             height: 52px;
             object-fit: contain;
-        }
-
-        .modern-nav-links {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            color: rgba(255, 255, 255, 0.74);
-            font-size: 0.94rem;
-            font-weight: 700;
-        }
-
-        .modern-nav-links a:hover {
-            color: #ffffff;
-        }
-
-        .modern-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .modern-mobile-toggle {
-            display: none;
-            width: 46px;
-            height: 46px;
-            border: 0;
-            border-radius: 50%;
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.12);
-            cursor: pointer;
-        }
-
-        body.modern-mobile-menu-active {
-            overflow: hidden;
-        }
-
-        .modern-mobile-backdrop {
-            position: fixed;
-            inset: 0;
-            z-index: 89;
-            display: none;
-            opacity: 0;
-            background: rgba(2, 6, 23, 0.54);
-            backdrop-filter: blur(10px);
-            transition: opacity .32s ease;
-        }
-
-        .modern-mobile-backdrop.open {
-            display: block;
-            opacity: 1;
-        }
-
-        .modern-mobile-menu {
-            position: fixed;
-            top: 14px;
-            right: 14px;
-            bottom: 14px;
-            z-index: 90;
-            display: flex;
-            flex-direction: column;
-            width: min(88vw, 390px);
-            padding: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            border-radius: 32px;
-            background:
-                radial-gradient(circle at top right, rgba(0, 184, 217, 0.18), transparent 36%),
-                linear-gradient(180deg, rgba(6, 23, 44, 0.98), rgba(6, 17, 31, 0.96));
-            box-shadow: -28px 0 80px rgba(2, 6, 23, 0.34);
-            backdrop-filter: blur(24px);
-            opacity: 0;
-            pointer-events: none;
-            transform: translateX(112%);
-            transition: transform .42s cubic-bezier(.22, 1, .36, 1), opacity .26s ease;
-            will-change: transform, opacity;
-        }
-
-        .modern-mobile-menu.open {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateX(0);
-        }
-
-        .modern-mobile-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 14px;
-            padding: 4px 2px 18px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-        }
-
-        .modern-mobile-close {
-            width: 42px;
-            height: 42px;
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 50%;
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-        }
-
-        .modern-mobile-links,
-        .modern-mobile-foot {
-            display: grid;
-            gap: 8px;
-        }
-
-        .modern-mobile-links {
-            padding: 18px 0;
-        }
-
-        .modern-mobile-foot {
-            margin-top: auto;
-            padding-top: 18px;
-            border-top: 1px solid rgba(255, 255, 255, 0.12);
-        }
-
-        .modern-mobile-menu a {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            padding: 13px 14px;
-            border: 1px solid transparent;
-            border-radius: 18px;
-            color: #ffffff;
-            font-weight: 800;
-            background: rgba(255, 255, 255, 0.05);
-            transition: transform .2s ease, background .2s ease, border-color .2s ease;
-        }
-
-        .modern-mobile-menu a:hover {
-            transform: translateX(-4px);
-            border-color: rgba(255, 255, 255, 0.14);
-            background: rgba(255, 255, 255, 0.1);
         }
 
         .btn-modern {
@@ -269,6 +131,8 @@
             min-height: 620px;
             display: flex;
             align-items: center;
+            /* The shared navbar is fixed, so the hero reserves room for it. */
+            padding: 148px 0 78px;
             color: #ffffff;
             background:
                 linear-gradient(90deg, rgba(6, 23, 44, 0.96) 0%, rgba(6, 23, 44, 0.84) 48%, rgba(6, 23, 44, 0.48) 100%),
@@ -745,25 +609,16 @@
         }
 
         @media (max-width: 1080px) {
-            .modern-nav-links,
-            .modern-actions .btn-light-modern {
-                display: none;
+            .hero-modern {
+                min-height: auto;
             }
 
-            .modern-mobile-toggle {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-            }
-
+            /* Fixed track minimums (360px / 420px) overflow below ~1000px,
+               so the two-column layouts collapse to a single column here. */
             .hero-grid,
             .split-panel,
             .contact-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-modern {
-                min-height: auto;
+                grid-template-columns: minmax(0, 1fr);
             }
 
             .cards-grid,
@@ -777,17 +632,13 @@
                 width: min(100% - 28px, 1320px);
             }
 
-            .modern-nav-inner {
-                min-height: 68px;
-            }
-
-            .modern-brand img {
-                width: 44px;
-                height: 44px;
+            .hero-modern {
+                padding: 104px 0 44px;
             }
 
             .hero-grid {
                 padding: 46px 0 64px;
+                gap: 28px;
             }
 
             .hero-title {
@@ -809,10 +660,18 @@
                 min-height: auto;
             }
 
+            /* Decorative blurred circle escapes the viewport on narrow screens. */
+            .hero-card::after {
+                width: 200px;
+                height: 200px;
+                right: -12%;
+            }
+
             .cards-grid,
             .faq-grid,
             .field-grid,
-            .metrics-grid {
+            .metrics-grid,
+            .legal-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -824,56 +683,41 @@
                 margin-top: 20px;
                 padding: 22px;
             }
+
+            .section {
+                padding: 58px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-container {
+                width: min(100% - 22px, 1320px);
+            }
+
+            /* Numbered steps stack their badge above the text so long labels
+               never squeeze into a 62px column. */
+            .step-item {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                padding: 20px;
+            }
+
+            .hero-card,
+            .legal-item,
+            .contact-form {
+                padding: 20px;
+            }
+
+            .hero-card::after {
+                display: none;
+            }
         }
     </style>
+    @include('partials.public-navbar-styles')
 </head>
 <body>
-    @include('partials.site-launch-loader')
 <div class="modern-page">
-    <header class="modern-nav">
-        <div class="page-container modern-nav-inner">
-            <a class="modern-brand" href="{{ localized_route('home', ['locale' => $locale]) }}">
-                <img src="{{ asset('images/zuider-logo-white.png') }}" alt="{{ $brandName }}">
-                <span>{{ $brandName }}</span>
-            </a>
-            <nav class="modern-nav-links" aria-label="Navigation principale">
-                <a href="{{ localized_route('home', ['locale' => $locale]) }}">{{ $shared['nav_home'] }}</a>
-                <a href="{{ localized_route('services.comptes-professionnels', ['locale' => $locale]) }}">{{ $shared['nav_services'] }}</a>
-                <a href="{{ localized_route('about.notre-histoire', ['locale' => $locale]) }}">{{ $shared['nav_about'] }}</a>
-                <a href="{{ localized_route('support.centre-aide', ['locale' => $locale]) }}">{{ $shared['nav_support'] }}</a>
-            </nav>
-            <div class="modern-actions">
-                <a class="btn-modern btn-light-modern" href="{{ localized_route('login', ['locale' => $locale]) }}">{{ $shared['client_area'] }}</a>
-                <a class="btn-modern btn-primary-modern" href="{{ localized_route('register', ['locale' => $locale]) }}">{{ $shared['open_account'] }}</a>
-            </div>
-            <button class="modern-mobile-toggle" type="button" id="modern-mobile-menu-button" aria-label="Ouvrir le menu" aria-controls="modern-mobile-menu" aria-expanded="false">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-
-        <div class="modern-mobile-backdrop" id="modern-mobile-backdrop"></div>
-        <div class="modern-mobile-menu" id="modern-mobile-menu" aria-hidden="true">
-            <div class="modern-mobile-head">
-                <a class="modern-brand" href="{{ localized_route('home', ['locale' => $locale]) }}">
-                    <img src="{{ asset('images/zuider-logo-white.png') }}" alt="{{ $brandName }}">
-                    <span>{{ $brandName }}</span>
-                </a>
-                <button class="modern-mobile-close" type="button" id="modern-mobile-menu-close" aria-label="Fermer le menu">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modern-mobile-links">
-                <a href="{{ localized_route('home', ['locale' => $locale]) }}">{{ $shared['nav_home'] }} <i class="fas fa-arrow-left"></i></a>
-                <a href="{{ localized_route('services.comptes-professionnels', ['locale' => $locale]) }}">{{ $shared['nav_services'] }} <i class="fas fa-arrow-left"></i></a>
-                <a href="{{ localized_route('about.notre-histoire', ['locale' => $locale]) }}">{{ $shared['nav_about'] }} <i class="fas fa-arrow-left"></i></a>
-                <a href="{{ localized_route('support.centre-aide', ['locale' => $locale]) }}">{{ $shared['nav_support'] }} <i class="fas fa-arrow-left"></i></a>
-            </div>
-            <div class="modern-mobile-foot">
-                <a href="{{ localized_route('login', ['locale' => $locale]) }}">{{ $shared['client_area'] }}</a>
-                <a href="{{ localized_route('register', ['locale' => $locale]) }}">{{ $shared['open_account'] }}</a>
-            </div>
-        </div>
-    </header>
+    @include('partials.public-navbar')
 
     <main>
         <section class="hero-modern">
@@ -1089,60 +933,7 @@
         </div>
     </footer>
 </div>
-<script>
-    (function () {
-        const toggle = document.getElementById('modern-mobile-menu-button');
-        const menu = document.getElementById('modern-mobile-menu');
-        const close = document.getElementById('modern-mobile-menu-close');
-        const backdrop = document.getElementById('modern-mobile-backdrop');
-
-        if (!toggle || !menu || toggle.dataset.menuInitialized === 'true') return;
-        toggle.dataset.menuInitialized = 'true';
-
-        const setMobileMenu = function (isOpen) {
-            menu.classList.toggle('open', isOpen);
-            backdrop?.classList.toggle('open', isOpen);
-            document.body.classList.toggle('modern-mobile-menu-active', isOpen);
-            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-            menu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
-
-            const icon = toggle.querySelector('i');
-            if (icon) {
-                icon.classList.toggle('fa-bars', !isOpen);
-                icon.classList.toggle('fa-times', isOpen);
-            }
-        };
-
-        toggle.addEventListener('click', function () {
-            setMobileMenu(!menu.classList.contains('open'));
-        });
-
-        close?.addEventListener('click', function () {
-            setMobileMenu(false);
-        });
-
-        backdrop?.addEventListener('click', function () {
-            setMobileMenu(false);
-        });
-
-        menu.querySelectorAll('a').forEach(function (link) {
-            link.addEventListener('click', function () {
-                setMobileMenu(false);
-            });
-        });
-
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') {
-                setMobileMenu(false);
-            }
-        });
-
-        window.addEventListener('resize', function () {
-            if (window.innerWidth >= 769) setMobileMenu(false);
-        });
-        window.addEventListener('pageshow', function () { setMobileMenu(false); });
-        window.addEventListener('pagehide', function () { setMobileMenu(false); });
-    })();
-</script>
+@include('partials.public-navbar-scripts')
+@include('components.cookie-consent')
 </body>
 </html>

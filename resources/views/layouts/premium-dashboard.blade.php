@@ -571,9 +571,7 @@
                                     @if($profilePhotoUrl)
                                         <img src="{{ $profilePhotoUrl }}" alt="{{ $displayName }}" class="h-full w-full object-cover">
                                     @else
-                                        <span class="premium-brand-title text-sm font-semibold text-slate-700">
-                                            {{ strtoupper(substr($authUser?->first_name ?? 'U', 0, 1) . substr($authUser?->last_name ?? '', 0, 1)) }}
-                                        </span>
+                                        <img src="{{ asset('images/Logosite.png') }}" alt="Zuider Bank S.A" class="h-8 w-8 object-contain">
                                     @endif
                                     <span class="absolute bottom-0.5 right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white"></span>
                                 </div>

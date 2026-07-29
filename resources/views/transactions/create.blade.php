@@ -287,6 +287,125 @@
             }
         }
 
+        /* Auto-transfer amount card — modern redesign */
+        .auto-amount-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 28px;
+            padding: 30px 24px;
+            text-align: center;
+            background:
+                radial-gradient(circle at 15% 0%, rgba(16, 185, 129, .16), transparent 45%),
+                radial-gradient(circle at 100% 100%, rgba(5, 150, 105, .10), transparent 40%),
+                linear-gradient(180deg, #ecfdf5 0%, #f0fdfa 100%);
+            border: 1px solid rgba(16, 185, 129, .25);
+            box-shadow: 0 20px 48px rgba(5, 150, 105, .12);
+        }
+
+        .auto-amount-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #0d9488, #10b981);
+            background-size: 200% 100%;
+            animation: autoAmountShimmer 5s linear infinite;
+        }
+
+        @keyframes autoAmountShimmer { to { background-position: -200% 0; } }
+
+        .auto-amount-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 16px;
+            border-radius: 999px;
+            background: rgba(16, 185, 129, .12);
+            color: #047857;
+            font-size: .72rem;
+            font-weight: 800;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
+        .auto-amount-badge .auto-amount-dot {
+            position: relative;
+            display: flex;
+            height: 7px;
+            width: 7px;
+        }
+
+        .auto-amount-badge .auto-amount-dot span:first-child {
+            position: absolute;
+            inset: 0;
+            border-radius: 999px;
+            background: #34d399;
+            opacity: .75;
+            animation: autoAmountPing 1.8s cubic-bezier(0,0,.2,1) infinite;
+        }
+
+        .auto-amount-badge .auto-amount-dot span:last-child {
+            position: relative;
+            display: block;
+            height: 100%;
+            width: 100%;
+            border-radius: 999px;
+            background: #10b981;
+        }
+
+        @keyframes autoAmountPing {
+            75%, 100% { transform: scale(2.4); opacity: 0; }
+        }
+
+        .auto-amount-value {
+            background: linear-gradient(135deg, #047857, #0d9488);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 2px 12px rgba(5, 150, 105, .18));
+        }
+
+        .auto-amount-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #10b981, #0d9488);
+            color: #fff;
+            font-size: 1.15rem;
+            box-shadow: 0 12px 28px rgba(16, 185, 129, .3);
+            flex-shrink: 0;
+        }
+
+        .transfer-new-pill {
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 18px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #fff7ed, #ffedd5);
+            border: 1px solid rgba(249, 115, 22, .3);
+            color: #c2410c;
+            font-size: .72rem;
+            font-weight: 800;
+            letter-spacing: .1em;
+        }
+
+        .transfer-new-pill i {
+            color: #f97316;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .auto-amount-card::before,
+            .auto-amount-badge .auto-amount-dot span:first-child {
+                animation: none;
+            }
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -1116,9 +1235,10 @@
                         <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">{{ __('transactions.transfer_details') }}</h2>
                         <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('transactions.beneficiary_info') }}</p>
                     </div>
-                    <div class="rounded-full bg-orange-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-orange-700 ring-1 ring-orange-200/80">
+                    <span class="transfer-new-pill w-fit">
+                        <i class="fas fa-bolt text-[10px]"></i>
                         {{ __('transactions.new_transfer') }}
-                    </div>
+                    </span>
                 </div>
 
                 <form id="transferForm" method="POST" class="mt-6 scroll-mt-28 space-y-6">
@@ -1127,7 +1247,7 @@
                     <div class="grid gap-6 xl:grid-cols-2">
                         <div class="transfer-group rounded-[28px] p-5 xl:col-span-2">
                             <div class="flex items-start gap-4">
-                                <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                                <span class="auto-amount-icon">
                                     <i class="fas fa-wallet"></i>
                                 </span>
                                 <div>
@@ -1136,24 +1256,26 @@
                                 </div>
                             </div>
 
-                            <div class="mt-5 rounded-[28px] border border-emerald-200/80 bg-emerald-50/80 p-6 text-center shadow-sm">
-                                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
+                            <div class="auto-amount-card mt-5">
+                                <span class="auto-amount-badge">
+                                    <span class="auto-amount-dot"><span></span><span></span></span>
                                     {{ $autoTransferText('auto_transfer_amount_label') }}
-                                </p>
-                                <p id="transferLockedAmount" class="transfer-fit-amount premium-brand-title mt-4 font-semibold text-emerald-700">
+                                </span>
+                                <p id="transferLockedAmount" class="auto-amount-value transfer-fit-amount mt-5 font-extrabold">
                                     {{ $balanceFormatted }}
                                 </p>
-                                <p class="mt-4 text-sm leading-6 text-emerald-900">
+                                <p class="mx-auto mt-5 max-w-md text-sm leading-6 text-emerald-900/80">
                                     {{ $autoTransferText('auto_transfer_amount_notice') }}
                                 </p>
                                 @unless($hasTransferableBalance)
-                                    <p class="mt-4 rounded-2xl bg-white/80 px-4 py-3 text-sm font-semibold text-red-600 ring-1 ring-red-200/80">
+                                    <p class="mt-4 rounded-2xl bg-white/90 px-4 py-3 text-sm font-semibold text-red-600 ring-1 ring-red-200/80">
                                         {{ __('transactions.auto_transfer_no_balance') }}
                                     </p>
                                 @endunless
                             </div>
 
-                            <div class="mt-4 rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
+                            <div class="mt-4 flex items-start gap-3 rounded-[24px] bg-slate-50 px-4 py-4 ring-1 ring-slate-200/70">
+                                <i class="fas fa-circle-info mt-0.5 text-slate-400"></i>
                                 <p class="text-sm leading-6 text-slate-600">
                                     {{ $autoTransferText('auto_transfer_helper') }}
                                 </p>

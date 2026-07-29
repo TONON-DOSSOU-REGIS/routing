@@ -38,7 +38,7 @@ class PremiumDashboardDesignTest extends TestCase
             ->assertSee('data-client-news-section', false)
             ->assertDontSee('market-tracker-widget', false);
 
-        $this->assertSame(5, substr_count($response->getContent(), 'data-ui-no-loading'));
+        $this->assertSame(4, substr_count($response->getContent(), 'data-ui-no-loading'));
     }
 
     public function test_admin_dashboard_uses_the_vip_shared_shell(): void

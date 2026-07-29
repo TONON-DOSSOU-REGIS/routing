@@ -22,7 +22,7 @@
     <section class="hero-bg min-h-screen flex items-center justify-center relative">
         <div class="absolute inset-0 hero-overlay"></div>
 
-        <div id="thankyou-card" class="relative z-10 max-w-xl w-full mx-4 bg-white rounded-2xl shadow-2xl p-10 opacity-0 translate-y-6 transition-all duration-700">
+        <div id="thankyou-card" class="relative z-10 max-w-xl w-full mx-4 bg-white rounded-2xl shadow-2xl p-6 sm:p-10 opacity-0 translate-y-6 transition-all duration-700">
             <div class="flex justify-center mb-8">
                 <div class="bg-green-100 text-green-600 p-5 rounded-full shadow-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -75,5 +75,6 @@
         });
     </script>
 
+    @include('components.cookie-consent')
 </body>
 </html>

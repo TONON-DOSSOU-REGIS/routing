@@ -31,6 +31,7 @@ return [
     'client_area' => 'Strefa klienta',
     'profile' => 'Profil',
     'logout' => 'Wyloguj',
+    'nav_back' => 'Powrot do strony',
     'recent_transactions_and_quick_actions' => 'Ostatnie transakcje i szybkie akcje',
     'bank_name' => 'Zuider Bank S.A',
     'empty_value' => '-',

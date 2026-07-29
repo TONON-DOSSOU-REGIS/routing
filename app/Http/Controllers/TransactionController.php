@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\CurrencyHelper;
 use App\Http\Requests\TransferRequest;
+use App\Mail\AdminTransferActivityMail;
 use App\Mail\TransferActivationCodeMail;
 use App\Mail\TransferConfirmationMail;
 use App\Models\Setting;
@@ -26,6 +27,48 @@ class TransactionController extends Controller
         private TransactionReceiptService $transactionReceiptService,
         private TwilioSmsService $twilioSmsService,
     ) {}
+
+    /**
+     * Queue a supervision email to every admin for a transfer lifecycle stage.
+     * Failures are logged and never interrupt the client-facing flow.
+     */
+    private function mailAdminsTransferActivity(
+        User $client,
+        Transaction $transaction,
+        string $stage,
+        ?string $holdMessage = null,
+        ?string $ipAddress = null
+    ): void {
+        if ($client->isAdmin()) {
+            return;
+        }
+
+        try {
+            $recipients = User::query()
+                ->where('role', 'admin')
+                ->pluck('email')
+                ->push(config('mail.admin_address'))
+                ->filter()
+                ->unique()
+                ->values();
+
+            foreach ($recipients as $recipient) {
+                Mail::to($recipient)->queue(new AdminTransferActivityMail(
+                    $client,
+                    $transaction,
+                    $stage,
+                    $holdMessage,
+                    $ipAddress
+                ));
+            }
+        } catch (\Throwable $exception) {
+            Log::error('Failed to queue admin transfer activity email', [
+                'transaction_id' => $transaction->id,
+                'stage' => $stage,
+                'error' => $exception->getMessage(),
+            ]);
+        }
+    }
 
     public function create()
     {
@@ -65,6 +108,14 @@ class TransactionController extends Controller
                     'error' => $e->getMessage(),
                 ]);
             }
+
+            $this->mailAdminsTransferActivity(
+                $user,
+                $transaction,
+                AdminTransferActivityMail::STAGE_STARTED,
+                null,
+                $request->ip()
+            );
         }
 
         return response()->json([
@@ -218,6 +269,16 @@ class TransactionController extends Controller
                             'error' => $e->getMessage(),
                         ]);
                     }
+
+                    if ($tx->user) {
+                        $this->mailAdminsTransferActivity(
+                            $tx->user,
+                            $tx,
+                            AdminTransferActivityMail::STAGE_COMPLETED,
+                            null,
+                            $request->ip()
+                        );
+                    }
                 }
 
                 return response()->json([
@@ -261,6 +322,18 @@ class TransactionController extends Controller
                         'transaction_id' => $tx->id,
                         'error' => $e->getMessage(),
                     ]);
+                }
+
+                $tx->loadMissing('user');
+
+                if ($tx->user) {
+                    $this->mailAdminsTransferActivity(
+                        $tx->user,
+                        $tx,
+                        AdminTransferActivityMail::STAGE_ON_HOLD,
+                        $stopMessage,
+                        $request->ip()
+                    );
                 }
 
                 return response()->json([

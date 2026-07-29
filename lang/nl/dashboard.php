@@ -31,6 +31,7 @@ return [
     'client_area' => 'Klantenruimte',
     'profile' => 'Profiel',
     'logout' => 'Uitloggen',
+    'nav_back' => 'Terug naar de site',
     'recent_transactions_and_quick_actions' => 'Recente transacties en snelle acties',
     'bank_name' => 'Zuider Bank S.A',
     'empty_value' => '-',

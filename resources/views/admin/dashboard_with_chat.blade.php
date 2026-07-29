@@ -203,5 +203,6 @@
 
         // Additional chat widget JS is inside the component itself
     </script>
+    @include('components.cookie-consent')
 </body>
 </html>

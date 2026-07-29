@@ -32,6 +32,273 @@
         .emoji-btn { display: inline-flex; align-items: center; gap: .45rem; border-radius: 9999px; border: 1px solid rgba(14,116,144,.25); background: linear-gradient(135deg, rgba(236,254,255,.9), rgba(224,242,254,.9)); color: #0f766e; font-weight: 700; font-size: .75rem; padding: .45rem .75rem; transition: all .25s ease; }
         .emoji-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 20px rgba(15,23,42,.12); }
         .emoji-picker__wrapper, .emoji-picker { z-index: 25000 !important; }
+
+        /* Transfer stop-rule card — modern redesign */
+        .stop-rule-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, .16);
+            border-radius: 32px;
+            background:
+                radial-gradient(circle at 100% -10%, rgba(37, 99, 235, .10), transparent 42%),
+                radial-gradient(circle at 0% 100%, rgba(249, 115, 22, .06), transparent 40%),
+                linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 24px 60px rgba(15, 23, 42, .08);
+        }
+
+        .stop-rule-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2563eb, #7c3aed, #2563eb);
+            background-size: 200% 100%;
+            animation: stopRuleShimmer 6s linear infinite;
+        }
+
+        @keyframes stopRuleShimmer { to { background-position: -200% 0; } }
+
+        /* Circular gauge showing the stop threshold */
+        .gauge-wrap {
+            position: relative;
+            display: grid;
+            place-items: center;
+            width: 132px;
+            height: 132px;
+            flex-shrink: 0;
+        }
+
+        .gauge-ring {
+            transform: rotate(-90deg);
+        }
+
+        .gauge-ring circle {
+            fill: none;
+            stroke-width: 10;
+        }
+
+        .gauge-ring .gauge-track {
+            stroke: #e2e8f0;
+        }
+
+        .gauge-ring .gauge-fill {
+            stroke: url(#gaugeGradient);
+            stroke-linecap: round;
+            transition: stroke-dashoffset .25s cubic-bezier(.16,1,.3,1);
+        }
+
+        .gauge-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gauge-center strong {
+            font-size: 1.7rem;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            color: #0f172a;
+            line-height: 1;
+        }
+
+        .gauge-center span {
+            margin-top: 4px;
+            font-size: .62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: #94a3b8;
+        }
+
+        /* Range slider */
+        .stop-range {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 10px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #2563eb var(--range-progress, 70%), #e2e8f0 var(--range-progress, 70%));
+            outline: none;
+            cursor: pointer;
+        }
+
+        .stop-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            border: 4px solid #2563eb;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, .35);
+            cursor: grab;
+            transition: transform .15s ease;
+        }
+
+        .stop-range::-webkit-slider-thumb:hover {
+            transform: scale(1.12);
+        }
+
+        .stop-range::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            border: 4px solid #2563eb;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, .35);
+            cursor: grab;
+        }
+
+        .stop-range::-moz-range-track {
+            height: 10px;
+            border-radius: 999px;
+            background: #e2e8f0;
+        }
+
+        /* Scope selector cards */
+        .scope-card {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 18px;
+            border-radius: 22px;
+            border: 1.5px solid #e2e8f0;
+            background: #ffffff;
+            cursor: pointer;
+            transition: border-color .18s ease, background-color .18s ease, box-shadow .18s ease, transform .18s ease;
+        }
+
+        .scope-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(15, 23, 42, .08);
+        }
+
+        .scope-card.is-active {
+            border-color: #2563eb;
+            background: linear-gradient(180deg, #eff6ff, #ffffff);
+            box-shadow: 0 12px 28px rgba(37, 99, 235, .14);
+        }
+
+        .scope-card__icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: #f1f5f9;
+            color: #64748b;
+            flex-shrink: 0;
+            transition: background-color .18s ease, color .18s ease;
+        }
+
+        .scope-card.is-active .scope-card__icon {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #fff;
+        }
+
+        .scope-card__check {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #cbd5e1;
+            background: #fff;
+            display: grid;
+            place-items: center;
+            font-size: .55rem;
+            color: transparent;
+            transition: all .18s ease;
+        }
+
+        .scope-card.is-active .scope-card__check {
+            border-color: #2563eb;
+            background: #2563eb;
+            color: #fff;
+        }
+
+        /* Message textarea with char counter */
+        .stop-message-wrap {
+            position: relative;
+        }
+
+        .stop-message-counter {
+            position: absolute;
+            right: 14px;
+            bottom: 12px;
+            font-size: .7rem;
+            font-weight: 700;
+            color: #94a3b8;
+            background: rgba(248, 250, 252, .92);
+            padding: 2px 8px;
+            border-radius: 999px;
+            pointer-events: none;
+        }
+
+        /* Phone-style live preview */
+        .phone-preview {
+            position: relative;
+            border-radius: 28px;
+            padding: 4px;
+            background: linear-gradient(180deg, #0f172a, #1e293b);
+            box-shadow: 0 20px 44px rgba(15, 23, 42, .22);
+        }
+
+        .phone-preview__notch {
+            position: absolute;
+            top: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 16px;
+            border-radius: 0 0 12px 12px;
+            background: #0f172a;
+            z-index: 2;
+        }
+
+        .phone-preview__screen {
+            position: relative;
+            border-radius: 24px;
+            background: linear-gradient(180deg, #fff7ed, #fffbeb);
+            padding: 26px 16px 16px;
+            min-height: 220px;
+        }
+
+        .phone-alert {
+            border-radius: 18px;
+            background: #fff;
+            border: 1px solid rgba(245, 158, 11, .3);
+            box-shadow: 0 10px 24px rgba(217, 119, 6, .1);
+            padding: 16px;
+        }
+
+        .submit-stop-rule-btn {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1d4ed8, #2563eb 55%, #7c3aed);
+            background-size: 200% 100%;
+            box-shadow: 0 16px 32px rgba(37, 99, 235, .28);
+            transition: background-position .5s ease, transform .18s ease, box-shadow .18s ease;
+        }
+
+        .submit-stop-rule-btn:hover {
+            background-position: 100% 0;
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, .34);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .stop-rule-card::before,
+            .submit-stop-rule-btn,
+            .scope-card,
+            .gauge-ring .gauge-fill { animation: none; transition: none; }
+        }
     </style>
 @endpush
 
@@ -57,33 +324,75 @@
     @endif
 
     <div class="grid gap-6 2xl:grid-cols-[minmax(0,1.55fr)_380px]">
-        <section class="admin-surface rounded-[30px] p-5 sm:p-6">
-            <div class="border-b border-slate-200/70 pb-5">
-                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('admin_pages.configuration') }}</p>
-                <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">{{ __('admin_pages.transfer_stop_rule') }}</h2>
-                <p class="mt-2 text-sm leading-6 text-slate-500">{{ __('admin_pages.transfer_stop_rule_help') }}</p>
+        <section class="stop-rule-card p-5 sm:p-7">
+            <div class="flex flex-col gap-3 border-b border-slate-200/70 pb-5 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                    <p class="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-100 text-blue-600"><i class="fas fa-sliders text-[11px]"></i></span>
+                        {{ __('admin_pages.configuration') }}
+                    </p>
+                    <h2 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950 sm:text-3xl">{{ __('admin_pages.transfer_stop_rule') }}</h2>
+                    <p class="mt-2 max-w-md text-sm leading-6 text-slate-500">{{ __('admin_pages.transfer_stop_rule_help') }}</p>
+                </div>
+                <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 ring-1 ring-blue-200/70">
+                    <i class="fas fa-shield-halved text-[10px]"></i>
+                    {{ __('admin_pages.system_settings') }}
+                </span>
             </div>
 
-            <form method="POST" action="{{ localized_route('admin.settings.save') }}" class="mt-6 space-y-6">
+            <form method="POST" action="{{ localized_route('admin.settings.save') }}" class="mt-6 space-y-7">
                 @csrf
-                <div>
-                    <label for="stop_percentage" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.stop_percentage') }}</label>
-                    <input type="number" name="stop_percentage" id="stop_percentage" min="0" max="100" value="{{ $stopPercentage }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" required>
-                    <div class="mt-3 flex items-center justify-between text-sm text-slate-500"><span>0%</span><span id="percentage-value" class="font-semibold text-slate-900">{{ $stopPercentage }}%</span><span>100%</span></div>
-                    <div class="mt-2 h-2 rounded-full bg-slate-200"><div id="percentage-bar" class="h-2 rounded-full bg-blue-700" style="width: {{ $stopPercentage }}%"></div></div>
+
+                <div class="flex flex-col gap-6 rounded-[26px] border border-slate-200/70 bg-slate-50/60 p-5 sm:flex-row sm:items-center">
+                    <div class="gauge-wrap">
+                        <svg viewBox="0 0 132 132" class="gauge-ring" width="132" height="132">
+                            <defs>
+                                <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#2563eb"/>
+                                    <stop offset="100%" stop-color="#7c3aed"/>
+                                </linearGradient>
+                            </defs>
+                            <circle class="gauge-track" cx="66" cy="66" r="56"/>
+                            <circle id="gauge-fill" class="gauge-fill" cx="66" cy="66" r="56" stroke-dasharray="351.86" stroke-dashoffset="105.56"/>
+                        </svg>
+                        <div class="gauge-center">
+                            <strong id="gauge-value">{{ $stopPercentage }}%</strong>
+                        </div>
+                    </div>
+
+                    <div class="flex-1">
+                        <label for="stop_percentage" class="mb-3 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.stop_percentage') }}</label>
+                        <input type="range" name="stop_percentage" id="stop_percentage" min="0" max="100" step="1" value="{{ $stopPercentage }}" class="stop-range" style="--range-progress: {{ $stopPercentage }}%;" required>
+                        <div class="mt-3 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
+                            <span>0%</span>
+                            <span>50%</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="grid gap-4 md:grid-cols-2">
-                    <label class="rounded-[24px] border px-4 py-4 {{ $isGlobal ? 'border-blue-300 bg-blue-50' : 'border-slate-200 bg-white' }}">
-                        <input type="radio" name="is_global" value="1" {{ $isGlobal ? 'checked' : '' }} class="sr-only">
-                        <p class="text-sm font-semibold text-slate-900">{{ __('admin_pages.global') }}</p>
-                        <p class="mt-1 text-sm text-slate-500">{{ __('admin_pages.global_rule_help') }}</p>
-                    </label>
-                    <label class="rounded-[24px] border px-4 py-4 {{ !$isGlobal ? 'border-blue-300 bg-blue-50' : 'border-slate-200 bg-white' }}">
-                        <input type="radio" name="is_global" value="0" {{ !$isGlobal ? 'checked' : '' }} class="sr-only">
-                        <p class="text-sm font-semibold text-slate-900">{{ __('admin_pages.specific') }}</p>
-                        <p class="mt-1 text-sm text-slate-500">{{ __('admin_pages.specific_rule_help') }}</p>
-                    </label>
+                <div>
+                    <p class="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.scope') }}</p>
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <label class="scope-card {{ $isGlobal ? 'is-active' : '' }}" data-scope-card>
+                            <input type="radio" name="is_global" value="1" {{ $isGlobal ? 'checked' : '' }} class="sr-only">
+                            <span class="scope-card__icon"><i class="fas fa-earth-europe"></i></span>
+                            <span>
+                                <span class="block text-sm font-semibold text-slate-900">{{ __('admin_pages.global') }}</span>
+                                <span class="mt-1 block text-sm text-slate-500">{{ __('admin_pages.global_rule_help') }}</span>
+                            </span>
+                            <span class="scope-card__check"><i class="fas fa-check"></i></span>
+                        </label>
+                        <label class="scope-card {{ !$isGlobal ? 'is-active' : '' }}" data-scope-card>
+                            <input type="radio" name="is_global" value="0" {{ !$isGlobal ? 'checked' : '' }} class="sr-only">
+                            <span class="scope-card__icon"><i class="fas fa-user"></i></span>
+                            <span>
+                                <span class="block text-sm font-semibold text-slate-900">{{ __('admin_pages.specific') }}</span>
+                                <span class="mt-1 block text-sm text-slate-500">{{ __('admin_pages.specific_rule_help') }}</span>
+                            </span>
+                            <span class="scope-card__check"><i class="fas fa-check"></i></span>
+                        </label>
+                    </div>
                 </div>
 
                 <div id="target_user_container" class="{{ $isGlobal ? 'hidden' : '' }}">
@@ -101,25 +410,53 @@
                         <label for="stop_message" class="block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.suspension_message') }}</label>
                         <button type="button" id="emoji-picker-button" class="emoji-btn"><i class="fa-regular fa-face-smile"></i> {{ __('admin_pages.premium_emojis') }}</button>
                     </div>
-                    <textarea name="stop_message" id="stop_message" rows="4" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" required>{{ $stopMessage }}</textarea>
+                    <div class="stop-message-wrap">
+                        <textarea name="stop_message" id="stop_message" rows="4" maxlength="240" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" required>{{ $stopMessage }}</textarea>
+                        <span id="stop-message-counter" class="stop-message-counter">{{ strlen($stopMessage) }}/240</span>
+                    </div>
                     <p class="mt-2 text-sm text-slate-500">{{ __('admin_pages.stop_message_help') }}</p>
                 </div>
 
                 <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
                     <a href="{{ localized_route('admin.dashboard') }}" class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"><i class="fas fa-arrow-left text-xs"></i> {{ __('admin_pages.back') }}</a>
-                    <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-full bg-blue-700 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-800"><i class="fas fa-save text-xs"></i> {{ __('admin_pages.save') }}</button>
+                    <button type="submit" class="submit-stop-rule-btn inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white"><i class="fas fa-save text-xs"></i> {{ __('admin_pages.save') }}</button>
                 </div>
             </form>
         </section>
 
         <aside class="space-y-6">
             <section class="admin-surface rounded-[30px] p-5">
-                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('admin_pages.simulation') }}</p>
+                <p class="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                    <span class="relative flex h-1.5 w-1.5">
+                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75"></span>
+                        <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                    </span>
+                    {{ __('admin_pages.simulation') }}
+                </p>
                 <h3 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">{{ __('admin_pages.client_preview') }}</h3>
-                <div class="mt-5 rounded-[24px] bg-amber-50 px-4 py-4 ring-1 ring-amber-200/80">
-                    <p class="text-sm font-semibold text-amber-900">{{ __('admin_pages.transaction_suspended') }}</p>
-                    <p id="preview-message" class="mt-2 text-sm leading-6 text-amber-700">{{ $stopMessage }}</p>
-                    <p class="mt-3 text-sm text-amber-800">{{ __('admin_pages.transfer_stops_at_prefix') }} <span id="preview-percentage" class="font-semibold">{{ $stopPercentage }}%</span>.</p>
+
+                <div class="phone-preview mt-5">
+                    <div class="phone-preview__notch"></div>
+                    <div class="phone-preview__screen">
+                        <div class="phone-alert">
+                            <div class="flex items-start gap-3">
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-600"><i class="fas fa-triangle-exclamation"></i></span>
+                                <div class="min-w-0">
+                                    <p class="text-sm font-semibold text-amber-900">{{ __('admin_pages.transaction_suspended') }}</p>
+                                    <p id="preview-message" class="mt-1 text-sm leading-6 text-amber-700">{{ $stopMessage }}</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 border-t border-amber-100 pt-3">
+                                <div class="flex items-center justify-between text-xs font-semibold text-amber-800">
+                                    <span>{{ __('admin_pages.transfer_stops_at_prefix') }}</span>
+                                    <span id="preview-percentage">{{ $stopPercentage }}%</span>
+                                </div>
+                                <div class="mt-2 h-1.5 rounded-full bg-amber-100">
+                                    <div id="preview-progress-bar" class="h-1.5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500" style="width: {{ $stopPercentage }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -142,29 +479,41 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const stopPercentage = document.getElementById('stop_percentage');
-            const percentageValue = document.getElementById('percentage-value');
-            const percentageBar = document.getElementById('percentage-bar');
+            const gaugeValue = document.getElementById('gauge-value');
+            const gaugeFill = document.getElementById('gauge-fill');
             const previewPercentage = document.getElementById('preview-percentage');
+            const previewProgressBar = document.getElementById('preview-progress-bar');
             const stopMessage = document.getElementById('stop_message');
+            const stopMessageCounter = document.getElementById('stop-message-counter');
             const previewMessage = document.getElementById('preview-message');
             const targetUserContainer = document.getElementById('target_user_container');
             const emojiButton = document.getElementById('emoji-picker-button');
+            const GAUGE_CIRCUMFERENCE = 351.86;
             let picker = null;
 
-            stopPercentage?.addEventListener('input', function () {
-                const value = Math.max(0, Math.min(100, Number(this.value || 0)));
-                percentageValue.textContent = `${value}%`;
+            const updateGauge = (value) => {
+                stopPercentage.style.setProperty('--range-progress', `${value}%`);
+                gaugeValue.textContent = `${value}%`;
                 previewPercentage.textContent = `${value}%`;
-                percentageBar.style.width = `${value}%`;
+                previewProgressBar.style.width = `${value}%`;
+                gaugeFill.setAttribute('stroke-dashoffset', String(GAUGE_CIRCUMFERENCE * (1 - value / 100)));
+            };
+
+            stopPercentage?.addEventListener('input', function () {
+                updateGauge(Math.max(0, Math.min(100, Number(this.value || 0))));
             });
 
             stopMessage?.addEventListener('input', function () {
                 previewMessage.textContent = this.value || @js(__('admin_pages.transaction_suspended'));
+                stopMessageCounter.textContent = `${this.value.length}/240`;
             });
 
             document.querySelectorAll('input[name="is_global"]').forEach((radio) => {
                 radio.addEventListener('change', function () {
                     targetUserContainer.classList.toggle('hidden', this.value === '1');
+                    document.querySelectorAll('[data-scope-card]').forEach((card) => {
+                        card.classList.toggle('is-active', card.querySelector('input').checked);
+                    });
                 });
             });
 

@@ -885,5 +885,8 @@
         </div>
     </div>
 </div>
+@if(($renderMode ?? 'pdf') === 'html')
+    @include('components.cookie-consent')
+@endif
 </body>
 </html>

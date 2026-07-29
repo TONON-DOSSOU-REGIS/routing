@@ -60,264 +60,6 @@
       margin: 0 auto;
     }
 
-    .bank-nav {
-      position: fixed;
-      z-index: 60;
-      top: 0;
-      left: 0;
-      right: 0;
-      padding-top: 14px;
-      padding-bottom: 10px;
-      pointer-events: none;
-      background: linear-gradient(180deg, #071a2f 0%, rgba(7, 26, 47, 0.94) 64%, rgba(7, 26, 47, 0) 100%);
-    }
-
-    .bank-nav-inner {
-      pointer-events: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      min-height: 74px;
-      padding: 12px 16px 12px 20px;
-      border: 1px solid rgba(255, 255, 255, 0.24);
-      border-radius: 999px;
-      background: rgba(7, 26, 47, 0.82);
-      box-shadow: 0 24px 70px rgba(7, 26, 47, 0.2);
-      backdrop-filter: blur(22px);
-    }
-
-    .brand-mark {
-      display: inline-flex;
-      align-items: center;
-      gap: 0;
-      min-width: 0;
-      color: #ffffff;
-      font-weight: 800;
-      font-size: 1rem;
-    }
-
-    .brand-mark img {
-      width: clamp(150px, 14vw, 220px);
-      height: 50px;
-      border-radius: 0;
-      background: transparent;
-      padding: 0;
-      object-fit: contain;
-      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.22));
-    }
-
-    .brand-mark span {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: clamp(14px, 1.6vw, 26px);
-    }
-
-    .nav-links a {
-      color: rgba(255, 255, 255, 0.82);
-      font-size: 0.93rem;
-      font-weight: 600;
-      transition: color 0.2s ease;
-      white-space: nowrap;
-    }
-
-    .nav-links a:hover {
-      color: #ffffff;
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      min-height: 46px;
-      padding: 0 18px;
-      border-radius: 999px;
-      font-weight: 800;
-      font-size: 0.94rem;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-      white-space: nowrap;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .btn-primary {
-      color: #071a2f;
-      background: #ffffff;
-      box-shadow: 0 14px 34px rgba(255, 255, 255, 0.2);
-    }
-
-    .btn-accent {
-      color: #ffffff;
-      background: linear-gradient(135deg, #0b5cff 0%, #00b8d9 100%);
-      box-shadow: 0 20px 40px rgba(11, 92, 255, 0.28);
-    }
-
-    .btn-outline {
-      color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.28);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .mobile-toggle {
-      display: none;
-      width: 46px;
-      height: 46px;
-      border: 0;
-      border-radius: 50%;
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.12);
-      cursor: pointer;
-    }
-
-    body.mobile-menu-active {
-      overflow: hidden;
-    }
-
-    .mobile-menu-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 89;
-      display: none;
-      background: rgba(2, 6, 23, 0.52);
-      opacity: 0;
-      backdrop-filter: blur(10px);
-      transition: opacity .32s ease;
-    }
-
-    .mobile-menu-backdrop.open {
-      display: block;
-      opacity: 1;
-    }
-
-    .mobile-menu {
-      position: fixed;
-      top: 14px;
-      right: 14px;
-      bottom: 14px;
-      z-index: 90;
-      display: flex;
-      flex-direction: column;
-      width: min(88vw, 390px);
-      padding: 18px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 32px;
-      background:
-        radial-gradient(circle at top right, rgba(0, 184, 217, 0.18), transparent 36%),
-        linear-gradient(180deg, rgba(7, 26, 47, 0.98), rgba(6, 23, 44, 0.96));
-      box-shadow: -28px 0 80px rgba(2, 6, 23, 0.34);
-      backdrop-filter: blur(24px);
-      opacity: 0;
-      pointer-events: none;
-      transform: translateX(112%);
-      transition: transform .42s cubic-bezier(.22, 1, .36, 1), opacity .26s ease;
-      will-change: transform, opacity;
-    }
-
-    .mobile-menu.open {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateX(0);
-    }
-
-    .mobile-menu-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 4px 2px 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .mobile-menu-brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: #ffffff;
-      font-family: 'Sora', sans-serif;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-
-    .mobile-menu-brand img {
-      width: 42px;
-      height: 42px;
-      object-fit: contain;
-    }
-
-    .mobile-close {
-      width: 42px;
-      height: 42px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 50%;
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.1);
-      cursor: pointer;
-    }
-
-    .mobile-menu-links {
-      display: grid;
-      gap: 8px;
-      padding: 18px 0;
-    }
-
-    .mobile-menu a {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      color: #ffffff;
-      padding: 13px 14px;
-      border: 1px solid transparent;
-      border-radius: 18px;
-      font-weight: 700;
-      background: rgba(255, 255, 255, 0.05);
-      transition: transform .2s ease, background .2s ease, border-color .2s ease;
-    }
-
-    .mobile-menu a:hover {
-      transform: translateX(-4px);
-      border-color: rgba(255, 255, 255, 0.14);
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .mobile-menu-foot {
-      display: grid;
-      gap: 10px;
-      margin-top: auto;
-      padding-top: 18px;
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .mobile-menu-foot .language-selector {
-      width: 100%;
-    }
-
-    .mobile-menu-foot .language-selector .language-btn {
-      width: 100%;
-      justify-content: center;
-    }
-
-    .mobile-menu-foot .mobile-auth-link {
-      justify-content: center;
-    }
 
     .hero {
       position: relative;
@@ -1678,6 +1420,7 @@
       }
     }
   </style>
+  @include('partials.public-navbar-styles')
 </head>
 
 <body>
@@ -1714,64 +1457,7 @@
 @endphp
 
 <div class="site-shell">
-  <header class="bank-nav">
-    <div class="container-bank">
-      <div class="bank-nav-inner">
-        <a class="brand-mark" href="{{ localized_route('home', ['locale' => $locale]) }}">
-          <img src="{{ asset('images/zuider-logo-white.png') }}" alt="Zuider Bank S.A">
-          <span>Zuider Bank S.A</span>
-        </a>
-
-        <nav class="nav-links" aria-label="Navigation principale">
-          <a href="{{ localized_route('home', ['locale' => $locale]) }}">{{ __('home.nav_home') }}</a>
-          <a href="#about">{{ __('home.nav_about') }}</a>
-          <a href="#services">{{ __('home.nav_services') }}</a>
-          <a href="#cards">{{ __('home.nav_cards') }}</a>
-          <a href="#partners">{{ __('home.partners_title') }}</a>
-          <a href="#faq">{{ __('home.nav_faq') }}</a>
-        </nav>
-
-        <div class="nav-actions">
-          @include('components.language-selector')
-          <a class="btn btn-outline" href="{{ localized_route('login', ['locale' => $locale]) }}">{{ __('home.nav_login') }}</a>
-          <a class="btn btn-primary" href="{{ localized_route('register', ['locale' => $locale]) }}">{{ __('home.nav_register') }}</a>
-        </div>
-
-        <button class="mobile-toggle" type="button" id="mobile-menu-button" aria-label="Ouvrir le menu" aria-controls="mobile-menu" aria-expanded="false">
-          <i class="fas fa-bars"></i>
-        </button>
-      </div>
-
-      <div class="mobile-menu-backdrop" id="mobile-menu-backdrop"></div>
-      <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
-        <div class="mobile-menu-head">
-          <span class="mobile-menu-brand">
-            <img src="{{ asset('images/zuider-logo-white.png') }}" alt="Zuider Bank S.A">
-            <span>Zuider Bank S.A</span>
-          </span>
-          <button class="mobile-close" type="button" id="mobile-menu-close" aria-label="Fermer le menu">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-
-        <div class="mobile-menu-links">
-          <a href="{{ localized_route('home', ['locale' => $locale]) }}">{{ __('home.nav_home') }} <i class="fas fa-arrow-left"></i></a>
-          <a href="#about">{{ __('home.nav_about') }} <i class="fas fa-arrow-left"></i></a>
-          <a href="#services">{{ __('home.nav_services') }} <i class="fas fa-arrow-left"></i></a>
-          <a href="#cards">{{ __('home.nav_cards') }} <i class="fas fa-arrow-left"></i></a>
-          <a href="#partners">{{ __('home.partners_title') }} <i class="fas fa-arrow-left"></i></a>
-          <a href="#trustpilot">{{ __('home.trustpilot_badge') }} <i class="fas fa-arrow-left"></i></a>
-          <a href="#faq">{{ __('home.nav_faq') }} <i class="fas fa-arrow-left"></i></a>
-        </div>
-
-        <div class="mobile-menu-foot">
-          @include('components.language-selector')
-          <a class="mobile-auth-link" href="{{ localized_route('login', ['locale' => $locale]) }}">{{ __('home.nav_login') }}</a>
-          <a class="mobile-auth-link" href="{{ localized_route('register', ['locale' => $locale]) }}">{{ __('home.nav_register') }}</a>
-        </div>
-      </div>
-    </div>
-  </header>
+  @include('partials.public-navbar')
 
   <main>
     <section class="hero" id="home">
@@ -2103,6 +1789,8 @@
             <li><a href="{{ localized_route('support.nous-contacter', ['locale' => $locale]) }}">{{ __('home.footer_contact_us') }}</a></li>
             <li><a href="{{ localized_route('support.securite', ['locale' => $locale]) }}">{{ __('home.footer_security') }}</a></li>
             <li><a href="{{ localized_route('support.mentions-legales', ['locale' => $locale]) }}">{{ __('home.footer_legal') }}</a></li>
+            <li><a href="{{ localized_route('support.politique-cookies', ['locale' => $locale]) }}">{{ __('cookies.footer_link_label') }}</a></li>
+            <li><a href="#" data-cookie-open-preferences>{{ __('cookies.manage_preferences_link') }}</a></li>
           </ul>
         </div>
       </div>
@@ -2117,57 +1805,6 @@
 
 <script>
   (function () {
-    const toggle = document.getElementById('mobile-menu-button');
-    const menu = document.getElementById('mobile-menu');
-    const close = document.getElementById('mobile-menu-close');
-    const backdrop = document.getElementById('mobile-menu-backdrop');
-
-    if (toggle && menu && toggle.dataset.menuInitialized !== 'true') {
-      toggle.dataset.menuInitialized = 'true';
-
-      const setMobileMenu = function (isOpen) {
-        menu.classList.toggle('open', isOpen);
-        backdrop?.classList.toggle('open', isOpen);
-        document.body.classList.toggle('mobile-menu-active', isOpen);
-        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        menu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
-        const icon = toggle.querySelector('i');
-        if (icon) {
-          icon.classList.toggle('fa-bars', !isOpen);
-          icon.classList.toggle('fa-times', isOpen);
-        }
-      };
-
-      toggle.addEventListener('click', function () {
-        setMobileMenu(!menu.classList.contains('open'));
-      });
-
-      close?.addEventListener('click', function () {
-        setMobileMenu(false);
-      });
-
-      backdrop?.addEventListener('click', function () {
-        setMobileMenu(false);
-      });
-
-      menu.querySelectorAll('a').forEach(function (link) {
-        link.addEventListener('click', function () {
-          setMobileMenu(false);
-        });
-      });
-
-      document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape') {
-          setMobileMenu(false);
-        }
-      });
-
-      window.addEventListener('resize', function () {
-        if (window.innerWidth >= 769) setMobileMenu(false);
-      });
-      window.addEventListener('pageshow', function () { setMobileMenu(false); });
-      window.addEventListener('pagehide', function () { setMobileMenu(false); });
-    }
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const finePointer = window.matchMedia('(pointer: fine)').matches;
@@ -2362,5 +1999,7 @@
     });
   })();
 </script>
+@include('partials.public-navbar-scripts')
+@include('components.cookie-consent')
 </body>
 </html>
