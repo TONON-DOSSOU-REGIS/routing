@@ -1417,7 +1417,7 @@
                                     @enderror
                                 </div>
 
-                                <div id="activationCodeGroup" class="hidden">
+                                <div id="activationCodeGroup">
                                     <label for="activation_code" class="mb-3 block text-sm font-semibold text-slate-800">
                                         {{ __('transactions.activation_code') }}
                                     </label>
@@ -1425,19 +1425,15 @@
                                         type="text"
                                         id="activation_code"
                                         name="activation_code"
-                                        value="{{ old('activation_code') }}"
                                         inputmode="numeric"
                                         maxlength="6"
-                                        autocomplete="one-time-code"
+                                        pattern="[0-9]{6}"
+                                        autocomplete="off"
+                                        required
                                         class="transfer-field input-field block w-full rounded-2xl px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400"
                                         placeholder="{{ __('transactions.activation_code_placeholder') }}"
                                     >
-                                    <div class="mt-2 flex flex-wrap items-center justify-between gap-2">
-                                        <p id="activationCodeStatus" class="text-sm text-emerald-700"></p>
-                                        <button type="button" id="resendActivationCode" class="text-sm font-semibold text-blue-700 hover:text-blue-800">
-                                            {{ __('transactions.resend_activation_code') }}
-                                        </button>
-                                    </div>
+                                    <p class="mt-2 text-sm text-slate-500">{{ __('transactions.activation_code_admin_help') }}</p>
                                     @error('activation_code')
                                         <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
                                     @enderror
@@ -1453,7 +1449,7 @@
                         </a>
                         <button type="button" id="startBtn" @disabled(!$hasTransferableBalance) class="inline-flex min-w-[220px] items-center justify-center gap-2 rounded-full border border-orange-300 bg-orange-500 px-6 py-3.5 text-sm font-semibold text-white shadow-[0_18px_45px_rgba(249,115,22,0.35)] transition hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-200 disabled:cursor-not-allowed disabled:opacity-80">
                             <i class="fas fa-paper-plane text-xs"></i>
-                            {{ __('transactions.send_activation_code') }}
+                            {{ __('transactions.start_transfer') }}
                         </button>
                     </div>
                 </form>
@@ -1610,10 +1606,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             const transferForm = document.getElementById('transferForm');
             const startBtn = document.getElementById('startBtn');
-            const activationCodeGroup = document.getElementById('activationCodeGroup');
-            const activationCodeInput = document.getElementById('activation_code');
-            const activationCodeStatus = document.getElementById('activationCodeStatus');
-            const resendActivationCode = document.getElementById('resendActivationCode');
             const overlay = document.getElementById('flashOverlay');
             const flashMsg = document.getElementById('flashMessage');
             const closeFlash = document.getElementById('closeFlash');
@@ -1643,7 +1635,6 @@
             }
 
             let txId = null;
-            let activationCodeRequested = false;
             let ticking = false;
             let progressMode = false;
             let audioContext = null;
@@ -1970,9 +1961,7 @@
 
             function resetStartButton() {
                 startBtn.disabled = false;
-                startBtn.innerHTML = activationCodeRequested
-                    ? '<i class="fas fa-paper-plane text-xs"></i>{{ __('transactions.start_transfer') }}'
-                    : '<i class="fas fa-envelope text-xs"></i>{{ __('transactions.send_activation_code') }}';
+                startBtn.innerHTML = '<i class="fas fa-paper-plane text-xs"></i>{{ __('transactions.start_transfer') }}';
             }
 
             function showMessage(message, type) {
@@ -2062,57 +2051,17 @@
                 }
             }
 
-            async function requestActivationCode() {
-                if (!transferForm.reportValidity()) {
-                    return;
-                }
-
-                startBtn.disabled = true;
-                startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>{{ __('transactions.sending_activation_code') }}';
-
-                try {
-                    const res = await fetch('{{ localized_route('transactions.activation-code') }}', {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: new FormData(transferForm)
-                    });
-                    const data = await res.json().catch(function () { return {}; });
-
-                    if (!res.ok) {
-                        const firstError = data.errors
-                            ? Object.values(data.errors)[0][0]
-                            : (data.message || '{{ __('transactions.activation_email_failed') }}');
-                        resetStartButton();
-                        showMessage(firstError, 'error');
-                        return;
-                    }
-
-                    activationCodeRequested = true;
-                    activationCodeGroup.classList.remove('hidden');
-                    activationCodeStatus.textContent = data.message;
-                    activationCodeStatus.className = 'text-sm text-emerald-700';
-                    activationCodeInput.value = '';
-                    activationCodeInput.focus();
-                    resetStartButton();
-                } catch (error) {
-                    resetStartButton();
-                    showMessage('{{ __('transactions.connection_error') }}', 'error');
-                }
-            }
-
             async function handleTransferStart() {
                 if (ticking) {
                     return;
                 }
 
-                if (!activationCodeRequested) {
-                    await requestActivationCode();
+                if (!transferForm.reportValidity()) {
                     return;
                 }
 
+                startBtn.disabled = true;
+                startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>{{ __('transactions.processing_in_progress') }}';
                 soundUnlocked = true;
                 unlockAudio();
                 transferClientSnapshot = buildClientSnapshot();
@@ -2160,14 +2109,15 @@
                     const firstError = data.errors
                         ? Object.values(data.errors)[0][0]
                         : (data.message || '{{ __('transactions.error_starting_transfer') }}');
+                    resetStartButton();
                     showMessage(firstError, 'error');
                 } catch (error) {
+                    resetStartButton();
                     showMessage('{{ __('transactions.connection_error') }}', 'error');
                 }
             }
 
             startBtn.addEventListener('click', handleTransferStart);
-            resendActivationCode.addEventListener('click', requestActivationCode);
 
             closeFlash.addEventListener('click', function () {
                 if (progressMode) {

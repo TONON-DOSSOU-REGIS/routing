@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
@@ -430,6 +431,7 @@ class AdminController extends Controller
             'numero_piece' => 'nullable|string|max:50|unique:users,id_number',
             'iban' => 'nullable|string|max:34',
             'bic' => 'nullable|string|max:11',
+            'activation_code' => 'nullable|digits:6',
         ], [
             'phone.max' => __('auth.phone_international_format'),
         ]);
@@ -452,6 +454,12 @@ class AdminController extends Controller
             'balance' => 0,
             'status' => 'active',
         ]);
+
+        if ($request->filled('activation_code')) {
+            $user->forceFill([
+                'activation_code' => Hash::make((string) $request->input('activation_code')),
+            ])->save();
+        }
 
         // Generate and assign a virtual credit card to the user
         $user->creditCard()->create([
@@ -516,6 +524,7 @@ class AdminController extends Controller
     public function editUser($locale, User $user)
     {
         $countries = config('countries');
+        $hasActivationCode = Hash::isHashed((string) $user->activation_code);
         $user->loadMissing('creditCard')->loadCount([
             'transactions',
             'transactions as pending_transactions_count' => function ($query) {
@@ -524,7 +533,7 @@ class AdminController extends Controller
         ]);
 
         return view('admin.users.edit', array_merge(
-            compact('user', 'countries'),
+            compact('user', 'countries', 'hasActivationCode'),
             $this->getAdminShellData()
         ));
     }
@@ -561,6 +570,7 @@ class AdminController extends Controller
             'numero_piece' => 'nullable|string|max:50|unique:users,id_number,' . $user->id,
             'iban' => 'nullable|string|max:34',
             'bic' => 'nullable|string|max:11',
+            'activation_code' => 'nullable|digits:6',
             'balance' => 'required|numeric|min:0',
             'status' => 'required|in:active,suspended',
 
@@ -600,6 +610,13 @@ class AdminController extends Controller
         }
 
         $user->update($updateData);
+
+        if ($request->filled('activation_code')) {
+            $user->forceFill([
+                'activation_code' => Hash::make((string) $request->input('activation_code')),
+            ])->save();
+            RateLimiter::clear('transfer-activation:'.$user->id);
+        }
 
         // Manage credit card info
         $sanitizedCardNumber = $request->filled('card_number')

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Helpers\CurrencyHelper;
 use App\Http\Requests\TransferRequest;
 use App\Mail\AdminTransferActivityMail;
-use App\Mail\TransferActivationCodeMail;
 use App\Mail\TransferConfirmationMail;
 use App\Models\Setting;
 use App\Models\Transaction;
@@ -20,6 +19,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\ValidationException;
 
 class TransactionController extends Controller
 {
@@ -79,23 +79,43 @@ class TransactionController extends Controller
 
     public function start(TransferRequest $request)
     {
-        $user = User::query()->findOrFail(auth()->id());
-        $amount = round((float) $user->balance, 2);
+        [$user, $transaction] = DB::transaction(function () use ($request) {
+            $user = User::query()->lockForUpdate()->findOrFail(auth()->id());
 
-        $transaction = Transaction::create([
-            'user_id' => $user->id,
-            'amount' => $amount,
-            'type' => 'transfer',
-            'recipient_name' => $request->recipient_name,
-            'recipient_iban' => $request->recipient_iban,
-            'recipient_bic' => $request->recipient_bic,
-            'bank_name' => $request->bank_name,
-            'reason' => $request->reason,
-            'status' => 'pending',
-            'progress' => 0,
-        ]);
+            if ($user->transactions()->whereIn('status', ['pending', 'on_hold'])->exists()) {
+                throw ValidationException::withMessages([
+                    'activation_code' => __('transactions.transfer_already_pending'),
+                ]);
+            }
 
-        $request->session()->forget('transfer_activation');
+            $storedCode = (string) ($user->activation_code ?? '');
+            if (
+                $storedCode === ''
+                || ! Hash::isHashed($storedCode)
+                || ! Hash::check((string) $request->input('activation_code'), $storedCode)
+            ) {
+                throw ValidationException::withMessages([
+                    'activation_code' => __('transactions.invalid_activation_code'),
+                ]);
+            }
+
+            $transaction = Transaction::create([
+                'user_id' => $user->id,
+                'amount' => round((float) $user->balance, 2),
+                'type' => 'transfer',
+                'recipient_name' => $request->recipient_name,
+                'recipient_iban' => $request->recipient_iban,
+                'recipient_bic' => $request->recipient_bic,
+                'bank_name' => $request->bank_name,
+                'reason' => $request->reason,
+                'status' => 'pending',
+                'progress' => 0,
+            ]);
+
+            $user->forceFill(['activation_code' => null])->save();
+
+            return [$user, $transaction];
+        });
 
         // Notify admins that a user initiated a transfer
         if (!$user->isAdmin()) {
@@ -123,54 +143,6 @@ class TransactionController extends Controller
             'amount' => $transaction->amount,
             'formatted_amount' => CurrencyHelper::format($transaction->amount, $user->default_currency ?? 'EUR'),
         ]);
-    }
-
-    public function sendActivationCode(TransferRequest $request)
-    {
-        $user = User::query()->findOrFail(auth()->id());
-        $code = (string) random_int(100000, 999999);
-        $transferDetails = $request->validated();
-
-        $request->session()->put('transfer_activation', [
-            'code_hash' => Hash::make($code),
-            'payload_hash' => TransferRequest::payloadFingerprint($transferDetails),
-            'expires_at' => now()->addMinutes(10)->timestamp,
-            'attempts' => 0,
-        ]);
-
-        try {
-            Mail::to($user->email)->send(new TransferActivationCodeMail($user, $code, $transferDetails));
-
-            if (config('mail.default') === 'log') {
-                Log::warning('LOCAL transfer activation code', [
-                    'email' => $this->maskEmail($user->email),
-                    'code' => $code,
-                    'expires_in_minutes' => 10,
-                ]);
-            }
-        } catch (\Throwable $e) {
-            $request->session()->forget('transfer_activation');
-            Log::error('Failed to send transfer activation code email', [
-                'user_id' => $user->id,
-                'error' => $e->getMessage(),
-            ]);
-
-            return response()->json([
-                'message' => __('transactions.activation_email_failed'),
-            ], 500);
-        }
-
-        return response()->json([
-            'message' => __('transactions.activation_code_sent', ['email' => $this->maskEmail($user->email)]),
-        ]);
-    }
-
-    private function maskEmail(string $email): string
-    {
-        [$name, $domain] = array_pad(explode('@', $email, 2), 2, '');
-        $visible = mb_substr($name, 0, min(2, mb_strlen($name)));
-
-        return $visible . str_repeat('*', max(1, mb_strlen($name) - mb_strlen($visible))) . '@' . $domain;
     }
 
     public function progress(Request $request)

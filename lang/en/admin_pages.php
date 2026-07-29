@@ -325,5 +325,10 @@ return [
     'create_form_intro' => 'Enter the account’s personal, security, address, and banking information.',
     'identity_document' => 'Identity document',
     'activation_code_placeholder' => 'Enter a secure activation code',
+    'activation_code_create_help' => 'Personal one-time 6-digit code. Leave blank to configure it later.',
+    'activation_code_edit_help' => 'The current code is never displayed and is disabled after a transfer. Enter 6 digits only to replace it.',
+    'activation_code_configured' => 'Code configured',
+    'activation_code_missing' => 'Code not configured',
+    'new_activation_code' => 'New 6-digit code',
     'recent_accounts_empty_help' => 'The latest created accounts will appear here.',
 ];

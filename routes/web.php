@@ -192,9 +192,6 @@ Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(fu
 
         Route::get('/transactions/create', [TransactionController::class, 'create'])->name('transactions.create');
         Route::post('/transactions/start', [TransactionController::class, 'start'])->name('transactions.start');
-        Route::post('/transactions/activation-code', [TransactionController::class, 'sendActivationCode'])
-            ->middleware('throttle:3,1')
-            ->name('transactions.activation-code');
         Route::post('/transactions/progress', [TransactionController::class, 'progress'])->name('transactions.progress');
 
         // Transactions (non sensitive)

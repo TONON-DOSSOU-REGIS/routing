@@ -18,7 +18,6 @@ class Transaction extends Model
         'recipient_bic',
         'bank_name',
         'reason',
-        'activation_code',
         'status',
         'progress',
         'message',
@@ -55,4 +54,3 @@ class Transaction extends Model
         return $this->status === 'refunded';
     }
 }
-

@@ -325,5 +325,10 @@ return [
     'create_form_intro' => 'Renseignez les informations personnelles, de sécurité, d’adresse et bancaires du compte.',
     'identity_document' => 'Pièce d’identité',
     'activation_code_placeholder' => 'Entrez un code d’activation sécurisé',
+    'activation_code_create_help' => 'Code personnel à 6 chiffres et à usage unique. Laissez vide pour le configurer plus tard.',
+    'activation_code_edit_help' => 'Le code actuel n’est jamais affiché et sera désactivé après un virement. Saisissez 6 chiffres uniquement pour le remplacer.',
+    'activation_code_configured' => 'Code configuré',
+    'activation_code_missing' => 'Code non configuré',
+    'new_activation_code' => 'Nouveau code à 6 chiffres',
     'recent_accounts_empty_help' => 'Les derniers comptes créés apparaîtront ici.',
 ];

@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Http\Requests\TransferRequest;
 use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
@@ -20,7 +19,7 @@ class TransferProgressFlowTest extends TestCase
             'role' => 'user',
             'status' => 'active',
             'balance' => 5000,
-            'activation_code' => '1234',
+            'activation_code' => Hash::make('123456'),
             'two_factor_enabled' => false,
         ]);
 
@@ -60,7 +59,7 @@ class TransferProgressFlowTest extends TestCase
             'role' => 'user',
             'status' => 'active',
             'balance' => 5000,
-            'activation_code' => '1234',
+            'activation_code' => Hash::make('123456'),
             'two_factor_enabled' => false,
         ]);
 
@@ -104,7 +103,7 @@ class TransferProgressFlowTest extends TestCase
             'role' => 'user',
             'status' => 'active',
             'balance' => 5000,
-            'activation_code' => '1234',
+            'activation_code' => Hash::make('123456'),
             'two_factor_enabled' => false,
         ]);
 
@@ -137,16 +136,6 @@ class TransferProgressFlowTest extends TestCase
             'reason' => 'Test transfer',
             'activation_code' => '123456',
         ];
-
-        $this->withSession([
-            'transfer_activation' => [
-                'code_hash' => Hash::make('123456'),
-                'payload_hash' => TransferRequest::payloadFingerprint(array_merge($payload, [
-                    'amount' => auth()->user()->balance,
-                ])),
-                'expires_at' => now()->addMinutes(10)->timestamp,
-            ],
-        ]);
 
         return $payload;
     }

@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Support\Facades\Hash;
 
 uses(RefreshDatabase::class);
 
@@ -24,6 +25,7 @@ test('admin user creation page only displays essential fields', function () {
         ->assertSee('name="phone"', false)
         ->assertSee('name="pays"', false)
         ->assertSee('name="date_naissance"', false)
+        ->assertSee('name="activation_code"', false)
         ->assertSee('data-password-toggle="password"', false)
         ->assertSee('data-password-toggle="password_confirmation"', false)
         ->assertDontSee('name="profile_photo"', false)
@@ -45,6 +47,7 @@ test('admin can create a user with only the simplified form fields', function ()
             'phone' => '+221771234567',
             'role' => 'user',
             'pays' => 'Sénégal',
+            'activation_code' => '482901',
         ]);
 
     $response->assertRedirect(route('admin.users', ['locale' => 'fr']));
@@ -57,4 +60,9 @@ test('admin can create a user with only the simplified form fields', function ()
         'id_type' => null,
         'profile_photo_path' => null,
     ]);
+
+    $user = User::where('email', 'amina.diallo@example.com')->firstOrFail();
+    expect($user->activation_code)->not->toBe('482901');
+    expect(Hash::check('482901', $user->activation_code))->toBeTrue();
+    expect($user->toArray())->not->toHaveKey('activation_code');
 });

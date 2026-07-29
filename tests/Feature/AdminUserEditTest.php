@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Support\Facades\Hash;
 
 uses(RefreshDatabase::class);
 
@@ -21,7 +22,7 @@ test('admin can update user details', function () {
         'last_name' => 'Doe',
         'email' => 'john@example.com',
         'balance' => 100.00,
-        'activation_code' => 'old_code'
+        'activation_code' => Hash::make('111111')
     ]);
 
     $response = $this->actingAs($admin)
@@ -43,7 +44,7 @@ test('admin can update user details', function () {
             'numero_piece' => 'AA998877',
             'iban' => 'FR7612345678901234567890123',
             'bic' => 'BNPAFRPP',
-            'activation_code' => 'new_code',
+            'activation_code' => '654321',
             'balance' => 200.00,
             'status' => 'active',
         ]);
@@ -65,7 +66,8 @@ test('admin can update user details', function () {
     expect($user->id_number)->toBe('AA998877');
     expect($user->iban)->toBe('FR7612345678901234567890123');
     expect($user->bic)->toBe('BNPAFRPP');
-    expect($user->activation_code)->toBe('old_code');
+    expect($user->activation_code)->not->toBe('654321');
+    expect(Hash::check('654321', $user->activation_code))->toBeTrue();
     expect($user->balance)->toBe('200.00');
     expect($user->status)->toBe('active');
 });
@@ -102,6 +104,29 @@ test('admin can update and create credit card info with user', function () {
     expect($creditCard->card_number)->toBe('4111111111111111');
     expect($creditCard->card_type)->toBe('Visa');
     expect($creditCard->expiry_date->format('Y-m-d'))->toBe(now()->addYear()->format('Y-m-d'));
+});
+
+test('leaving activation code blank keeps the current code', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    $currentHash = Hash::make('123456');
+    $user = User::factory()->create([
+        'activation_code' => $currentHash,
+    ]);
+
+    $this->actingAs($admin)
+        ->put(route('admin.users.update', ['locale' => 'fr', 'user' => $user]), [
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'email' => $user->email,
+            'phone' => $user->phone,
+            'role' => $user->role,
+            'balance' => $user->balance,
+            'status' => $user->status,
+            'activation_code' => '',
+        ])
+        ->assertRedirect(localized_route('admin.users'));
+
+    expect($user->fresh()->activation_code)->toBe($currentHash);
 });
 
 test('admin can delete credit card info', function () {
@@ -228,7 +253,7 @@ test('admin can edit user page loads correctly', function () {
         'first_name' => 'Test',
         'last_name' => 'User',
         'email' => 'test@example.com',
-        'activation_code' => 'test_code'
+        'activation_code' => Hash::make('123456')
     ]);
 
     $response = $this->withoutMiddleware(\App\Http\Middleware\IsAdmin::class)
@@ -240,5 +265,6 @@ test('admin can edit user page loads correctly', function () {
     $response->assertSee('Test');
     $response->assertSee('User');
     $response->assertSee('test@example.com');
-    $response->assertDontSee('test_code');
+    $response->assertSee('name="activation_code"', false);
+    $response->assertDontSee($user->activation_code);
 });

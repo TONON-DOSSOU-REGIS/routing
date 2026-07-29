@@ -21,7 +21,6 @@ class TransactionFactory extends Factory
             'recipient_bic' => $this->faker->swiftBicNumber(),
             'bank_name' => $this->faker->company(),
             'reason' => $this->faker->sentence(),
-            'activation_code' => $this->faker->uuid(),
             'status' => $this->faker->randomElement(['pending', 'success', 'failed']),
             'progress' => $this->faker->numberBetween(0, 100),
             'message' => $this->faker->optional()->sentence(),
@@ -29,4 +28,3 @@ class TransactionFactory extends Factory
         ];
     }
 }
-

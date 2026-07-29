@@ -35,7 +35,7 @@ class UserFactory extends Factory
             'balance' => $this->faker->randomFloat(2, 0, 10000),
             'status' => 'active',
             'password' => static::$password ??= Hash::make('password'),
-            'activation_code' => $this->faker->optional()->word(),
+            'activation_code' => null,
             'date_of_birth' => $this->faker->date('Y-m-d', '2000-01-01'),
             'id_type' => 'Passport',
             'id_number' => $this->faker->unique()->regexify('[A-Z0-9]{10}'),

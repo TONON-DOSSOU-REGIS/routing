@@ -36,7 +36,6 @@ class User extends Authenticatable
         'default_currency',
         'status',
         'password',
-        'activation_code',
         'oauth_provider',
         'oauth_id',
         'profile_photo_path',
@@ -53,6 +52,7 @@ class User extends Authenticatable
         'two_factor_secret',
         'two_factor_backup_codes',
         'login_link_token',
+        'activation_code',
     ];
 
     /**

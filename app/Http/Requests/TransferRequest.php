@@ -7,6 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 
 class TransferRequest extends FormRequest
 {
@@ -36,7 +37,7 @@ class TransferRequest extends FormRequest
     {
         $balance = $this->currentBalance();
 
-        $rules = [
+        return [
             'amount' => [
                 'bail',
                 'required',
@@ -54,13 +55,8 @@ class TransferRequest extends FormRequest
             'recipient_bic' => 'required|string|regex:/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/',
             'bank_name' => 'required|string|max:255',
             'reason' => 'nullable|string|max:500',
+            'activation_code' => ['required', 'digits:6'],
         ];
-
-        if (! $this->routeIs('*.activation-code')) {
-            $rules['activation_code'] = ['required', 'digits:6'];
-        }
-
-        return $rules;
     }
 
     public function messages()
@@ -95,52 +91,40 @@ class TransferRequest extends FormRequest
 
     public function withValidator($validator)
     {
-        if ($this->routeIs('*.activation-code')) {
-            return;
-        }
-
         $validator->after(function ($validator) {
-            $verification = $this->session()->get('transfer_activation');
+            if ($validator->errors()->any()) {
+                return;
+            }
 
-            if (! is_array($verification) || ($verification['expires_at'] ?? 0) <= now()->timestamp) {
-                $this->session()->forget('transfer_activation');
-                $validator->errors()->add('activation_code', __('transactions.activation_code_expired'));
+            $user = $this->user()?->fresh();
+            $storedCode = (string) ($user?->activation_code ?? '');
+
+            if ($storedCode === '' || ! Hash::isHashed($storedCode)) {
+                $validator->errors()->add('activation_code', __('transactions.activation_code_not_configured'));
 
                 return;
             }
 
-            if (($verification['payload_hash'] ?? '') !== self::payloadFingerprint($this->all())) {
-                $validator->errors()->add('activation_code', __('transactions.activation_details_changed'));
+            $rateLimitKey = 'transfer-activation:'.(string) $user->id;
+
+            if (RateLimiter::tooManyAttempts($rateLimitKey, 5)) {
+                $validator->errors()->add('activation_code', __('transactions.activation_too_many_attempts'));
 
                 return;
             }
 
-            if (! Hash::check((string) $this->input('activation_code'), (string) ($verification['code_hash'] ?? ''))) {
-                $verification['attempts'] = (int) ($verification['attempts'] ?? 0) + 1;
+            if (! Hash::check((string) $this->input('activation_code'), $storedCode)) {
+                RateLimiter::hit($rateLimitKey, 15 * 60);
+                $message = RateLimiter::tooManyAttempts($rateLimitKey, 5)
+                    ? __('transactions.activation_too_many_attempts')
+                    : __('transactions.invalid_activation_code');
+                $validator->errors()->add('activation_code', $message);
 
-                if ($verification['attempts'] >= 5) {
-                    $this->session()->forget('transfer_activation');
-                    $validator->errors()->add('activation_code', __('transactions.activation_too_many_attempts'));
-
-                    return;
-                }
-
-                $this->session()->put('transfer_activation', $verification);
-                $validator->errors()->add('activation_code', __('transactions.invalid_activation_code'));
+                return;
             }
+
+            RateLimiter::clear($rateLimitKey);
         });
-    }
-
-    public static function payloadFingerprint(array $data): string
-    {
-        $payload = [
-            'amount' => number_format((float) ($data['amount'] ?? 0), 2, '.', ''),
-        ];
-        foreach (['recipient_name', 'recipient_iban', 'recipient_bic', 'bank_name', 'reason'] as $field) {
-            $payload[$field] = trim((string) ($data[$field] ?? ''));
-        }
-
-        return hash('sha256', json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
     }
 
     private function currentBalance(): float

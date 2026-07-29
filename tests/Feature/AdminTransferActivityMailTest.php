@@ -7,6 +7,7 @@ use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
@@ -30,6 +31,7 @@ class AdminTransferActivityMailTest extends TestCase
             'status' => 'active',
             'two_factor_enabled' => false,
             'balance' => $balance,
+            'activation_code' => Hash::make('482901'),
         ]);
     }
 
@@ -47,23 +49,9 @@ class AdminTransferActivityMailTest extends TestCase
             'reason' => 'Test transfer',
         ];
 
-        // The real flow requires an emailed activation code before starting.
-        $this->actingAs($client)
-            ->postJson(route('transactions.activation-code', ['locale' => 'fr']), $payload)
-            ->assertOk();
-
-        $activation = session('transfer_activation');
-        $this->assertNotNull($activation, 'Activation session payload should exist.');
-
-        $code = null;
-        Mail::assertSent(\App\Mail\TransferActivationCodeMail::class, function ($mail) use (&$code) {
-            $code = $mail->code;
-            return true;
-        });
-
         $this->actingAs($client)
             ->postJson(route('transactions.start', ['locale' => 'fr']), $payload + [
-                'activation_code' => $code,
+                'activation_code' => '482901',
             ])
             ->assertOk();
 

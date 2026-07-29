@@ -50,6 +50,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->dontFlash([
+            'activation_code',
+        ]);
+
         $handleExpiredSession = function ($request) {
             $supportedLocales = ['en', 'fr', 'de', 'nl', 'es', 'pl', 'it'];
             $routeLocale = (string) $request->route('locale', '');
@@ -69,6 +73,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 '_token',
                 'password',
                 'password_confirmation',
+                'activation_code',
             ]);
 
             if ($request->is('login') || $request->is('*/login')) {
