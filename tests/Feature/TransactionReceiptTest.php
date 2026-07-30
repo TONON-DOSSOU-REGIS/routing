@@ -55,7 +55,7 @@ class TransactionReceiptTest extends TestCase
         $response->assertSee('Code de vérification');
     }
 
-    public function test_stop_percentage_validation_allows_0_to_100(): void
+    public function test_stop_percentage_validation_allows_1_to_100(): void
     {
         $this->withExceptionHandling();
         $this->withoutMiddleware(ValidateCsrfToken::class);
@@ -66,25 +66,24 @@ class TransactionReceiptTest extends TestCase
             'date_of_birth' => '1990-01-01',
             'id_type' => 'Passport',
         ]);
+        $client = User::factory()->create();
 
         $this->actingAs($user);
 
-        foreach ([0, 50, 100] as $value) {
+        foreach ([1, 50, 100] as $value) {
             $response = $this->post(route('admin.settings.save', ['locale' => 'fr']), [
                 'stop_percentage' => $value,
                 'stop_message' => 'Test message',
-                'target_user_id' => null,
-                'is_global' => true,
+                'target_user_id' => $client->id,
             ]);
 
             $response->assertSessionHasNoErrors('stop_percentage');
         }
 
         $response = $this->post(route('admin.settings.save', ['locale' => 'fr']), [
-            'stop_percentage' => 101,
+            'stop_percentage' => 0,
             'stop_message' => 'Test message',
-            'target_user_id' => null,
-            'is_global' => true,
+            'target_user_id' => $client->id,
         ]);
 
         $response->assertSessionHasErrors('stop_percentage');
@@ -101,6 +100,7 @@ class TransactionReceiptTest extends TestCase
             'date_of_birth' => '1990-01-01',
             'id_type' => 'Passport',
         ]);
+        $client = User::factory()->create();
 
         $this->actingAs($admin);
 
@@ -109,14 +109,13 @@ class TransactionReceiptTest extends TestCase
         $response = $this->post(route('admin.settings.save', ['locale' => 'fr']), [
             'stop_percentage' => 50,
             'stop_message' => $longMessage,
-            'target_user_id' => null,
-            'is_global' => true,
+            'target_user_id' => $client->id,
         ]);
 
         $response->assertSessionHasNoErrors('stop_message');
         $response->assertSessionHas('status');
 
-        $setting = Setting::query()->first();
+        $setting = Setting::where('target_user_id', $client->id)->first();
 
         $this->assertNotNull($setting);
         $this->assertGreaterThan(255, strlen($longMessage));

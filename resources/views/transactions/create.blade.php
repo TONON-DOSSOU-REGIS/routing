@@ -8,6 +8,16 @@
     $formattedClientIban = $user->iban
         ? trim(chunk_split(preg_replace('/\s+/', '', (string) $user->iban), 4, ' '))
         : __('transactions.not_available');
+    $activeTransferPayload = $activeTransfer ? [
+        'id' => $activeTransfer->id,
+        'status' => $activeTransfer->status,
+        'progress' => (int) $activeTransfer->progress,
+        'message' => $activeTransfer->message,
+        'amount' => (float) $activeTransfer->amount,
+        'formatted_amount' => \App\Helpers\CurrencyHelper::format($activeTransfer->amount, $user->default_currency ?? 'EUR'),
+        'recipient_name' => $activeTransfer->recipient_name,
+        'recipient_iban' => $activeTransfer->recipient_iban,
+    ] : null;
     $autoTransferText = static fn (string $key): string => __('transactions.' . $key);
 @endphp
 
@@ -808,6 +818,97 @@
             letter-spacing: -0.01em;
         }
 
+        .flash-resume-panel {
+            margin: -0.35rem 0 1.25rem;
+            padding: 1rem;
+            border-radius: 1.25rem;
+            border: 1px solid rgba(239, 68, 68, 0.18);
+            background: rgba(255, 255, 255, 0.84);
+            text-align: left;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 18px 34px rgba(15, 23, 42, 0.07);
+        }
+
+        .flash-resume-panel.hidden {
+            display: none;
+        }
+
+        .flash-resume-heading {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            color: #0f172a;
+            font-size: 0.92rem;
+            font-weight: 800;
+        }
+
+        .flash-resume-help {
+            margin: 0.45rem 0 0.85rem;
+            color: #64748b;
+            font-size: 0.82rem;
+            line-height: 1.55;
+        }
+
+        .flash-resume-form {
+            display: grid;
+            gap: 0.7rem;
+        }
+
+        .flash-resume-input {
+            width: 100%;
+            border: 1px solid rgba(148, 163, 184, 0.42);
+            border-radius: 1rem;
+            background: #fff;
+            padding: 0.9rem 1rem;
+            color: #0f172a;
+            font-size: 1rem;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+            text-align: center;
+            text-transform: uppercase;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .flash-resume-input:focus {
+            border-color: rgba(239, 68, 68, 0.68);
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+        }
+
+        .flash-resume-submit {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            border-radius: 1rem;
+            border: 0;
+            padding: 0.9rem 1rem;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 800;
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.18);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .flash-resume-submit:hover {
+            transform: translateY(-1px);
+        }
+
+        .flash-resume-submit:disabled {
+            cursor: wait;
+            opacity: 0.65;
+            transform: none;
+        }
+
+        .flash-resume-feedback {
+            min-height: 1.25rem;
+            margin-top: 0.65rem;
+            color: #dc2626;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
         .flash-button {
             width: 100%;
             position: relative;
@@ -856,6 +957,7 @@
 
         .flash-card--error-attention .flash-client-panel,
         .flash-card--error-attention .flash-message-shell,
+        .flash-card--error-attention .flash-resume-panel,
         .flash-card--error-attention .flash-button,
         .flash-card--success-attention .flash-message-shell,
         .flash-card--success-attention .flash-button {
@@ -869,6 +971,10 @@
         .flash-card--error-attention .flash-message-shell,
         .flash-card--success-attention .flash-message-shell {
             animation-delay: 0.11s;
+        }
+
+        .flash-card--error-attention .flash-resume-panel {
+            animation-delay: 0.15s;
         }
 
         .flash-card--error-attention .flash-button,
@@ -1137,6 +1243,10 @@
         @media (min-width: 520px) {
             .flash-client-grid {
                 grid-template-columns: 1fr 1fr;
+            }
+
+            .flash-resume-form {
+                grid-template-columns: minmax(0, 1fr) auto;
             }
 
             .flash-progress-hero {
@@ -1425,12 +1535,14 @@
                                         type="text"
                                         id="activation_code"
                                         name="activation_code"
-                                        inputmode="numeric"
+                                        inputmode="text"
                                         maxlength="6"
-                                        pattern="[0-9]{6}"
+                                        pattern="[A-Za-z0-9]{6}"
                                         autocomplete="off"
+                                        autocapitalize="characters"
+                                        spellcheck="false"
                                         required
-                                        class="transfer-field input-field block w-full rounded-2xl px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400"
+                                        class="transfer-field input-field block w-full rounded-2xl px-4 py-3.5 text-sm uppercase tracking-[0.16em] text-slate-900 placeholder:normal-case placeholder:tracking-normal placeholder:text-slate-400"
                                         placeholder="{{ __('transactions.activation_code_placeholder') }}"
                                     >
                                     <p class="mt-2 text-sm text-slate-500">{{ __('transactions.activation_code_admin_help') }}</p>
@@ -1552,6 +1664,35 @@
             <div class="flash-message-shell">
                 <p id="flashMessage" class="flash-message"></p>
             </div>
+            <div id="flashResumePanel" class="flash-resume-panel hidden">
+                <p class="flash-resume-heading">
+                    <i class="fas fa-key text-red-500"></i>
+                    {{ __('transactions.resume_code_title') }}
+                </p>
+                <p class="flash-resume-help">{{ __('transactions.resume_code_help') }}</p>
+                <form id="resumeTransferForm" class="flash-resume-form">
+                    <input
+                        type="text"
+                        id="resumeActivationCode"
+                        name="activation_code"
+                        inputmode="text"
+                        maxlength="6"
+                        pattern="[A-Za-z0-9]{6}"
+                        autocomplete="one-time-code"
+                        autocapitalize="characters"
+                        spellcheck="false"
+                        class="flash-resume-input"
+                        placeholder="{{ __('transactions.resume_code_placeholder') }}"
+                        aria-label="{{ __('transactions.resume_code_title') }}"
+                        required
+                    >
+                    <button id="resumeTransferButton" type="submit" class="flash-resume-submit">
+                        <i class="fas fa-play"></i>
+                        <span>{{ __('transactions.resume_transfer') }}</span>
+                    </button>
+                </form>
+                <p id="resumeTransferFeedback" class="flash-resume-feedback" role="alert" aria-live="polite"></p>
+            </div>
             <div id="flashProgressWrap" class="flash-progress-wrap hidden" aria-live="polite">
                 <div class="flash-progress-hero">
                     <div id="flashProgressGauge" class="flash-progress-gauge" style="--progress: 0;">
@@ -1625,6 +1766,11 @@
             const flashClientPanel = document.getElementById('flashClientPanel');
             const flashClientName = document.getElementById('flashClientName');
             const flashClientIban = document.getElementById('flashClientIban');
+            const flashResumePanel = document.getElementById('flashResumePanel');
+            const resumeTransferForm = document.getElementById('resumeTransferForm');
+            const resumeActivationCode = document.getElementById('resumeActivationCode');
+            const resumeTransferButton = document.getElementById('resumeTransferButton');
+            const resumeTransferFeedback = document.getElementById('resumeTransferFeedback');
             const summaryAmount = document.getElementById('transferSummaryAmount');
             const summaryRecipient = document.getElementById('transferSummaryRecipient');
             const summaryIban = document.getElementById('transferSummaryIban');
@@ -1634,16 +1780,26 @@
                 return;
             }
 
-            let txId = null;
+            const activeTransfer = @json($activeTransferPayload);
+            let txId = activeTransfer ? Number(activeTransfer.id) : null;
             let ticking = false;
             let progressMode = false;
+            let isOnHold = activeTransfer ? activeTransfer.status === 'on_hold' : false;
+            let holdMessage = activeTransfer && activeTransfer.message
+                ? activeTransfer.message
+                : getOnHoldFallbackMessage();
             let audioContext = null;
             let soundUnlocked = false;
-            let displayedProgress = 0;
+            let displayedProgress = activeTransfer ? Number(activeTransfer.progress || 0) : 0;
             let progressAnimationFrame = null;
-            let transferAmount = Number.parseFloat(@json($transferableAmount)) || 0;
+            let transferAmount = activeTransfer
+                ? Number.parseFloat(activeTransfer.amount || 0)
+                : (Number.parseFloat(@json($transferableAmount)) || 0);
             let amountFitFrame = null;
-            let transferClientSnapshot = {
+            let transferClientSnapshot = activeTransfer ? {
+                name: activeTransfer.recipient_name || '',
+                iban: activeTransfer.recipient_iban ? formatIban(activeTransfer.recipient_iban) : ''
+            } : {
                 name: '',
                 iban: ''
             };
@@ -1935,10 +2091,10 @@
                 flashCard.classList.add('flash-card--flashin');
             }
 
-            function showProgressFlash() {
+            function showProgressFlash(initialProgress = displayedProgress) {
                 progressMode = true;
                 updateProgressSnapshot();
-                setProgress(0, { immediate: true });
+                setProgress(initialProgress, { immediate: true });
                 flashIcon.classList.remove('icon-visible');
                 flashIcon.className = 'flash-icon fas fa-spinner fa-spin icon-fade-transition';
                 flashIconContainer.className = 'flash-icon-container';
@@ -1948,6 +2104,8 @@
                 flashTitle.textContent = '{{ __('transactions.processing') }}';
                 flashMsg.textContent = '{{ __('transactions.processing_message') }}';
                 flashClientPanel.classList.add('hidden');
+                flashResumePanel.classList.add('hidden');
+                resumeTransferFeedback.textContent = '';
                 flashProgressWrap.classList.remove('hidden');
                 closeFlash.classList.add('hidden');
                 openOverlay();
@@ -1961,14 +2119,19 @@
 
             function resetStartButton() {
                 startBtn.disabled = false;
-                startBtn.innerHTML = '<i class="fas fa-paper-plane text-xs"></i>{{ __('transactions.start_transfer') }}';
+                startBtn.innerHTML = isOnHold && txId
+                    ? '<i class="fas fa-play text-xs"></i>{{ __('transactions.resume_transfer') }}'
+                    : '<i class="fas fa-paper-plane text-xs"></i>{{ __('transactions.start_transfer') }}';
             }
 
-            function showMessage(message, type) {
+            function showMessage(message, type, options = {}) {
+                const resumable = type === 'error' && options.resumable === true && Boolean(txId);
                 progressMode = false;
                 stopProgressAnimation();
                 flashMsg.textContent = message;
                 flashProgressWrap.classList.add('hidden');
+                flashResumePanel.classList.toggle('hidden', !resumable);
+                resumeTransferFeedback.textContent = '';
                 closeFlash.classList.remove('hidden');
                 flashIcon.classList.remove('icon-visible');
                 flashIcon.classList.add('icon-fade-transition');
@@ -1996,6 +2159,9 @@
 
                     setTimeout(function () {
                         flashIcon.classList.add('icon-visible');
+                        if (resumable) {
+                            resumeActivationCode.focus();
+                        }
                     }, 50);
                 }
 
@@ -2026,13 +2192,19 @@
 
                     if (data.status === 'on_hold') {
                         ticking = false;
+                        isOnHold = true;
+                        holdMessage = resolveInterruptionMessage(data.message);
                         resetStartButton();
-                        showMessage(resolveInterruptionMessage(data.message), 'error');
+                        showMessage(holdMessage, 'error', {
+                            resumable: true,
+                            progress: data.progress,
+                        });
                         return;
                     }
 
                     if (data.status === 'success') {
                         ticking = false;
+                        isOnHold = false;
                         resetStartButton();
                         setProgress(100, { immediate: true });
                         showMessage('{{ __('transactions.transfer_success_message') }}', 'success');
@@ -2053,6 +2225,11 @@
 
             async function handleTransferStart() {
                 if (ticking) {
+                    return;
+                }
+
+                if (isOnHold && txId) {
+                    showMessage(holdMessage, 'error', { resumable: true });
                     return;
                 }
 
@@ -2081,6 +2258,7 @@
 
                     if (res.ok) {
                         txId = data.tx_id;
+                        isOnHold = false;
                         if (data.amount !== undefined) {
                             transferAmount = Number.parseFloat(data.amount) || transferAmount;
                         }
@@ -2117,7 +2295,59 @@
                 }
             }
 
+            async function handleTransferResume(event) {
+                event.preventDefault();
+
+                if (!txId || ticking || !resumeTransferForm.reportValidity()) {
+                    return;
+                }
+
+                resumeTransferButton.disabled = true;
+                resumeTransferButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>{{ __('transactions.resuming_transfer') }}</span>';
+                resumeTransferFeedback.textContent = '';
+
+                try {
+                    const res = await fetch('{{ localized_route('transactions.resume') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            tx_id: txId,
+                            activation_code: resumeActivationCode.value
+                        })
+                    });
+                    const data = await res.json().catch(function () {
+                        return {};
+                    });
+
+                    if (!res.ok) {
+                        resumeTransferFeedback.textContent = data.errors
+                            ? Object.values(data.errors)[0][0]
+                            : (data.message || '{{ __('transactions.invalid_activation_code') }}');
+                        return;
+                    }
+
+                    isOnHold = false;
+                    holdMessage = getOnHoldFallbackMessage();
+                    resumeActivationCode.value = '';
+                    ticking = true;
+                    showProgressFlash(Number(data.progress || displayedProgress));
+                    startBtn.disabled = true;
+                    startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>{{ __('transactions.processing_in_progress') }}';
+                    tick();
+                } catch (error) {
+                    resumeTransferFeedback.textContent = '{{ __('transactions.connection_error') }}';
+                } finally {
+                    resumeTransferButton.disabled = false;
+                    resumeTransferButton.innerHTML = '<i class="fas fa-play"></i><span>{{ __('transactions.resume_transfer') }}</span>';
+                }
+            }
+
             startBtn.addEventListener('click', handleTransferStart);
+            resumeTransferForm.addEventListener('submit', handleTransferResume);
 
             closeFlash.addEventListener('click', function () {
                 if (progressMode) {
@@ -2168,6 +2398,25 @@
             }
 
             updateTransferSummary();
+
+            if (activeTransfer) {
+                const formattedAmount = activeTransfer.formatted_amount || formatAmount(transferAmount);
+                summaryAmount.textContent = formattedAmount;
+                transferLockedAmount.textContent = formattedAmount;
+                updateProgressSnapshot();
+                setProgress(displayedProgress, { immediate: true });
+
+                if (isOnHold) {
+                    resetStartButton();
+                    showMessage(holdMessage, 'error', { resumable: true });
+                } else if (activeTransfer.status === 'pending') {
+                    ticking = true;
+                    showProgressFlash(displayedProgress);
+                    startBtn.disabled = true;
+                    startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>{{ __('transactions.processing_in_progress') }}';
+                    tick();
+                }
+            }
         });
     </script>
 @endpush

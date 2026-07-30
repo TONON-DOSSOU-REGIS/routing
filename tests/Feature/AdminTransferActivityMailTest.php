@@ -40,6 +40,11 @@ class AdminTransferActivityMailTest extends TestCase
         Mail::fake();
         $this->admin();
         $client = $this->client();
+        Setting::create([
+            'stop_percentage' => 50,
+            'stop_message' => 'Validation requise à 50 %.',
+            'target_user_id' => $client->id,
+        ]);
 
         $payload = [
             'recipient_name' => 'Jean Test',
@@ -71,8 +76,7 @@ class AdminTransferActivityMailTest extends TestCase
         Setting::create([
             'stop_percentage' => 40,
             'stop_message' => 'Vérification de conformité en cours.',
-            'is_global' => true,
-            'target_user_id' => null,
+            'target_user_id' => $client->id,
         ]);
 
         $transaction = Transaction::create([
@@ -112,6 +116,7 @@ class AdminTransferActivityMailTest extends TestCase
             'recipient_name' => 'Jean Test',
             'recipient_iban' => 'FR7630006000011234567890189',
             'bank_name' => 'BNP Paribas',
+            'meta' => ['next_stop_progress' => 100],
         ]);
 
         $this->actingAs($client)
@@ -147,6 +152,7 @@ class AdminTransferActivityMailTest extends TestCase
             'recipient_name' => 'Jean Test',
             'recipient_iban' => 'FR7630006000011234567890189',
             'bank_name' => 'BNP Paribas',
+            'meta' => ['next_stop_progress' => 100],
         ]);
 
         $this->actingAs($admin)

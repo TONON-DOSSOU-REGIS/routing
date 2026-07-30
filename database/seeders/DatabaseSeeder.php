@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -49,22 +48,5 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Create or update the default global settings without keeping duplicates.
-        $globalSettings = Setting::where('is_global', true)
-            ->whereNull('target_user_id')
-            ->orderBy('id')
-            ->get();
-
-        $settings = $globalSettings->first() ?? new Setting([
-            'is_global' => true,
-            'target_user_id' => null,
-        ]);
-
-        $settings->fill([
-            'stop_percentage' => 70,
-            'stop_message' => 'Transaction suspendue pour vérification de sécurité.',
-        ])->save();
-
-        $globalSettings->skip(1)->each->delete();
     }
 }

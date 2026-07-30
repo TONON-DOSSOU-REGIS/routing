@@ -93,7 +93,7 @@
                         </div>
                         <div class="mt-5">
                             <label for="activation_code" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.new_activation_code') }}</label>
-                            <input type="text" name="activation_code" id="activation_code" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" autocomplete="new-password" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="{{ __('admin_pages.activation_code_placeholder') }}">
+                            <input type="text" name="activation_code" id="activation_code" inputmode="text" maxlength="6" pattern="(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{6}" autocomplete="new-password" autocapitalize="characters" spellcheck="false" class="admin-field w-full rounded-2xl px-4 py-3 text-sm uppercase tracking-[0.16em] text-slate-700" placeholder="{{ __('admin_pages.activation_code_placeholder') }}">
                         </div>
                     </section>
                 </div>

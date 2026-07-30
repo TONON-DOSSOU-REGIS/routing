@@ -8,6 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class TransferRequest extends FormRequest
 {
@@ -17,6 +18,7 @@ class TransferRequest extends FormRequest
             'amount' => $this->currentBalance(),
             'recipient_iban' => strtoupper((string) preg_replace('/\s+/', '', (string) $this->input('recipient_iban'))),
             'recipient_bic' => strtoupper((string) preg_replace('/\s+/', '', (string) $this->input('recipient_bic'))),
+            'activation_code' => Str::upper(trim((string) $this->input('activation_code'))),
         ]);
     }
 
@@ -55,7 +57,7 @@ class TransferRequest extends FormRequest
             'recipient_bic' => 'required|string|regex:/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/',
             'bank_name' => 'required|string|max:255',
             'reason' => 'nullable|string|max:500',
-            'activation_code' => ['required', 'digits:6'],
+            'activation_code' => ['required', 'string', 'size:6', 'alpha_num:ascii'],
         ];
     }
 
@@ -73,7 +75,9 @@ class TransferRequest extends FormRequest
             'recipient_bic.regex' => 'Format BIC invalide.',
             'bank_name.required' => 'Le nom de la banque est requis.',
             'activation_code.required' => __('transactions.activation_code_required'),
-            'activation_code.digits' => __('transactions.invalid_activation_code'),
+            'activation_code.string' => __('transactions.invalid_activation_code'),
+            'activation_code.size' => __('transactions.invalid_activation_code'),
+            'activation_code.alpha_num' => __('transactions.invalid_activation_code'),
         ];
     }
 

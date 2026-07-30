@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class SettingsSeeder extends Seeder
@@ -12,15 +13,14 @@ class SettingsSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create default settings if they don't exist
-        if (!Setting::exists()) {
-            Setting::create([
-                'stop_percentage' => 0,
-                'stop_message' => 'Votre transaction est en cours de traitement.',
-                'target_user_id' => null,
-                'is_global' => true,
-            ]);
-        }
+        User::where('role', 'user')->each(function (User $user) {
+            Setting::firstOrCreate(
+                ['target_user_id' => $user->id],
+                [
+                    'stop_percentage' => 0,
+                    'stop_message' => 'Votre transaction est en cours de traitement.',
+                ]
+            );
+        });
     }
 }
-

@@ -44,7 +44,7 @@ test('admin can update user details', function () {
             'numero_piece' => 'AA998877',
             'iban' => 'FR7612345678901234567890123',
             'bic' => 'BNPAFRPP',
-            'activation_code' => '654321',
+            'activation_code' => 'x7y8z9',
             'balance' => 200.00,
             'status' => 'active',
         ]);
@@ -66,8 +66,8 @@ test('admin can update user details', function () {
     expect($user->id_number)->toBe('AA998877');
     expect($user->iban)->toBe('FR7612345678901234567890123');
     expect($user->bic)->toBe('BNPAFRPP');
-    expect($user->activation_code)->not->toBe('654321');
-    expect(Hash::check('654321', $user->activation_code))->toBeTrue();
+    expect($user->activation_code)->not->toBe('X7Y8Z9');
+    expect(Hash::check('X7Y8Z9', $user->activation_code))->toBeTrue();
     expect($user->balance)->toBe('200.00');
     expect($user->status)->toBe('active');
 });

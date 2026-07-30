@@ -193,6 +193,7 @@ Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(fu
         Route::get('/transactions/create', [TransactionController::class, 'create'])->name('transactions.create');
         Route::post('/transactions/start', [TransactionController::class, 'start'])->name('transactions.start');
         Route::post('/transactions/progress', [TransactionController::class, 'progress'])->name('transactions.progress');
+        Route::post('/transactions/resume', [TransactionController::class, 'resume'])->name('transactions.resume');
 
         // Transactions (non sensitive)
         Route::get('/transactions/history', [TransactionController::class, 'history'])->name('transactions.history');
@@ -223,6 +224,7 @@ Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(fu
         // Settings
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
         Route::post('/settings', [AdminController::class, 'saveSettings'])->name('settings.save');
+        Route::post('/settings/activation-code', [AdminController::class, 'updateClientActivationCode'])->name('settings.activation-code');
         Route::post('/password', [AdminController::class, 'updatePassword'])->name('password.update');
 
         // Users management

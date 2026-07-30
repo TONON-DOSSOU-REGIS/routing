@@ -1,10 +1,9 @@
 @extends('layouts.admin-premium')
 
 @php
-    $targetUser = collect($users)->firstWhere('id', old('target_user_id', $settings->target_user_id ?? null));
-    $stopPercentage = old('stop_percentage', $settings->stop_percentage ?? 70);
+    $targetUser = $selectedUser;
+    $stopPercentage = old('stop_percentage', $settings->stop_percentage ?? 1);
     $stopMessage = old('stop_message', $settings->stop_message ?? __('admin_pages.transaction_suspended'));
-    $isGlobal = (bool) old('is_global', $settings->is_global ?? true);
 @endphp
 
 @section('title', __('admin_pages.settings_title'))
@@ -158,71 +157,6 @@
             background: #e2e8f0;
         }
 
-        /* Scope selector cards */
-        .scope-card {
-            position: relative;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 18px;
-            border-radius: 22px;
-            border: 1.5px solid #e2e8f0;
-            background: #ffffff;
-            cursor: pointer;
-            transition: border-color .18s ease, background-color .18s ease, box-shadow .18s ease, transform .18s ease;
-        }
-
-        .scope-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(15, 23, 42, .08);
-        }
-
-        .scope-card.is-active {
-            border-color: #2563eb;
-            background: linear-gradient(180deg, #eff6ff, #ffffff);
-            box-shadow: 0 12px 28px rgba(37, 99, 235, .14);
-        }
-
-        .scope-card__icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 42px;
-            height: 42px;
-            border-radius: 14px;
-            background: #f1f5f9;
-            color: #64748b;
-            flex-shrink: 0;
-            transition: background-color .18s ease, color .18s ease;
-        }
-
-        .scope-card.is-active .scope-card__icon {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: #fff;
-        }
-
-        .scope-card__check {
-            position: absolute;
-            top: 14px;
-            right: 14px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid #cbd5e1;
-            background: #fff;
-            display: grid;
-            place-items: center;
-            font-size: .55rem;
-            color: transparent;
-            transition: all .18s ease;
-        }
-
-        .scope-card.is-active .scope-card__check {
-            border-color: #2563eb;
-            background: #2563eb;
-            color: #fff;
-        }
-
         /* Message textarea with char counter */
         .stop-message-wrap {
             position: relative;
@@ -296,7 +230,6 @@
         @media (prefers-reduced-motion: reduce) {
             .stop-rule-card::before,
             .submit-stop-rule-btn,
-            .scope-card,
             .gauge-ring .gauge-fill { animation: none; transition: none; }
         }
     </style>
@@ -306,8 +239,8 @@
     <section class="premium-gradient-card premium-grid-glow relative overflow-hidden rounded-[30px] p-6 sm:p-7">
         <div class="relative z-10 grid gap-3 sm:grid-cols-2 2xl:grid-cols-4">
             <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.current_stop') }}</p><p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $stopPercentage }}%</p></div>
-            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.scope') }}</p><p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $isGlobal ? __('admin_pages.global') : __('admin_pages.specific') }}</p></div>
-            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.target_client') }}</p><p class="mt-2 text-lg font-semibold">{{ $targetUser ? $targetUser->first_name . ' ' . $targetUser->last_name : __('admin_pages.all_clients') }}</p></div>
+            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.scope') }}</p><p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ __('admin_pages.specific') }}</p></div>
+            <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.target_client') }}</p><p class="mt-2 truncate text-lg font-semibold">{{ $targetUser ? $targetUser->first_name . ' ' . $targetUser->last_name : __('admin_pages.choose_client') }}</p></div>
             <div class="rounded-[24px] bg-white/10 px-4 py-4 backdrop-blur-sm"><p class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('admin_pages.queues_to_process') }}</p><p class="premium-kpi-number mt-2 text-2xl font-semibold">{{ $pendingTransactionsCount }}</p></div>
         </div>
     </section>
@@ -340,87 +273,85 @@
                 </span>
             </div>
 
-            <form method="POST" action="{{ localized_route('admin.settings.save') }}" class="mt-6 space-y-7">
+            <form id="client-settings-form" method="POST" action="{{ localized_route('admin.settings.save') }}" class="mt-6 space-y-7">
                 @csrf
 
-                <div class="flex flex-col gap-6 rounded-[26px] border border-slate-200/70 bg-slate-50/60 p-5 sm:flex-row sm:items-center">
-                    <div class="gauge-wrap">
-                        <svg viewBox="0 0 132 132" class="gauge-ring" width="132" height="132">
-                            <defs>
-                                <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#2563eb"/>
-                                    <stop offset="100%" stop-color="#7c3aed"/>
-                                </linearGradient>
-                            </defs>
-                            <circle class="gauge-track" cx="66" cy="66" r="56"/>
-                            <circle id="gauge-fill" class="gauge-fill" cx="66" cy="66" r="56" stroke-dasharray="351.86" stroke-dashoffset="105.56"/>
-                        </svg>
-                        <div class="gauge-center">
-                            <strong id="gauge-value">{{ $stopPercentage }}%</strong>
-                        </div>
-                    </div>
-
-                    <div class="flex-1">
-                        <label for="stop_percentage" class="mb-3 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.stop_percentage') }}</label>
-                        <input type="range" name="stop_percentage" id="stop_percentage" min="0" max="100" step="1" value="{{ $stopPercentage }}" class="stop-range" style="--range-progress: {{ $stopPercentage }}%;" required>
-                        <div class="mt-3 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
-                            <span>0%</span>
-                            <span>50%</span>
-                            <span>100%</span>
-                        </div>
-                    </div>
-                </div>
-
                 <div>
-                    <p class="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.scope') }}</p>
-                    <div class="grid gap-4 md:grid-cols-2">
-                        <label class="scope-card {{ $isGlobal ? 'is-active' : '' }}" data-scope-card>
-                            <input type="radio" name="is_global" value="1" {{ $isGlobal ? 'checked' : '' }} class="sr-only">
-                            <span class="scope-card__icon"><i class="fas fa-earth-europe"></i></span>
-                            <span>
-                                <span class="block text-sm font-semibold text-slate-900">{{ __('admin_pages.global') }}</span>
-                                <span class="mt-1 block text-sm text-slate-500">{{ __('admin_pages.global_rule_help') }}</span>
-                            </span>
-                            <span class="scope-card__check"><i class="fas fa-check"></i></span>
-                        </label>
-                        <label class="scope-card {{ !$isGlobal ? 'is-active' : '' }}" data-scope-card>
-                            <input type="radio" name="is_global" value="0" {{ !$isGlobal ? 'checked' : '' }} class="sr-only">
-                            <span class="scope-card__icon"><i class="fas fa-user"></i></span>
-                            <span>
-                                <span class="block text-sm font-semibold text-slate-900">{{ __('admin_pages.specific') }}</span>
-                                <span class="mt-1 block text-sm text-slate-500">{{ __('admin_pages.specific_rule_help') }}</span>
-                            </span>
-                            <span class="scope-card__check"><i class="fas fa-check"></i></span>
-                        </label>
-                    </div>
-                </div>
-
-                <div id="target_user_container" class="{{ $isGlobal ? 'hidden' : '' }}">
                     <label for="target_user_id" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.target_client') }}</label>
-                    <select name="target_user_id" id="target_user_id" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700">
+                    <select
+                        name="target_user_id"
+                        id="target_user_id"
+                        data-settings-url="{{ localized_route('admin.settings') }}"
+                        class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700"
+                        required
+                    >
                         <option value="">{{ __('admin_pages.choose_client') }}</option>
                         @foreach($users as $user)
-                            <option value="{{ $user->id }}" {{ old('target_user_id', $settings->target_user_id ?? '') == $user->id ? 'selected' : '' }}>{{ $user->first_name }} {{ $user->last_name }} ({{ $user->email }})</option>
+                            <option value="{{ $user->id }}" {{ (string) old('target_user_id', $targetUser?->id) === (string) $user->id ? 'selected' : '' }}>{{ $user->first_name }} {{ $user->last_name }} ({{ $user->email }})</option>
                         @endforeach
                     </select>
+                    <div class="mt-3 flex items-start gap-3 rounded-2xl border {{ $targetUser ? 'border-blue-200 bg-blue-50 text-blue-800' : 'border-amber-200 bg-amber-50 text-amber-800' }} px-4 py-3 text-sm">
+                        <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg {{ $targetUser ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700' }}">
+                            <i class="fas {{ $targetUser ? 'fa-user-check' : 'fa-circle-info' }} text-xs"></i>
+                        </span>
+                        <div class="min-w-0">
+                            @if($targetUser)
+                                <p class="font-semibold">{{ $targetUser->first_name }} {{ $targetUser->last_name }}</p>
+                                <p class="mt-0.5 truncate opacity-75">{{ $targetUser->email }}</p>
+                            @else
+                                <p class="font-semibold">{{ __('admin_pages.choose_client') }}</p>
+                                <p class="mt-0.5 opacity-75">{{ __('admin_pages.specific_rule_help') }}</p>
+                            @endif
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <div class="mb-2 flex items-center justify-between gap-3">
-                        <label for="stop_message" class="block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.suspension_message') }}</label>
-                        <button type="button" id="emoji-picker-button" class="emoji-btn"><i class="fa-regular fa-face-smile"></i> {{ __('admin_pages.premium_emojis') }}</button>
-                    </div>
-                    <div class="stop-message-wrap">
-                        <textarea name="stop_message" id="stop_message" rows="4" maxlength="240" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" required>{{ $stopMessage }}</textarea>
-                        <span id="stop-message-counter" class="stop-message-counter">{{ strlen($stopMessage) }}/240</span>
-                    </div>
-                    <p class="mt-2 text-sm text-slate-500">{{ __('admin_pages.stop_message_help') }}</p>
-                </div>
+                <fieldset class="space-y-7 transition-opacity {{ $targetUser ? '' : 'opacity-45' }}" {{ $targetUser ? '' : 'disabled' }}>
+                    <div class="flex flex-col gap-6 rounded-[26px] border border-slate-200/70 bg-slate-50/60 p-5 sm:flex-row sm:items-center">
+                        <div class="gauge-wrap">
+                            <svg viewBox="0 0 132 132" class="gauge-ring" width="132" height="132">
+                                <defs>
+                                    <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#2563eb"/>
+                                        <stop offset="100%" stop-color="#7c3aed"/>
+                                    </linearGradient>
+                                </defs>
+                                <circle class="gauge-track" cx="66" cy="66" r="56"/>
+                                <circle id="gauge-fill" class="gauge-fill" cx="66" cy="66" r="56" stroke-dasharray="351.86"/>
+                            </svg>
+                            <div class="gauge-center">
+                                <strong id="gauge-value">{{ $stopPercentage }}%</strong>
+                            </div>
+                        </div>
 
-                <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
-                    <a href="{{ localized_route('admin.dashboard') }}" class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"><i class="fas fa-arrow-left text-xs"></i> {{ __('admin_pages.back') }}</a>
-                    <button type="submit" class="submit-stop-rule-btn inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white"><i class="fas fa-save text-xs"></i> {{ __('admin_pages.save') }}</button>
-                </div>
+                        <div class="flex-1">
+                            <label for="stop_percentage" class="mb-3 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.stop_percentage') }}</label>
+                            <input type="range" name="stop_percentage" id="stop_percentage" min="1" max="100" step="1" value="{{ $stopPercentage }}" class="stop-range" style="--range-progress: {{ $stopPercentage }}%;" required>
+                            <div class="mt-3 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
+                                <span>1%</span>
+                                <span>50%</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="mb-2 flex items-center justify-between gap-3">
+                            <label for="stop_message" class="block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.suspension_message') }}</label>
+                            <button type="button" id="emoji-picker-button" class="emoji-btn"><i class="fa-regular fa-face-smile"></i> {{ __('admin_pages.premium_emojis') }}</button>
+                        </div>
+                        <div class="stop-message-wrap">
+                            <textarea name="stop_message" id="stop_message" rows="4" maxlength="240" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" required>{{ $stopMessage }}</textarea>
+                            <span id="stop-message-counter" class="stop-message-counter">{{ strlen($stopMessage) }}/240</span>
+                        </div>
+                        <p class="mt-2 text-sm text-slate-500">{{ __('admin_pages.stop_message_help') }}</p>
+                    </div>
+
+                    <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                        <a href="{{ localized_route('admin.dashboard') }}" class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"><i class="fas fa-arrow-left text-xs"></i> {{ __('admin_pages.back') }}</a>
+                        <button type="submit" class="submit-stop-rule-btn inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white"><i class="fas fa-save text-xs"></i> {{ __('admin_pages.save') }}</button>
+                    </div>
+                </fieldset>
             </form>
         </section>
 
@@ -461,6 +392,85 @@
             </section>
 
             <section class="admin-surface rounded-[30px] p-5">
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('admin_pages.admin_security') }}</p>
+                        <h3 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">{{ __('admin_pages.activation_code') }}</h3>
+                    </div>
+                    <span class="inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold {{ $targetUser && $hasActivationCode ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200' : 'bg-amber-50 text-amber-700 ring-1 ring-amber-200' }}">
+                        <span class="h-1.5 w-1.5 rounded-full {{ $targetUser && $hasActivationCode ? 'bg-emerald-500' : 'bg-amber-500' }}"></span>
+                        @if(!$targetUser)
+                            {{ __('admin_pages.choose_client') }}
+                        @elseif($hasActivationCode)
+                            {{ __('admin_pages.activation_code_configured') }}
+                        @else
+                            {{ __('admin_pages.activation_code_missing') }}
+                        @endif
+                    </span>
+                </div>
+
+                <p class="mt-3 text-sm leading-6 text-slate-500">{{ __('admin_pages.activation_code_settings_help') }}</p>
+
+                @if($targetUser)
+                    <div class="mt-4 flex items-center gap-3 rounded-2xl border border-blue-100 bg-blue-50/70 px-3.5 py-3">
+                        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-700"><i class="fas fa-user-lock text-xs"></i></span>
+                        <div class="min-w-0">
+                            <p class="truncate text-sm font-semibold text-slate-900">{{ $targetUser->first_name }} {{ $targetUser->last_name }}</p>
+                            <p class="truncate text-xs text-slate-500">{{ $targetUser->email }}</p>
+                        </div>
+                    </div>
+                @endif
+
+                <form id="activation-code-form" method="POST" action="{{ localized_route('admin.settings.activation-code') }}" class="mt-5 space-y-4">
+                    @csrf
+                    <input type="hidden" name="target_user_id" value="{{ $targetUser?->id }}">
+                    <input type="hidden" name="stop_percentage" id="activation_stop_percentage" value="{{ $stopPercentage }}">
+                    <textarea name="stop_message" id="activation_stop_message" class="hidden" aria-hidden="true">{{ $stopMessage }}</textarea>
+
+                    <fieldset class="space-y-4 transition-opacity {{ $targetUser ? '' : 'opacity-45' }}" {{ $targetUser ? '' : 'disabled' }}>
+                        <div>
+                            <label for="activation_code" class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{{ __('admin_pages.new_activation_code') }}</label>
+                            <div class="flex gap-2">
+                                <input
+                                    type="text"
+                                    id="activation_code"
+                                    name="activation_code"
+                                    value="{{ old('activation_code') }}"
+                                    class="admin-field min-w-0 flex-1 rounded-2xl px-4 py-3 font-mono text-sm font-semibold uppercase tracking-[0.2em] text-slate-800"
+                                    placeholder="{{ __('admin_pages.activation_code_placeholder') }}"
+                                    minlength="6"
+                                    maxlength="6"
+                                    pattern="(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]{6}"
+                                    autocomplete="off"
+                                    autocapitalize="characters"
+                                    spellcheck="false"
+                                    required
+                                >
+                                <button type="button" id="generate-activation-code" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl border border-blue-200 bg-blue-50 px-3.5 text-xs font-semibold text-blue-700 transition hover:border-blue-300 hover:bg-blue-100">
+                                    <i class="fas fa-wand-magic-sparkles text-[11px]"></i>
+                                    {{ __('admin_pages.activation_code_generate') }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <p class="rounded-2xl border border-slate-200 bg-slate-50 px-3.5 py-3 text-xs leading-5 text-slate-600">
+                            <i class="fas fa-circle-info mr-1.5 text-blue-600"></i>
+                            {{ __('admin_pages.activation_code_replace_help') }}
+                        </p>
+
+                        <button type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-full bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-700/20 transition hover:bg-blue-800">
+                            <i class="fas fa-key text-xs"></i>
+                            {{ __('admin_pages.activation_code_update') }}
+                        </button>
+                    </fieldset>
+
+                    @unless($targetUser)
+                        <p class="text-sm leading-6 text-amber-700">{{ __('admin_pages.activation_code_select_client') }}</p>
+                    @endunless
+                </form>
+            </section>
+
+            <section class="admin-surface rounded-[30px] p-5">
                 <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('admin_pages.admin_security') }}</p>
                 <h3 class="mt-2 premium-brand-title text-2xl font-semibold text-slate-950">{{ __('admin_pages.password') }}</h3>
                 <form method="POST" action="{{ localized_route('admin.password.update') }}" class="mt-5 space-y-4">
@@ -486,8 +496,14 @@
             const stopMessage = document.getElementById('stop_message');
             const stopMessageCounter = document.getElementById('stop-message-counter');
             const previewMessage = document.getElementById('preview-message');
-            const targetUserContainer = document.getElementById('target_user_container');
+            const clientSettingsForm = document.getElementById('client-settings-form');
+            const targetUserSelect = document.getElementById('target_user_id');
             const emojiButton = document.getElementById('emoji-picker-button');
+            const activationCodeInput = document.getElementById('activation_code');
+            const generateActivationCodeButton = document.getElementById('generate-activation-code');
+            const activationCodeForm = document.getElementById('activation-code-form');
+            const activationStopPercentage = document.getElementById('activation_stop_percentage');
+            const activationStopMessage = document.getElementById('activation_stop_message');
             const GAUGE_CIRCUMFERENCE = 351.86;
             let picker = null;
 
@@ -499,6 +515,8 @@
                 gaugeFill.setAttribute('stroke-dashoffset', String(GAUGE_CIRCUMFERENCE * (1 - value / 100)));
             };
 
+            updateGauge(Math.max(0, Math.min(100, Number(stopPercentage?.value || 0))));
+
             stopPercentage?.addEventListener('input', function () {
                 updateGauge(Math.max(0, Math.min(100, Number(this.value || 0))));
             });
@@ -508,13 +526,56 @@
                 stopMessageCounter.textContent = `${this.value.length}/240`;
             });
 
-            document.querySelectorAll('input[name="is_global"]').forEach((radio) => {
-                radio.addEventListener('change', function () {
-                    targetUserContainer.classList.toggle('hidden', this.value === '1');
-                    document.querySelectorAll('[data-scope-card]').forEach((card) => {
-                        card.classList.toggle('is-active', card.querySelector('input').checked);
-                    });
-                });
+            targetUserSelect?.addEventListener('change', function () {
+                const settingsUrl = new URL(this.dataset.settingsUrl, window.location.origin);
+
+                if (this.value) {
+                    settingsUrl.searchParams.set('target_user_id', this.value);
+                }
+
+                this.disabled = true;
+                clientSettingsForm?.classList.add('pointer-events-none', 'opacity-70');
+                window.location.assign(settingsUrl.toString());
+            });
+
+            activationCodeInput?.addEventListener('input', function () {
+                this.value = this.value.replace(/[^a-z0-9]/gi, '').toUpperCase().slice(0, 6);
+            });
+
+            generateActivationCodeButton?.addEventListener('click', function () {
+                const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+                const digits = '23456789';
+                const pool = letters + digits;
+                const randomIndex = (length) => {
+                    const randomValue = new Uint32Array(1);
+                    const upperBound = Math.floor(0x100000000 / length) * length;
+
+                    do {
+                        window.crypto.getRandomValues(randomValue);
+                    } while (randomValue[0] >= upperBound);
+
+                    return randomValue[0] % length;
+                };
+                const code = [
+                    letters[randomIndex(letters.length)],
+                    digits[randomIndex(digits.length)],
+                    ...Array.from({ length: 4 }, () => pool[randomIndex(pool.length)]),
+                ];
+
+                for (let index = code.length - 1; index > 0; index--) {
+                    const swapIndex = randomIndex(index + 1);
+                    [code[index], code[swapIndex]] = [code[swapIndex], code[index]];
+                }
+
+                activationCodeInput.value = code.join('');
+                activationCodeInput.dispatchEvent(new Event('input', { bubbles: true }));
+                activationCodeInput.focus();
+                activationCodeInput.select();
+            });
+
+            activationCodeForm?.addEventListener('submit', function () {
+                activationStopPercentage.value = stopPercentage.value;
+                activationStopMessage.value = stopMessage.value;
             });
 
             const insertAtCursor = (input, value) => {

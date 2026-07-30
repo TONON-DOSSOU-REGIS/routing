@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class TransactionController extends Controller
@@ -73,8 +75,16 @@ class TransactionController extends Controller
     public function create()
     {
         $user = auth()->user();
+        $activeTransfer = $user->transactions()
+            ->where('type', 'transfer')
+            ->whereIn('status', ['pending', 'on_hold'])
+            ->latest()
+            ->first();
 
-        return view('transactions.create', $this->getClientShellData($user));
+        return view('transactions.create', array_merge(
+            $this->getClientShellData($user),
+            compact('activeTransfer')
+        ));
     }
 
     public function start(TransferRequest $request)
@@ -99,6 +109,14 @@ class TransactionController extends Controller
                 ]);
             }
 
+            $stopPercentage = $this->configuredStopPercentage($user->id);
+            if ($stopPercentage <= 0) {
+                throw ValidationException::withMessages([
+                    'activation_code' => __('transactions.transfer_rule_not_configured'),
+                ]);
+            }
+            $nextStopProgress = $stopPercentage;
+
             $transaction = Transaction::create([
                 'user_id' => $user->id,
                 'amount' => round((float) $user->balance, 2),
@@ -110,6 +128,16 @@ class TransactionController extends Controller
                 'reason' => $request->reason,
                 'status' => 'pending',
                 'progress' => 0,
+                'meta' => [
+                    'next_stop_progress' => $nextStopProgress,
+                    'authorization_count' => 1,
+                    'authorization_steps' => [[
+                        'sequence' => 1,
+                        'authorized_progress' => 0,
+                        'next_stop_progress' => $nextStopProgress,
+                        'authorized_at' => now()->toIso8601String(),
+                    ]],
+                ],
             ]);
 
             $user->forceFill(['activation_code' => null])->save();
@@ -151,29 +179,7 @@ class TransactionController extends Controller
             ->where('user_id', auth()->id())
             ->firstOrFail();
 
-        // Priorite : settings specifiques a l'utilisateur, sinon global
-        $settings = Setting::where('target_user_id', auth()->id())
-            ->where('is_global', false)
-            ->first();
-
-        if (!$settings) {
-            $settings = Setting::where('is_global', true)->first();
-        }
-
-        // Legacy fallback if old rows do not have proper scope flags.
-        if (!$settings) {
-            $settings = Setting::first();
-        }
-
-        // Si aucun setting n'existe, creer des valeurs par defaut
-        if (!$settings) {
-            $settings = new Setting([
-                'stop_percentage' => 0,
-                'stop_message' => '',
-                'is_global' => true,
-                'target_user_id' => null,
-            ]);
-        }
+        $settings = Setting::where('target_user_id', auth()->id())->first();
 
         $stopPercentage = max(0, min(100, (int) ($settings->stop_percentage ?? 0)));
         $stopMessage = trim((string) ($settings->stop_message ?? ''));
@@ -181,15 +187,19 @@ class TransactionController extends Controller
             $stopMessage = __('transactions.transaction_on_hold');
         }
 
+        $meta = is_array($tx->meta) ? $tx->meta : [];
+        $nextStopProgress = max(0, min(100, (int) ($meta['next_stop_progress'] ?? $stopPercentage)));
+
         Log::info('Progress check', [
             'transaction_id' => $tx->id,
             'current_progress' => $tx->progress,
             'status' => $tx->status,
             'stop_percentage' => $stopPercentage,
+            'next_stop_progress' => $nextStopProgress,
             'user_id' => auth()->id(),
         ]);
 
-        $increment = $this->calculateProgressIncrement((int) $tx->progress, $stopPercentage);
+        $increment = $this->calculateProgressIncrement((int) $tx->progress, $nextStopProgress);
         $p = min(100, (int) $tx->progress + $increment);
 
         if ($tx->status === 'pending') {
@@ -261,11 +271,15 @@ class TransactionController extends Controller
             }
 
             // Check for stop_percentage (only if not yet at 100%)
-            if ($stopPercentage > 0 && $stopPercentage < 100 && $p >= $stopPercentage) {
+            if ($nextStopProgress > 0 && $nextStopProgress < 100 && $p >= $nextStopProgress) {
+                $meta['last_hold_progress'] = $nextStopProgress;
+                $meta['last_hold_at'] = now()->toIso8601String();
+
                 $tx->update([
-                    'progress' => $stopPercentage,
+                    'progress' => $nextStopProgress,
                     'status' => 'on_hold',
                     'message' => $stopMessage,
+                    'meta' => $meta,
                 ]);
 
                 // Notify user that transaction is on hold
@@ -287,7 +301,7 @@ class TransactionController extends Controller
                     NotificationService::notifyAdminTransferFailed(
                         $tx->user,
                         $tx,
-                        __('system_messages.transaction_hold_admin', ['percentage' => $stopPercentage])
+                        __('system_messages.transaction_hold_admin', ['percentage' => $nextStopProgress])
                     );
                 } catch (\Exception $e) {
                     Log::error('Failed to notify admins of on-hold transfer', [
@@ -310,8 +324,9 @@ class TransactionController extends Controller
 
                 return response()->json([
                     'status' => 'on_hold',
-                    'progress' => $stopPercentage,
+                    'progress' => $nextStopProgress,
                     'message' => $stopMessage,
+                    'can_resume' => true,
                     'recipient_name' => $tx->recipient_name,
                     'recipient_iban' => $tx->recipient_iban,
                     'recipient_bic' => $tx->recipient_bic,
@@ -334,6 +349,7 @@ class TransactionController extends Controller
             'status' => $tx->status,
             'progress' => (int) $tx->progress,
             'message' => $tx->message,
+            'can_resume' => $tx->status === 'on_hold',
             'recipient_name' => $tx->recipient_name,
             'recipient_iban' => $tx->recipient_iban,
             'recipient_bic' => $tx->recipient_bic,
@@ -341,11 +357,124 @@ class TransactionController extends Controller
         ]);
     }
 
-    private function calculateProgressIncrement(int $currentProgress, int $stopPercentage): int
+    public function resume(Request $request)
     {
-        $targetProgress = $stopPercentage > 0 && $stopPercentage < 100
-            ? $stopPercentage
-            : 100;
+        $request->merge([
+            'activation_code' => Str::upper(trim((string) $request->input('activation_code'))),
+        ]);
+        $validated = $request->validate([
+            'tx_id' => ['required', 'integer'],
+            'activation_code' => ['required', 'string', 'size:6', 'alpha_num:ascii'],
+        ], [
+            'activation_code.required' => __('transactions.activation_code_required'),
+            'activation_code.size' => __('transactions.invalid_activation_code'),
+            'activation_code.alpha_num' => __('transactions.invalid_activation_code'),
+        ]);
+
+        $userId = (int) auth()->id();
+        $rateLimitKey = 'transfer-activation:'.$userId;
+
+        if (RateLimiter::tooManyAttempts($rateLimitKey, 5)) {
+            throw ValidationException::withMessages([
+                'activation_code' => __('transactions.activation_too_many_attempts'),
+            ]);
+        }
+
+        [$transaction, $nextStopProgress] = DB::transaction(function () use ($validated, $userId, $rateLimitKey) {
+            $transaction = Transaction::query()
+                ->whereKey($validated['tx_id'])
+                ->where('user_id', $userId)
+                ->where('type', 'transfer')
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ($transaction->status !== 'on_hold') {
+                throw ValidationException::withMessages([
+                    'activation_code' => __('transactions.resume_not_on_hold'),
+                ]);
+            }
+
+            $user = User::query()->lockForUpdate()->findOrFail($userId);
+            $storedCode = (string) ($user->activation_code ?? '');
+
+            if ($storedCode === '' || ! Hash::isHashed($storedCode)) {
+                throw ValidationException::withMessages([
+                    'activation_code' => __('transactions.resume_code_not_configured'),
+                ]);
+            }
+
+            if (! Hash::check($validated['activation_code'], $storedCode)) {
+                RateLimiter::hit($rateLimitKey, 15 * 60);
+                $message = RateLimiter::tooManyAttempts($rateLimitKey, 5)
+                    ? __('transactions.activation_too_many_attempts')
+                    : __('transactions.invalid_activation_code');
+
+                throw ValidationException::withMessages([
+                    'activation_code' => $message,
+                ]);
+            }
+
+            $nextStopProgress = $this->configuredStopPercentage($userId);
+            if ($nextStopProgress <= (int) $transaction->progress) {
+                throw ValidationException::withMessages([
+                    'activation_code' => __('transactions.resume_percentage_must_increase', [
+                        'percentage' => (int) $transaction->progress,
+                    ]),
+                ]);
+            }
+            $meta = is_array($transaction->meta) ? $transaction->meta : [];
+            $authorizationCount = (int) ($meta['authorization_count'] ?? 1) + 1;
+            $authorizationSteps = is_array($meta['authorization_steps'] ?? null)
+                ? $meta['authorization_steps']
+                : [];
+            $authorizationSteps[] = [
+                'sequence' => $authorizationCount,
+                'authorized_progress' => (int) $transaction->progress,
+                'next_stop_progress' => $nextStopProgress,
+                'authorized_at' => now()->toIso8601String(),
+            ];
+            $meta['authorization_count'] = $authorizationCount;
+            $meta['authorization_steps'] = $authorizationSteps;
+            $meta['next_stop_progress'] = $nextStopProgress;
+            $meta['last_resumed_at'] = now()->toIso8601String();
+
+            $transaction->forceFill([
+                'status' => 'pending',
+                'message' => null,
+                'meta' => $meta,
+            ])->save();
+            $user->forceFill(['activation_code' => null])->save();
+
+            return [$transaction, $nextStopProgress];
+        });
+
+        RateLimiter::clear($rateLimitKey);
+
+        Log::info('Client resumed transfer with a new activation code', [
+            'transaction_id' => $transaction->id,
+            'user_id' => $userId,
+            'resumed_progress' => (int) $transaction->progress,
+            'next_stop_progress' => $nextStopProgress,
+        ]);
+
+        return response()->json([
+            'status' => 'pending',
+            'progress' => (int) $transaction->progress,
+            'next_stop_progress' => $nextStopProgress,
+            'message' => __('transactions.resume_success', [
+                'percentage' => (int) $transaction->progress,
+            ]),
+        ]);
+    }
+
+    private function configuredStopPercentage(int $userId): int
+    {
+        return max(0, min(100, (int) Setting::where('target_user_id', $userId)->value('stop_percentage')));
+    }
+
+    private function calculateProgressIncrement(int $currentProgress, int $targetProgress): int
+    {
+        $targetProgress = max(0, min(100, $targetProgress));
 
         $remaining = max(0, $targetProgress - $currentProgress);
 

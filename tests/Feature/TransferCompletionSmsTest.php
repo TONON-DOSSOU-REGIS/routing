@@ -41,6 +41,7 @@ class TransferCompletionSmsTest extends TestCase
             'status' => 'pending',
             'progress' => 99,
             'amount' => 100,
+            'meta' => ['next_stop_progress' => 100],
         ]);
 
         $smsService = Mockery::mock(TwilioSmsService::class);
@@ -82,6 +83,7 @@ class TransferCompletionSmsTest extends TestCase
             'status' => 'pending',
             'progress' => 99,
             'amount' => 250,
+            'meta' => ['next_stop_progress' => 100],
         ]);
 
         $smsService = Mockery::mock(TwilioSmsService::class);
@@ -115,6 +117,7 @@ class TransferCompletionSmsTest extends TestCase
             'status' => 'pending',
             'progress' => 99,
             'amount' => 50,
+            'meta' => ['next_stop_progress' => 100],
         ]);
 
         $smsService = Mockery::mock(TwilioSmsService::class);
@@ -149,6 +152,7 @@ class TransferCompletionSmsTest extends TestCase
             'status' => 'pending',
             'progress' => 99,
             'amount' => 80,
+            'meta' => ['next_stop_progress' => 100],
         ]);
 
         $smsService = Mockery::mock(TwilioSmsService::class);
@@ -182,6 +186,7 @@ class TransferCompletionSmsTest extends TestCase
             'status' => 'pending',
             'progress' => 99,
             'amount' => 300,
+            'meta' => ['next_stop_progress' => 100],
         ]);
 
         $failingSmsService = Mockery::mock(TwilioSmsService::class);

@@ -31,6 +31,7 @@ class TransferCompletionEmailTest extends TestCase
             'status' => 'pending',
             'progress' => 99,
             'amount' => 100,
+            'meta' => ['next_stop_progress' => 100],
         ]);
 
         $response = $this->callProgressAsUser($user, $transaction->id);
@@ -68,6 +69,7 @@ class TransferCompletionEmailTest extends TestCase
             'status' => 'pending',
             'progress' => 99,
             'amount' => 250,
+            'meta' => ['next_stop_progress' => 100],
         ]);
 
         $this->callProgressAsUser($user, $transaction->id);

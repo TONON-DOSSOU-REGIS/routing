@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mail\UserRegistrationNotification;
@@ -94,13 +96,21 @@ class AdminController extends Controller
         return view('admin.dashboard_with_chat', compact('users'));
     }
 
-    public function settings($locale)
+    public function settings(Request $request, $locale)
     {
-        $settings = Setting::first();
         $users = User::where('role', 'user')->orderBy('first_name')->get();
+        $selectedUser = $request->filled('target_user_id')
+            ? $users->firstWhere('id', $request->integer('target_user_id'))
+            : null;
+        $settings = $selectedUser
+            ? Setting::where('target_user_id', $selectedUser->id)->first()
+            : null;
+        $hasActivationCode = $selectedUser
+            ? Hash::isHashed((string) $selectedUser->activation_code)
+            : false;
 
         return view('admin.settings', array_merge(
-            compact('settings', 'users'),
+            compact('settings', 'users', 'selectedUser', 'hasActivationCode'),
             $this->getAdminShellData()
         ));
     }
@@ -108,35 +118,108 @@ class AdminController extends Controller
     public function saveSettings(Request $request)
     {
         $request->validate([
-            'stop_percentage' => 'required|integer|between:0,100',
+            'stop_percentage' => 'required|integer|between:1,100',
             'stop_message' => 'required|string',
-            'target_user_id' => 'nullable|exists:users,id',
-            'is_global' => 'required|boolean',
+            'target_user_id' => [
+                'required',
+                Rule::exists('users', 'id')->where('role', 'user'),
+            ],
         ]);
 
-        $settings = Setting::first();
-        
-        // Create settings if it doesn't exist
-        if (!$settings) {
-            $settings = Setting::create([
-                'stop_percentage' => $request->stop_percentage,
-                'stop_message' => $request->stop_message,
-                'target_user_id' => $request->target_user_id,
-                'is_global' => $request->is_global,
-            ]);
-        } else {
-            $settings->update($request->only(['stop_percentage', 'stop_message', 'target_user_id', 'is_global']));
-        }
+        $settings = Setting::updateOrCreate(
+            ['target_user_id' => $request->integer('target_user_id')],
+            $request->only(['stop_percentage', 'stop_message'])
+        );
 
         Log::info('Admin updated settings', [
             'admin_id' => auth()->id(),
             'stop_percentage' => $request->stop_percentage,
             'stop_message' => $request->stop_message,
-            'target_user_id' => $request->target_user_id,
-            'is_global' => $request->is_global,
+            'target_user_id' => $settings->target_user_id,
         ]);
 
-        return back()->with('status', __('system_messages.admin_settings_updated'));
+        return redirect()
+            ->route('admin.settings', [
+                'locale' => app()->getLocale(),
+                'target_user_id' => $settings->target_user_id,
+            ])
+            ->with('status', __('system_messages.admin_settings_updated'));
+    }
+
+    public function updateClientActivationCode(Request $request)
+    {
+        $this->normalizeActivationCodeInput($request);
+
+        $validated = $request->validate([
+            'target_user_id' => [
+                'required',
+                'integer',
+                Rule::exists('users', 'id')->where('role', 'user'),
+            ],
+            'activation_code' => [
+                'required',
+                'string',
+                'size:6',
+                'regex:/^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]+$/',
+            ],
+            'stop_percentage' => ['required', 'integer', 'between:1,100'],
+            'stop_message' => ['required', 'string'],
+        ], [
+            'activation_code.size' => __('admin_pages.activation_code_format_error'),
+            'activation_code.regex' => __('admin_pages.activation_code_format_error'),
+        ]);
+
+        $client = DB::transaction(function () use ($validated) {
+            $client = User::query()
+                ->where('role', 'user')
+                ->lockForUpdate()
+                ->findOrFail((int) $validated['target_user_id']);
+
+            $heldTransfer = Transaction::query()
+                ->where('user_id', $client->id)
+                ->where('type', 'transfer')
+                ->where('status', 'on_hold')
+                ->latest('id')
+                ->lockForUpdate()
+                ->first();
+
+            if ($heldTransfer && (int) $validated['stop_percentage'] <= (int) $heldTransfer->progress) {
+                throw ValidationException::withMessages([
+                    'stop_percentage' => __('admin_pages.activation_percentage_must_exceed_current', [
+                        'percentage' => (int) $heldTransfer->progress,
+                    ]),
+                ]);
+            }
+
+            Setting::updateOrCreate(
+                ['target_user_id' => $client->id],
+                [
+                    'stop_percentage' => $validated['stop_percentage'],
+                    'stop_message' => $validated['stop_message'],
+                ]
+            );
+
+            $client->forceFill([
+                'activation_code' => Hash::make($validated['activation_code']),
+            ])->save();
+
+            return $client;
+        });
+
+        RateLimiter::clear('transfer-activation:'.$client->id);
+
+        Log::info('Admin updated client activation code from settings', [
+            'admin_id' => auth()->id(),
+            'target_user_id' => $client->id,
+            'stop_percentage' => $validated['stop_percentage'],
+        ]);
+
+        return redirect()
+            ->route('admin.settings', [
+                'locale' => app()->getLocale(),
+                'target_user_id' => $client->id,
+            ])
+            ->with('status', __('admin_pages.activation_code_updated'));
     }
 
     public function updatePassword($locale, Request $request)
@@ -409,6 +492,7 @@ class AdminController extends Controller
     public function storeUser(Request $request)
     {
         $this->normalizePhoneInput($request);
+        $this->normalizeActivationCodeInput($request);
         $normalizedIdType = match ((string) $request->input('type_piece')) {
             'Passeport' => 'Passport',
             'passport' => 'Passport',
@@ -431,9 +515,11 @@ class AdminController extends Controller
             'numero_piece' => 'nullable|string|max:50|unique:users,id_number',
             'iban' => 'nullable|string|max:34',
             'bic' => 'nullable|string|max:11',
-            'activation_code' => 'nullable|digits:6',
+            'activation_code' => ['nullable', 'string', 'size:6', 'regex:/^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]+$/'],
         ], [
             'phone.max' => __('auth.phone_international_format'),
+            'activation_code.size' => __('admin_pages.activation_code_format_error'),
+            'activation_code.regex' => __('admin_pages.activation_code_format_error'),
         ]);
 
         $user = User::create([
@@ -543,6 +629,7 @@ class AdminController extends Controller
         // Handle French decimal format (comma) for balance
         $request->merge(['balance' => str_replace(',', '.', $request->balance)]);
         $this->normalizePhoneInput($request);
+        $this->normalizeActivationCodeInput($request);
 
         $normalizedIdType = match ((string) $request->input('type_piece')) {
             'Passeport' => 'Passport',
@@ -570,7 +657,7 @@ class AdminController extends Controller
             'numero_piece' => 'nullable|string|max:50|unique:users,id_number,' . $user->id,
             'iban' => 'nullable|string|max:34',
             'bic' => 'nullable|string|max:11',
-            'activation_code' => 'nullable|digits:6',
+            'activation_code' => ['nullable', 'string', 'size:6', 'regex:/^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]+$/'],
             'balance' => 'required|numeric|min:0',
             'status' => 'required|in:active,suspended',
 
@@ -582,6 +669,8 @@ class AdminController extends Controller
             'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
             'phone.max' => __('auth.phone_international_format'),
+            'activation_code.size' => __('admin_pages.activation_code_format_error'),
+            'activation_code.regex' => __('admin_pages.activation_code_format_error'),
         ]);
 
         $updateData = [
@@ -866,6 +955,17 @@ class AdminController extends Controller
     {
         $request->merge([
             'phone' => PhoneNumber::sanitize($request->input('phone')),
+        ]);
+    }
+
+    private function normalizeActivationCodeInput(Request $request): void
+    {
+        if (!$request->filled('activation_code')) {
+            return;
+        }
+
+        $request->merge([
+            'activation_code' => Str::upper(trim((string) $request->input('activation_code'))),
         ]);
     }
 

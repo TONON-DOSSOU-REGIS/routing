@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,7 +17,7 @@ class TransferActivationCodeTest extends TestCase
 
     public function test_admin_defined_code_is_required_before_transfer_starts(): void
     {
-        $user = $this->clientWithCode('482901');
+        $user = $this->clientWithCode('A1B2C3');
         $this->actingAs($user);
         $payload = $this->transferPayload();
 
@@ -24,13 +25,13 @@ class TransferActivationCodeTest extends TestCase
             ->assertUnprocessable()
             ->assertJsonValidationErrors('activation_code');
 
-        $this->postJson(route('transactions.start', ['locale' => 'fr']), $payload + ['activation_code' => '000000'])
+        $this->postJson(route('transactions.start', ['locale' => 'fr']), $payload + ['activation_code' => 'Z9Y8X7'])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('activation_code');
 
         $this->assertDatabaseCount('transactions', 0);
 
-        $this->postJson(route('transactions.start', ['locale' => 'fr']), $payload + ['activation_code' => '482901'])
+        $this->postJson(route('transactions.start', ['locale' => 'fr']), $payload + ['activation_code' => 'a1b2c3'])
             ->assertOk()
             ->assertJsonStructure(['tx_id']);
 
@@ -39,7 +40,7 @@ class TransferActivationCodeTest extends TestCase
         $this->assertNull($transaction->activation_code);
         $this->assertNull($user->fresh()->activation_code);
 
-        $this->postJson(route('transactions.start', ['locale' => 'fr']), $payload + ['activation_code' => '482901'])
+        $this->postJson(route('transactions.start', ['locale' => 'fr']), $payload + ['activation_code' => 'A1B2C3'])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('activation_code');
 
@@ -163,9 +164,50 @@ class TransferActivationCodeTest extends TestCase
             ->get(route('transfer.create', ['locale' => 'fr']))
             ->assertOk()
             ->assertSee('name="activation_code"', false)
-            ->assertSee('pattern="[0-9]{6}"', false)
+            ->assertSee('pattern="[A-Za-z0-9]{6}"', false)
             ->assertDontSee('transactions/activation-code', false)
             ->assertDontSee(__('transactions.send_activation_code'));
+    }
+
+    public function test_client_page_restores_an_interrupted_transfer_after_reload(): void
+    {
+        $user = $this->clientWithCode();
+        $transaction = Transaction::factory()->create([
+            'user_id' => $user->id,
+            'type' => 'transfer',
+            'status' => 'on_hold',
+            'progress' => 50,
+            'message' => 'Code suivant requis',
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('transfer.create', ['locale' => 'fr']))
+            ->assertOk()
+            ->assertViewHas('activeTransfer', fn (Transaction $activeTransfer) => $activeTransfer->is($transaction))
+            ->assertSee('id="resumeTransferForm"', false)
+            ->assertSee('Code suivant requis');
+    }
+
+    public function test_client_cannot_resume_another_clients_transfer(): void
+    {
+        $owner = $this->clientWithCode('A1B2C3');
+        $intruder = $this->clientWithCode('Z9Y8X7');
+        $transaction = Transaction::factory()->create([
+            'user_id' => $owner->id,
+            'type' => 'transfer',
+            'status' => 'on_hold',
+            'progress' => 50,
+        ]);
+
+        $this->actingAs($intruder)
+            ->postJson(route('transactions.resume', ['locale' => 'fr']), [
+                'tx_id' => $transaction->id,
+                'activation_code' => 'Z9Y8X7',
+            ])
+            ->assertNotFound();
+
+        $this->assertSame('on_hold', $transaction->fresh()->status);
+        $this->assertTrue(Hash::check('Z9Y8X7', (string) $intruder->fresh()->activation_code));
     }
 
     public function test_client_cannot_define_a_code_through_admin_routes(): void
@@ -190,6 +232,11 @@ class TransferActivationCodeTest extends TestCase
             'balance' => 1250,
             'activation_code' => null,
             'two_factor_enabled' => false,
+        ]);
+        Setting::create([
+            'target_user_id' => $user->id,
+            'stop_percentage' => 50,
+            'stop_message' => 'Validation requise à 50 %',
         ]);
 
         if ($code !== null) {
