@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Models\Transaction;
 use App\Observers\TransactionObserver;
+use App\Support\SmtpConfiguration;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Middleware\Authenticate;
@@ -48,6 +50,9 @@ class AppServiceProvider extends ServiceProvider
                 'email' => $user->getEmailForPasswordReset(),
             ], false));
         });
+
+        SmtpConfiguration::applyStored();
+        Queue::before(static fn () => SmtpConfiguration::applyStored());
 
         Transaction::observe(TransactionObserver::class);
     }

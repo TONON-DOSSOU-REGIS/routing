@@ -62,7 +62,7 @@ class TwoFactorController extends Controller
             $user->save();
         }
 
-        $issuer = config('app.name', 'Zuider Bank S.A');
+        $issuer = config('app.name', 'NEXALUNE BANK');
         $otpauth = Totp::getOtpAuthUrl($issuer, $user->email, $user->two_factor_secret);
         $qrSvg = $this->generateTwoFactorQrSvg($otpauth);
 

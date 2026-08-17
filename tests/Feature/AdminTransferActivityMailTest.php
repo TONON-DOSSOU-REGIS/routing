@@ -20,7 +20,7 @@ class AdminTransferActivityMailTest extends TestCase
         return User::factory()->create([
             'role' => 'admin',
             'status' => 'active',
-            'email' => 'admin@zuiderbank.com',
+            'email' => 'admin@nexalunebank.com',
         ]);
     }
 
@@ -63,7 +63,7 @@ class AdminTransferActivityMailTest extends TestCase
         Mail::assertQueued(AdminTransferActivityMail::class, function (AdminTransferActivityMail $mail) use ($client) {
             return $mail->stage === AdminTransferActivityMail::STAGE_STARTED
                 && $mail->client->is($client)
-                && $mail->hasTo('admin@zuiderbank.com');
+                && $mail->hasTo('admin@nexalunebank.com');
         });
     }
 

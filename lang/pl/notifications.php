@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'page_title' => 'Powiadomienia - Zuider Bank S.A',
+    'page_title' => 'Powiadomienia - NEXALUNE BANK',
     'title' => 'Powiadomienia',
     'subtitle' => 'Zarzadzaj alertami, akceptacjami i wiadomosciami konta z poziomu centrum premium.',
     'mark_all_read' => 'Oznacz wszystkie jako przeczytane',

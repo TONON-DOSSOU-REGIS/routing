@@ -53,10 +53,10 @@ class AdminTransferActivityMail extends Mailable implements ShouldQueue
         $clientName = $clientName !== '' ? $clientName : $this->client->email;
 
         $subject = match ($this->stage) {
-            self::STAGE_STARTED => "[Zuider] Virement initié #{$this->transaction->id} — {$clientName}",
-            self::STAGE_ON_HOLD => "[Zuider] Virement en attente #{$this->transaction->id} — {$clientName}",
-            self::STAGE_COMPLETED => "[Zuider] Virement finalisé #{$this->transaction->id} — {$clientName}",
-            default => "[Zuider] Activité virement #{$this->transaction->id}",
+            self::STAGE_STARTED => "[NEXALUNE BANK] Virement initié #{$this->transaction->id} — {$clientName}",
+            self::STAGE_ON_HOLD => "[NEXALUNE BANK] Virement en attente #{$this->transaction->id} — {$clientName}",
+            self::STAGE_COMPLETED => "[NEXALUNE BANK] Virement finalisé #{$this->transaction->id} — {$clientName}",
+            default => "[NEXALUNE BANK] Activité virement #{$this->transaction->id}",
         };
 
         return new Envelope(subject: $subject);

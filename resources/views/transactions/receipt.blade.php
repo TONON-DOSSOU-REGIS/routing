@@ -558,7 +558,7 @@
                         <div class="brand-stack">
                             <div class="brand-emblem">
                                 @if($receiptLogoDataUri ?? null)
-                                    <img src="{{ $receiptLogoDataUri }}" alt="Zuider Bank S.A" class="brand-logo-img">
+                                    <img src="{{ $receiptLogoDataUri }}" alt="NEXALUNE BANK" class="brand-logo-img">
                                 @else
                                     <svg viewBox="0 0 74 74" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                         <rect x="4" y="4" width="66" height="66" rx="22" fill="#f97316"/>
@@ -841,8 +841,8 @@
                         </div>
 
                         <div class="side-card">
-                            <div class="side-eyebrow">Zuider Bank S.A</div>
-                            <div class="support-line">support@zuiderbank.com</div>
+                            <div class="side-eyebrow">NEXALUNE BANK</div>
+                            <div class="support-line">support@nexalunebank.com</div>
                             <div class="support-line">{{ $typeLabel }} - {{ $statusLabel }}</div>
                             <table class="mini-table">
                                 <tr>
@@ -851,7 +851,7 @@
                                 </tr>
                                 <tr>
                                     <td class="mini-label">Secure Area</td>
-                                    <td class="mini-value">client.zuiderbank.com</td>
+                                    <td class="mini-value">client.nexalunebank.com</td>
                                 </tr>
                             </table>
                         </div>
@@ -866,7 +866,7 @@
             <table class="receipt-footer-table">
                 <tr>
                     <td>
-                        <strong>Zuider Bank S.A</strong><br>
+                        <strong>NEXALUNE BANK</strong><br>
                         {{ __('transactions.receipt_title') }} #{{ $transaction->id }}<br>
                         {{ __('transactions.receipt_generated_at', ['date' => $receiptGeneratedLabel]) }}
                     </td>
@@ -876,7 +876,7 @@
                         {{ __('transactions.receipt_verification_code') }} {{ $receiptVerificationCode }}
                     </td>
                     <td class="receipt-footer-right">
-                        <strong>support@zuiderbank.com</strong><br>
+                        <strong>support@nexalunebank.com</strong><br>
                         {{ $typeLabel }} - {{ $statusLabel }}<br>
                         {{ $amountFormatted }}
                     </td>

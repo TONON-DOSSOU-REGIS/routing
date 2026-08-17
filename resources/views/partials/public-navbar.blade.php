@@ -24,8 +24,8 @@
     <div class="container-bank">
         <div class="bank-nav-inner">
             <a class="brand-mark" href="{{ $homeUrl }}">
-                <img src="{{ asset('images/zuider-logo-white.png') }}" alt="Zuider Bank S.A" width="220" height="50">
-                <span>Zuider Bank S.A</span>
+                <img src="{{ asset('images/nexalune-logo-white.png') }}" alt="NEXALUNE BANK" width="220" height="50">
+                <span>NEXALUNE BANK</span>
             </a>
 
             <nav class="nav-links" aria-label="Navigation principale">
@@ -49,8 +49,8 @@
         <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
             <div class="mobile-menu-head">
                 <span class="mobile-menu-brand">
-                    <img src="{{ asset('images/zuider-logo-white.png') }}" alt="Zuider Bank S.A" width="42" height="42">
-                    <span>Zuider Bank S.A</span>
+                    <img src="{{ asset('images/nexalune-mark-white.png') }}" alt="NEXALUNE BANK" width="42" height="42">
+                    <span>NEXALUNE BANK</span>
                 </span>
                 <button class="mobile-close" type="button" id="mobile-menu-close" aria-label="Fermer le menu">
                     <i class="fas fa-times"></i>

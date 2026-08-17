@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   @include('partials.seo')
   @vite(['resources/css/app.css', 'resources/js/button-feedback.js'])
+  <link rel="preload" as="image" href="{{ asset('images/hero/nexalune-financial-district.webp') }}" fetchpriority="high">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,19 +64,46 @@
 
     .hero {
       position: relative;
+      isolation: isolate;
       min-height: 94vh;
       padding: 148px 0 78px;
       color: #ffffff;
-      background:
-        linear-gradient(120deg, rgba(7, 26, 47, 0.98) 0%, rgba(8, 41, 75, 0.94) 54%, rgba(7, 26, 47, 0.98) 100%);
+      background: #071a2f;
+    }
+
+    .hero-backgrounds {
+      position: absolute;
+      z-index: -3;
+      inset: 0;
+      overflow: hidden;
+      background: #071a2f;
+      pointer-events: none;
+    }
+
+    .hero-background {
+      position: absolute;
+      inset: -2%;
+      opacity: 0;
+      background-position: center;
+      background-size: cover;
+      transform: scale(1.02);
+      transition: opacity 1.4s ease-in-out, transform 8s ease-out;
+      will-change: opacity, transform;
+    }
+
+    .hero-background.is-active {
+      opacity: 1;
+      transform: scale(1);
     }
 
     .hero::before {
       content: '';
       position: absolute;
+      z-index: -2;
       inset: 0;
       background:
-        linear-gradient(90deg, rgba(7, 26, 47, 0.98) 0%, rgba(7, 26, 47, 0.74) 45%, rgba(7, 26, 47, 0.32) 100%),
+        linear-gradient(90deg, rgba(7, 26, 47, 0.98) 0%, rgba(7, 26, 47, 0.89) 42%, rgba(7, 26, 47, 0.55) 72%, rgba(7, 26, 47, 0.46) 100%),
+        linear-gradient(180deg, rgba(7, 26, 47, 0.16) 0%, rgba(7, 26, 47, 0.28) 68%, rgba(7, 26, 47, 0.7) 100%),
         repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0, rgba(255, 255, 255, 0.06) 1px, transparent 1px, transparent 92px);
       pointer-events: none;
     }
@@ -83,6 +111,7 @@
     .hero::after {
       content: '';
       position: absolute;
+      z-index: -1;
       left: 0;
       right: 0;
       bottom: 0;
@@ -198,6 +227,36 @@
       line-height: 1.8;
     }
 
+    .site-shell main .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 0 22px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-weight: 800;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+
+    .site-shell main .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .site-shell main .btn-accent,
+    .site-shell main .btn-primary {
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      box-shadow: 0 16px 34px rgba(11, 92, 255, 0.28);
+    }
+
+    .site-shell main .btn-outline {
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
@@ -262,6 +321,7 @@
     .section {
       position: relative;
       padding: clamp(82px, 8vw, 124px) 0;
+      scroll-margin-top: 112px;
     }
 
     #about {
@@ -337,6 +397,23 @@
       color: #475467;
       font-size: 1.05rem;
       line-height: 1.85;
+    }
+
+    .section-text-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    .section-text-link i {
+      transition: transform 0.2s ease;
+    }
+
+    .section-text-link:hover i {
+      transform: translateX(4px);
     }
 
     .about-values {
@@ -615,6 +692,224 @@
       margin-top: auto;
       color: var(--blue);
       font-weight: 800;
+    }
+
+    .experience-section {
+      overflow: hidden;
+      color: #ffffff;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(0, 184, 217, 0.2), transparent 30%),
+        radial-gradient(circle at 92% 84%, rgba(11, 92, 255, 0.2), transparent 34%),
+        #071a2f;
+    }
+
+    .experience-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.2;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: linear-gradient(135deg, #000, transparent 74%);
+      pointer-events: none;
+    }
+
+    .experience-section .container-bank {
+      position: relative;
+    }
+
+    .experience-heading {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(320px, 0.55fr);
+      gap: 42px;
+      align-items: end;
+      max-width: none;
+    }
+
+    .experience-heading h2 {
+      max-width: 800px;
+    }
+
+    .experience-heading p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .experience-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.76fr) minmax(520px, 1fr);
+      gap: clamp(28px, 4vw, 64px);
+      align-items: stretch;
+    }
+
+    .advantage-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .advantage-item {
+      min-height: 190px;
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.065);
+      backdrop-filter: blur(12px);
+    }
+
+    .advantage-item i {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      color: #071a2f;
+      background: #8ee9ff;
+    }
+
+    .advantage-item h3 {
+      margin: 18px 0 8px;
+      font-size: 1.02rem;
+    }
+
+    .advantage-item p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.66);
+      font-size: 0.9rem;
+      line-height: 1.62;
+    }
+
+    .experience-visual {
+      position: relative;
+      display: grid;
+      min-height: 520px;
+      margin: 0;
+      place-items: center;
+      isolation: isolate;
+    }
+
+    .experience-visual::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      width: 78%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 184, 217, 0.34) 0%, rgba(11, 92, 255, 0.16) 38%, transparent 70%);
+      filter: blur(12px);
+      animation: experienceGlow 6.5s ease-in-out infinite;
+    }
+
+    .experience-visual img {
+      display: block;
+      width: min(112%, 820px);
+      max-width: none;
+      height: auto;
+      filter: drop-shadow(0 38px 52px rgba(0, 0, 0, 0.38));
+      transform-origin: 50% 65%;
+      animation: experienceFloat 7s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    @keyframes experienceFloat {
+      0%, 100% { transform: translate3d(0, 8px, 0) rotate(-0.5deg); }
+      50% { transform: translate3d(0, -16px, 0) rotate(0.7deg); }
+    }
+
+    @keyframes experienceGlow {
+      0%, 100% { opacity: 0.72; transform: scale(0.94); }
+      50% { opacity: 1; transform: scale(1.08); }
+    }
+
+    .features-heading {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(320px, 0.55fr);
+      gap: 42px;
+      align-items: end;
+      max-width: none;
+    }
+
+    .features-heading p {
+      margin: 0;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(18px, 2.2vw, 30px);
+    }
+
+    .feature-panel {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(28px, 3vw, 40px);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 22px 56px rgba(16, 24, 40, 0.08);
+    }
+
+    .feature-panel::before {
+      content: attr(data-index);
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      color: #e8eef7;
+      font-size: 3.8rem;
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .feature-panel > i {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      box-shadow: 0 14px 28px rgba(11, 92, 255, 0.2);
+    }
+
+    .feature-panel h3 {
+      position: relative;
+      margin: 24px 0 12px;
+      font-size: 1.28rem;
+    }
+
+    .feature-panel > p {
+      position: relative;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .feature-panel ul {
+      position: relative;
+      display: grid;
+      gap: 12px;
+      margin: 24px 0 0;
+      padding: 20px 0 0;
+      border-top: 1px solid #e8edf4;
+      list-style: none;
+    }
+
+    .feature-panel li {
+      display: flex;
+      gap: 10px;
+      color: #475467;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .feature-panel li i {
+      margin-top: 3px;
+      color: var(--green);
     }
 
     .cards-showcase {
@@ -1114,6 +1409,18 @@
       transition: transform 0.2s ease;
     }
 
+    .faq-question-copy {
+      display: grid;
+      gap: 7px;
+    }
+
+    .faq-question-copy small {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 500;
+      line-height: 1.45;
+    }
+
     .faq-item.active .faq-question i {
       transform: rotate(180deg);
     }
@@ -1185,42 +1492,17 @@
       font-size: 1.08rem;
     }
 
-    .bank-footer {
-      padding: 64px 0 34px;
-      color: rgba(255, 255, 255, 0.7);
-      background: #06111f;
+    .cta-band .cta-security-note {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 18px 0 0;
+      color: rgba(255, 255, 255, 0.66);
+      font-size: 0.82rem;
     }
 
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 1.25fr repeat(3, 0.72fr);
-      gap: 32px;
-    }
-
-    .bank-footer h3 {
-      margin: 0 0 16px;
-      color: #ffffff;
-      font-size: 1rem;
-      font-weight: 800;
-    }
-
-    .bank-footer ul {
-      display: grid;
-      gap: 10px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .bank-footer a {
-      color: rgba(255, 255, 255, 0.68);
-    }
-
-    .footer-bottom {
-      margin-top: 42px;
-      padding-top: 24px;
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-      font-size: 0.92rem;
+    .cta-security-note i {
+      color: #8ee9ff;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1230,6 +1512,11 @@
 
       .hero-card-image {
         animation: none;
+      }
+
+      .hero-background {
+        transition: none;
+        transform: none;
       }
 
       .hero-subtitle {
@@ -1256,6 +1543,11 @@
       .bank-card-3d {
         transform: none;
       }
+
+      .experience-visual img,
+      .experience-visual::before {
+        animation: none;
+      }
     }
 
     @media (max-width: 1080px) {
@@ -1276,10 +1568,31 @@
 
       .hero-layout,
       .about-grid,
+      .experience-heading,
+      .experience-grid,
+      .features-heading,
       .cards-heading,
       .trust-layout,
       .faq-layout {
         grid-template-columns: 1fr;
+      }
+
+      .experience-heading,
+      .features-heading {
+        gap: 18px;
+      }
+
+      .experience-heading p,
+      .features-heading p {
+        margin-top: 0;
+      }
+
+      .features-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .feature-panel:last-child {
+        grid-column: 1 / -1;
       }
 
       .bank-cards-grid {
@@ -1311,8 +1624,7 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .partners-strip,
-      .footer-grid {
+      .partners-strip {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
@@ -1340,11 +1652,16 @@
       .hero {
         min-height: auto;
         padding: 118px 0 54px;
-        background-position: 66% center;
+      }
+
+      .hero-background {
+        background-position: 68% center;
       }
 
       .hero::before {
-        background: linear-gradient(180deg, rgba(7, 26, 47, 0.96) 0%, rgba(7, 26, 47, 0.82) 62%, rgba(7, 26, 47, 0.7) 100%);
+        background:
+          linear-gradient(180deg, rgba(7, 26, 47, 0.97) 0%, rgba(7, 26, 47, 0.9) 58%, rgba(7, 26, 47, 0.8) 100%),
+          repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0, rgba(255, 255, 255, 0.04) 1px, transparent 1px, transparent 72px);
       }
 
       .hero h1 {
@@ -1353,12 +1670,29 @@
 
       .hero-proof,
       .about-values,
+      .advantage-list,
+      .features-grid,
       .bank-cards-grid,
       .services-grid,
       .reviews-grid,
-      .partners-strip,
-      .footer-grid {
+      .partners-strip {
         grid-template-columns: 1fr;
+      }
+
+      .feature-panel:last-child {
+        grid-column: auto;
+      }
+
+      .advantage-item {
+        min-height: auto;
+      }
+
+      .experience-visual {
+        min-height: 360px;
+      }
+
+      .experience-visual img {
+        width: 122%;
       }
 
       .bank-card-product--vip {
@@ -1441,6 +1775,17 @@
     ['icon' => 'fa-chart-line', 'route' => 'services.gestion-tresorerie', 'title' => __('home.services_3_title'), 'text' => __('home.services_3_text'), 'points' => [__('home.services_3_point_1'), __('home.services_3_point_2'), __('home.services_3_point_3')]],
     ['icon' => 'fa-credit-card', 'route' => 'services.cartes-paiement', 'title' => __('home.services_4_title'), 'text' => __('home.services_4_text'), 'points' => [__('home.services_4_point_1'), __('home.services_4_point_2'), __('home.services_4_point_3')]],
   ];
+  $experienceAdvantages = [
+    ['icon' => 'fa-laptop', 'title' => __('home.advantage_1_title'), 'text' => __('home.advantage_1_description')],
+    ['icon' => 'fa-bolt', 'title' => __('home.advantage_2_title'), 'text' => __('home.advantage_2_description')],
+    ['icon' => 'fa-file-pdf', 'title' => __('home.advantage_3_title'), 'text' => __('home.advantage_3_description')],
+    ['icon' => 'fa-headset', 'title' => __('home.advantage_4_title'), 'text' => __('home.advantage_4_description')],
+  ];
+  $securityFeatures = [
+    ['icon' => 'fa-lock', 'title' => __('home.feature_1_title'), 'text' => __('home.feature_1_description'), 'items' => [__('home.feature_1_item_1'), __('home.feature_1_item_2'), __('home.feature_1_item_3')]],
+    ['icon' => 'fa-shield-halved', 'title' => __('home.feature_2_title'), 'text' => __('home.feature_2_description'), 'items' => [__('home.feature_2_item_1'), __('home.feature_2_item_2'), __('home.feature_2_item_3')]],
+    ['icon' => 'fa-route', 'title' => __('home.feature_3_title'), 'text' => __('home.feature_3_description'), 'items' => [__('home.feature_3_item_1'), __('home.feature_3_item_2'), __('home.feature_3_item_3')]],
+  ];
   $bankCards = [
     ['variant' => 'standard', 'name' => __('home.cards_standard_name'), 'label' => __('home.cards_standard_label'), 'description' => __('home.cards_standard_description'), 'number' => '4892  ••••  ••••  2418', 'features' => [__('home.cards_standard_feature_1'), __('home.cards_standard_feature_2'), __('home.cards_standard_feature_3')]],
     ['variant' => 'premium', 'name' => __('home.cards_premium_name'), 'label' => __('home.cards_premium_label'), 'description' => __('home.cards_premium_description'), 'number' => '5417  ••••  ••••  8062', 'badge' => __('home.cards_popular'), 'features' => [__('home.cards_premium_feature_1'), __('home.cards_premium_feature_2'), __('home.cards_premium_feature_3')]],
@@ -1461,10 +1806,15 @@
 
   <main>
     <section class="hero" id="home">
+      <div class="hero-backgrounds" id="hero-backgrounds" aria-hidden="true">
+        <div class="hero-background is-active" style="background-image: url('{{ asset('images/hero/nexalune-financial-district.webp') }}')"></div>
+        <div class="hero-background" style="background-image: url('{{ asset('images/hero/nexalune-digital-banking.webp') }}')"></div>
+        <div class="hero-background" style="background-image: url('{{ asset('images/hero/nexalune-private-banking.webp') }}')"></div>
+      </div>
       <div class="container-bank hero-layout">
         <div>
           <span class="eyebrow"><i class="fas fa-shield-halved"></i>{{ __('home.hero_badge') }}</span>
-          <h1>Zuider Bank S.A</h1>
+          <h1>NEXALUNE BANK</h1>
           <div class="hero-title-slider" aria-live="polite" aria-atomic="true">
             <p class="hero-subtitle" id="hero-rotating-title">{{ $heroSliderTitles[0] }}</p>
             <div class="hero-title-slider-meta" aria-hidden="true">
@@ -1500,7 +1850,7 @@
         </div>
 
         <div class="card-stage" aria-hidden="true">
-          <img class="hero-card-image" src="{{ asset('images/zuider-card-3d-hero.webp') }}" alt="" width="1000" height="667" fetchpriority="high" decoding="async">
+          <img class="hero-card-image" src="{{ asset('images/nexalune-card-3d-hero.png') }}" alt="" width="1000" height="667" fetchpriority="high" decoding="async">
         </div>
       </div>
     </section>
@@ -1515,6 +1865,9 @@
           </div>
           <p class="lead-text">{{ __('home.about_paragraph_1') }}</p>
           <p class="lead-text">{{ __('home.about_paragraph_2') }}</p>
+          <a class="section-text-link" href="{{ localized_route('about.notre-histoire', ['locale' => $locale]) }}">
+            {{ __('home.about_cta') }} <i class="fas fa-arrow-right"></i>
+          </a>
         </div>
 
         <div class="happy-client-visual">
@@ -1562,6 +1915,41 @@
       </div>
     </section>
 
+    <section class="section experience-section" id="experience">
+      <div class="container-bank">
+        <div class="section-heading experience-heading">
+          <div>
+            <span class="section-kicker" style="color:#8ee9ff"><i class="fas fa-gauge-high"></i>{{ __('home.dashboard_preview_title') }}</span>
+            <h2>{{ __('home.why_choose_title') }}</h2>
+          </div>
+          <p>{{ __('home.why_choose_description') }}</p>
+        </div>
+
+        <div class="experience-grid">
+          <div class="advantage-list">
+            @foreach ($experienceAdvantages as $advantage)
+              <article class="advantage-item">
+                <i class="fas {{ $advantage['icon'] }}"></i>
+                <h3>{{ $advantage['title'] }}</h3>
+                <p>{{ $advantage['text'] }}</p>
+              </article>
+            @endforeach
+          </div>
+
+          <figure class="experience-visual">
+            <img
+              src="{{ asset('images/experience/nexalune-banking-devices.webp') }}"
+              alt="{{ __('home.dashboard_preview_title') }}"
+              width="1536"
+              height="1024"
+              loading="lazy"
+              decoding="async"
+            >
+          </figure>
+        </div>
+      </div>
+    </section>
+
     <section class="section soft" id="services">
       <div class="container-bank">
         <div class="section-heading">
@@ -1590,6 +1978,33 @@
       </div>
     </section>
 
+    <section class="section" id="security-features">
+      <div class="container-bank">
+        <div class="section-heading features-heading">
+          <div>
+            <span class="section-kicker"><i class="fas fa-fingerprint"></i>{{ __('home.cert_1_badge') }}</span>
+            <h2>{{ __('home.features_title') }}</h2>
+          </div>
+          <p>{{ __('home.features_description') }}</p>
+        </div>
+
+        <div class="features-grid">
+          @foreach ($securityFeatures as $feature)
+            <article class="feature-panel" data-index="{{ str_pad((string) ($loop->index + 1), 2, '0', STR_PAD_LEFT) }}">
+              <i class="fas {{ $feature['icon'] }}"></i>
+              <h3>{{ $feature['title'] }}</h3>
+              <p>{{ $feature['text'] }}</p>
+              <ul>
+                @foreach ($feature['items'] as $item)
+                  <li><i class="fas fa-check-circle"></i><span>{{ $item }}</span></li>
+                @endforeach
+              </ul>
+            </article>
+          @endforeach
+        </div>
+      </div>
+    </section>
+
     <section class="section cards-showcase" id="cards">
       <div class="container-bank">
         <div class="cards-heading">
@@ -1610,7 +2025,7 @@
               <div class="bank-card-scene" aria-label="{{ $card['name'] }}">
                 <div class="bank-card-3d">
                   <div class="bank-card-top">
-                    <span class="bank-card-brand">Zuider Bank</span>
+                    <span class="bank-card-brand">NEXALUNE BANK</span>
                     <span class="bank-card-tier">{{ $card['label'] }}</span>
                   </div>
                   <div class="bank-card-chip-row">
@@ -1727,7 +2142,10 @@
           @foreach ($faqItems as $faqIndex)
             <article class="faq-item {{ $loop->first ? 'active' : '' }}">
               <button class="faq-question" type="button">
-                <span>{{ __('home.faq_' . $faqIndex . '_question') }}</span>
+                <span class="faq-question-copy">
+                  <span>{{ __('home.faq_' . $faqIndex . '_question') }}</span>
+                  <small>{{ __('home.faq_' . $faqIndex . '_subtitle') }}</small>
+                </span>
                 <i class="fas fa-chevron-down"></i>
               </button>
               <div class="faq-answer">
@@ -1747,60 +2165,13 @@
           <a class="btn btn-primary" href="{{ localized_route('register', ['locale' => $locale]) }}">
             {{ __('home.cta_button') }} <i class="fas fa-arrow-right"></i>
           </a>
+          <p class="cta-security-note"><i class="fas fa-shield-halved"></i>{{ __('home.cta_security') }}</p>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="bank-footer">
-    <div class="container-bank">
-      <div class="footer-grid">
-        <div>
-          <a class="brand-mark" href="{{ localized_route('home', ['locale' => $locale]) }}">
-            <img src="{{ asset('images/zuider-logo-white.png') }}" alt="Zuider Bank S.A">
-            <span>Zuider Bank S.A</span>
-          </a>
-          <p style="max-width:380px;line-height:1.7;margin-top:18px">{{ __('home.footer_description') }}</p>
-        </div>
-
-        <div>
-          <h3>{{ __('home.footer_services') }}</h3>
-          <ul>
-            @foreach ($serviceRoutes as $service)
-              <li><a href="{{ localized_route($service['route'], ['locale' => $locale]) }}">{{ $service['title'] }}</a></li>
-            @endforeach
-          </ul>
-        </div>
-
-        <div>
-          <h3>{{ __('home.footer_about') }}</h3>
-          <ul>
-            <li><a href="{{ localized_route('about.notre-histoire', ['locale' => $locale]) }}">{{ __('home.footer_our_story') }}</a></li>
-            <li><a href="{{ localized_route('about.carrieres', ['locale' => $locale]) }}">{{ __('home.footer_careers') }}</a></li>
-            <li><a href="{{ localized_route('about.presse', ['locale' => $locale]) }}">{{ __('home.footer_press') }}</a></li>
-            <li><a href="{{ localized_route('about.blog', ['locale' => $locale]) }}">{{ __('home.footer_blog') }}</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <h3>{{ __('home.footer_support') }}</h3>
-          <ul>
-            <li><a href="{{ localized_route('support.centre-aide', ['locale' => $locale]) }}">{{ __('home.footer_help_center') }}</a></li>
-            <li><a href="{{ localized_route('support.nous-contacter', ['locale' => $locale]) }}">{{ __('home.footer_contact_us') }}</a></li>
-            <li><a href="{{ localized_route('support.securite', ['locale' => $locale]) }}">{{ __('home.footer_security') }}</a></li>
-            <li><a href="{{ localized_route('support.mentions-legales', ['locale' => $locale]) }}">{{ __('home.footer_legal') }}</a></li>
-            <li><a href="{{ localized_route('support.politique-cookies', ['locale' => $locale]) }}">{{ __('cookies.footer_link_label') }}</a></li>
-            <li><a href="#" data-cookie-open-preferences>{{ __('cookies.manage_preferences_link') }}</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <p>&copy; {{ date('Y') }} Zuider Bank S.A. {{ __('home.footer_copyright') }}</p>
-        <p>{{ __('home.footer_disclaimer') }}</p>
-      </div>
-    </div>
-  </footer>
+  @include('partials.public-footer')
 </div>
 
 <script>
@@ -1808,6 +2179,7 @@
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const finePointer = window.matchMedia('(pointer: fine)').matches;
+    const heroBackgrounds = Array.from(document.querySelectorAll('#hero-backgrounds .hero-background'));
     const heroTitles = @json($heroSliderTitles);
     const rotatingTitle = document.getElementById('hero-rotating-title');
     const titleCounter = document.getElementById('hero-title-counter');
@@ -1833,6 +2205,11 @@
             titleIndex = (titleIndex + 1) % heroTitles.length;
             rotatingTitle.textContent = heroTitles[titleIndex];
             titleCounter.textContent = String(titleIndex + 1).padStart(2, '0') + ' / ' + String(heroTitles.length).padStart(2, '0');
+            if (heroBackgrounds.length > 1) {
+              heroBackgrounds.forEach(function (background, index) {
+                background.classList.toggle('is-active', index === titleIndex % heroBackgrounds.length);
+              });
+            }
             rotatingTitle.classList.remove('is-fading');
             restartTitleProgress();
             scheduleTitleRotation();

@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $adminEmail = (string) config('mail.admin_address', 'admin@zuiderbank.com');
+        $adminEmail = (string) config('mail.admin_address', 'admin@nexalunebank.com');
 
         // Keep a single canonical admin account/email.
         $admin = User::where('email', $adminEmail)->first();
@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         if ($admin) {
             $admin->update([
                 'first_name' => 'Admin',
-                'last_name' => 'Zuider Bank S.A',
+                'last_name' => 'NEXALUNE BANK',
                 'email' => $adminEmail,
                 'role' => 'admin',
                 'status' => 'active',
@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
         } else {
             User::create([
                 'first_name' => 'Admin',
-                'last_name' => 'Zuider Bank S.A',
+                'last_name' => 'NEXALUNE BANK',
                 'email' => $adminEmail,
                 'phone' => '+22912345678',
                 'address' => '123 Admin Street',

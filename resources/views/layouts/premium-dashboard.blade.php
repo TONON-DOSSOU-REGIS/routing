@@ -454,7 +454,7 @@
         $dashboardSubtitle = html_entity_decode(trim($__env->yieldContent('dashboard_page_subtitle')) ?: '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $dashboardSearchPlaceholder = html_entity_decode(trim($__env->yieldContent('dashboard_search_placeholder')) ?: __('admin_pages.dashboard_search_default'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $dashboardSectionLabel = html_entity_decode(trim($__env->yieldContent('dashboard_section_label')) ?: ($dashboardTheme === 'admin' ? __('admin_pages.central_pilotage') : __('admin_pages.premium_space')), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        $dashboardFooterBrand = html_entity_decode(trim($__env->yieldContent('dashboard_footer_brand')) ?: ($dashboardTheme === 'admin' ? 'Zuider Admin' : 'Zuider Bank S.A'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $dashboardFooterBrand = html_entity_decode(trim($__env->yieldContent('dashboard_footer_brand')) ?: ($dashboardTheme === 'admin' ? 'NEXALUNE BANK Admin' : 'NEXALUNE BANK'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $displayName = $authUser?->name ?? __('common.user');
         $displayEmail = $authUser?->email ?? '';
         $profilePhotoUrl = $authUser?->profile_photo_url;
@@ -478,12 +478,12 @@
                     <div class="flex min-h-full flex-col gap-8">
                         <div class="premium-sidebar-brand flex items-center justify-between gap-3">
                             <div class="flex min-w-0 items-center gap-4">
-                                <a href="{{ $dashboardHomeUrl }}" data-dashboard-brand-link class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white shadow-xl shadow-slate-950/20 ring-1 ring-white/20">
-                                    <img src="{{ asset('images/Logosite.png') }}" alt="Zuider Bank S.A" class="h-10 w-10 object-contain">
+                                <a href="{{ $dashboardHomeUrl }}" data-dashboard-brand-link class="flex h-14 w-14 shrink-0 items-center justify-center">
+                                    <img src="{{ asset('images/nexalune-mark-white.png') }}" alt="NEXALUNE BANK" class="h-14 w-14 object-contain drop-shadow-lg">
                                 </a>
                                 <div class="min-w-0">
                                     <p class="premium-brand-title truncate text-lg font-semibold text-slate-900">
-                                        @yield('dashboard_brand_title', 'Zuider Bank S.A')
+                                        @yield('dashboard_brand_title', 'NEXALUNE BANK')
                                     </p>
                                     <p class="truncate text-sm text-slate-500">
                                         @yield('dashboard_brand_subtitle', $dashboardTheme === 'admin' ? 'Back office premium' : 'Client banking suite')
@@ -534,7 +534,7 @@
 
                 <div class="relative z-10 flex min-w-0 flex-1 flex-col overflow-x-clip">
                     <header class="premium-topbar border-b border-slate-200/70 px-4 py-4 sm:px-6 lg:px-8">
-                        <div class="flex flex-wrap items-center gap-3 lg:gap-4">
+                        <div class="flex items-center gap-2 sm:gap-3 lg:gap-4">
                             <button
                                 type="button"
                                 id="premium-dashboard-sidebar-toggle"
@@ -545,19 +545,19 @@
                                 <i class="fas fa-bars text-sm"></i>
                             </button>
 
-                            <div class="order-2 ml-auto flex items-center gap-3 lg:ml-0">
+                            <div class="order-3 flex shrink-0 items-center gap-3">
                                 @yield('topbar_actions')
                                 @include('components.notification-bell')
                             </div>
 
-                            <div class="premium-search order-3 flex min-w-0 basis-full items-center gap-3 rounded-2xl px-4 py-3 lg:order-1 lg:min-w-[320px] lg:flex-1 lg:basis-auto 2xl:min-w-[420px]">
+                            <div class="premium-search order-2 flex min-w-0 flex-1 items-center gap-3 rounded-2xl px-3 py-3 sm:px-4 lg:order-1 lg:min-w-[320px] 2xl:min-w-[420px]">
                                 <i class="fas fa-search text-slate-400"></i>
                                 <input
                                     type="text"
-                                    class="w-full border-0 bg-transparent p-0 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0"
+                                    class="min-w-0 w-full border-0 bg-transparent p-0 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0"
                                     placeholder="{{ $dashboardSearchPlaceholder }}"
                                 >
-                                <span class="hidden rounded-xl bg-slate-100 px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 sm:inline-flex">
+                                <span class="hidden rounded-xl bg-slate-100 px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 xl:inline-flex">
                                     {{ __('dashboard.search_quick_label') }}
                                 </span>
                             </div>
@@ -567,11 +567,11 @@
                                     <p class="text-sm font-semibold text-slate-900">{{ $displayName }}</p>
                                     <p class="text-xs text-slate-500">{{ $displayEmail }}</p>
                                 </div>
-                                <div class="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-slate-200">
+                                <div class="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-[#071d35] ring-1 ring-slate-200">
                                     @if($profilePhotoUrl)
                                         <img src="{{ $profilePhotoUrl }}" alt="{{ $displayName }}" class="h-full w-full object-cover">
                                     @else
-                                        <img src="{{ asset('images/Logosite.png') }}" alt="Zuider Bank S.A" class="h-8 w-8 object-contain">
+                                        <img src="{{ asset('images/nexalune-mark-white.png') }}" alt="NEXALUNE BANK" class="h-9 w-9 object-contain">
                                     @endif
                                     <span class="absolute bottom-0.5 right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white"></span>
                                 </div>

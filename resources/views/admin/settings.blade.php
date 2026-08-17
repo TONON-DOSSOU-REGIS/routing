@@ -4,6 +4,13 @@
     $targetUser = $selectedUser;
     $stopPercentage = old('stop_percentage', $settings->stop_percentage ?? 1);
     $stopMessage = old('stop_message', $settings->stop_message ?? __('admin_pages.transaction_suspended'));
+    $smtpHost = old('smtp_host', $smtpSettings?->host ?? config('mail.mailers.smtp.host'));
+    $smtpPort = old('smtp_port', $smtpSettings?->port ?? config('mail.mailers.smtp.port', 587));
+    $smtpScheme = old('smtp_scheme', $smtpSettings?->scheme ?? config('mail.mailers.smtp.scheme', 'smtp') ?? 'smtp');
+    $smtpUsername = old('smtp_username', $smtpSettings?->username ?? config('mail.mailers.smtp.username'));
+    $smtpFromAddress = old('smtp_from_address', $smtpSettings?->from_address ?? config('mail.from.address'));
+    $smtpFromName = old('smtp_from_name', $smtpSettings?->from_name ?? config('mail.from.name'));
+    $hasSmtpPassword = $smtpSettings && filled($smtpSettings->getRawOriginal('password'));
 @endphp
 
 @section('title', __('admin_pages.settings_title'))
@@ -483,6 +490,102 @@
             </section>
         </aside>
     </div>
+
+    <section id="smtp-configuration" class="admin-surface overflow-hidden rounded-[30px]">
+        <div class="flex flex-col gap-4 border-b border-slate-200/70 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 px-5 py-6 text-white sm:px-7 lg:flex-row lg:items-center lg:justify-between">
+            <div class="flex items-start gap-4">
+                <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-cyan-200 ring-1 ring-white/15">
+                    <i class="fas fa-envelope-circle-check text-lg"></i>
+                </span>
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-200/75">NEXALUNE BANK Mail</p>
+                    <h2 class="mt-1 premium-brand-title text-2xl font-semibold sm:text-3xl">{{ __('admin_pages.smtp_configuration') }}</h2>
+                    <p class="mt-2 max-w-3xl text-sm leading-6 text-white/65">{{ __('admin_pages.smtp_configuration_help') }}</p>
+                </div>
+            </div>
+            <span class="inline-flex w-fit shrink-0 items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold {{ $smtpSettings ? 'bg-emerald-400/15 text-emerald-200 ring-1 ring-emerald-300/25' : 'bg-amber-400/15 text-amber-100 ring-1 ring-amber-300/25' }}">
+                <span class="h-2 w-2 rounded-full {{ $smtpSettings ? 'bg-emerald-400' : 'bg-amber-400' }}"></span>
+                {{ $smtpSettings ? __('admin_pages.smtp_configured') : __('admin_pages.smtp_not_configured') }}
+            </span>
+        </div>
+
+        <form method="POST" action="{{ localized_route('admin.settings.smtp') }}" class="space-y-6 p-5 sm:p-7">
+            @csrf
+
+            <div class="grid gap-5 xl:grid-cols-3">
+                <fieldset class="rounded-[24px] border border-slate-200/80 bg-white p-5 shadow-sm">
+                    <legend class="px-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                        <i class="fas fa-server mr-2 text-blue-600"></i>{{ __('admin_pages.smtp_server') }}
+                    </legend>
+                    <div class="mt-2 space-y-4">
+                        <div>
+                            <label for="smtp_host" class="mb-2 block text-sm font-semibold text-slate-700">{{ __('admin_pages.smtp_host') }}</label>
+                            <input type="text" id="smtp_host" name="smtp_host" value="{{ $smtpHost }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="smtp.example.com" autocomplete="off" required>
+                        </div>
+                        <div class="grid gap-4 sm:grid-cols-[120px_minmax(0,1fr)] xl:grid-cols-1 2xl:grid-cols-[120px_minmax(0,1fr)]">
+                            <div>
+                                <label for="smtp_port" class="mb-2 block text-sm font-semibold text-slate-700">{{ __('admin_pages.smtp_port') }}</label>
+                                <input type="number" id="smtp_port" name="smtp_port" value="{{ $smtpPort }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" min="1" max="65535" inputmode="numeric" required>
+                            </div>
+                            <div>
+                                <label for="smtp_scheme" class="mb-2 block text-sm font-semibold text-slate-700">{{ __('admin_pages.smtp_security') }}</label>
+                                <select id="smtp_scheme" name="smtp_scheme" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" required>
+                                    <option value="smtp" @selected($smtpScheme === 'smtp')>{{ __('admin_pages.smtp_tls') }}</option>
+                                    <option value="smtps" @selected($smtpScheme === 'smtps')>{{ __('admin_pages.smtp_ssl') }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="rounded-[24px] border border-slate-200/80 bg-white p-5 shadow-sm">
+                    <legend class="px-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                        <i class="fas fa-key mr-2 text-violet-600"></i>{{ __('admin_pages.smtp_credentials') }}
+                    </legend>
+                    <div class="mt-2 space-y-4">
+                        <div>
+                            <label for="smtp_username" class="mb-2 block text-sm font-semibold text-slate-700">{{ __('admin_pages.smtp_username') }}</label>
+                            <input type="text" id="smtp_username" name="smtp_username" value="{{ $smtpUsername }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" autocomplete="off">
+                        </div>
+                        <div>
+                            <label for="smtp_password" class="mb-2 block text-sm font-semibold text-slate-700">{{ __('admin_pages.smtp_password') }}</label>
+                            <input type="password" id="smtp_password" name="smtp_password" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" placeholder="{{ $hasSmtpPassword ? '••••••••••••' : '' }}" autocomplete="new-password" aria-describedby="smtp-password-help">
+                            <p id="smtp-password-help" class="mt-2 text-xs leading-5 text-slate-500">{{ __('admin_pages.smtp_password_keep') }}</p>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="rounded-[24px] border border-slate-200/80 bg-white p-5 shadow-sm">
+                    <legend class="px-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                        <i class="fas fa-at mr-2 text-emerald-600"></i>{{ __('admin_pages.smtp_sender') }}
+                    </legend>
+                    <div class="mt-2 space-y-4">
+                        <div>
+                            <label for="smtp_from_address" class="mb-2 block text-sm font-semibold text-slate-700">{{ __('admin_pages.smtp_from_address') }}</label>
+                            <input type="email" id="smtp_from_address" name="smtp_from_address" value="{{ $smtpFromAddress }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" autocomplete="email" required>
+                        </div>
+                        <div>
+                            <label for="smtp_from_name" class="mb-2 block text-sm font-semibold text-slate-700">{{ __('admin_pages.smtp_from_name') }}</label>
+                            <input type="text" id="smtp_from_name" name="smtp_from_name" value="{{ $smtpFromName }}" class="admin-field w-full rounded-2xl px-4 py-3 text-sm text-slate-700" autocomplete="organization" required>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="flex flex-col gap-4 rounded-[24px] border border-blue-100 bg-blue-50/70 p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex items-start gap-3">
+                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-700"><i class="fas fa-shield-halved"></i></span>
+                    <div>
+                        <p class="text-sm font-semibold text-slate-900">{{ __('admin_pages.smtp_security_notice') }}</p>
+                        <p class="mt-1 text-sm leading-6 text-slate-600">{{ __('admin_pages.smtp_security_notice_text') }}</p>
+                    </div>
+                </div>
+                <button type="submit" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-blue-700 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-700/20 transition hover:bg-blue-800">
+                    <i class="fas fa-floppy-disk text-xs"></i>{{ __('admin_pages.smtp_save') }}
+                </button>
+            </div>
+        </form>
+    </section>
 @endsection
 
 @push('premium_dashboard_scripts')

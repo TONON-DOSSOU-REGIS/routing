@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmation de contact - Zuider Bank S.A</title>
+    <title>Confirmation de contact - NEXALUNE BANK</title>
     @include('partials.favicon')
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -275,7 +275,7 @@
     <div class="email-container">
         <!-- En-tête -->
         <div class="header">
-            <div class="logo">Zuider Bank S.A</div>
+            <div class="logo">NEXALUNE BANK</div>
             <div class="logo-subtitle">{{ __('mail_body.trusted_partner') }}</div>
         </div>
         
@@ -379,7 +379,7 @@
             </div>
             
             <p class="copyright">
-                © 2023 Zuider Bank S.A. {{ __('admin_dashboard.footer_rights') }}<br>
+                © 2023 NEXALUNE BANK. {{ __('admin_dashboard.footer_rights') }}<br>
                 {{ __('mail_body.sent_to', ['email' => $contact->email]) }}
             </p>
         </div>

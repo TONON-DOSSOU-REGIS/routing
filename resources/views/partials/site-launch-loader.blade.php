@@ -18,7 +18,7 @@
 <div id="site-launch-loader" data-launch-loader role="status" aria-live="polite" aria-label="Chargement du site">
     <div class="site-launch-loader__glow" aria-hidden="true"></div>
     <div class="site-launch-loader__content">
-        <div class="site-launch-loader__mark"><img src="{{ asset('images/zuider-logo-white.png') }}" alt="Zuider Bank S.A"></div>
+        <div class="site-launch-loader__mark"><img src="{{ asset('images/nexalune-logo-white.png') }}" alt="NEXALUNE BANK"></div>
         <div class="site-launch-loader__spinner" aria-hidden="true"></div>
         <p class="site-launch-loader__status">Initialisation sécurisée</p>
     </div>
@@ -33,8 +33,8 @@
         // page later in the same session skips it entirely.
         let alreadyPlayed = false;
         try {
-            alreadyPlayed = sessionStorage.getItem('zuider_launch_intro') === '1';
-            sessionStorage.setItem('zuider_launch_intro', '1');
+            alreadyPlayed = sessionStorage.getItem('nexalune_launch_intro') === '1';
+            sessionStorage.setItem('nexalune_launch_intro', '1');
         } catch (error) {
             // Private mode / storage disabled: just play it.
         }

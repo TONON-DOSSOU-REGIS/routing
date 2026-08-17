@@ -5,7 +5,7 @@ test('the home page shows the branded launch loader', function () {
         ->assertOk()
         ->assertSee('id="site-launch-loader"', false)
         ->assertSee('data-launch-loader', false)
-        ->assertSee('images/zuider-logo-white.png', false)
+        ->assertSee('images/nexalune-logo-white.png', false)
         ->assertSee('Initialisation sécurisée', false)
         ->assertSee('siteLoaderSpin', false);
 });
@@ -17,7 +17,7 @@ test('the launch loader can never block interaction or stay stuck', function () 
         // Decorative overlay: taps always reach the page underneath.
         ->assertSee('pointer-events: none', false)
         // Plays once per browsing session, skipped when returning home later.
-        ->assertSee('zuider_launch_intro', false)
+        ->assertSee('nexalune_launch_intro', false)
         // Independent safety nets guaranteeing dismissal.
         ->assertSee('hardTimeout', false)
         ->assertSee("window.addEventListener('load', settle", false)

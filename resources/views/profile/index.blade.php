@@ -44,7 +44,7 @@
 @section('dashboard_page_subtitle', __('profile.page_subtitle'))
 @section('dashboard_section_label', __('dashboard.premium_profile'))
 @section('dashboard_search_placeholder', __('dashboard.search_placeholder'))
-@section('dashboard_brand_title', 'Zuider Bank S.A')
+@section('dashboard_brand_title', 'NEXALUNE BANK')
 @section('dashboard_brand_subtitle', __('dashboard.client_area'))
 @section('sidebar_primary_title', __('dashboard.menu'))
 

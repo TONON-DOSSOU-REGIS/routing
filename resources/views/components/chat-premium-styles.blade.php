@@ -1115,7 +1115,7 @@
 
 @once
     <script>
-        window.ZuiderChatAudio = window.ZuiderChatAudio || (() => {
+        window.NexaluneChatAudio = window.NexaluneChatAudio || (() => {
             let context = null;
             const unlock = () => {
                 const AudioContextClass = window.AudioContext || window.webkitAudioContext;

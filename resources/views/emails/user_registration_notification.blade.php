@@ -151,7 +151,7 @@
     
     <div class="footer">
         <p>{{ __('mail_body.auto_sent') }}</p>
-        <p>© {{ date('Y') }} Zuider Bank S.A. {{ __('admin_dashboard.footer_rights') }}</p>
+        <p>© {{ date('Y') }} NEXALUNE BANK. {{ __('admin_dashboard.footer_rights') }}</p>
     </div>
 </body>
 </html>

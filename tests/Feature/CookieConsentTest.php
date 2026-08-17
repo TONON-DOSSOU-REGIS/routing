@@ -25,7 +25,9 @@ test('the dedicated cookie policy page is reachable and details every cookie cat
         ->assertSee(__('cookies.category_functional_title'))
         ->assertSee(__('cookies.category_marketing_title'))
         ->assertSee(__('cookies.section_legal_basis_title'))
-        ->assertSee(__('cookies.section_rights_title'));
+        ->assertSee(__('cookies.section_rights_title'))
+        ->assertSee('data-label="'.__('cookies.table_name').'"', false)
+        ->assertSee('content: attr(data-label)', false);
 });
 
 test('the preferences center exposes toggles for every optional cookie category', function () {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activité virement - Zuider Bank S.A</title>
+    <title>Activité virement - NEXALUNE BANK</title>
 </head>
 <body style="margin:0;padding:0;background-color:#eef2f7;font-family:'Segoe UI',Arial,Helvetica,sans-serif;color:#0f172a;">
 @php
@@ -50,7 +50,7 @@
                 <tr>
                     <td style="background-color:#0f172a;padding:26px 28px;">
                         <p style="margin:0;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.6);">
-                            Zuider Bank S.A — Supervision
+                            NEXALUNE BANK — Supervision
                         </p>
                         <h1 style="margin:10px 0 0;font-size:22px;font-weight:700;color:#ffffff;">
                             {{ $stageMeta['label'] }}
@@ -142,7 +142,7 @@
                 <tr>
                     <td style="background-color:#f8fafc;border-top:1px solid #e2e8f0;padding:18px 28px;">
                         <p style="margin:0;font-size:12px;line-height:19px;color:#64748b;">
-                            <strong style="color:#0f172a;">Zuider Bank S.A</strong> — notification automatique de supervision.
+                            <strong style="color:#0f172a;">NEXALUNE BANK</strong> — notification automatique de supervision.
                             Ce message est destiné à l'administration et ne doit pas être transféré au client.
                         </p>
                     </td>

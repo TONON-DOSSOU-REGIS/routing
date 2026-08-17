@@ -1,20 +1,20 @@
 <?php
 
 return [
-    'footer_kicker' => 'Zuider Bank S.A Admin',
+    'footer_kicker' => 'NEXALUNE BANK Admin',
     'footer_title' => 'Operational Control Center',
     'footer_description' => 'Monitor users, transfers, and deposits from a unified, secure workspace optimized for real-time operations.',
     'footer_users' => 'Users',
     'footer_transfers' => 'Transfers',
     'footer_settings' => 'Settings',
     'footer_back_site' => 'Back to site',
-    'footer_rights' => 'Zuider Bank S.A Admin. All rights reserved.',
+    'footer_rights' => 'NEXALUNE BANK Admin. All rights reserved.',
     'footer_system_monitoring' => 'System under active monitoring',
     'admin_title' => 'Premium administration',
     'admin_subtitle' => 'A premium control center for critical operations, validations, and supervision.',
     'admin_section' => 'Admin control',
     'search_placeholder' => 'Search for a client, transaction, operation, or status...',
-    'brand_title' => 'Zuider Admin',
+    'brand_title' => 'NEXALUNE BANK Admin',
     'brand_subtitle' => 'Control center',
     'nav_dashboard' => 'Dashboard',
     'nav_users' => 'Users',

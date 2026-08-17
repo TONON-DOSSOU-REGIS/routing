@@ -34,7 +34,7 @@
         <div class="cookie-consent-preferences__panel">
             <div class="cookie-consent-preferences__head">
                 <div>
-                    <p class="cookie-consent-preferences__eyebrow"><i class="fas fa-shield-halved"></i> Zuider Bank S.A</p>
+                    <p class="cookie-consent-preferences__eyebrow"><i class="fas fa-shield-halved"></i> NEXALUNE BANK</p>
                     <h2 class="cookie-consent-preferences__title">{{ __('cookies.preferences_title') }}</h2>
                 </div>
                 <button type="button" class="cookie-consent-close" data-cookie-action="close-preferences" aria-label="{{ __('cookies.preferences_close') }}">
@@ -519,7 +519,7 @@
 
 <script>
 (() => {
-    const STORAGE_KEY = 'zuider_cookie_consent';
+    const STORAGE_KEY = 'nexalune_cookie_consent';
     const CATEGORIES = ['analytics', 'functional', 'marketing'];
 
     const root = document.getElementById('cookie-consent-root');
@@ -554,7 +554,7 @@
             // page view via the in-memory state, just won't persist.
         }
 
-        document.dispatchEvent(new CustomEvent('zuider:cookie-consent-updated', { detail: payload }));
+        document.dispatchEvent(new CustomEvent('nexalune:cookie-consent-updated', { detail: payload }));
         return payload;
     };
 

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'bank_name' => 'Zuider Bank S.A',
+    'bank_name' => 'NEXALUNE BANK',
     'page_title' => 'Mijn profiel',
     'page_subtitle' => 'Beheer uw persoonlijke en bankgegevens',
     'account_number' => 'Rekening nr. :number',

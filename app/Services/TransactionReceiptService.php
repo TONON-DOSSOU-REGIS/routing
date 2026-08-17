@@ -51,7 +51,7 @@ class TransactionReceiptService
             return self::$logoDataUriCache;
         }
 
-        $path = public_path('images/zuider-logo-white.png');
+        $path = public_path('images/nexalune-logo-white.png');
 
         if (!is_file($path)) {
             return null;
@@ -121,7 +121,7 @@ class TransactionReceiptService
     {
         $baseName = $transaction->type === 'transfer' ? 'recu-virement' : 'recu-transaction';
 
-        return sprintf('zuider-%s-%s.%s', $baseName, $transaction->id, $extension);
+        return sprintf('nexalune-%s-%s.%s', $baseName, $transaction->id, $extension);
     }
 
     public function historyUrl(Transaction $transaction, ?string $locale = null): string

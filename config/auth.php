@@ -101,17 +101,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Login Link (Magic Link)
-    |--------------------------------------------------------------------------
-    |
-    | Number of days a generated login link remains valid.
-    |
-    */
-
-    'login_link_ttl_days' => (int) env('LOGIN_LINK_TTL_DAYS', 90),
-
-    /*
-    |--------------------------------------------------------------------------
     | Password Confirmation Timeout
     |--------------------------------------------------------------------------
     |
@@ -124,4 +113,3 @@ return [
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
 ];
-

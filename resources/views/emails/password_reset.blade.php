@@ -385,7 +385,7 @@
                     <i class="fas fa-building-columns"></i>
                 </div>
             </div>
-            <h1>Zuider Bank S.A</h1>
+            <h1>NEXALUNE BANK</h1>
             <h2>{{ __('mail_body.password_reset_heading') }}</h2>
         </div>
 
@@ -441,7 +441,7 @@
             <div class="support">
                 <p>{{ __('mail_body.password_reset_questions') }}</p>
                 <p>{{ __('mail_body.contact_support_now') }}</p>
-                <a href="mailto:support@zuiderbank.com" class="support-contact">support@zuiderbank.com</a>
+                <a href="mailto:support@nexalunebank.com" class="support-contact">support@nexalunebank.com</a>
             </div>
 
             <!-- Signature -->
@@ -456,7 +456,7 @@
             <p>{{ __('mail_body.do_not_reply') }}</p>
             <p>{{ __('mail_body.do_not_forward') }}</p>
             <div class="copyright">
-                &copy; 2025 Zuider Bank S.A. {{ __('admin_dashboard.footer_rights') }}<br>
+                &copy; 2025 NEXALUNE BANK. {{ __('admin_dashboard.footer_rights') }}<br>
                 {{ __('mail_body.security_priority') }}
             </div>
         </div>

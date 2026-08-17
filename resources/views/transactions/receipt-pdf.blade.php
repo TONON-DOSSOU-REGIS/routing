@@ -390,7 +390,7 @@
             <td class="brand-col">
                 <span class="brand-mark">
                     @if($receiptLogoDataUri ?? null)
-                        <img src="{{ $receiptLogoDataUri }}" alt="Zuider Bank S.A" class="brand-logo-img">
+                        <img src="{{ $receiptLogoDataUri }}" alt="NEXALUNE BANK" class="brand-logo-img">
                     @else
                         <svg viewBox="0 0 74 74" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                             <rect x="6" y="6" width="62" height="62" rx="20" fill="#f97316"/>
@@ -577,7 +577,7 @@
                             <div class="code">{{ $receiptVerificationCode }}</div>
                             <div class="mini-line">
                                 <div class="label">Support</div>
-                                <div class="value">support@zuiderbank.com</div>
+                                <div class="value">support@nexalunebank.com</div>
                             </div>
                             <div class="mini-line">
                                 <div class="label">{{ __('transactions.receipt_generated_at', ['date' => $receiptGeneratedLabel]) }}</div>
@@ -594,7 +594,7 @@
         <table class="footer-table">
             <tr>
                 <td>
-                    <strong>Zuider Bank S.A</strong><br>
+                    <strong>NEXALUNE BANK</strong><br>
                     {{ __('transactions.receipt_notice') }}
                 </td>
                 <td class="footer-center">
@@ -605,7 +605,7 @@
                 <td class="footer-right">
                     <strong>{{ $amountFormatted }}</strong><br>
                     {{ $typeLabel }} - {{ $statusLabel }}<br>
-                    support@zuiderbank.com
+                    support@nexalunebank.com
                 </td>
             </tr>
         </table>

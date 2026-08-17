@@ -1,7 +1,7 @@
 @php
     use Illuminate\Support\Facades\Route;
 
-    $seoBrand = 'Zuider Bank S.A';
+    $seoBrand = 'NEXALUNE BANK';
     $seoLocale = app()->getLocale();
     $seoLocales = config('app.available_locales', ['fr', 'en']);
     $seoRouteName = Route::currentRouteName();
@@ -85,7 +85,7 @@
         : ($seoIsIndexable ? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' : 'noindex, nofollow');
 
     $seoCanonical = trim($__env->yieldContent('seo_canonical')) ?: ($seoIsIndexable ? url()->current() : null);
-    $seoOgImage = trim($__env->yieldContent('seo_image')) ?: asset('images/zuider-logo-transparent.png');
+    $seoOgImage = trim($__env->yieldContent('seo_image')) ?: asset('images/nexalune-logo-transparent.png');
     $seoOgType = $seoRouteName === 'home' ? 'website' : 'article';
 
     $seoAlternates = [];
@@ -108,7 +108,7 @@
         '@type' => 'BankOrCreditUnion',
         'name' => $seoBrand,
         'url' => localized_route('home', ['locale' => $seoDefaultLocale]),
-        'logo' => asset('images/zuider-logo-transparent.png'),
+        'logo' => asset('images/nexalune-logo-transparent.png'),
         'sameAs' => [],
     ];
 

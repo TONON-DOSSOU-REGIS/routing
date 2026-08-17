@@ -1,6 +1,5 @@
 @php
     $locale = app()->getLocale();
-    $brandName = 'Zuider Bank S.A';
     $cookieRows = [
         ['name' => __('cookies.cookie_session_name'), 'purpose' => __('cookies.cookie_session_purpose'), 'duration' => __('cookies.cookie_session_duration'), 'category' => __('cookies.category_necessary_title')],
         ['name' => __('cookies.cookie_csrf_name'), 'purpose' => __('cookies.cookie_csrf_purpose'), 'duration' => __('cookies.cookie_csrf_duration'), 'category' => __('cookies.category_necessary_title')],
@@ -22,10 +21,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" media="print" onload="this.media='all'">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
     </noscript>
     <style>
         :root {
@@ -57,9 +56,7 @@
 
         .cookies-page {
             overflow: hidden;
-            background:
-                radial-gradient(circle at top left, rgba(11, 92, 255, 0.12), transparent 30%),
-                linear-gradient(180deg, var(--brand-navy) 0%, var(--brand-navy) 16%, #f7faff 52%, #ffffff 100%);
+            background: #ffffff;
         }
 
         .page-container {
@@ -71,6 +68,9 @@
             position: relative;
             padding: 148px 0 64px;
             color: #ffffff;
+            background:
+                radial-gradient(circle at top left, rgba(11, 92, 255, 0.2), transparent 36%),
+                linear-gradient(135deg, var(--brand-navy), #0b2c52);
         }
 
         .cookies-eyebrow {
@@ -221,6 +221,7 @@
             width: 100%;
             min-width: 720px;
             border-collapse: collapse;
+            background: #ffffff;
             font-size: 0.88rem;
         }
 
@@ -325,6 +326,79 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+
+            .cookies-table-wrap {
+                overflow: visible;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .cookies-table {
+                min-width: 0;
+                border-collapse: separate;
+                background: transparent;
+            }
+
+            .cookies-table thead {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+            }
+
+            .cookies-table tbody {
+                display: grid;
+                gap: 16px;
+            }
+
+            .cookies-table tbody tr {
+                display: block;
+                overflow: hidden;
+                border: 1px solid var(--brand-line);
+                border-radius: 20px;
+                background: #ffffff !important;
+                box-shadow: 0 16px 38px rgba(15, 23, 42, 0.07);
+            }
+
+            .cookies-table tbody td {
+                display: grid;
+                grid-template-columns: minmax(92px, 0.65fr) minmax(0, 1fr);
+                gap: 12px;
+                padding: 14px 16px;
+            }
+
+            .cookies-table tbody td::before {
+                content: attr(data-label);
+                color: var(--brand-muted);
+                font-family: 'Manrope', sans-serif;
+                font-size: 0.7rem;
+                font-weight: 800;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+            }
+
+            .cookies-table tbody tr:last-child td {
+                border-bottom: 1px solid var(--brand-line);
+            }
+
+            .cookies-table tbody tr td:last-child,
+            .cookies-table tbody tr:last-child td:last-child {
+                border-bottom: 0;
+            }
+
+            .cookies-table .cookie-name {
+                overflow-wrap: anywhere;
+                white-space: normal;
+            }
+
+            .cookies-table .cookie-category-pill {
+                max-width: 100%;
+                justify-self: start;
+                white-space: normal;
+            }
         }
     </style>
     @include('partials.public-navbar-styles')
@@ -392,10 +466,10 @@
                         <tbody>
                             @foreach($cookieRows as $row)
                                 <tr>
-                                    <td class="cookie-name">{{ $row['name'] }}</td>
-                                    <td><span class="cookie-category-pill">{{ $row['category'] }}</span></td>
-                                    <td>{{ $row['purpose'] }}</td>
-                                    <td>{{ $row['duration'] }}</td>
+                                    <td class="cookie-name" data-label="{{ __('cookies.table_name') }}">{{ $row['name'] }}</td>
+                                    <td data-label="{{ __('cookies.table_category') }}"><span class="cookie-category-pill">{{ $row['category'] }}</span></td>
+                                    <td data-label="{{ __('cookies.table_purpose') }}">{{ $row['purpose'] }}</td>
+                                    <td data-label="{{ __('cookies.table_duration') }}">{{ $row['duration'] }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -441,14 +515,7 @@
         </div>
     </main>
 
-    <footer class="modern-footer" style="padding: 48px 0; background: var(--brand-navy);">
-        <div class="page-container" style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px;">
-            <a href="{{ localized_route('home', ['locale' => $locale]) }}" style="display:inline-flex; align-items:center; gap:12px; color:#fff; font-weight:700;">
-                <img src="{{ asset('images/zuider-logo-white.png') }}" alt="{{ $brandName }}" style="width:44px; height:44px; object-fit:contain;">
-            </a>
-            <p style="margin:0; color:rgba(255,255,255,.6); font-size:.85rem;">&copy; {{ date('Y') }} {{ $brandName }}. {{ __('public_pages.shared')['rights'] ?? '' }}</p>
-        </div>
-    </footer>
+    @include('partials.public-footer')
 </div>
 @include('partials.public-navbar-scripts')
 @include('components.cookie-consent')

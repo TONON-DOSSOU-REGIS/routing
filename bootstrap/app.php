@@ -52,6 +52,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->dontFlash([
             'activation_code',
+            'smtp_password',
         ]);
 
         $handleExpiredSession = function ($request) {

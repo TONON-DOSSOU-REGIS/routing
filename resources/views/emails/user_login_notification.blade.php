@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notification de Connexion - Zuider Bank S.A</title>
+    <title>Notification de Connexion - NEXALUNE BANK</title>
     @include('partials.favicon')
     <style>
         body {

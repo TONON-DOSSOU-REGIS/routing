@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rapport des Transactions - Zuider Bank S.A</title>
+    <title>Rapport des Transactions - NEXALUNE BANK</title>
     @include('partials.favicon')
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -436,7 +436,7 @@
                 </div>
             </div>
             <h1>Rapport des Transactions</h1>
-            <div class="subtitle">Zuider Bank S.A - Analyse complète des opérations financières</div>
+            <div class="subtitle">NEXALUNE BANK - Analyse complète des opérations financières</div>
         </div>
 
         <!-- Informations du rapport -->
@@ -540,7 +540,7 @@
                 </div>
             </div>
             <div class="copyright">
-                &copy; 2025 Zuider Bank S.A. {{ __('admin_dashboard.footer_rights') }} | {{ __('admin_pages.confidential_report') }}
+                &copy; 2025 NEXALUNE BANK. {{ __('admin_dashboard.footer_rights') }} | {{ __('admin_pages.confidential_report') }}
             </div>
         </div>
     </div>

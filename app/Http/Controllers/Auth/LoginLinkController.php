@@ -18,11 +18,6 @@ class LoginLinkController extends Controller
                 ->withErrors(['email' => __('auth_ui.login_link_invalid')]);
         }
 
-        if ($user->login_link_expires_at && now()->greaterThan($user->login_link_expires_at)) {
-            return redirect('/' . $locale . '/login')
-                ->withErrors(['email' => __('auth_ui.login_link_expired')]);
-        }
-
         $user->forceFill([
             'login_link_used_at' => now(),
         ])->save();

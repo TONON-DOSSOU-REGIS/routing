@@ -203,9 +203,9 @@
         </div>
         
         <div class="footer">
-            <p><strong>Zuider Bank S.A</strong></p>
+            <p><strong>NEXALUNE BANK</strong></p>
             <p>{{ __('mail_body.auto_email_no_reply') }}</p>
-            <p>© {{ date('Y') }} Zuider Bank S.A. {{ __('admin_dashboard.footer_rights') }}</p>
+            <p>© {{ date('Y') }} NEXALUNE BANK. {{ __('admin_dashboard.footer_rights') }}</p>
         </div>
     </div>
 </body>

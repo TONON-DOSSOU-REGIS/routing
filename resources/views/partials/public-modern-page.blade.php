@@ -1,6 +1,5 @@
 @php
     $locale = app()->getLocale();
-    $brandName = 'Zuider Bank S.A';
     $primaryCtaRoute = $page['primary_cta_route'] ?? 'register';
     $secondaryCtaRoute = $page['secondary_cta_route'] ?? 'support.nous-contacter';
     $accent = $page['accent'] ?? '#0b5cff';
@@ -17,7 +16,7 @@
     @include('partials.favicon')
     @vite(['resources/css/app.css', 'resources/js/button-feedback.js'])
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --brand-navy: #06172c;
@@ -65,29 +64,12 @@
 
         .modern-page {
             overflow: hidden;
-            background:
-                radial-gradient(circle at top left, rgba(11, 92, 255, 0.12), transparent 30%),
-                linear-gradient(180deg, var(--brand-navy) 0%, var(--brand-navy) 16%, #f7faff 52%, #ffffff 100%);
+            background: #ffffff;
         }
 
         .page-container {
             width: min(100% - 48px, 1320px);
             margin: 0 auto;
-        }
-
-        .modern-brand {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            color: #ffffff;
-            font-family: 'Sora', sans-serif;
-            font-weight: 700;
-        }
-
-        .modern-brand img {
-            width: 52px;
-            height: 52px;
-            object-fit: contain;
         }
 
         .btn-modern {
@@ -374,6 +356,33 @@
             line-height: 1.75;
         }
 
+        .contact-phone-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 14px;
+            color: var(--page-accent);
+            font-weight: 800;
+            letter-spacing: 0.01em;
+            text-decoration: none;
+        }
+
+        .contact-phone-link:hover,
+        .contact-phone-link:focus-visible {
+            color: var(--brand-navy);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        .contact-phone-flag {
+            width: 27px;
+            height: 18px;
+            flex: 0 0 auto;
+            overflow: hidden;
+            border-radius: 3px;
+            box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.12);
+        }
+
         .feature-list {
             display: grid;
             gap: 10px;
@@ -574,7 +583,7 @@
             color: #ffffff;
             background:
                 linear-gradient(90deg, rgba(6, 23, 44, 0.96), rgba(11, 92, 255, 0.76)),
-                url('{{ asset('images/zuider-card-3d-hero.png') }}') right center / min(54vw, 720px) auto no-repeat;
+                url('{{ asset('images/nexalune-card-3d-hero.png') }}') right center / min(54vw, 720px) auto no-repeat;
             overflow: hidden;
         }
 
@@ -592,20 +601,6 @@
             margin: 18px 0 30px;
             color: rgba(255, 255, 255, 0.78);
             line-height: 1.76;
-        }
-
-        .modern-footer {
-            padding: 42px 0;
-            color: rgba(255, 255, 255, 0.68);
-            background: #06111f;
-        }
-
-        .footer-row {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
         }
 
         @media (max-width: 1080px) {
@@ -649,6 +644,23 @@
             .hero-lead {
                 font-size: 0.98rem;
                 line-height: 1.66;
+            }
+
+            .hero-actions[data-public-hero-actions] {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+
+            .hero-actions .btn-modern {
+                width: 100%;
+                min-width: 0;
+                height: 100%;
+                padding: 10px 12px;
+                font-size: 0.82rem;
+                line-height: 1.3;
+                text-align: center;
+                white-space: normal;
             }
 
             .section-heading h2,
@@ -726,7 +738,7 @@
                     <span class="eyebrow"><i class="{{ $page['eyebrow_icon'] ?? 'fas fa-sparkles' }}"></i>{{ $page['eyebrow'] }}</span>
                     <h1 class="hero-title">{{ $page['title'] }}</h1>
                     <p class="hero-lead">{{ $page['subtitle'] }}</p>
-                    <div class="hero-actions">
+                    <div class="hero-actions" data-public-hero-actions>
                         <a class="btn-modern btn-primary-modern" href="{{ localized_route($primaryCtaRoute, ['locale' => $locale]) }}">
                             {{ $page['primary_cta'] ?? $shared['open_account'] }} <i class="fas fa-arrow-right"></i>
                         </a>
@@ -832,6 +844,18 @@
                             <p>{{ $page['contact']['intro'] }}</p>
                         </div>
                         <div class="cards-grid" style="grid-template-columns:1fr;">
+                            <article class="content-card">
+                                <div class="card-icon"><i class="fas fa-phone"></i></div>
+                                <h3>{{ __('support.contact_phone') }}</h3>
+                                <a class="contact-phone-link" href="tel:+33635786812" aria-label="{{ __('support.contact_phone') }} : {{ __('support.contact_phone_number') }}">
+                                    <svg class="contact-phone-flag" viewBox="0 0 3 2" aria-hidden="true" focusable="false">
+                                        <path fill="#002654" d="M0 0h1v2H0z"/>
+                                        <path fill="#fff" d="M1 0h1v2H1z"/>
+                                        <path fill="#CE1126" d="M2 0h1v2H2z"/>
+                                    </svg>
+                                    <span>{{ __('support.contact_phone_number') }}</span>
+                                </a>
+                            </article>
                             @foreach($page['contact']['cards'] as $card)
                                 <article class="content-card">
                                     <div class="card-icon"><i class="{{ $card['icon'] }}"></i></div>
@@ -923,15 +947,7 @@
         </section>
     </main>
 
-    <footer class="modern-footer">
-        <div class="page-container footer-row">
-            <a class="modern-brand" href="{{ localized_route('home', ['locale' => $locale]) }}">
-                <img src="{{ asset('images/zuider-logo-white.png') }}" alt="{{ $brandName }}">
-                <span>{{ $brandName }}</span>
-            </a>
-            <p>&copy; {{ date('Y') }} {{ $brandName }}. {{ $shared['rights'] }}</p>
-        </div>
-    </footer>
+    @include('partials.public-footer')
 </div>
 @include('partials.public-navbar-scripts')
 @include('components.cookie-consent')

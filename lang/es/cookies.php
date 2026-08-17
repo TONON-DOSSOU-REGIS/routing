@@ -3,7 +3,7 @@
 return [
     // Banner de consentimiento
     'banner_title' => 'Su privacidad nos importa',
-    'banner_text' => 'Zuider Bank S.A utiliza cookies para garantizar el funcionamiento esencial del sitio, proteger su conexión y, si usted lo acepta, medir la audiencia y personalizar su experiencia. Puede aceptar, rechazar o personalizar sus opciones en cualquier momento.',
+    'banner_text' => 'NEXALUNE BANK utiliza cookies para garantizar el funcionamiento esencial del sitio, proteger su conexión y, si usted lo acepta, medir la audiencia y personalizar su experiencia. Puede aceptar, rechazar o personalizar sus opciones en cualquier momento.',
     'banner_learn_more' => 'Más información sobre nuestra política de cookies',
     'accept_all' => 'Aceptar todo',
     'reject_all' => 'Rechazar todo',
@@ -31,14 +31,14 @@ return [
     'category_marketing_text' => 'Se utilizan para presentarle comunicaciones relevantes sobre nuestros servicios y para medir la eficacia de nuestras campañas. Pueden compartirse con socios publicitarios.',
 
     // Página dedicada: política de cookies
-    'page_title' => 'Política de cookies - Zuider Bank S.A',
+    'page_title' => 'Política de cookies - NEXALUNE BANK',
     'page_eyebrow' => 'Transparencia y privacidad',
     'page_heading' => 'Nuestra política de cookies',
-    'page_intro' => 'Esta política explica de forma clara y completa cómo Zuider Bank S.A utiliza cookies y tecnologías similares en este sitio, qué datos se ven afectados y cómo puede ejercer sus opciones en cualquier momento.',
+    'page_intro' => 'Esta política explica de forma clara y completa cómo NEXALUNE BANK utiliza cookies y tecnologías similares en este sitio, qué datos se ven afectados y cómo puede ejercer sus opciones en cualquier momento.',
     'page_updated' => 'Última actualización:',
 
     'section_what_title' => '¿Qué es una cookie?',
-    'section_what_text' => 'Una cookie es un pequeño archivo de texto que se guarda en su dispositivo (ordenador, tableta, smartphone) al visitar un sitio web. Permite que el sitio reconozca su navegador, recuerde cierta información y funcione correctamente. Zuider Bank S.A también puede utilizar tecnologías similares (almacenamiento local, etiquetas, identificadores de sesión) que cumplen funciones comparables.',
+    'section_what_text' => 'Una cookie es un pequeño archivo de texto que se guarda en su dispositivo (ordenador, tableta, smartphone) al visitar un sitio web. Permite que el sitio reconozca su navegador, recuerde cierta información y funcione correctamente. NEXALUNE BANK también puede utilizar tecnologías similares (almacenamiento local, etiquetas, identificadores de sesión) que cumplen funciones comparables.',
 
     'section_why_title' => '¿Por qué utilizamos cookies?',
     'section_why_text' => 'Las cookies nos permiten garantizar la seguridad de su sesión bancaria, mantener su conexión mientras navega, comprender cómo se utilizan nuestros servicios con el fin de mejorarlos, y ofrecerle una experiencia adaptada a sus preferencias. No se instala ninguna cookie no esencial sin su consentimiento previo.',
@@ -50,7 +50,7 @@ return [
     'table_duration' => 'Período de conservación',
     'table_category' => 'Categoría',
 
-    'cookie_session_name' => 'zuider_session',
+    'cookie_session_name' => 'nexalune_session',
     'cookie_session_purpose' => 'Mantiene su sesión activa y segura durante su navegación y sus operaciones bancarias.',
     'cookie_session_duration' => 'Duración de la sesión (se elimina al cerrar el navegador)',
 
@@ -58,11 +58,11 @@ return [
     'cookie_csrf_purpose' => 'Protege contra los ataques de falsificación de solicitudes entre sitios (seguridad).',
     'cookie_csrf_duration' => '2 horas',
 
-    'cookie_consent_name' => 'zuider_cookie_consent',
+    'cookie_consent_name' => 'nexalune_cookie_consent',
     'cookie_consent_purpose' => 'Memoriza sus opciones de consentimiento en materia de cookies para no volver a solicitárselo en cada visita.',
     'cookie_consent_duration' => '6 meses',
 
-    'cookie_locale_name' => 'zuider_locale',
+    'cookie_locale_name' => 'nexalune_locale',
     'cookie_locale_purpose' => 'Memoriza el idioma elegido para la visualización del sitio.',
     'cookie_locale_duration' => '12 meses',
 
@@ -84,7 +84,7 @@ return [
     'section_thirdparty_text' => 'Algunas cookies analíticas y de marketing pueden implicar la transferencia de datos a proveedores externos (por ejemplo, Google Analytics). Estos proveedores actúan como encargados del tratamiento y están contractualmente obligados a respetar la confidencialidad y la seguridad de sus datos, de conformidad con las exigencias del RGPD. Ningún dato bancario o de identificación sensible se comparte nunca a través de estas cookies.',
 
     'section_changes_title' => 'Modificaciones de esta política',
-    'section_changes_text' => 'Zuider Bank S.A puede verse obligada a modificar la presente política de cookies para reflejar cambios legales, técnicos o de nuestras prácticas. Cualquier modificación sustancial se le notificará mediante una nueva solicitud de consentimiento en su próxima visita.',
+    'section_changes_text' => 'NEXALUNE BANK puede verse obligada a modificar la presente política de cookies para reflejar cambios legales, técnicos o de nuestras prácticas. Cualquier modificación sustancial se le notificará mediante una nueva solicitud de consentimiento en su próxima visita.',
 
     'section_contact_title' => 'Contáctenos',
     'section_contact_text' => 'Para cualquier pregunta relativa a esta política de cookies o al ejercicio de sus derechos, nuestro equipo está a su disposición a través de nuestro formulario de contacto.',

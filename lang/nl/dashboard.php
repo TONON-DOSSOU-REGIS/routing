@@ -33,7 +33,7 @@ return [
     'logout' => 'Uitloggen',
     'nav_back' => 'Terug naar de site',
     'recent_transactions_and_quick_actions' => 'Recente transacties en snelle acties',
-    'bank_name' => 'Zuider Bank S.A',
+    'bank_name' => 'NEXALUNE BANK',
     'empty_value' => '-',
     'zero_amount' => '0,00',
     'transaction_type' => 'transactie',

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'page_title' => 'Notifications - Zuider Bank S.A',
+    'page_title' => 'Notifications - NEXALUNE BANK',
     'title' => 'Notifications',
     'subtitle' => 'Gérez vos alertes, validations et messages depuis un centre premium.',
     'mark_all_read' => 'Tout marquer comme lu',

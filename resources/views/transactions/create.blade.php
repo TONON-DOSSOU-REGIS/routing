@@ -27,7 +27,7 @@
 @section('dashboard_page_subtitle', __('transactions.transfer_subtitle'))
 @section('dashboard_section_label', __('dashboard.client_area'))
 @section('dashboard_search_placeholder', __('dashboard.search_placeholder'))
-@section('dashboard_brand_title', 'Zuider Bank S.A')
+@section('dashboard_brand_title', 'NEXALUNE BANK')
 @section('dashboard_brand_subtitle', __('dashboard.client_area'))
 @section('sidebar_primary_title', __('dashboard.menu'))
 
@@ -1256,14 +1256,68 @@
 
         @media (max-width: 640px) {
             .flash-overlay {
-                padding: 0.6rem;
+                padding:
+                    max(0.6rem, env(safe-area-inset-top))
+                    max(0.6rem, env(safe-area-inset-right))
+                    max(0.6rem, env(safe-area-inset-bottom))
+                    max(0.6rem, env(safe-area-inset-left));
+                overflow-y: auto;
+                overscroll-behavior: contain;
             }
 
             .flash-card {
-                width: min(100vw - 0.6rem, 100%);
-                max-height: 90dvh;
-                border-radius: 1.1rem;
-                padding: 1.15rem;
+                width: 100%;
+                max-height: calc(100dvh - 1.2rem);
+                border-radius: 1.25rem;
+                padding: 1rem;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .flash-icon-container {
+                width: 62px;
+                height: 62px;
+                margin-bottom: 0.8rem;
+            }
+
+            .flash-icon {
+                font-size: 1.4rem;
+            }
+
+            .flash-title {
+                margin-bottom: 0.7rem;
+                font-size: 1.3rem;
+            }
+
+            .flash-client-panel,
+            .flash-message-shell,
+            .flash-resume-panel {
+                border-radius: 1rem;
+                padding: 0.85rem;
+            }
+
+            .flash-client-panel,
+            .flash-message-shell {
+                margin-bottom: 0.85rem;
+            }
+
+            .flash-message {
+                font-size: 0.9rem;
+                line-height: 1.55;
+            }
+
+            .flash-resume-panel {
+                margin: 0 0 0.85rem;
+            }
+
+            .flash-resume-help {
+                margin: 0.45rem 0 0.75rem;
+                line-height: 1.5;
+            }
+
+            .flash-resume-input,
+            .flash-resume-submit,
+            .flash-button {
+                min-height: 3rem;
             }
 
             .flash-progress-summary {

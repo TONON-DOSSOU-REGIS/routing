@@ -850,11 +850,11 @@
                     <div class="auth-nav-inner flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                         <div class="auth-nav-brand-row flex items-center justify-between gap-4">
                             <div class="auth-brand-lockup flex min-w-0 items-center gap-4">
-                                <a href="{{ localized_route('home') }}" class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-200/80">
-                                    <img src="{{ asset('images/Logosite.png') }}" alt="Zuider Bank S.A" class="h-10 w-10 object-contain">
+                                <a href="{{ localized_route('home') }}" class="flex h-14 w-14 shrink-0 items-center justify-center">
+                                    <img src="{{ asset('images/nexalune-mark-white.png') }}" alt="NEXALUNE BANK" class="h-14 w-14 object-contain drop-shadow-lg">
                                 </a>
                                 <div class="min-w-0">
-                                    <p class="auth-brand-title text-lg font-semibold text-slate-950">Zuider Bank S.A</p>
+                                    <p class="auth-brand-title text-lg font-semibold text-slate-950">NEXALUNE BANK</p>
                                     <p class="text-sm text-slate-500">@yield('auth_nav_subtitle', __('auth_ui.secure_client_access'))</p>
                                 </div>
                             </div>
@@ -879,11 +879,11 @@
                 <aside class="auth-mobile-drawer" id="auth-mobile-menu" role="dialog" aria-modal="true" aria-label="Menu" aria-hidden="true" tabindex="-1" inert>
                     <div class="auth-mobile-drawer-header">
                         <div class="flex min-w-0 items-center gap-3">
-                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white">
-                                <img src="{{ asset('images/Logosite.png') }}" alt="" class="h-8 w-8 object-contain">
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center">
+                                <img src="{{ asset('images/nexalune-mark-white.png') }}" alt="" class="h-10 w-10 object-contain drop-shadow-md">
                             </span>
                             <span class="min-w-0">
-                                <span class="auth-brand-title block truncate text-sm font-semibold">Zuider Bank S.A</span>
+                                <span class="auth-brand-title block truncate text-sm font-semibold">NEXALUNE BANK</span>
                                 <span class="mt-0.5 block text-xs text-white/55">@yield('auth_nav_subtitle', __('auth_ui.secure_client_access'))</span>
                             </span>
                         </div>
@@ -908,9 +908,9 @@
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center gap-2.5">
                                             <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 ring-1 ring-white/25">
-                                                <img src="{{ asset('images/Logosite.png') }}" alt="" class="h-7 w-7 object-contain brightness-0 invert">
+                                                <img src="{{ asset('images/nexalune-mark-white.png') }}" alt="" class="h-8 w-8 object-contain">
                                             </span>
-                                            <span class="auth-brand-title text-sm font-semibold tracking-wide">ZUIDER BANK</span>
+                                            <span class="auth-brand-title text-sm font-semibold tracking-wide">NEXALUNE BANK</span>
                                         </div>
                                         <i class="fas fa-wifi rotate-90 text-lg text-white/80"></i>
                                     </div>
@@ -944,7 +944,7 @@
                 <footer class="auth-footer-card mt-6 rounded-[28px] px-5 py-4 sm:px-6">
                     <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                         <div>
-                            <p class="text-sm font-semibold text-slate-900">Zuider Bank S.A</p>
+                            <p class="text-sm font-semibold text-slate-900">NEXALUNE BANK</p>
                             <p class="mt-1 text-sm text-slate-500">&copy; {{ date('Y') }} {{ __('auth.footer_copyright') }}</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-4 text-sm font-medium text-slate-600">

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'page_title' => 'Meldingen - Zuider Bank S.A',
+    'page_title' => 'Meldingen - NEXALUNE BANK',
     'title' => 'Meldingen',
     'subtitle' => 'Beheer waarschuwingen, goedkeuringen en accountmeldingen vanuit een premium centrum.',
     'mark_all_read' => 'Alles als gelezen markeren',

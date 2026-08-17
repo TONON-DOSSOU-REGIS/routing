@@ -6,6 +6,7 @@ use App\Http\Requests\DepositRequest;
 use App\Mail\PasswordResetMail;
 use App\Models\ChatMessage;
 use App\Models\Setting;
+use App\Models\SmtpSetting;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -25,6 +26,7 @@ use App\Mail\UserApprovedNotification;
 use App\Mail\TransactionRefundedMail;
 use App\Services\NotificationService;
 use App\Support\PhoneNumber;
+use App\Support\SmtpConfiguration;
 
 class AdminController extends Controller
 {
@@ -108,9 +110,10 @@ class AdminController extends Controller
         $hasActivationCode = $selectedUser
             ? Hash::isHashed((string) $selectedUser->activation_code)
             : false;
+        $smtpSettings = SmtpSetting::query()->find(1);
 
         return view('admin.settings', array_merge(
-            compact('settings', 'users', 'selectedUser', 'hasActivationCode'),
+            compact('settings', 'users', 'selectedUser', 'hasActivationCode', 'smtpSettings'),
             $this->getAdminShellData()
         ));
     }
@@ -144,6 +147,57 @@ class AdminController extends Controller
                 'target_user_id' => $settings->target_user_id,
             ])
             ->with('status', __('system_messages.admin_settings_updated'));
+    }
+
+    public function updateSmtpSettings(Request $request)
+    {
+        $request->merge([
+            'smtp_host' => trim((string) $request->input('smtp_host')),
+            'smtp_username' => filled($request->input('smtp_username'))
+                ? trim((string) $request->input('smtp_username'))
+                : null,
+            'smtp_from_address' => trim((string) $request->input('smtp_from_address')),
+            'smtp_from_name' => trim((string) $request->input('smtp_from_name')),
+        ]);
+
+        $validated = $request->validate([
+            'smtp_host' => ['required', 'string', 'max:255'],
+            'smtp_port' => ['required', 'integer', 'between:1,65535'],
+            'smtp_scheme' => ['required', Rule::in(['smtp', 'smtps'])],
+            'smtp_username' => ['nullable', 'string', 'max:255'],
+            'smtp_password' => ['nullable', 'string', 'max:4096'],
+            'smtp_from_address' => ['required', 'email:rfc', 'max:255'],
+            'smtp_from_name' => ['required', 'string', 'max:255'],
+        ]);
+
+        $smtpSettings = SmtpSetting::query()->findOrNew(1);
+        $smtpSettings->id = 1;
+        $smtpSettings->fill([
+            'host' => $validated['smtp_host'],
+            'port' => (int) $validated['smtp_port'],
+            'scheme' => $validated['smtp_scheme'],
+            'username' => filled($validated['smtp_username'] ?? null)
+                ? $validated['smtp_username']
+                : null,
+            'from_address' => $validated['smtp_from_address'],
+            'from_name' => $validated['smtp_from_name'],
+        ]);
+
+        if (filled($validated['smtp_password'] ?? null)) {
+            $smtpSettings->password = $validated['smtp_password'];
+        }
+
+        $smtpSettings->save();
+        SmtpConfiguration::apply($smtpSettings);
+
+        Log::info('Admin updated SMTP settings', [
+            'admin_id' => auth()->id(),
+            'smtp_host' => $smtpSettings->host,
+            'smtp_port' => $smtpSettings->port,
+            'smtp_scheme' => $smtpSettings->scheme,
+        ]);
+
+        return back()->with('status', __('admin_pages.smtp_settings_updated'));
     }
 
     public function updateClientActivationCode(Request $request)
@@ -468,25 +522,23 @@ class AdminController extends Controller
         return $types[array_rand($types)];
     }
 
-    private function issueLoginLink(User $user): array
+    private function issueLoginLink(User $user): string
     {
         do {
             $rawToken = Str::random(12);
             $tokenHash = hash('sha256', $rawToken);
         } while (User::where('login_link_token', $tokenHash)->exists());
 
-        $expiresAt = now()->addDays(config('auth.login_link_ttl_days', 90));
-
         $user->forceFill([
             'login_link_token' => $tokenHash,
-            'login_link_expires_at' => $expiresAt,
+            'login_link_expires_at' => null,
             'login_link_used_at' => null,
         ])->save();
 
         $locale = $user->locale ?? app()->getLocale();
         $loginLink = route('login.short', ['locale' => $locale, 'token' => $rawToken]);
 
-        return [$loginLink, $expiresAt];
+        return $loginLink;
     }
 
     public function storeUser(Request $request)
@@ -557,9 +609,8 @@ class AdminController extends Controller
         ]);
 
         $loginLink = null;
-        $loginLinkExpiresAt = null;
         if ($user->role === 'user') {
-            [$loginLink, $loginLinkExpiresAt] = $this->issueLoginLink($user);
+            $loginLink = $this->issueLoginLink($user);
         }
 
         Log::info('Admin created user with virtual credit card', [
@@ -574,8 +625,7 @@ class AdminController extends Controller
 
         if ($loginLink) {
             $redirect->with('login_link', $loginLink)
-                ->with('login_link_user', $user->email)
-                ->with('login_link_expires_at', $loginLinkExpiresAt->format('d/m/Y H:i'));
+                ->with('login_link_user', $user->email);
         }
 
         return $redirect;
@@ -591,20 +641,18 @@ class AdminController extends Controller
             return back()->withErrors(['error' => __('system_messages.admin_login_link_active_only')]);
         }
 
-        [$loginLink, $loginLinkExpiresAt] = $this->issueLoginLink($user);
+        $loginLink = $this->issueLoginLink($user);
 
         Log::info('Admin generated login link', [
             'admin_id' => auth()->id(),
             'user_id' => $user->id,
             'user_email' => $user->email,
-            'expires_at' => $loginLinkExpiresAt,
         ]);
 
         return back()
             ->with('status', __('system_messages.admin_login_link_generated'))
             ->with('login_link', $loginLink)
-            ->with('login_link_user', $user->email)
-            ->with('login_link_expires_at', $loginLinkExpiresAt->format('d/m/Y H:i'));
+            ->with('login_link_user', $user->email);
     }
 
     public function editUser($locale, User $user)

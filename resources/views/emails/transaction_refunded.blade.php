@@ -163,7 +163,7 @@
     
     <div class="footer">
         <p>Merci de votre confiance !</p>
-        <p>© {{ date('Y') }} Zuider Bank S.A. {{ __('admin_dashboard.footer_rights') }}</p>
+        <p>© {{ date('Y') }} NEXALUNE BANK. {{ __('admin_dashboard.footer_rights') }}</p>
     </div>
 </body>
 </html>

@@ -53,7 +53,7 @@
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <p class="text-sm font-semibold text-blue-900">{{ __('admin_pages.generated_login_link') }}</p>
-                    <p class="mt-1 text-sm text-blue-700">{{ __('admin_pages.client') }} : {{ session('login_link_user') }} @if(session('login_link_expires_at')) - {{ __('admin_pages.valid_until', ['date' => session('login_link_expires_at')]) }} @endif</p>
+                    <p class="mt-1 text-sm text-blue-700">{{ __('admin_pages.client') }} : {{ session('login_link_user') }}</p>
                 </div>
                 <a href="{{ session('login_link') }}" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm ring-1 ring-blue-200/80">
                     <i class="fas fa-arrow-up-right-from-square text-xs"></i> {{ __('admin_pages.open') }}

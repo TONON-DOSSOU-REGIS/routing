@@ -114,19 +114,14 @@
             flex: 0 0 auto;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            border: 1px solid #dce4ee;
-            border-radius: 13px;
-            background: #fff;
+            overflow: visible;
         }
 
         .register-brand-logo img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            object-position: left center;
-            transform: scale(1.28);
-            transform-origin: left center;
+            object-fit: contain;
+            filter: drop-shadow(0 6px 12px rgba(15, 35, 60, .16));
         }
 
         .register-brand-name {
@@ -1045,12 +1040,12 @@
     <div class="register-page">
         <div class="register-shell">
             <header class="register-topbar">
-                <a href="{{ localized_route('home') }}" class="register-brand" aria-label="Zuider Bank S.A">
+                <a href="{{ localized_route('home') }}" class="register-brand" aria-label="NEXALUNE BANK">
                     <span class="register-brand-logo">
                         <img src="{{ asset('images/Logosite.png') }}" alt="">
                     </span>
                     <span>
-                        <span class="register-brand-name">Zuider Bank S.A</span>
+                        <span class="register-brand-name">NEXALUNE BANK</span>
                         <span class="register-brand-subtitle">{{ __('auth_ui.secure_client_access') }}</span>
                     </span>
                 </a>
@@ -1448,7 +1443,7 @@
             </main>
 
             <footer class="register-footer">
-                <p>&copy; {{ date('Y') }} Zuider Bank S.A — {{ __('auth.footer_copyright') }}</p>
+                <p>&copy; {{ date('Y') }} NEXALUNE BANK — {{ __('auth.footer_copyright') }}</p>
                 <div class="register-footer-links">
                     <a href="{{ localized_route('support.nous-contacter') }}">{{ __('auth.footer_support') }}</a>
                     <a href="{{ localized_route('support.securite') }}">{{ __('auth.footer_terms') }}</a>

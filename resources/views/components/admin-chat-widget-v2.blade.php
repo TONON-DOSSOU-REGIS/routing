@@ -187,8 +187,8 @@
 
 <script>
 (() => {
-    if (window.ZuiderAdminChatMounted) return;
-    window.ZuiderAdminChatMounted = true;
+    if (window.NexaluneAdminChatMounted) return;
+    window.NexaluneAdminChatMounted = true;
     const i18n = @json($adminChatV2I18n);
     const adminId = {{ auth()->id() }};
     const locale = document.documentElement.lang || '{{ app()->getLocale() }}';
@@ -351,7 +351,7 @@
         el.messages.innerHTML = `<div class="space-y-4">${messages.map(messageHtml).join('')}</div>`;
         if (stick) el.messages.scrollTo({ top: el.messages.scrollHeight, behavior: 'smooth' });
         el.jumpLatest.classList.toggle('hidden', stick);
-        if (hasNewReply) window.ZuiderChatAudio?.notify();
+        if (hasNewReply) window.NexaluneChatAudio?.notify();
     }
 
     function userCard(user, preview = '', unread = 0) {
@@ -468,7 +468,7 @@
             const { response, data } = await json('{{ route("chat.unread-count") }}');
             if (!response.ok || !data || !data.success) return;
             const count = Number(data.count || 0);
-            if (state.unreadCount !== null && count > state.unreadCount) window.ZuiderChatAudio?.notify();
+            if (state.unreadCount !== null && count > state.unreadCount) window.NexaluneChatAudio?.notify();
             state.unreadCount = count;
             if (count > 0) {
                 el.badge.textContent = count > 99 ? '99+' : `${count}`;
@@ -642,7 +642,7 @@
     function openImage(src) { if (!src) return; setZoom(1); el.imageFull.src = src; el.imageDownload.href = src; el.imageModal.classList.add('is-open'); document.body.classList.add('overflow-hidden'); }
     function closeImage() { el.imageModal.classList.remove('is-open'); el.imageFull.src = ''; setZoom(1); el.imageDownload.removeAttribute('href'); if (!state.open || window.innerWidth >= 640) document.body.classList.remove('overflow-hidden'); }
 
-    el.toggle.addEventListener('click', () => { window.ZuiderChatAudio?.unlock(); toggle(); });
+    el.toggle.addEventListener('click', () => { window.NexaluneChatAudio?.unlock(); toggle(); });
     el.close.addEventListener('click', () => toggle(false));
     el.backdrop.addEventListener('click', () => toggle(false));
     el.back.addEventListener('click', backToList);

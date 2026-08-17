@@ -224,6 +224,7 @@ Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(fu
         // Settings
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
         Route::post('/settings', [AdminController::class, 'saveSettings'])->name('settings.save');
+        Route::post('/settings/smtp', [AdminController::class, 'updateSmtpSettings'])->name('settings.smtp');
         Route::post('/settings/activation-code', [AdminController::class, 'updateClientActivationCode'])->name('settings.activation-code');
         Route::post('/password', [AdminController::class, 'updatePassword'])->name('password.update');
 

@@ -3,7 +3,7 @@
 return [
     // Toestemmingsbanner
     'banner_title' => 'Uw privacy is belangrijk voor ons',
-    'banner_text' => 'Zuider Bank S.A gebruikt cookies om de essentiële werking van de website te waarborgen, uw verbinding te beveiligen en, indien u hiermee instemt, het publieksbereik te meten en uw ervaring te personaliseren. U kunt uw keuzes op elk moment aanvaarden, weigeren of aanpassen.',
+    'banner_text' => 'NEXALUNE BANK gebruikt cookies om de essentiële werking van de website te waarborgen, uw verbinding te beveiligen en, indien u hiermee instemt, het publieksbereik te meten en uw ervaring te personaliseren. U kunt uw keuzes op elk moment aanvaarden, weigeren of aanpassen.',
     'banner_learn_more' => 'Meer weten over ons cookiebeleid',
     'accept_all' => 'Alles accepteren',
     'reject_all' => 'Alles weigeren',
@@ -31,14 +31,14 @@ return [
     'category_marketing_text' => 'Worden gebruikt om u relevante communicatie over onze diensten te tonen en de doeltreffendheid van onze campagnes te meten. Kunnen worden gedeeld met reclamepartners.',
 
     // Speciale pagina: cookiebeleid
-    'page_title' => 'Cookiebeleid - Zuider Bank S.A',
+    'page_title' => 'Cookiebeleid - NEXALUNE BANK',
     'page_eyebrow' => 'Transparantie & privacy',
     'page_heading' => 'Ons cookiebeleid',
-    'page_intro' => 'Dit beleid legt op duidelijke en volledige wijze uit hoe Zuider Bank S.A cookies en soortgelijke technologieën op deze website gebruikt, welke gegevens hierbij betrokken zijn en hoe u op elk moment uw keuzes kunt uitoefenen.',
+    'page_intro' => 'Dit beleid legt op duidelijke en volledige wijze uit hoe NEXALUNE BANK cookies en soortgelijke technologieën op deze website gebruikt, welke gegevens hierbij betrokken zijn en hoe u op elk moment uw keuzes kunt uitoefenen.',
     'page_updated' => 'Laatst bijgewerkt:',
 
     'section_what_title' => 'Wat is een cookie?',
-    'section_what_text' => 'Een cookie is een klein tekstbestand dat bij het bezoeken van een website op uw apparaat (computer, tablet, smartphone) wordt geplaatst. Hierdoor kan de website uw browser herkennen, bepaalde informatie onthouden en correct functioneren. Zuider Bank S.A kan ook soortgelijke technologieën gebruiken (lokale opslag, tags, sessie-identificatoren) die vergelijkbare functies vervullen.',
+    'section_what_text' => 'Een cookie is een klein tekstbestand dat bij het bezoeken van een website op uw apparaat (computer, tablet, smartphone) wordt geplaatst. Hierdoor kan de website uw browser herkennen, bepaalde informatie onthouden en correct functioneren. NEXALUNE BANK kan ook soortgelijke technologieën gebruiken (lokale opslag, tags, sessie-identificatoren) die vergelijkbare functies vervullen.',
 
     'section_why_title' => 'Waarom gebruiken wij cookies?',
     'section_why_text' => 'Cookies stellen ons in staat de veiligheid van uw banksessie te waarborgen, u tijdens uw navigatie ingelogd te houden, te begrijpen hoe onze diensten worden gebruikt om ze te verbeteren, en u een op uw voorkeuren afgestemde ervaring te bieden. Er wordt geen niet-essentiële cookie geplaatst zonder uw voorafgaande toestemming.',
@@ -50,7 +50,7 @@ return [
     'table_duration' => 'Bewaartermijn',
     'table_category' => 'Categorie',
 
-    'cookie_session_name' => 'zuider_session',
+    'cookie_session_name' => 'nexalune_session',
     'cookie_session_purpose' => 'Houdt uw sessie actief en veilig tijdens uw navigatie en uw bankverrichtingen.',
     'cookie_session_duration' => 'Duur van de sessie (verwijderd bij het sluiten van de browser)',
 
@@ -58,11 +58,11 @@ return [
     'cookie_csrf_purpose' => 'Beschermt tegen cross-site request forgery-aanvallen (beveiliging).',
     'cookie_csrf_duration' => '2 uur',
 
-    'cookie_consent_name' => 'zuider_cookie_consent',
+    'cookie_consent_name' => 'nexalune_cookie_consent',
     'cookie_consent_purpose' => 'Onthoudt uw toestemmingskeuzes met betrekking tot cookies, zodat u niet bij elk bezoek opnieuw wordt gevraagd.',
     'cookie_consent_duration' => '6 maanden',
 
-    'cookie_locale_name' => 'zuider_locale',
+    'cookie_locale_name' => 'nexalune_locale',
     'cookie_locale_purpose' => 'Onthoudt de gekozen taal voor de weergave van de website.',
     'cookie_locale_duration' => '12 maanden',
 
@@ -84,7 +84,7 @@ return [
     'section_thirdparty_text' => 'Bepaalde analytische en marketingcookies kunnen de doorgifte van gegevens aan externe dienstverleners inhouden (bijvoorbeeld Google Analytics). Deze dienstverleners treden op als verwerkers en zijn contractueel verplicht de vertrouwelijkheid en veiligheid van uw gegevens te respecteren, overeenkomstig de vereisten van de AVG. Er worden via deze cookies nooit bankgegevens of gevoelige identificatiegegevens gedeeld.',
 
     'section_changes_title' => 'Wijzigingen van dit beleid',
-    'section_changes_text' => 'Zuider Bank S.A kan dit cookiebeleid wijzigen om juridische, technische of operationele ontwikkelingen weer te geven. Elke substantiële wijziging wordt u meegedeeld via een nieuw toestemmingsverzoek bij uw volgende bezoek.',
+    'section_changes_text' => 'NEXALUNE BANK kan dit cookiebeleid wijzigen om juridische, technische of operationele ontwikkelingen weer te geven. Elke substantiële wijziging wordt u meegedeeld via een nieuw toestemmingsverzoek bij uw volgende bezoek.',
 
     'section_contact_title' => 'Contact met ons opnemen',
     'section_contact_text' => 'Voor vragen over dit cookiebeleid of het uitoefenen van uw rechten staat ons team tot uw beschikking via ons contactformulier.',

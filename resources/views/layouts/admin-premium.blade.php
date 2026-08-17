@@ -4,7 +4,7 @@
     $adminNavActive = trim($__env->yieldContent('admin_nav_active', ''));
 @endphp
 
-@section('title', trim($__env->yieldContent('title', 'Administration - Zuider Bank S.A')))
+@section('title', trim($__env->yieldContent('title', 'Administration - NEXALUNE BANK')))
 @section('dashboard_theme', 'admin')
 @section('dashboard_page_title', trim($__env->yieldContent('dashboard_page_title', __('admin_dashboard.admin_title'))))
 @section('dashboard_page_subtitle', trim($__env->yieldContent('dashboard_page_subtitle', __('admin_dashboard.admin_subtitle'))))

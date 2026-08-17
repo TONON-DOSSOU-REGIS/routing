@@ -4,7 +4,7 @@
     $depositVolume30DaysFormatted = \App\Helpers\CurrencyHelper::format($depositVolume30Days ?? 0, 'EUR');
 @endphp
 
-@section('title', __('admin_pages.manual_deposit_title') . ' - Zuider Bank S.A Admin')
+@section('title', __('admin_pages.manual_deposit_title') . ' - NEXALUNE BANK Admin')
 @section('admin_nav_active', 'deposit')
 @section('dashboard_page_title', __('admin_pages.manual_deposit_title'))
 @section('dashboard_page_subtitle', __('admin_pages.deposit_subtitle'))
@@ -95,7 +95,7 @@
             position: relative;
             display: flex;
             align-items: stretch;
-            border-radius: 1.25rem;
+            border-radius: 1rem;
             background: rgba(248, 250, 252, .9);
             border: 1px solid rgba(148, 163, 184, .24);
             box-shadow: inset 0 1px 0 rgba(255,255,255,.72);
@@ -110,11 +110,13 @@
         }
 
         .amount-field-wrap input {
+            min-width: 0;
             border: 0;
             background: transparent;
             box-shadow: none;
-            font-size: clamp(1.35rem, 1rem + 1vw, 1.9rem);
-            font-weight: 700;
+            font-size: .875rem;
+            font-weight: 600;
+            line-height: 1.25rem;
             font-variant-numeric: tabular-nums;
         }
 

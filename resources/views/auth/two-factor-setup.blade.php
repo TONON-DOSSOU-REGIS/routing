@@ -42,7 +42,7 @@
 
         /* Matches the public bank-nav pill (same radius, background, blur,
            padding rhythm) so this authenticated step still reads as part of
-           the same Zuider shell. */
+           the same NEXALUNE BANK shell. */
         .tf-nav {
             display: flex;
             align-items: center;
@@ -666,8 +666,8 @@
 <div class="tf-shell">
     <nav class="tf-nav" aria-label="{{ __('auth_ui.security') }}">
         <a class="tf-brand" href="{{ localized_route('home', ['locale' => app()->getLocale()]) }}">
-            <img src="{{ asset('images/zuider-logo-white.png') }}" alt="Zuider Bank S.A">
-            <span>Zuider Bank S.A</span>
+            <img src="{{ asset('images/nexalune-logo-white.png') }}" alt="NEXALUNE BANK">
+            <span>NEXALUNE BANK</span>
         </a>
         <a class="tf-back" href="{{ $dashboardUrl }}">
             <i class="fas fa-arrow-left"></i>
@@ -679,7 +679,7 @@
         <aside class="tf-hero">
             <span class="tf-kicker">
                 <i class="fas fa-shield-halved"></i>
-                Zuider Secure Access
+                NEXALUNE BANK Secure Access
             </span>
 
             <h1 class="tf-title">{{ __('auth.2fa_setup_heading') }}</h1>
@@ -726,7 +726,7 @@
         <section class="tf-panel">
             <div class="tf-panel-head">
                 <div>
-                    <p class="tf-label">Zuider Bank S.A</p>
+                    <p class="tf-label">NEXALUNE BANK</p>
                     <h2>{{ __('auth.2fa_setup_heading') }}</h2>
                     <p>{{ __('auth.2fa_setup_description') }}</p>
                 </div>
