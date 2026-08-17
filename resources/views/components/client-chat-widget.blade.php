@@ -142,6 +142,7 @@
     const currentUserId = {{ auth()->id() }};
     const locale = document.documentElement.lang || '{{ app()->getLocale() }}';
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    const attachmentUrlTemplate = @json(rtrim(request()->getBaseUrl(), '/') . route('chat.attachment', ['message' => '__MESSAGE_ID__'], false));
     const el = {
         toggle: document.getElementById('client-chat-toggle'),
         window: document.getElementById('client-chat-window'),
@@ -230,7 +231,8 @@
 
     function attachmentHtml(msg, outgoing) {
         if (!msg.attachment_path) return '';
-        const url = msg.attachment_url || `/storage/${msg.attachment_path}`;
+        const url = msg.attachment_url || (msg.id ? attachmentUrlTemplate.replace('__MESSAGE_ID__', encodeURIComponent(String(msg.id))) : '');
+        if (!url) return '';
         const name = msg.attachment_name || i18n.fileLabel;
         const fsize = msg.formatted_attachment_size || size(msg.attachment_size);
         if (msg.is_image_attachment || (msg.attachment_type || '').startsWith('image/')) {

@@ -258,6 +258,7 @@ Route::prefix('{locale}')->where(['locale' => 'en|fr|de|nl|es|pl|it'])->group(fu
 // Chat Routes (outside locale prefix for AJAX compatibility)
 Route::middleware(['auth', 'twofactor'])->prefix('chat')->name('chat.')->group(function () {
     Route::post('/send', [ChatController::class, 'sendMessage'])->name('send');
+    Route::get('/attachments/{message}', [ChatController::class, 'attachment'])->name('attachment');
     Route::post('/typing', [ChatController::class, 'setTyping'])->name('typing');
     Route::get('/messages', [ChatController::class, 'getMessages'])->name('messages');
     Route::get('/messages/{userId}', [ChatController::class, 'getMessages'])->name('messages.user');

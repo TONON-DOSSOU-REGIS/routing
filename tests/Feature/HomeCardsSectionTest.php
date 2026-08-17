@@ -118,6 +118,16 @@ class HomeCardsSectionTest extends TestCase
         $response->assertSee('const heroTitles =', false);
     }
 
+    public function test_home_hero_actions_stay_side_by_side_on_mobile(): void
+    {
+        $this->get(route('home', ['locale' => 'fr']))
+            ->assertOk()
+            ->assertSee('data-home-hero-actions', false)
+            ->assertSee('.hero-actions[data-home-hero-actions] {', false)
+            ->assertSee('grid-template-columns: repeat(2, minmax(0, 1fr));', false)
+            ->assertDontSee(".hero-actions .btn,\n      .cta-band .btn", false);
+    }
+
     public function test_hero_trust_indicators_are_dynamic_counters(): void
     {
         $response = $this->get(route('home', ['locale' => 'de']));

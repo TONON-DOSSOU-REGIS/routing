@@ -1712,7 +1712,21 @@
         padding: 19px;
       }
 
-      .hero-actions .btn,
+      .hero-actions[data-home-hero-actions] {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .hero-actions[data-home-hero-actions] .btn {
+        width: auto;
+        min-width: 0;
+        padding: 10px 12px;
+        font-size: clamp(0.75rem, 3.2vw, 0.9rem);
+        line-height: 1.25;
+        text-align: center;
+      }
+
       .cta-band .btn {
         width: 100%;
       }
@@ -1824,7 +1838,7 @@
           </div>
           <p class="hero-copy">{{ __('home.hero_description') }}</p>
 
-          <div class="hero-actions">
+          <div class="hero-actions" data-home-hero-actions>
             <a class="btn btn-accent" href="{{ localized_route('register', ['locale' => $locale]) }}">
               {{ __('home.hero_cta_register') }} <i class="fas fa-arrow-right"></i>
             </a>

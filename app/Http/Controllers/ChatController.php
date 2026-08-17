@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 
 class ChatController extends Controller
 {
@@ -87,7 +88,9 @@ class ChatController extends Controller
             'message' => (string) ($message->message ?? ''),
             'is_read' => (bool) $message->is_read,
             'attachment_path' => $message->attachment_path,
-            'attachment_url' => $message->attachment_url,
+            'attachment_url' => $message->hasAttachment()
+                ? rtrim(request()->getBaseUrl(), '/') . route('chat.attachment', ['message' => $message->id], false)
+                : null,
             'attachment_name' => $message->attachment_name,
             'attachment_type' => $message->attachment_type,
             'attachment_size' => $message->attachment_size,
@@ -270,7 +273,7 @@ class ChatController extends Controller
         $request->validate([
             'message' => 'nullable|string|max:1000',
             'receiver_id' => 'nullable|integer|exists:users,id',
-            'attachment' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx,txt,zip',
+            'attachment' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,gif,webp,pdf,doc,docx,xls,xlsx,txt,zip',
         ]);
 
         if (!$request->message && !$request->hasFile('attachment')) {
@@ -321,11 +324,21 @@ class ChatController extends Controller
 
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            // Store file in public disk to have public-accessible path
-            $path = $file->storeAs('chat_attachments', $filename, 'public');
+            $path = $file->store('chat_attachments', 'public');
 
-            Log::info('File uploaded:', ['filename' => $filename, 'path' => $path]);
+            if (!$path) {
+                Log::error('Chat attachment could not be stored', [
+                    'user_id' => $currentUserId,
+                    'filename' => $file->getClientOriginalName(),
+                ]);
+
+                return response()->json([
+                    'success' => false,
+                    'message' => __('chat.send_error'),
+                ], 500);
+            }
+
+            Log::info('File uploaded:', ['filename' => $file->getClientOriginalName(), 'path' => $path]);
 
             $messageData['attachment_path'] = $path;
             $messageData['attachment_name'] = $file->getClientOriginalName();
@@ -353,6 +366,34 @@ class ChatController extends Controller
             'success' => true,
             'message' => $this->formatChatMessage($message),
         ]);
+    }
+
+    /**
+     * Display a chat attachment to either participant in the conversation.
+     */
+    public function attachment(ChatMessage $message)
+    {
+        $currentUserId = (int) Auth::id();
+        $isParticipant = $currentUserId > 0 && in_array($currentUserId, [
+            (int) $message->sender_id,
+            (int) $message->receiver_id,
+        ], true);
+
+        abort_unless($isParticipant, 403);
+        abort_unless(
+            $message->hasAttachment() && Storage::disk('public')->exists($message->attachment_path),
+            404
+        );
+
+        return Storage::disk('public')->response(
+            $message->attachment_path,
+            $message->attachment_name ?: basename($message->attachment_path),
+            [
+                'Content-Type' => $message->attachment_type ?: 'application/octet-stream',
+                'X-Content-Type-Options' => 'nosniff',
+            ],
+            $message->isImage() ? 'inline' : 'attachment'
+        );
     }
 
     /**
